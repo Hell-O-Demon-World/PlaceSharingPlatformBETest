@@ -1,13 +1,15 @@
 package com.golfzonaca.officesharingplatform.domain;
 
+import com.golfzonaca.officesharingplatform.domain.type.PayStatus;
 import com.golfzonaca.officesharingplatform.domain.type.PayType;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 public class Payment {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
     @JoinColumn(name = "USER_ID")
@@ -22,13 +24,18 @@ public class Payment {
     @Column(name = "place_id")
     private Long placeId;
 
-    @Column(name = "trx_date")
-    private LocalDate trxDate;
-    private int companyId;
-    private int roomId;
-    private int trxPrice;
-    private boolean trxStatus;
-    private int trxMileage;
-    private PayType trxType;
-    private String trxApiCode;
+    @Column(name = "pay_date", nullable = false)
+    private LocalDateTime payDateTime;
+    @Column(name = "pay_price", nullable = false)
+    private long price;
+    @Column(name = "pay_status", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private PayStatus status;
+    @Column(name = "pay_mileage", nullable = false)
+    private long savedMileage;
+    @Column(name = "pay_type", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private PayType type;
+    @Column(name = "pay_api_code", nullable = false)
+    private String apiCode;
 }
