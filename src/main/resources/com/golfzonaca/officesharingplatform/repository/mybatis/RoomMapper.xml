@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.golfzonaca.officesharingplatform.repository.mybatis.RoomMapper">
+    <select id="findRoomByPlaceIdAndRoomKindId" resultType="Room">
+        select *
+        from ROOM
+        where place_id = #{placeId}
+          and room_kind_id = #{roomKindId};
+    </select>
+
+    <select id="findRoomIdByPlaceIdAndRoomTypeId" resultType="java.lang.Long">
+        select id
+        from room
+        where place_id = #{placeId}
+          and room_kind_id = #{roomTypeId}
+    </select>
+
+    <select id="countRoomQuantityByPlaceId" resultType="java.lang.Integer">
+        select count(*)
+        from room
+        where place_id = #{placeId}
+          and room_kind_id = #{roomTypeId}
+    </select>
+
+    <select id="findRoomTypeByPlaceId" resultType="java.lang.Integer">
+        select room_kind_id
+        from room
+        where place_id = #{placeId}
+    </select>
+</mapper>

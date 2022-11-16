@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.golfzonaca.officesharingplatform.repository.mybatis.ReservationMapper">
+
+    <select id="findAllByPlaceIdAndRoomKindIdAndDate" resultType="Reservation">
+        select *
+        from reservation
+        where PLACE_ID = #{placeId}
+          AND ROOM_KIND_ID = #{roomKindId}
+          AND res_startdate = #{reservationDate}
+    </select>
+
+    <select id="findAllByUserId" resultType="Reservation">
+        select *
+        from reservation
+        where user_id = #{userId}
+    </select>
+
+    <insert id="save" useGeneratedKeys="true" keyProperty="id">
+        insert into reservation (place_id, user_id, room_id, room_kind_id, res_startdate, res_starttime, res_enddate,
+                                 res_endtime)
+        values (#{placeId}, #{userId}, #{roomId}, #{roomKindId}, #{resStartDate}, #{resStartTime}, #{resEndDate},
+                #{resEndTime})
+    </insert>
+
+    <select id="findResByPlaceIdAndRoomKindId" resultType="Reservation">
+        select *
+        from reservation
+        where place_id = #{placeId}
+          and room_kind_id = #{roomTypeId}
+          and res_startdate = #{resStartDate}
+          and res_enddate = #{resEndDate}
+    </select>
+
+    <select id="findRoomTypeByPlaceId" resultType="java.lang.Integer">
+        select room_kind_id
+        from room
+        where place_id = #{placeId}
+    </select>
+    <select id="deleteById">
+        delete
+        from reservation
+        where id = #{reservationId}
+    </select>
+</mapper>
