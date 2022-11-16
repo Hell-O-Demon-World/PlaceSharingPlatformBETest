@@ -12,6 +12,6 @@ public class Mileage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @Column(nullable = false, length = 11)
+    @Column(name = "POINT", nullable = false, length = 11)
     private long point;
 }

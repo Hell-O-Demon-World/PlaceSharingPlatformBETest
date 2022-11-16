@@ -16,12 +16,12 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @Column(nullable = false)
+    @Column(name = "PLACE_ID", nullable = false)
     private long placeId;
-    @Column(name = "comment_text", nullable = false, length = 40)
+    @Column(name = "COMMENT_TEXT", nullable = false, length = 40)
     private String text;
-    @Column(name = "comment_writer", nullable = false, length = 40)
+    @Column(name = "COMMENT_WRITER", nullable = false, length = 40)
     private String writer;
-    @Column(name = "comment_datetime", nullable = false)
+    @Column(name = "COMMENT_DATETIME", nullable = false)
     private LocalDateTime dateTime;
 }

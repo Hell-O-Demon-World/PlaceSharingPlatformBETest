@@ -18,18 +18,18 @@ public class Payment {
     @JoinColumn(name = "ROOM_ID")
     private Room room;
 
-    @Column(name = "pay_date", nullable = false)
+    @Column(name = "PAY_DATE", nullable = false)
     private LocalDateTime payDateTime;
-    @Column(name = "pay_price", nullable = false)
+    @Column(name = "PAY_PRICE", nullable = false)
     private long price;
-    @Column(name = "pay_status", nullable = false)
+    @Column(name = "PAY_STATUS", nullable = false)
     @Enumerated(EnumType.STRING)
     private PayStatus status;
-    @Column(name = "pay_mileage", nullable = false)
+    @Column(name = "PAY_MILEAGE", nullable = false)
     private long savedMileage;
-    @Column(name = "pay_type", nullable = false)
+    @Column(name = "PAY_TYPE", nullable = false)
     @Enumerated(EnumType.STRING)
     private PayType type;
-    @Column(name = "pay_api_code", nullable = false)
+    @Column(name = "PAY_API_CODE", nullable = false)
     private String apiCode;
 }

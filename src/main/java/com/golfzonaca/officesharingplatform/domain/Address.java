@@ -17,9 +17,9 @@ public class Address {
     @GeneratedValue
     @Column(unique = true, nullable = false)
     private Long id;
-    @Column(unique = true, nullable = false, length = 100)
+    @Column(name = "ADDRESS", unique = true, nullable = false, length = 100)
     private String address;
-    @Column(nullable = false, length = 5)
+    @Column(name = "POSTALCODE", nullable = false, length = 5)
     private String postalCode;
 
     public Address(Long id, String address, String postalCode) {

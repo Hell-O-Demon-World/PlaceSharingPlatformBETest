@@ -1,20 +1,17 @@
 package com.golfzonaca.officesharingplatform.domain;
 
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.sql.Time;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Date;
-import java.util.Map;
 
 @Data
 @Entity
 @NoArgsConstructor
 public class Place {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @ManyToOne
     @JoinColumn(name = "COMPANY_ID")
@@ -33,7 +30,7 @@ public class Place {
     @Column(name = "PLACE_END", nullable = false)
     private LocalTime placeEnd;
     @Column(name = "PLACE_ADDINFO", nullable = false)
-    private String placeAddinfo;
+    private String placeAddInfo;
     @OneToOne
     @JoinColumn(name = "ADDRESS_ID")
     private Address address;
