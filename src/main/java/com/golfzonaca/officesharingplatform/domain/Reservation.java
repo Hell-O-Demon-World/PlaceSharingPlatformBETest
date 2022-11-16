@@ -1,33 +1,37 @@
 package com.golfzonaca.officesharingplatform.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-
-@RequiredArgsConstructor
 @Data
+@Entity
+@AllArgsConstructor
+@NoArgsConstructor
 public class Reservation {
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private long placeId;
-    private long userId;
-    private long roomId;
-    private long roomKindId;
+    @ManyToOne
+    @JoinColumn(name = "PLACE_ID")
+    private Place place;
+    @ManyToOne
+    @JoinColumn(name = "USER_ID")
+    private User user;
+    @ManyToOne
+    @JoinColumn(name = "ROOM_ID")
+    private Room room;
+    @Column(name = "RES_STARTDATE", nullable = false)
     private LocalDate resStartDate;
+    @Column(name = "RES_STARTTIME", nullable = false)
     private LocalTime resStartTime;
+    @Column(name = "RES_ENDDATE", nullable = false)
     private LocalDate resEndDate;
+    @Column(name = "RES_ENDTIME", nullable = false)
     private LocalTime resEndTime;
 
-    public Reservation(long placeId, long userId, long roomId, long roomKindId, LocalDate resStartDate, LocalTime resStartTime, LocalDate resEndDate, LocalTime resEndTime) {
-        this.placeId = placeId;
-        this.userId = userId;
-        this.roomId = roomId;
-        this.roomKindId = roomKindId;
-        this.resStartDate = resStartDate;
-        this.resStartTime = resStartTime;
-        this.resEndDate = resEndDate;
-        this.resEndTime = resEndTime;
-    }
 }

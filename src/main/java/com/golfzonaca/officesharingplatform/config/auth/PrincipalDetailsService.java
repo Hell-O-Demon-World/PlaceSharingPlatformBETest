@@ -4,7 +4,6 @@ import com.golfzonaca.officesharingplatform.domain.User;
 import com.golfzonaca.officesharingplatform.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,6 +28,6 @@ public class PrincipalDetailsService implements UserDetailsService {
         SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority("ROLE_USER");
         grantedAuthorityList.add(simpleGrantedAuthority);
 
-        return new PrincipalDetails(user.getUserMail(), user.getUserPw(), grantedAuthorityList);
+        return new PrincipalDetails(user.getMail(), user.getPassword(), grantedAuthorityList);
     }
 }

@@ -1,10 +1,8 @@
 package com.golfzonaca.officesharingplatform.domain;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
+import javax.persistence.*;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -12,19 +10,31 @@ import java.time.LocalTime;
 import java.util.Date;
 import java.util.Map;
 
-@Getter
-@Setter
-@ToString
-@RequiredArgsConstructor
+@Data
+@Entity
+@NoArgsConstructor
 public class Place {
-
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private long companyId;
+    @ManyToOne
+    @JoinColumn(name = "COMPANY_ID")
+    private Company company;
+    @OneToOne
+    @JoinColumn(name = "RATEPOINT_ID")
+    private RatePoint ratePoint;
+    @Column(name = "PLACE_NAME", nullable = false, length = 30)
     private String placeName;
-    private String placeDescription;
-    private String placeOpendays;
+    @Column(name = "PLACE_DESCRIPTION", nullable = false, length = 50)
+    private String description;
+    @Column(name = "PLACE_OPENDAYS", nullable = false)
+    private String openDays;
+    @Column(name = "PLACE_START", nullable = false)
     private LocalTime placeStart;
+    @Column(name = "PLACE_END", nullable = false)
     private LocalTime placeEnd;
-    private Map<String, Boolean> placeAddinfo;
-    private int addressId;
+    @Column(name = "PLACE_ADDINFO", nullable = false)
+    private String placeAddinfo;
+    @OneToOne
+    @JoinColumn(name = "ADDRESS_ID")
+    private Address address;
 }

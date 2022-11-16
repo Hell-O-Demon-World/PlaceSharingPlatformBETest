@@ -1,26 +1,39 @@
 package com.golfzonaca.officesharingplatform.domain;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.List;
+import javax.persistence.*;
 
+@Entity
+@Table(name = "USER")
 @Data
+@NoArgsConstructor
 public class User {
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String userName;
-    private String userMail;
-    private String userPw;
-    private Long mileageId;
-    private String userTel;
-    private String userJob;
+    @Column(name = "USER_NAME", nullable = false)
+    private String username;
+    @Column(name = "USER_MAIL", nullable = false, unique = true)
+    private String mail;
+    @Column(name = "USER_PW", nullable = false)
+    private String password;
+    @Column(name = "USER_TEL", nullable = false)
+    private String phoneNumber;
+    @Column(name = "USER_JOB", nullable = false)
+    private String job;
+    @Column(name = "USER_PLACE", nullable = false)
     private String userPlace;
+    @OneToOne
+    @JoinColumn(name = "MILEAGE_ID")
+    private Mileage mileage;
 
-    public User(String userName, String userMail, String userPw, String userTel, String userJob, String userPlace) {
-        this.userName = userName;
-        this.userMail = userMail;
-        this.userPw = userPw;
-        this.userTel = userTel;
-        this.userJob = userJob;
+    public User(String username, String mail, String password, String phoneNumber, String job, String userPlace) {
+        this.username = username;
+        this.mail = mail;
+        this.password = password;
+        this.phoneNumber = phoneNumber;
+        this.job = job;
         this.userPlace = userPlace;
     }
 }

@@ -35,21 +35,21 @@ public class MyBatisAuthService implements AuthService{
     public Boolean join(User user) {
         boolean isJoin = true;
 
-        if (!emailCheck(user.getUserMail())) {
+        if (!emailCheck(user.getMail())) {
             return false;
         }
 
-        String rawPassword = user.getUserPw();
+        String rawPassword = user.getPassword();
         String encPassword = bCryptPasswordEncoder.encode(rawPassword);
         Mileage mileage = mileageService.join();
         Set<GrantedAuthority> authorities = new HashSet<>();
 
-        user.setUserPw(encPassword);
+        user.setPassword(encPassword);
         user.setMileageId(mileage.getId());
         User userEntity = userRepository.save(user);
         authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 
-        PrincipalDetails principalDetails = new PrincipalDetails(userEntity.getUserMail(), userEntity.getUserPw(), authorities);
+        PrincipalDetails principalDetails = new PrincipalDetails(userEntity.getMail(), userEntity.getPassword(), authorities);
         principalDetailsRepository.save(user.getId(), principalDetails);
 
         return isJoin;

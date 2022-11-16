@@ -2,10 +2,19 @@ package com.golfzonaca.officesharingplatform.domain;
 
 import com.golfzonaca.officesharingplatform.domain.type.RoomType;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
 
 @Data
+@Entity
+@Table(name = "ROOM_KIND")
+@NoArgsConstructor
 public class RoomKind {
-    private long id;
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(name = "ROOM_TYPE", nullable = false)
     private String roomType;
-    private int price;
+    @Column(name = "PRICE", nullable = false)
+    private Integer price;
 }
