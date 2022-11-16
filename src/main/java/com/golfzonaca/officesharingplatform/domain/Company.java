@@ -11,7 +11,6 @@ import javax.persistence.*;
 @ToString
 @Entity
 @NoArgsConstructor
-@RequiredArgsConstructor
 public class Company {
 
     @Id
