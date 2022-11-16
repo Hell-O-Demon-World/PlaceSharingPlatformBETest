@@ -12,15 +12,9 @@ public class Payment {
     @ManyToOne
     @JoinColumn(name = "USER_ID")
     private User user;
-    @ManyToOne
-    @JoinColumn(name = "MILEAGE_ID")
-    private Mileage mileage;
-    @Column(name = "room_id")
-    private Long roomid;
-    @Column(name = "room_kind_id")
-    private Long roomkindId;
-    @Column(name = "place_id")
-    private Long placeId;
+    @OneToOne
+    @JoinColumn(name = "ROOM_ID")
+    private Room room;
 
     @Column(name = "trx_date")
     private LocalDate trxDate;
