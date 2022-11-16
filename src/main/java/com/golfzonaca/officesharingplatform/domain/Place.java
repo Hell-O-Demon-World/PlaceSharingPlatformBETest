@@ -12,7 +12,7 @@ import java.time.LocalTime;
 public class Place {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     @ManyToOne
     @JoinColumn(name = "COMPANY_ID")
     private Company company;

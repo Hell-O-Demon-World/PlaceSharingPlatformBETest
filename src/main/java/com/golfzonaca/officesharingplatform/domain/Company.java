@@ -30,6 +30,7 @@ public class Company {
     private String regNum;
     @Column(name = "COMPANY_REPNAME", nullable = false, length = 20)
     private String repName;
-    @Column(name = "ADDRESS_ID", unique = true, nullable = false)
-    private long addressId;
+    @OneToOne
+    @JoinColumn(name = "ADDRESS_ID")
+    private Address address;
 }

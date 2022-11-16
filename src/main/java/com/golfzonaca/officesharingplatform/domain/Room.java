@@ -19,6 +19,6 @@ public class Room {
     @JoinColumn(name = "PLACE_ID")
     private Place place;
     @Column(name = "TOTAL_NUM", nullable = false)
-    private int totalNum;
+    private Integer totalNum;
 
 }

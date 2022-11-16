@@ -14,7 +14,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class Photo {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     @Column(nullable = false)
     private String fileName;
     @Column(nullable = false)

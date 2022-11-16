@@ -16,8 +16,9 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @Column(name = "PLACE_ID", nullable = false)
-    private long placeId;
+    @ManyToOne
+    @JoinColumn(name = "PLACE_ID")
+    private Place place;
     @Column(name = "COMMENT_TEXT", nullable = false, length = 40)
     private String text;
     @Column(name = "COMMENT_WRITER", nullable = false, length = 40)

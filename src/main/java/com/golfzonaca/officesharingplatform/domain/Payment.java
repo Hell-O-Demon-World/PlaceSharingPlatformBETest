@@ -21,12 +21,12 @@ public class Payment {
     @Column(name = "PAY_DATE", nullable = false)
     private LocalDateTime payDateTime;
     @Column(name = "PAY_PRICE", nullable = false)
-    private long price;
+    private Long price;
     @Column(name = "PAY_STATUS", nullable = false)
     @Enumerated(EnumType.STRING)
     private PayStatus status;
     @Column(name = "PAY_MILEAGE", nullable = false)
-    private long savedMileage;
+    private Long savedMileage;
     @Column(name = "PAY_TYPE", nullable = false)
     @Enumerated(EnumType.STRING)
     private PayType type;
