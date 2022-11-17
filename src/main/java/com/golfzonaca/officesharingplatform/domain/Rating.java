@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @ToString
-@RequiredArgsConstructor
 @NoArgsConstructor
 public class Rating {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

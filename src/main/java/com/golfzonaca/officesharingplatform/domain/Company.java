@@ -12,7 +12,6 @@ import javax.persistence.*;
 @Entity
 @Table(UniqueConstraint)
 @NoArgsConstructor
-@RequiredArgsConstructor
 public class Company {
 
     @Id
