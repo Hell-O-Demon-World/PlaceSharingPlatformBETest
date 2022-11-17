@@ -2,13 +2,11 @@ package com.golfzonaca.officesharingplatform.domain;
 
 import com.golfzonaca.officesharingplatform.web.mypage.form.MyPageReservationForm;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 
-import javax.persistence.Entity;
 import java.util.List;
 
-@Data
+@Getter
 @Builder
 public class MyPage {
     private String userName;

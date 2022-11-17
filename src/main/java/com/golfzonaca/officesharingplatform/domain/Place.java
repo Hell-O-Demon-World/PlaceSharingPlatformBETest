@@ -1,6 +1,7 @@
 package com.golfzonaca.officesharingplatform.domain;
 
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -8,7 +9,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
 @Entity
 @NoArgsConstructor
 public class Place {
@@ -40,4 +41,17 @@ public class Place {
     //양방향 매핑
     @OneToMany(mappedBy = "place")
     private List<Room> rooms = new ArrayList<>();
+
+    @Builder
+    public Place(Company company, RatePoint ratePoint, String placeName, String description, String openDays, LocalTime placeStart, LocalTime placeEnd, String placeAddInfo, Address address) {
+        this.company = company;
+        this.ratePoint = ratePoint;
+        this.placeName = placeName;
+        this.description = description;
+        this.openDays = openDays;
+        this.placeStart = placeStart;
+        this.placeEnd = placeEnd;
+        this.placeAddInfo = placeAddInfo;
+        this.address = address;
+    }
 }

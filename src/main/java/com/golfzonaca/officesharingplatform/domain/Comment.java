@@ -1,14 +1,13 @@
 package com.golfzonaca.officesharingplatform.domain;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Getter
-@ToString
 @Entity
 @NoArgsConstructor
 public class Comment {
@@ -25,4 +24,12 @@ public class Comment {
     private String writer;
     @Column(name = "COMMENT_DATETIME", nullable = false)
     private LocalDateTime dateTime;
+
+    @Builder
+    public Comment(Place place, String text, String writer, LocalDateTime dateTime) {
+        this.place = place;
+        this.text = text;
+        this.writer = writer;
+        this.dateTime = dateTime;
+    }
 }

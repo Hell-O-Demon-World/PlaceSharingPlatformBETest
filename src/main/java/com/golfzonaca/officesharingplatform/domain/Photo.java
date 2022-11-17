@@ -1,21 +1,26 @@
 package com.golfzonaca.officesharingplatform.domain;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 
 import javax.persistence.*;
 
 @Getter
-@ToString
 @Entity
 @NoArgsConstructor
 public class Photo {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false)
     private String fileName;
     @Column(nullable = false)
     private String path;
+
+    @Builder
+    public Photo(String fileName, String path) {
+        this.fileName = fileName;
+        this.path = path;
+    }
 }
