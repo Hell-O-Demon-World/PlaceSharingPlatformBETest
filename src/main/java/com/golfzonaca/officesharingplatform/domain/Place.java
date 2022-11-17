@@ -5,6 +5,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
@@ -34,4 +36,8 @@ public class Place {
     @OneToOne
     @JoinColumn(name = "ADDRESS_ID")
     private Address address;
+
+    //양방향 매핑
+    @OneToMany(mappedBy = "place")
+    private List<Room> rooms = new ArrayList<>();
 }

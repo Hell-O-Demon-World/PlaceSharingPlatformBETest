@@ -10,6 +10,7 @@ import javax.persistence.*;
 @Getter
 @ToString
 @Entity
+@Table(UniqueConstraint)
 @NoArgsConstructor
 @RequiredArgsConstructor
 public class Company {

@@ -1,22 +1,10 @@
 package com.golfzonaca.officesharingplatform.repository.user;
 
 import com.golfzonaca.officesharingplatform.domain.User;
-import com.golfzonaca.officesharingplatform.repository.mybatis.dto.UserInfoDto;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
+import java.util.Optional;
 
-public interface UserRepository {
-    User save(User user);
-
-    User findById(long id);
-
-    User findByEmail(String email);
-
-    int countContainByEmail(String email);
-
-    User update(long id, UserInfoDto updateParam);
-
-    List<User> findAll();
-
-    Boolean validateUserByUserId(long userId);
+public interface UserRepository extends JpaRepository<User, Long>, UserRepositoryCustom {
+    Optional<User> findByEmail(String Email);
 }

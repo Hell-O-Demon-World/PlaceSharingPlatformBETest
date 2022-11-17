@@ -10,12 +10,13 @@ import javax.persistence.*;
 @Data
 @NoArgsConstructor
 public class User {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "USER_NAME", nullable = false)
     private String username;
     @Column(name = "USER_MAIL", nullable = false, unique = true)
-    private String mail;
+    private String email;
     @Column(name = "USER_PW", nullable = false)
     private String password;
     @Column(name = "USER_TEL", nullable = false)
@@ -28,9 +29,9 @@ public class User {
     @JoinColumn(name = "MILEAGE_ID")
     private Mileage mileage;
 
-    public User(String username, String mail, String password, String phoneNumber, String job, String userPlace) {
+    public User(String username, String email, String password, String phoneNumber, String job, String userPlace) {
         this.username = username;
-        this.mail = mail;
+        this.email = email;
         this.password = password;
         this.phoneNumber = phoneNumber;
         this.job = job;
