@@ -32,7 +32,7 @@ public class PrincipalDetailsService implements UserDetailsService {
         Set<GrantedAuthority> grantedAuthorityList = new HashSet<>();
         SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority("ROLE_USER");
         grantedAuthorityList.add(simpleGrantedAuthority);
-        
+
         return PrincipalDetails.builder()
                 .username(findUser.getEmail())
                 .password(findUser.getPassword())
