@@ -2,6 +2,7 @@ package com.golfzonaca.officesharingplatform.service.search;
 
 import com.golfzonaca.officesharingplatform.domain.Address;
 import com.golfzonaca.officesharingplatform.repository.address.AddressRepository;
+import com.golfzonaca.officesharingplatform.repository.place.PlaceRepository;
 import com.golfzonaca.officesharingplatform.web.search.form.SearchPlaceResultData;
 import com.golfzonaca.officesharingplatform.web.search.form.SearchRequestData;
 import com.golfzonaca.officesharingplatform.web.search.form.SearchResponseData;
@@ -17,12 +18,12 @@ import java.util.List;
 public class MyBatisSearchService {
 
     private final AddressRepository addressRepository;
+    private final PlaceRepository placeRepository;
 
-    @Override
     public List<SearchResponseData> findRoomByWord(SearchRequestData searchRequestData) {
         List<SearchResponseData> responseDataList = new LinkedList<>();
         List<Long> addressIdList = new ArrayList<>();
-        List<SearchPlaceResultData> placeSearchList = searchRepository.findPlaceBySearchWord(searchRequestData.getSearchWord());
+        List<SearchPlaceResultData> placeSearchList = placeRepository.findPlaceBySearchWord(searchRequestData.getSearchWord());
 
         for (SearchPlaceResultData resultData : placeSearchList) {
             addressIdList.add(resultData.getAddressId());
