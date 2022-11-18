@@ -1,49 +1,24 @@
 package com.golfzonaca.officesharingplatform.service.search;
 
-import com.golfzonaca.officesharingplatform.domain.Address;
+import com.golfzonaca.officesharingplatform.domain.Place;
 import com.golfzonaca.officesharingplatform.repository.address.AddressRepository;
 import com.golfzonaca.officesharingplatform.repository.place.PlaceRepository;
-import com.golfzonaca.officesharingplatform.web.search.form.SearchPlaceResultData;
 import com.golfzonaca.officesharingplatform.web.search.form.SearchRequestData;
-import com.golfzonaca.officesharingplatform.web.search.form.SearchResponseData;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class MyBatisSearchService {
+public class MyBatisSearchService implements SearchService {
 
     private final AddressRepository addressRepository;
     private final PlaceRepository placeRepository;
 
-    public List<SearchResponseData> findRoomByWord(SearchRequestData searchRequestData) {
-        List<SearchResponseData> responseDataList = new LinkedList<>();
-        List<Long> addressIdList = new ArrayList<>();
-        List<SearchPlaceResultData> placeSearchList = placeRepository.findPlaceBySearchWord(searchRequestData.getSearchWord());
+    public List<Place> findByPlaceNameLike(SearchRequestData searchRequestData) {
+        List<Place> placeSearchList = placeRepository.findByPlaceNameLike(searchRequestData.getSearchWord());
 
-        for (SearchPlaceResultData resultData : placeSearchList) {
-            addressIdList.add(resultData.getAddressId());
-        }
-
-        List<Address> addressSearchList = addressRepository.findByAddressId(addressIdList);
-
-        for (SearchPlaceResultData resultData : placeSearchList) {
-            for (Address address : addressSearchList) {
-                if (resultData.getAddressId() == address.getId()) {
-                    SearchResponseData responseData = new SearchResponseData();
-                    responseData.setKey(resultData.getId());
-                    responseData.setName(resultData.getPlaceName());
-                    responseData.setOption(resultData.getPlaceAddinfo());
-                    responseData.setAddress(address.getAddress());
-                    responseData.setPostcode(address.getPostalCode());
-                    responseDataList.add(responseData);
-                }
-            }
-        }
-        return responseDataList;
+        return placeSearchList;
     }
 }

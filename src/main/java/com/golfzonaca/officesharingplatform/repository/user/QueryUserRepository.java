@@ -27,9 +27,10 @@ public class QueryUserRepository {
         return Optional.ofNullable(query
                 .select(user)
                 .from(user)
-                .where(user.mail.like(email))
+                .where(user.email.like(email))
                 .fetchFirst());
     }
+
     public Optional<User> isContainById(Long userId) {
         return Optional.ofNullable(query
                 .select(user)
@@ -37,6 +38,7 @@ public class QueryUserRepository {
                 .where(user.id.eq(userId))
                 .fetchFirst());
     }
+
     public List<User> findAll(UserSearchCond cond) {
         String name = cond.getName();
         String mail = cond.getMail();
@@ -53,28 +55,32 @@ public class QueryUserRepository {
 
     private BooleanExpression likeName(String name) {
         if (StringUtils.hasText(name)) {
-            return user.name.like("%" + name + "%");
+            return user.username.like("%" + name + "%");
         }
         return null;
     }
+
     private BooleanExpression likeMail(String mail) {
         if (StringUtils.hasText(mail)) {
-            return user.mail.like("%" + mail + "%");
+            return user.email.like("%" + mail + "%");
         }
         return null;
     }
+
     private BooleanExpression likeJob(String job) {
         if (StringUtils.hasText(job)) {
             return user.job.like("%" + job + "%");
         }
         return null;
     }
+
     private BooleanExpression likePhoneNumber(String phoneNumber) {
         if (StringUtils.hasText(phoneNumber)) {
             return user.phoneNumber.like("%" + phoneNumber + "%");
         }
         return null;
     }
+
     private BooleanExpression likeUserPlace(String userPlace) {
         if (StringUtils.hasText(userPlace)) {
             return user.userPlace.like("%" + userPlace + "%");

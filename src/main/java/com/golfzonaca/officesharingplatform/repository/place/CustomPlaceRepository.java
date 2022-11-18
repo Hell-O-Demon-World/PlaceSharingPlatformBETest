@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Repository
 @Transactional
 @RequiredArgsConstructor
@@ -16,5 +18,10 @@ public class CustomPlaceRepository implements PlaceRepository {
     @Override
     public Place findById(long id) {
         return null;
+    }
+
+    @Override
+    public List<Place> findByPlaceNameLike(String searchWord) {
+        return jpaRepository.findByPlaceNameLike(searchWord);
     }
 }

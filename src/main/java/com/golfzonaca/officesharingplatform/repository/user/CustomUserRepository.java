@@ -26,7 +26,7 @@ public class CustomUserRepository implements UserRepository {
 
     @Override
     public User findByMailLike(String email) {
-        return jpaUserRepository.findByMailLike(email);
+        return jpaUserRepository.findByEmailLike(email);
     }
 
     @Override

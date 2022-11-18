@@ -29,6 +29,6 @@ public class PrincipalDetailsService implements UserDetailsService {
         SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority("ROLE_USER");
         grantedAuthorityList.add(simpleGrantedAuthority);
 
-        return new PrincipalDetails(user.getMail(), user.getPassword(), grantedAuthorityList);
+        return new PrincipalDetails(user.getEmail(), user.getPassword(), grantedAuthorityList);
     }
 }

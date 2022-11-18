@@ -13,10 +13,11 @@ public interface SpringDataJpaUserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findById(long id);
 
-    User findByMailLike(String email);
+    User findByEmailLike(String email);
 
     List<User> findAll();
-    @Query("select count(u) from User u where u.mail=:email")
+
+    @Query("select count(u) from User u where u.email=:email")
     Integer countContainByMail(@Param("email") String email);
 
     @Query("select count(u) from User u where u.id=:userId")
