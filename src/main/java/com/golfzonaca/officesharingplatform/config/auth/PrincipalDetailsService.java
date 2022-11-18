@@ -9,6 +9,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -22,13 +24,19 @@ public class PrincipalDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByMailLike(username);
-
-
+        User findUser = userRepository.findByMailLike(username);
+        if (findUser == null) {
+            log.info("user not found {}",username);
+            throw new UsernameNotFoundException(username);
+        }
         Set<GrantedAuthority> grantedAuthorityList = new HashSet<>();
         SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority("ROLE_USER");
         grantedAuthorityList.add(simpleGrantedAuthority);
-
-        return new PrincipalDetails(user.getEmail(), user.getPassword(), grantedAuthorityList);
+        
+        return PrincipalDetails.builder()
+                .username(findUser.getEmail())
+                .password(findUser.getPassword())
+                .authorities(grantedAuthorityList)
+                .build();
     }
 }

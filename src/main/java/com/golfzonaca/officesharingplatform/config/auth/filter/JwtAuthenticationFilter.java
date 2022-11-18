@@ -36,6 +36,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private Authentication getAuthentication(String id) {
+
         UserDetails userDetails = userDetailsService.loadUserByUsername(id);
         return new IdPwAuthenticationToken(userDetails.getUsername(), null, userDetails.getAuthorities());
     }

@@ -42,7 +42,7 @@ public class PrincipalDetails implements UserDetails, CredentialsContainer {
 
     @Override
     public boolean isAccountNonExpired() {
-        return true; //아니
+        return true;
     }
 
     @Override

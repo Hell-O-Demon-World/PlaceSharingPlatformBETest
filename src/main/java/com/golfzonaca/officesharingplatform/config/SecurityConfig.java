@@ -1,8 +1,11 @@
 package com.golfzonaca.officesharingplatform.config;
 
+import com.golfzonaca.officesharingplatform.config.auth.PrincipalDetailsService;
 import com.golfzonaca.officesharingplatform.config.auth.filter.JsonIdPwAuthenticationProcessingFilter;
 import com.golfzonaca.officesharingplatform.config.auth.filter.JwtAuthenticationFilter;
 import com.golfzonaca.officesharingplatform.config.auth.provider.IdPwAuthenticationProvider;
+import com.golfzonaca.officesharingplatform.repository.user.CustomUserRepository;
+import com.golfzonaca.officesharingplatform.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
