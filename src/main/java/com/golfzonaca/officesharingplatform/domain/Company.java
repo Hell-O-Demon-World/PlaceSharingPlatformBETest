@@ -1,19 +1,34 @@
 package com.golfzonaca.officesharingplatform.domain;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
+
+import javax.persistence.*;
 
 @Getter
 @ToString
-@RequiredArgsConstructor
+@Entity
+@NoArgsConstructor
 public class Company {
 
+    @Id
+    @Column(unique = true, nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String companyLoginId;
-    private String companyPw;
-    private String companyTel;
-    private String companyRegNum;
-    private String companyRepName;
-    private Address addressId;
+    @Column(name = "COMPANY_LOGINID", unique = true, nullable = false, length = 15)
+    private String loginId;
+    @Column(name = "COMPANY_PW", nullable = false, length = 15)
+    private String Pw;
+    @Column(name = "COMPANY_NAME", unique = true, nullable = false, length = 30)
+    private String Name;
+    @Column(name = "COMPANY_TEL", unique = true, nullable = false, length = 22)
+    private String tel;
+    @Column(name = "COMPANY_REGNUM", unique = true, nullable = false, length = 12)
+    private String regNum;
+    @Column(name = "COMPANY_REPNAME", nullable = false, length = 20)
+    private String repName;
+    @OneToOne
+    @JoinColumn(name = "ADDRESS_ID")
+    private Address address;
 }

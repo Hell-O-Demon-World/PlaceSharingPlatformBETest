@@ -2,9 +2,7 @@ package com.golfzonaca.officesharingplatform.service.reservation;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.golfzonaca.officesharingplatform.config.auth.token.JwtManager;
-import com.golfzonaca.officesharingplatform.domain.Place;
-import com.golfzonaca.officesharingplatform.domain.Reservation;
-import com.golfzonaca.officesharingplatform.domain.Room;
+import com.golfzonaca.officesharingplatform.domain.*;
 import com.golfzonaca.officesharingplatform.repository.company.CompanyRepository;
 import com.golfzonaca.officesharingplatform.repository.place.PlaceRepository;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
@@ -107,7 +105,7 @@ public class MyBatisReservationService implements ReservationService {
         LocalDate reservationDate = toLocalDate(selectedDateTimeForm.getYear().toString()
                 , selectedDateTimeForm.getMonth().toString(), selectedDateTimeForm.getDay().toString());
         String reservationDayOfWeek = reservationDate.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.US);
-        List<String> placeOpenList = Arrays.asList(findPlace.getPlaceOpendays().split(", "));
+        List<String> placeOpenList = Arrays.asList(findPlace.getOpenDays().split(", "));
 
         Map<Integer, Boolean> inputTimeMap = getDefaultTimeMap();
         if (isOpenToday(reservationDayOfWeek, placeOpenList)) {
@@ -184,7 +182,7 @@ public class MyBatisReservationService implements ReservationService {
     private int countBeforeReservationList(List<Reservation> findReservationList) {
         Set<Long> countRoomIdSet = new HashSet<>();
         for (int i = 0; i < findReservationList.size(); i++) {
-            countRoomIdSet.add(findReservationList.get(i).getRoomId());
+            countRoomIdSet.add(findReservationList.get(i).getRoom().getId());
         }
         return countRoomIdSet.size();
     }
@@ -269,24 +267,41 @@ public class MyBatisReservationService implements ReservationService {
         List<Reservation> findResList = findResByPlaceIdAndRoomKindId(placeId, roomTypeId, resStartDate, resEndDate);
 
         if (findResList.size() == 0) {
-            Reservation reservation = new Reservation(placeId, userId, findRoomIdList.get(0), roomTypeId, resStartDate, resStartTime, resEndDate, resEndTime);
+            Place place = new Place();
+            place.setId(placeId);
+            User user = new User();
+            user.setId(userId);
+            RoomKind roomKind = new RoomKind();
+            roomKind.setId(roomTypeId);
+            Room room = new Room();
+            room.setId(findRoomIdList.get(0));
+            room.setRoomKind(roomKind);
+            Reservation reservation = Reservation.builder()
+                    .place(place)
+                    .user(user)
+                    .room(room)
+                    .resStartDate(resStartDate)
+                    .resStartTime(resStartTime)
+                    .resEndDate(resEndDate)
+                    .resEndTime(resEndTime)
+                    .build();
             reservationRepository.save(reservation);
             return errorMap;
         }
 
         for (Reservation reservation : findResList) {
             if ((reservation.getResStartTime().isBefore(resStartTime) || reservation.getResStartTime().equals(resStartTime)) && reservation.getResEndTime().isAfter(resStartTime)) {
-                if (reservation.getUserId() != userId) {
+                if (reservation.getUser().getId() != userId) {
                     resCount++;
-                    findRoomIdList.remove(reservation.getRoomId());
+                    findRoomIdList.remove(reservation.getRoom().getId());
                 } else {
                     errorMap.put("DuplicatedResForUserError", "선택하신 시간과 공간에 대한 예약 내역이 존재합니다.");
                     return errorMap;
                 }
             } else if (resStartTime.isBefore(reservation.getResStartTime()) && resEndTime.isAfter(reservation.getResStartTime())) {
-                if (reservation.getUserId() != userId) {
+                if (reservation.getUser().getId() != userId) {
                     resCount++;
-                    findRoomIdList.remove(reservation.getRoomId());
+                    findRoomIdList.remove(reservation.getRoom().getId());
                 } else {
                     errorMap.put("DuplicatedResForUserError", "선택하신 시간과 공간에 대한 예약 내역이 존재합니다.");
                     return errorMap;
@@ -297,7 +312,24 @@ public class MyBatisReservationService implements ReservationService {
             errorMap.put("DuplicatedResForRoomError", "해당 Place 에 선택하신 타입의 이용가능한 사무공간이 없습니다.");
             return errorMap;
         }
-        Reservation reservation = new Reservation(placeId, userId, findRoomIdList.get(0), roomTypeId, resStartDate, resStartTime, resEndDate, resEndTime);
+        Place place = new Place();
+        place.setId(placeId);
+        User user = new User();
+        user.setId(userId);
+        RoomKind roomKind = new RoomKind();
+        roomKind.setId(roomTypeId);
+        Room room = new Room();
+        room.setId(findRoomIdList.get(0));
+        room.setRoomKind(roomKind);
+        Reservation reservation = Reservation.builder()
+                .place(place)
+                .user(user)
+                .room(room)
+                .resStartDate(resStartDate)
+                .resStartTime(resStartTime)
+                .resEndDate(resEndDate)
+                .resEndTime(resEndTime)
+                .build();
         reservationRepository.save(reservation);
         return errorMap;
     }

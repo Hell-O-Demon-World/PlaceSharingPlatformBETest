@@ -23,12 +23,12 @@ public class PrincipalDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(username);
+        User user = userRepository.findByMailLike(username);
 
         Set<GrantedAuthority> grantedAuthorityList = new HashSet<>();
         SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority("ROLE_USER");
         grantedAuthorityList.add(simpleGrantedAuthority);
 
-        return new PrincipalDetails(user.getUserMail(), user.getUserPw(), grantedAuthorityList);
+        return new PrincipalDetails(user.getMail(), user.getPassword(), grantedAuthorityList);
     }
 }

@@ -1,22 +1,23 @@
 package com.golfzonaca.officesharingplatform.repository.user;
 
+
+
 import com.golfzonaca.officesharingplatform.domain.User;
-import com.golfzonaca.officesharingplatform.repository.mybatis.dto.UserInfoDto;
 
 import java.util.List;
 
 public interface UserRepository {
     User save(User user);
 
-    User findById(long id);
+    User findById(Long id);
 
-    User findByEmail(String email);
-
-    int countContainByEmail(String email);
-
-    User update(long id, UserInfoDto updateParam);
+    User findByMailLike(String email);
+    Boolean isContainByEmail(String email);
+    Integer countContainByEmail(String email);
 
     List<User> findAll();
+    List<User> findAll(UserSearchCond cond);
 
-    Boolean validateUserByUserId(long userId);
+    Boolean validateUserByUserId(Long userId);
+
 }
