@@ -16,7 +16,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MyBatisSearchService {
 
-    private final SearchRepository searchRepository;
     private final AddressRepository addressRepository;
 
     @Override

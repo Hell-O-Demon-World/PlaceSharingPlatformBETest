@@ -20,12 +20,13 @@ import java.util.Set;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class MyBatisAuthService implements AuthService{
+public class MyBatisAuthService implements AuthService {
     private final UserRepository userRepository;
     private final MileageService mileageService;
     private final PasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
     private final PrincipalDetailsRepository principalDetailsRepository;
+
     @Override
     public boolean emailCheck(String email) {
         return userRepository.countContainByEmail(email) == 0;
@@ -35,7 +36,7 @@ public class MyBatisAuthService implements AuthService{
     public Boolean join(User user) {
         boolean isJoin = true;
 
-        if (!emailCheck(user.getMail())) {
+        if (!emailCheck(user.getEmail())) {
             return false;
         }
 
@@ -46,10 +47,11 @@ public class MyBatisAuthService implements AuthService{
 
         user.setPassword(encPassword);
         user.setMileage(mileage);
+
         User userEntity = userRepository.save(user);
         authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 
-        PrincipalDetails principalDetails = new PrincipalDetails(userEntity.getMail(), userEntity.getPassword(), authorities);
+        PrincipalDetails principalDetails = new PrincipalDetails(userEntity.getEmail(), userEntity.getPassword(), authorities);
         principalDetailsRepository.save(user.getId(), principalDetails);
 
         return isJoin;

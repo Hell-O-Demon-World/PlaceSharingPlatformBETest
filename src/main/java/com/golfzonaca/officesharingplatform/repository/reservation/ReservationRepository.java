@@ -8,11 +8,11 @@ import java.util.List;
 
 public interface ReservationRepository {
     List<Reservation> findAllByPlaceIdAndRoomKindIdAndDate(Long placeId, Long roomKindId, LocalDate reservationDate);
-    
+
     List<Reservation> findAllByUserId(Long userId);
 
     Reservation save(Reservation reservation);
-    
+
     List<Reservation> findResByPlaceIdAndRoomKindId(long placeId, long roomTypeId, LocalDate resStartDate, LocalDate resEndDate);
 
     List<Integer> findRoomTypeByPlaceId(long placeId);

@@ -14,8 +14,9 @@ dateFormat MM-DD
 title OfficeSharingPlatform
 
     section 공통
-    환경 설정             :chap1, 11-16, 1d
+    환경 설정(Git)             :chap1, 11-16, 1d
 
     section 메인플랫폼-BE
+    Spring Jpa, QueryDsl 적용 :chap1, 11-16, 3d
 
 ```
