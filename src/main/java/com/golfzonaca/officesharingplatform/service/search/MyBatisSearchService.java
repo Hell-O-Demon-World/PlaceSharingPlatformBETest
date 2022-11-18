@@ -21,14 +21,14 @@ public class MyBatisSearchService implements SearchService {
     @Override
     public List<SearchResponseData> findRoomByWord(SearchRequestData searchRequestData) {
         List<SearchResponseData> responseDataList = new LinkedList<>();
-        List<Long> addressIds = new ArrayList<>();
+        List<Long> addressIdList = new ArrayList<>();
         List<SearchPlaceResultData> placeSearchList = searchRepository.findPlaceBySearchWord(searchRequestData.getSearchWord());
 
         for (SearchPlaceResultData resultData : placeSearchList) {
-            addressIds.add(resultData.getAddressId());
+            addressIdList.add(resultData.getAddressId());
         }
 
-        List<Address> addressSearchList = addressRepository.findByAddressIds(addressIds);
+        List<Address> addressSearchList = addressRepository.findByAddressId(addressIdList);
 
         for (SearchPlaceResultData resultData : placeSearchList) {
             for (Address address : addressSearchList) {
