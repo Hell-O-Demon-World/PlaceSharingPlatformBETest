@@ -20,4 +20,6 @@ public interface ReservationRepository {
     void deleteById(Long reservationId);
 
     Reservation findById(Long reservationId);
+
+    Reservation findByUserIdAndRoomId(long userId, long roomId);
 }

@@ -3,11 +3,11 @@ package com.golfzonaca.officesharingplatform.service.payment;
 import com.golfzonaca.officesharingplatform.domain.Payment;
 import com.golfzonaca.officesharingplatform.domain.Reservation;
 import com.golfzonaca.officesharingplatform.domain.RoomKind;
+import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayApprovalForm;
+import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayReady;
 import com.golfzonaca.officesharingplatform.repository.payment.PaymentRepository;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
 import com.golfzonaca.officesharingplatform.repository.roomkind.RoomKindRepository;
-import com.golfzonaca.officesharingplatform.web.payment.form.KakaoPayApprovalForm;
-import com.golfzonaca.officesharingplatform.web.payment.form.KakaoPayReady;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
@@ -40,11 +40,12 @@ public class MyBatisKakaoPayService implements KakaoPayService {
 
     @Override
     public String kakaoPayReady() {
-        log.info("나 카카오 페이 준비 중 (서비스)~~~~~~~~~~~");
+
+        log.info("Started kakaoPayReady method");
 
         RestTemplate restTemplate = new RestTemplate();
 
-        Reservation reservation = reservationRepository.findById(3L);
+        Reservation reservation = reservationRepository.findById(12L);
         RoomKind roomKind = roomKindRepository.findById(reservation.getRoomId());
         String calculatePayPrice = calculatePayPrice(reservation, roomKind);
 
@@ -57,12 +58,12 @@ public class MyBatisKakaoPayService implements KakaoPayService {
         //서버요청 바디
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("cid", "TC0ONETIME");
-        params.add("partner_order_id", String.valueOf(reservation.getId())); // place id
-        params.add("partner_user_id", String.valueOf(reservation.getUserId())); // user id
-        params.add("item_name", roomKind.getRoomType()); // room kind  room type
-        params.add("quantity", "1"); // payment payprice에서 역으로 계산
-        params.add("total_amount", calculatePayPrice); // payment payprice
-        params.add("tax_free_amount", taxFreeAmount(calculatePayPrice)); // payment payprice*90%
+        params.add("partner_order_id", String.valueOf(reservation.getId()));
+        params.add("partner_user_id", String.valueOf(reservation.getUserId()));
+        params.add("item_name", roomKind.getRoomType());
+        params.add("quantity", "1");
+        params.add("total_amount", calculatePayPrice);
+        params.add("tax_free_amount", taxFreeAmount(calculatePayPrice));
         params.add("approval_url", "http://localhost:8080/kakaoPaySuccess");
         params.add("cancel_url", "http://localhost:8080/kakaoPayCancel");
         params.add("fail_url", "http://localhost:8080/kakaoPaySuccessFail");
@@ -82,13 +83,11 @@ public class MyBatisKakaoPayService implements KakaoPayService {
 
     @Override
     public KakaoPayApprovalForm kakaoPayInfo(String pg_token) {
-
-        log.info("KakaoPayInfoVO............................................");
-        log.info("-----------------------------");
+        log.info("Started kakaoPayInfo method");
 
         RestTemplate restTemplate = new RestTemplate();
 
-        Reservation reservation = reservationRepository.findById(3L);
+        Reservation reservation = reservationRepository.findById(12L);
         RoomKind roomKind = roomKindRepository.findById(reservation.getRoomId());
         String calculatePayPrice = calculatePayPrice(reservation, roomKind);
 
@@ -117,13 +116,10 @@ public class MyBatisKakaoPayService implements KakaoPayService {
             return kakaoPayApprovalForm;
 
         } catch (RestClientException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.error(e.toString());
         } catch (URISyntaxException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.error(e.toString());
         }
-
         return null;
     }
 
@@ -138,30 +134,41 @@ public class MyBatisKakaoPayService implements KakaoPayService {
 
     public void savePaymentInfo(KakaoPayApprovalForm kakaoPayApprovalForm) {
         long userId = Long.parseLong(kakaoPayApprovalForm.getPartner_user_id());
-//        long roomId = Integer.parseInt(kakaoPayApprovalForm.getItem_code()); // roomId는 notnull이어야하는데 null로 들어옴
+//        long roomId = Integer.parseInt(kakaoPayApprovalForm.getItem_code()); // roomId는 not null인데  null로 들어옴
         long roomId = Integer.parseInt(kakaoPayApprovalForm.getPartner_user_id());
-//        LocalDateTime payDate = kakaoPayApprovalForm.getApproved_at();
-//        LocalDate payDateFormat = toLocalDate(trxDate);
-        LocalDate now = LocalDate.now();
+        LocalDateTime localDateTime = kakaoPayApprovalForm.getApproved_at();
+        LocalDate payDate = toLocalDate(localDateTime);
+        LocalTime payTime = toLocalTime(localDateTime);
         long payPrice = kakaoPayApprovalForm.getAmount().getTotal();
 //        String payStatus = kakaoPayApprovalForm.getPayment_method_type(); -> 막은이유 : DB에서 enum으로 선언되어있어서 enum타입에 맞는 애들이 들어가야함
-        String payStatus = "선결제";
+        String payStatus = checkPayStatus(userId, roomId); // 한 사람이 같은 방을 2번(9~10am , 1pm~2pm 이런식으로) 예약한 경우도 생각해야하나?
         long payMileage = kakaoPayApprovalForm.getAmount().getPoint();
-//        String payType = kakaoPayApprovalForm.getPayment_method_type(); -> 마찬가지
+//        String payType = kakaoPayApprovalForm.getPayment_method_type(); -> 막은이유 : DB에서 enum으로 선언되어있어서 enum타입에 맞는 애들이 들어가야함
         String payType = "보증금";
         String payApiCode = kakaoPayApprovalForm.getTid();
 
-        Payment payment = new Payment(userId, roomId, now, payPrice, payStatus, payMileage, payType, payApiCode);
+        Payment payment = new Payment(userId, roomId, payDate, payTime, payPrice, payStatus, payMileage, payType, payApiCode);
 
         paymentRepository.save(payment);
     }
 
-    public LocalDate toLocalDate(LocalDateTime localDateTime) {
-        String StringType = localDateTime.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuu, M, d");
-        LocalDate resDate = LocalDate.parse(StringType);
-        return resDate;
+    public String checkPayStatus(long userId, long roomId) {
+        String payStatus;
+
+        if (reservationRepository.findByUserIdAndRoomId(userId, roomId) != null) {
+            payStatus = "선결제";
+        } else {
+            payStatus = "현장결제";
+        }
+        return payStatus;
     }
 
+    public LocalDate toLocalDate(LocalDateTime localDateTime) {
+        return LocalDate.from(localDateTime);
+    }
+
+    public LocalTime toLocalTime(LocalDateTime localDateTime) {
+        return LocalTime.from(localDateTime);
+    }
 }
 

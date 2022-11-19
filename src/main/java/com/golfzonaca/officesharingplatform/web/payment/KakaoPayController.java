@@ -24,7 +24,6 @@ public class KakaoPayController {
 
     @PostMapping("/kakaoPay")
     public String kakaoPay() {
-        log.info("나 카카오 페이 준비 중 (컨트롤러)~~~~~~~~~~~");
         return "redirect:" + kakaoPayService.kakaoPayReady();
     }
 

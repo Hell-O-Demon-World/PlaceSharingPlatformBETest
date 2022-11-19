@@ -49,4 +49,9 @@ public class MyBatisReservationRepository implements ReservationRepository {
     public Reservation findById(Long reservationId) {
         return reservationMapper.findById(reservationId);
     }
+
+    @Override
+    public Reservation findByUserIdAndRoomId(long userId, long roomId) {
+        return reservationMapper.findByUserIdAndRoomId(userId, roomId);
+    }
 }
