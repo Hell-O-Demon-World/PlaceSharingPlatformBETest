@@ -29,7 +29,7 @@ public class MyBatisReservationRepository implements ReservationRepository {
     public void save(Reservation reservation) {
         reservationMapper.save(reservation);
     }
-    
+
     @Override
     public List<Reservation> findResByPlaceIdAndRoomKindId(long placeId, long roomTypeId, LocalDate resStartDate, LocalDate resEndDate) {
         return reservationMapper.findResByPlaceIdAndRoomKindId(placeId, roomTypeId, resStartDate, resEndDate);
@@ -45,4 +45,8 @@ public class MyBatisReservationRepository implements ReservationRepository {
         reservationMapper.deleteById(reservationId);
     }
 
+    @Override
+    public Reservation findById(Long reservationId) {
+        return reservationMapper.findById(reservationId);
+    }
 }

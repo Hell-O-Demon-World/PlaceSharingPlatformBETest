@@ -3,18 +3,11 @@ package com.golfzonaca.officesharingplatform.web.mypage;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.golfzonaca.officesharingplatform.config.auth.token.JwtManager;
 import com.golfzonaca.officesharingplatform.domain.MyPage;
-import com.golfzonaca.officesharingplatform.domain.Reservation;
-import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
 import com.golfzonaca.officesharingplatform.repository.user.UserRepository;
 import com.golfzonaca.officesharingplatform.service.mypage.MyPageReservationFormService;
 import com.golfzonaca.officesharingplatform.service.mypage.MyPageService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor

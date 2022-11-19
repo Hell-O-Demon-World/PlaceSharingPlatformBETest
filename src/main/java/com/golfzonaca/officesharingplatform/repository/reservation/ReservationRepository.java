@@ -18,4 +18,6 @@ public interface ReservationRepository {
     List<Integer> findRoomTypeByPlaceId(long placeId);
 
     void deleteById(Long reservationId);
+
+    Reservation findById(Long reservationId);
 }

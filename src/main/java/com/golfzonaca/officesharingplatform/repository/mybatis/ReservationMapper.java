@@ -20,4 +20,6 @@ public interface ReservationMapper {
     List<Integer> findRoomTypeByPlaceId(long placeId);
 
     void deleteById(Long reservationId);
+
+    Reservation findById(Long reservationId);
 }
