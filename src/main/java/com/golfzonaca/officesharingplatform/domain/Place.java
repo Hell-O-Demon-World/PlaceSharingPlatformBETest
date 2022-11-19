@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 @Getter
@@ -23,9 +24,9 @@ public class Place {
     @JoinColumn(name = "COMPANY_ID")
     private Company company;
 
-    @OneToOne
-    @JoinColumn(name = "RATEPOINT_ID")
-    private RatePoint ratePoint;
+//    @OneToOne
+//    @JoinColumn(name = "RATEPOINT_ID")
+//    private RatePoint ratePoint;
 
     @Column(name = "PLACE_NAME", nullable = false, length = 30)
     private String placeName;
@@ -53,10 +54,14 @@ public class Place {
     @OneToMany(mappedBy = "place")
     private List<Room> rooms = new ArrayList<>();
 
+    //Place의 RoomType 보유 정보
+    @Transient
+    private HashSet<String> roomTypeInfo;
+
     @Builder
     public Place(Company company, RatePoint ratePoint, String placeName, String description, String openDays, LocalTime placeStart, LocalTime placeEnd, String placeAddInfo, Address address) {
         this.company = company;
-        this.ratePoint = ratePoint;
+//        this.ratePoint = ratePoint;
         this.placeName = placeName;
         this.description = description;
         this.openDays = openDays;

@@ -1,111 +1,135 @@
-CREATE TABLE `PLACE`
+create table address
 (
-    `ID`                BIGINT UNSIGNED primary key NOT NULL auto_increment,
-    `COMPANY_ID`        BIGINT UNSIGNED NOT NULL,
-    `PLACE_NAME`        VARCHAR(30) NOT NULL,
-    `PLACE_DESCRIPTION` VARCHAR(50) NOT NULL,
-    `PLACE_OPENDAYS`    VARCHAR(50) NOT NULL,
-    `PLACE_START`       TIME        NOT NULL,
-    `PLACE_END`         TIME        NOT NULL,
-    `PLACE_ADDINFO`     VARCHAR(50) NOT NULL,
-    `ADDRESS_ID`        BIGINT UNSIGNED NOT NULL
+    ID         bigint unsigned auto_increment primary key,
+    ADDRESS    varchar(100) not null,
+    POSTALCODE varchar(5)   not null
 );
 
-CREATE TABLE `COMPANY`
+create table mileage
 (
-    `ID`              BIGINT UNSIGNED primary key NOT NULL auto_increment,
-    `COMPANY_LOGINID` VARCHAR(15)  NOT NULL,
-    `COMPANY_PW`      VARCHAR(100) NOT NULL,
-    `COMPANY_NAME`    VARCHAR(30)  NOT NULL,
-    `COMPANY_TEL`     VARCHAR(22)  NOT NULL,
-    `COMPANY_REGNUM`  VARCHAR(12)  NOT NULL,
-    `COMPANY_REPNAME` VARCHAR(20)  NOT NULL,
-    `ADDRESS_ID`      BIGINT UNSIGNED NOT NULL
+    ID    bigint unsigned auto_increment primary key,
+    POINT bigint unsigned not null
 );
 
-CREATE TABLE `LOCATION`
+create table company
 (
-    `ID`         BIGINT UNSIGNED primary key NOT NULL auto_increment,
-    `ADDRESS`    VARCHAR(100) NOT NULL,
-    `POSTALCODE` VARCHAR(5)   NOT NULL
+    ID              bigint unsigned auto_increment primary key,
+    COMPANY_LOGINID varchar(15)  not null,
+    COMPANY_PW      varchar(100) not null,
+    COMPANY_NAME    varchar(30)  not null,
+    COMPANY_TEL     varchar(22)  not null,
+    COMPANY_REGNUM  varchar(12)  not null,
+    COMPANY_REPNAME varchar(20)  not null,
+    ADDRESS_ID      bigint unsigned not null,
+    constraint COMPANY_LOGINID unique (COMPANY_LOGINID),
+    constraint COMPANY_NAME unique (COMPANY_NAME),
+    constraint COMPANY_REGNUM unique (COMPANY_REGNUM),
+    constraint COMPANY_TEL unique (COMPANY_TEL),
+    constraint FK_ADDRESS_TO_COMPANY_1
+        foreign key (ADDRESS_ID)
+            references address (ID)
+            on delete cascade
 );
 
-CREATE TABLE `ROOM`
+create table place
 (
-    `ID`           BIGINT UNSIGNED primary key NOT NULL auto_increment,
-    `ROOM_KIND_ID` BIGINT UNSIGNED NOT NULL,
-    `PLACE_ID`     BIGINT UNSIGNED NOT NULL,
-    `COMPANY_ID`   BIGINT UNSIGNED NOT NULL,
-    `TOTAL_NUM`    INT(3) UNSIGNED NOT NULL,
-    `ROOM_STATE`   BOOLEAN NOT NULL
+    ID                bigint unsigned auto_increment primary key,
+    COMPANY_ID        bigint unsigned not null,
+    PLACE_NAME        varchar(30) not null,
+    PLACE_DESCRIPTION varchar(50) not null,
+    PLACE_OPENDAYS    varchar(50) not null,
+    PLACE_START       time        not null,
+    PLACE_END         time        not null,
+    PLACE_ADDINFO     varchar(50) not null,
+    ADDRESS_ID        bigint unsigned not null,
+    constraint PLACE_NAME
+        unique (PLACE_NAME),
+    constraint FK_ADDRESS_TO_PLACE_1
+        foreign key (ADDRESS_ID)
+            references address (ID)
+            on delete cascade,
+    constraint FK_COMPANY_TO_PLACE_1
+        foreign key (COMPANY_ID)
+            references company (ID)
+            on delete cascade
 );
 
-CREATE TABLE `ROOM_KIND`
+create table room_kind
 (
-    `ID`        BIGINT UNSIGNED primary key NOT NULL,
-    `ROOM_TYPE` ENUM ('DESK', 'MEETINGROOM4', 'MEETINGROOM6', 'MEETINGROOM10', 'MEETINGROOM20', 'OFFICE20', 'OFFICE40', 'OFFICE70', 'OFFICE100') NOT NULL,
-    `PRICE`     ENUM ('10000', '20000', '30000', '50000', '100000', '200000', '300000', '500000') NOT NULL
+    ID        bigint unsigned not null primary key,
+    ROOM_TYPE enum ('DESK', 'MEETINGROOM4', 'MEETINGROOM6', 'MEETINGROOM10', 'MEETINGROOM20', 'OFFICE20', 'OFFICE40', 'OFFICE70', 'OFFICE100') not null,
+    PRICE     enum ('10000', '20000', '30000', '50000', '100000', '200000', '300000', '500000') not null,
+    constraint ROOM_TYPE
+        unique (ROOM_TYPE)
 );
 
-INSERT INTO `ROOM_KIND`
-values (1, 'DESK', '10000');
-
-INSERT INTO `ROOM_KIND`
-values (2, 'MEETINGROOM4', '20000');
-
-INSERT INTO `ROOM_KIND`
-values (3, 'MEETINGROOM6', '30000');
-
-INSERT INTO `ROOM_KIND`
-values (4, 'MEETINGROOM10', '50000');
-
-INSERT INTO `ROOM_KIND`
-values (5, 'MEETINGROOM20', '100000');
-
-INSERT INTO `ROOM_KIND`
-values (6, 'OFFICE20', '100000');
-
-INSERT INTO `ROOM_KIND`
-values (7, 'OFFICE40', '200000');
-
-INSERT INTO `ROOM_KIND`
-values (8, 'OFFICE70', '300000');
-
-INSERT INTO `ROOM_KIND`
-values (9, 'OFFICE100', '500000');
-
-
-CREATE TABLE `USER`
+create table user
 (
-    `ID`          BIGINT UNSIGNED primary key AUTO_INCREMENT NOT NULL,
-    `MILEAGE_ID`  BIGINT UNSIGNED NOT NULL,
-    `USER_MAIL`   VARCHAR(32)  NOT NULL,
-    `USER_PW`     VARCHAR(100) NOT NULL,
-    `USER_NAME`   VARCHAR(20)  NOT NULL,
-    `USER_TEL`    VARCHAR(22)  NOT NULL,
-    `USER_JOB`    VARCHAR(20)  NOT NULL,
-    `prefer_type` VARCHAR(50)  NOT NULL
+    ID          bigint unsigned auto_increment primary key,
+    MILEAGE_ID  bigint unsigned not null,
+    USER_MAIL   varchar(32)  not null,
+    USER_PW     varchar(100) not null,
+    USER_NAME   varchar(20)  not null,
+    USER_TEL    varchar(22)  not null,
+    USER_JOB    varchar(20)  not null,
+    prefer_type varchar(50)  not null,
+    constraint USER_MAIL
+        unique (USER_MAIL),
+    constraint USER_TEL
+        unique (USER_TEL),
+    constraint FK_MILEAGE_TO_USER_1
+        foreign key (MILEAGE_ID)
+            references mileage (ID)
+            on delete cascade
 );
 
-CREATE TABLE `MILEAGE`
+create table room
 (
-    `ID`    BIGINT UNSIGNED primary key AUTO_INCREMENT NOT NULL,
-    `POINT` INT(11) NOT NULL
+    ID           bigint unsigned auto_increment primary key,
+    ROOM_KIND_ID bigint unsigned not null,
+    PLACE_ID     bigint unsigned not null,
+    COMPANY_ID   bigint unsigned not null,
+    TOTAL_NUM    int(3) unsigned not null,
+    ROOM_STATE   tinyint(1) not null,
+    constraint FK_COMPANY_TO_ROOM_1
+        foreign key (COMPANY_ID)
+            references company (ID)
+            on delete cascade,
+    constraint FK_PLACE_TO_ROOM_1
+        foreign key (PLACE_ID)
+            references place (ID)
+            on delete cascade,
+    constraint FK_ROOM_KIND_TO_ROOM_1
+        foreign key (ROOM_KIND_ID)
+            references room_kind (ID)
+            on delete cascade
 );
 
-create table RESERVATION
+create table reservation
 (
-    ID            BIGINT UNSIGNED AUTO_INCREMENT primary key,
-    PLACE_ID      BIGINT UNSIGNED not null,
-    USER_ID       BIGINT UNSIGNED not null,
-    ROOM_ID       BIGINT UNSIGNED not null,
-    ROOM_KIND_ID  BIGINT UNSIGNED not null,
-    RES_STARTDATE DATE NOT NULL,
-    RES_STARTTIME TIME NOT NULL,
-    RES_ENDDATE   DATE NOT NULL,
-    RES_ENDTIME   TIME NOT NULL
+    ID            bigint unsigned auto_increment primary key,
+    PLACE_ID      bigint unsigned not null,
+    USER_ID       bigint unsigned not null,
+    ROOM_ID       bigint unsigned not null,
+    ROOM_KIND_ID  bigint unsigned not null,
+    RES_STARTDATE date not null,
+    RES_STARTTIME time not null,
+    RES_ENDDATE   date not null,
+    RES_ENDTIME   time not null,
+    constraint FK_PLACE_TO_RESERVATION_1
+        foreign key (PLACE_ID)
+            references place (ID)
+            on delete cascade,
+    constraint FK_ROOM_KIND_TO_RESERVATION_1
+        foreign key (ROOM_KIND_ID)
+            references room_kind (ID)
+            on delete cascade,
+    constraint FK_ROOM_TO_RESERVATION_1
+        foreign key (ROOM_ID)
+            references room (ID)
+            on delete cascade,
+    constraint FK_USER_TO_RESERVATION_1
+        foreign key (USER_ID)
+            references user (ID)
+            on delete cascade
 );
-
-INSERT INTO RESERVATION (ID, PLACE_ID, USER_ID, ROOM_ID, ROOM_KIND_ID, RES_STARTDATE, RES_STARTTIME,
-                         RES_ENDDATE, RES_ENDTIME)
-VALUES (15, 1, 1, 1, 1, '2022-01-01', '11:00:00', '2022-01-01', '14:00:00');

@@ -19,7 +19,7 @@ public class SearchPlaceController {
     private final SearchService searchService;
 
     @PostMapping("/main/search")
-    public List<Place> findRoomByWord(@RequestBody SearchRequestData searchRequestData) {
-        return searchService.findByPlaceNameLike(searchRequestData);
+    public List<Place> findPlaces(@RequestBody SearchRequestData searchRequestData) {
+        return searchService.findPlaces(searchRequestData);
     }
 }
