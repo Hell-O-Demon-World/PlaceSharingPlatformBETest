@@ -17,6 +17,7 @@ public class MyBatisMyPageReservationFormService implements MyPageReservationFor
     private final ReservationRepository reservationRepository;
     private final PlaceRepository placeRepository;
     private final RoomKindRepository roomKindRepository;
+
     @Override
     public List<MyPageReservationForm> getMyPageReservationListByUserId(long userId) {
         List<MyPageReservationForm> myPageReservationFormList = new ArrayList<>();
@@ -25,8 +26,8 @@ public class MyBatisMyPageReservationFormService implements MyPageReservationFor
             Reservation findReservation = findReservationList.get(i);
             MyPageReservationForm myPageReservationForm = MyPageReservationForm.builder()
                     .resDate(findReservation.getResStartDate().toString() + "~" + findReservationList.get(i).getResEndDate().toString())
-                    .placeName(placeRepository.findById(findReservation.getPlaceId()).getPlaceName())
-                    .roomKind(roomKindRepository.findById(findReservation.getRoomKindId()).getRoomType())
+                    .placeName(placeRepository.findById(findReservation.getPlace().getId()).get().getPlaceName())
+                    .roomKind(roomKindRepository.findById(findReservation.getRoom().getRoomKind().getId()).getRoomType())
                     .resTime(findReservation.getResStartTime().toString() + "~" + findReservation.getResEndTime().toString())
                     .build();
             myPageReservationFormList.add(myPageReservationForm);

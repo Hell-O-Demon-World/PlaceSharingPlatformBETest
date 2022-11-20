@@ -1,11 +1,26 @@
 package com.golfzonaca.officesharingplatform.domain;
 
-import com.golfzonaca.officesharingplatform.domain.type.RoomType;
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Data
+import javax.persistence.*;
+
+@Getter
+@Entity
+@Table(name = "ROOM_KIND", uniqueConstraints = {@UniqueConstraint(name = "ROOM_KIND", columnNames = {"ROOM_TYPE"})})
+@NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class RoomKind {
-    private long id;
+
+    @Id
+    private Long id;
+
+    @Column(name = "ROOM_TYPE", nullable = false)
     private String roomType;
+
+    @Column(name = "PRICE", nullable = false)
     private int price;
 }

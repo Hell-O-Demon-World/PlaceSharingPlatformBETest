@@ -7,15 +7,14 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class MybatisMileageService implements MileageService{
+public class SpringJpaDslMileageService implements MileageService {
     private final MileageRepository mileageRepository;
     private final int initialPoint = 0;
+
     @Override
     public Mileage join() {
 
-        Mileage mileage = new Mileage();
-        mileage.setPoint(initialPoint);
-
+        Mileage mileage = new Mileage(initialPoint);
         mileageRepository.save(mileage);
         return mileage;
     }

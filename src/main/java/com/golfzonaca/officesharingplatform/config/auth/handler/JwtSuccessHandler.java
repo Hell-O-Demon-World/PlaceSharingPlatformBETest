@@ -28,7 +28,7 @@ public class JwtSuccessHandler implements AuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         try (PrintWriter writer = response.getWriter()) {
-            Jwt jwt = JwtManager.createJwt(userRepository.findByEmail(authentication.getPrincipal().toString()).getId().toString());
+            Jwt jwt = JwtManager.createJwt(userRepository.findByMailLike(authentication.getPrincipal().toString()).getId().toString());
 
             JsonObject json = new JsonObject();
             json.addProperty("accessToken", jwt.getEncoded());

@@ -5,5 +5,5 @@ import com.golfzonaca.officesharingplatform.domain.Address;
 import java.util.List;
 
 public interface AddressRepository {
-    List<Address> findByAddressIds(List addressIds);
+    List<Address> findByAddressId(List addressIdList);
 }

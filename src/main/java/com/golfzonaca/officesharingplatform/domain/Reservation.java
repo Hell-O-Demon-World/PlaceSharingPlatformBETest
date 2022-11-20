@@ -1,30 +1,55 @@
 package com.golfzonaca.officesharingplatform.domain;
 
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-
-@RequiredArgsConstructor
-@Data
+@Getter
+@Entity
+@NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class Reservation {
-    private long id;
-    private long placeId;
-    private long userId;
-    private long roomId;
-    private long roomKindId;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "PLACE_ID")
+    private Place place;
+
+    @ManyToOne
+    @JoinColumn(name = "USER_ID")
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "ROOM_ID")
+    private Room room;
+
+    @Column(name = "RES_STARTDATE", nullable = false)
     private LocalDate resStartDate;
+
+    @Column(name = "RES_STARTTIME", nullable = false)
     private LocalTime resStartTime;
+
+    @Column(name = "RES_ENDDATE", nullable = false)
     private LocalDate resEndDate;
+
+    @Column(name = "RES_ENDTIME", nullable = false)
     private LocalTime resEndTime;
 
-    public Reservation(long placeId, long userId, long roomId, long roomKindId, LocalDate resStartDate, LocalTime resStartTime, LocalDate resEndDate, LocalTime resEndTime) {
-        this.placeId = placeId;
-        this.userId = userId;
-        this.roomId = roomId;
-        this.roomKindId = roomKindId;
+
+    public Reservation(Place place, User user, Room room, LocalDate resStartDate, LocalTime resStartTime, LocalDate resEndDate, LocalTime resEndTime) {
+        this.place = place;
+        this.user = user;
+        this.room = room;
         this.resStartDate = resStartDate;
         this.resStartTime = resStartTime;
         this.resEndDate = resEndDate;

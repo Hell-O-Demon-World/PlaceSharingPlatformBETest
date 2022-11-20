@@ -1,26 +1,61 @@
 package com.golfzonaca.officesharingplatform.domain;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-import java.util.List;
+import javax.persistence.*;
 
-@Data
+@Getter
+@Entity
+@Table(name = "USER", uniqueConstraints = {@UniqueConstraint(name = "USER", columnNames = {"USER_MAIL", "USER_TEL", "MILEAGE_ID"})})
+@NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class User {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String userName;
-    private String userMail;
-    private String userPw;
-    private Long mileageId;
-    private String userTel;
-    private String userJob;
+
+    @Column(name = "USER_NAME", nullable = false)
+    private String username;
+
+    @Column(name = "USER_MAIL", nullable = false, unique = true)
+    private String email;
+
+    @Column(name = "USER_PW", nullable = false)
+    private String password;
+
+    @Column(name = "USER_TEL", nullable = false)
+    private String phoneNumber;
+
+    @Column(name = "USER_JOB", nullable = false)
+    private String job;
+
+    @Column(name = "PREFER_TYPE", nullable = false)
     private String userPlace;
 
-    public User(String userName, String userMail, String userPw, String userTel, String userJob, String userPlace) {
-        this.userName = userName;
-        this.userMail = userMail;
-        this.userPw = userPw;
-        this.userTel = userTel;
-        this.userJob = userJob;
+    @OneToOne
+    @JoinColumn(name = "MILEAGE_ID")
+    private Mileage mileage;
+
+    public User(String username, String email, String password, String phoneNumber, String job, String userPlace, Mileage mileage) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.phoneNumber = phoneNumber;
+        this.job = job;
         this.userPlace = userPlace;
+        this.mileage = mileage;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setMileage(Mileage mileage) {
+        this.mileage = mileage;
     }
 }

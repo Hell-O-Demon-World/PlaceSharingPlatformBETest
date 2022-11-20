@@ -1,9 +1,24 @@
 package com.golfzonaca.officesharingplatform.domain;
 
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Data
+import javax.persistence.*;
+
+@Getter
+@Entity
+@NoArgsConstructor
 public class Mileage {
-    private long id;
-    private int point;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "POINT", nullable = false, length = 11)
+    private long point;
+
+    @Builder
+    public Mileage(long point) {
+        this.point = point;
+    }
 }
