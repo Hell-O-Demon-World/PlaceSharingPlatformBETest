@@ -132,7 +132,6 @@ public class MyBatisKakaoPayService implements KakaoPayService {
 
     public String calculatePayPrice(Reservation reservation, RoomKind roomKind) {
         return String.valueOf((reservation.getResEndTime().getHour() - reservation.getResStartTime().getHour()) * roomKind.getPrice());
-//        Duration.between(reservation.getResStartTime(), reservation.getResEndTime());
     }
 
     public String taxFreeAmount(String calculatePayPrice) {
@@ -141,12 +140,15 @@ public class MyBatisKakaoPayService implements KakaoPayService {
 
     public void savePaymentInfo(KakaoPayApprovalForm kakaoPayApprovalForm) {
         long userId = Long.parseLong(kakaoPayApprovalForm.getPartner_user_id());
+        //TODO 1 : Payment 테이블에 roomId에 적절한 것 찾아야함
 //        long roomId = Integer.parseInt(kakaoPayApprovalForm.getItem_code()); // roomId는 not null인데  null로 들어옴
         long roomId = Integer.parseInt(kakaoPayApprovalForm.getPartner_user_id());
         LocalDateTime localDateTime = kakaoPayApprovalForm.getApproved_at();
         LocalDate payDate = toLocalDate(localDateTime);
         LocalTime payTime = toLocalTime(localDateTime);
         long payPrice = kakaoPayApprovalForm.getAmount().getTotal();
+        //TODO 2 : Payment 테이블에 payStatus 적절한 것 찾아야함
+        //TODO 3 : Reservation 테이블에서 예외상황 생각해야함
 //        String payStatus = kakaoPayApprovalForm.getPayment_method_type(); -> 막은이유 : DB에서 enum으로 선언되어있어서 enum타입에 맞는 애들이 들어가야함
         String payStatus = checkPayStatus(userId, roomId); // 한 사람이 같은 방을 2번(9~10am , 1pm~2pm 이런식으로) 예약한 경우도 생각해야하나?
 //        String payStatus = "선결제";
@@ -154,18 +156,9 @@ public class MyBatisKakaoPayService implements KakaoPayService {
 
         String payType = String.valueOf(PayType.FullPayment.getDescription());
         if (payStatus.equals(PayStatus.PREPAYMENT.getDescription())) { // 선결제일 때
-            // 마일리지 5퍼
-            // 페이타입 고치기
-            // String payType = kakaoPayApprovalForm.getPayment_method_type(); -> 막은이유 : DB에서 enum으로 선언되어있어서 enum타입에 맞는 애들이 들어가야함
-
-            // 선결제이면 총 가격의 5% 적립
-            // 마일리지 테이블을 없애고 , 유저 테이블에 포인트 필드를 넣는거는 어떨까?
             accumulationMileage(userId, payPrice);
-
         } else { // 현장결제일 때
-
             if (!kakaoPayApprovalForm.getItem_name().contains("OFFICE")) {
-                // 페이타입 고치기
                 payType = String.valueOf(PayType.Deposit.getDescription());
                 payPrice = calculateDeposit(payPrice);
             }
@@ -173,7 +166,6 @@ public class MyBatisKakaoPayService implements KakaoPayService {
         String payApiCode = kakaoPayApprovalForm.getTid();
 
         Payment payment = new Payment(userId, roomId, payDate, payTime, payPrice, payStatus, payMileage, payType, payApiCode);
-        log.info(payment.toString());
 
         paymentRepository.save(payment);
     }
@@ -190,8 +182,6 @@ public class MyBatisKakaoPayService implements KakaoPayService {
     }
 
     public void accumulationMileage(long userId, long payPrice) {
-        // 5프로 적립 쿼리 날리기
-
         int addMileage = (int) (payPrice * 0.05);
 
         User user = userRepository.findById(userId);
@@ -199,10 +189,8 @@ public class MyBatisKakaoPayService implements KakaoPayService {
 
         int point = addMileage + startMileage;
         MileageUpdateDto mileageUpdateDto = new MileageUpdateDto(point);
-        log.info(mileageUpdateDto.toString());
 
         mileageRepository.update(user.getMileageId(), mileageUpdateDto);
-
     }
 
     public long calculateDeposit(long payPrice) {
