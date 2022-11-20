@@ -2,7 +2,10 @@ package com.golfzonaca.officesharingplatform.service.reservation;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.golfzonaca.officesharingplatform.config.auth.token.JwtManager;
-import com.golfzonaca.officesharingplatform.domain.*;
+import com.golfzonaca.officesharingplatform.domain.Place;
+import com.golfzonaca.officesharingplatform.domain.Reservation;
+import com.golfzonaca.officesharingplatform.domain.Room;
+import com.golfzonaca.officesharingplatform.domain.User;
 import com.golfzonaca.officesharingplatform.repository.company.CompanyRepository;
 import com.golfzonaca.officesharingplatform.repository.place.PlaceRepository;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
@@ -18,7 +21,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
@@ -100,7 +102,8 @@ public class MyBatisReservationService implements ReservationService {
             log.error("placeId 에 맞는 place가 없습니다.");
             return new ArrayList<>();
         }
-        Place findPlace = placeRepository.findById(placeId);
+
+        Place findPlace = placeRepository.findById(placeId).get();
 
         LocalDate reservationDate = toLocalDate(selectedDateTimeForm.getYear().toString()
                 , selectedDateTimeForm.getMonth().toString(), selectedDateTimeForm.getDay().toString());
@@ -214,6 +217,26 @@ public class MyBatisReservationService implements ReservationService {
 
     @Override
     public Map<String, String> ResRequestValidation(long placeId, ResRequestData resRequestData) throws JsonProcessingException {
+        Place place = placeRepository.findById(placeId).get();
+        User user = userRepository.findById(JwtManager.getIdByToken(resRequestData.getAccessToken()));
+        Room room = null;
+        for (Room candidate : place.getRooms()) {
+            if (candidate.getRoomKind().getRoomType().equals(resRequestData.getSelectedType())) {
+                room = candidate;
+                break;
+            }
+        }
+
+        LocalDate resStartDate = toLocalDate(resRequestData.getYear(), resRequestData.getMonth(), resRequestData.getDay());
+        LocalDate resEndDate = toLocalDate(resRequestData.getYear(), resRequestData.getMonth(), resRequestData.getDay());
+        LocalTime resStartTime = toLocalTime(resRequestData.getStartTime());
+        LocalTime resEndTime = toLocalTime(resRequestData.getEndTime());
+
+        Reservation reservation = new Reservation(place, user, room, resStartDate, resStartTime, resEndDate, resEndTime);
+        reservationRepository.save(reservation);
+        return null;
+
+        /*
         Map<String, String> errorMap = new LinkedHashMap<>();
         Long userId = JwtManager.getIdByToken(resRequestData.getAccessToken());
         System.out.println("userId = " + userId);
@@ -244,12 +267,12 @@ public class MyBatisReservationService implements ReservationService {
         String resStartDayOfWeek = resStartDate.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.US);
         String resEndDayOfWeek = resEndDate.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.US);
 
-/*
+
         if (!(placeRepository.findOpenDaysById(placeId).contains(resStartDayOfWeek)) || !(placeRepository.findOpenDaysById(placeId).contains(resEndDayOfWeek))) {
             errorMap.put("InvalidOpenDaysError", "선택하신 요일은 휴무일입니다.");
             return errorMap;
         }
-*/
+
 
         if (resStartTime.equals(resEndTime)) {
             errorMap.put("InvalidResTimeError", "최소 1시간 이상 예약 가능합니다.");
@@ -270,7 +293,7 @@ public class MyBatisReservationService implements ReservationService {
 
         List<Reservation> findResList = findResByPlaceIdAndRoomKindId(placeId, roomTypeId, resStartDate, resEndDate);
         
-/*
+
         if (findResList.size() == 0) {
             reservationRepository.save(new Reservation(placeRepository.findById(placeId), userRepository.findById(userId), roo))
             Place place = new Place();
@@ -294,7 +317,7 @@ public class MyBatisReservationService implements ReservationService {
             reservationRepository.save(reservation);
             return errorMap;
         }
- */
+
         for (Reservation reservation : findResList) {
             if ((reservation.getResStartTime().isBefore(resStartTime) || reservation.getResStartTime().equals(resStartTime)) && reservation.getResEndTime().isAfter(resStartTime)) {
                 if (reservation.getUser().getId() != userId) {
@@ -342,6 +365,7 @@ public class MyBatisReservationService implements ReservationService {
                 .build();
         reservationRepository.save(reservation);
         return errorMap;
+*/
     }
 
     private boolean isOpenToday(String reservationDayOfWeek, List<String> placeOpenList) {
