@@ -318,7 +318,6 @@ public class MyBatisReservationService implements ReservationService {
             errorMap.put("DuplicatedResForRoomError", "해당 Place 에 선택하신 타입의 이용가능한 사무공간이 없습니다.");
             return errorMap;
         }
-        System.out.println("roomTypeId = " + roomTypeId);
         Place place = Place.builder()
                 .id(placeId)
                 .build();
