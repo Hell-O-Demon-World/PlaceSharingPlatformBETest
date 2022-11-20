@@ -4,7 +4,8 @@ import com.golfzonaca.officesharingplatform.domain.Place;
 import com.golfzonaca.officesharingplatform.web.search.form.SearchRequestData;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface SearchService {
-    List<Place> findPlaces(SearchRequestData searchRequestData);
+    List<Place> findPlaces(Optional<SearchRequestData> searchRequestData);
 }

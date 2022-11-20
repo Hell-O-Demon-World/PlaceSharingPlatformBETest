@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @Transactional
@@ -17,12 +18,12 @@ public class CustomPlaceRepository implements PlaceRepository {
     private final QueryPlaceRepository queryPlaceRepository;
 
     @Override
-    public Place findById(long id) {
-        return null;
+    public Optional<Place> findById(long id) {
+        return jpaRepository.findById(id);
     }
 
     @Override
-    public List<Place> findPlaces(SearchRequestData searchRequestData) {
+    public List<Place> findPlaces(Optional<SearchRequestData> searchRequestData) {
         return queryPlaceRepository.findPlaces(searchRequestData);
     }
 

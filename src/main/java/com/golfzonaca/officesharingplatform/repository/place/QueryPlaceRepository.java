@@ -1,6 +1,6 @@
 package com.golfzonaca.officesharingplatform.repository.place;
 
-import com.golfzonaca.officesharingplatform.domain.*;
+import com.golfzonaca.officesharingplatform.domain.Place;
 import com.golfzonaca.officesharingplatform.domain.type.RoomType;
 import com.golfzonaca.officesharingplatform.web.search.form.SearchRequestData;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -11,10 +11,12 @@ import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import java.time.LocalTime;
-import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 
 import static com.golfzonaca.officesharingplatform.domain.QPlace.place;
+import static com.golfzonaca.officesharingplatform.domain.QRoom.room;
+import static com.golfzonaca.officesharingplatform.domain.QRoomKind.roomKind;
 
 @Repository
 @Transactional
@@ -26,38 +28,46 @@ public class QueryPlaceRepository {
         this.query = new JPAQueryFactory(em);
     }
 
-    public List<Place> findPlaces(SearchRequestData searchRequestData) {
-        String searchWord = searchRequestData.getSearchWord();
-        String day = searchRequestData.getDay();
-        LocalTime startTime = searchRequestData.getStartTime();
-        LocalTime endTime = searchRequestData.getEndTime();
-        RoomType roomType = searchRequestData.getRoomType();
+    public List<Place> findPlaces(Optional<SearchRequestData> searchRequestData) {
+        String searchWord = null;
+        String day = null;
+        LocalTime startTime = null;
+        LocalTime endTime = null;
+        RoomType roomType = null;
+        
+        if (searchRequestData.isPresent()) {
+            searchWord = searchRequestData.get().getSearchWord();
+            day = searchRequestData.get().getDay();
+            startTime = searchRequestData.get().getStartTime();
+            endTime = searchRequestData.get().getEndTime();
+            roomType = searchRequestData.get().getRoomType();
+        }
 
         return query
                 .selectFrom(place)
-                .join(place.rooms, QRoom.room)
-                .join(QRoom.room.roomKind, QRoomKind.roomKind)
+                .join(place.rooms, room)
+                .join(room.roomKind, roomKind)
                 .where(likeName(searchWord), likeAddress(searchWord), likeDay(day), beforeStartTime(startTime), afterEndTime(endTime), likeRoomType(roomType))
                 .fetch();
     }
 
     private BooleanExpression likeName(String searchWord) {
         if (StringUtils.hasText(searchWord)) {
-            return place.placeName.like("%" + searchWord + "%");
+            return place.placeName.contains(searchWord);
         }
         return null;
     }
 
     private BooleanExpression likeAddress(String searchWord) {
         if (StringUtils.hasText(searchWord)) {
-            return place.address.address.like("%" + searchWord + "%");
+            return place.address.address.contains(searchWord);
         }
         return null;
     }
 
     private BooleanExpression likeDay(String day) {
         if (StringUtils.hasText(day)) {
-            return place.openDays.like("%" + day + "%");
+            return place.openDays.contains(day);
         }
         return null;
     }
@@ -76,25 +86,9 @@ public class QueryPlaceRepository {
         return null;
     }
 
-    private BooleanExpression likeRoomType(Place place, RoomType roomType) {
+    private BooleanExpression likeRoomType(RoomType roomType) {
         if (StringUtils.hasText(roomType.toString())) {
-            if (place.getRooms() != null) {
-                roomTypeInfo(place)
-            }
-        }
-        return null;
-    }
-
-    private String roomTypeInfo(QPlace place) {
-        if (place.rooms != null) {
-            HashSet<String> roomTypeInfo = new HashSet<>();
-            for (int i = 0; i < place.rooms.size(); i++) {
-
-            }
-            for (Room room : place.rooms.get(i)) {
-                roomTypeInfo.add(room.getRoomKind().getRoomType());
-            }
-            return roomTypeInfo.toString();
+            return roomKind.roomType.contains(String.valueOf(roomType));
         }
         return null;
     }

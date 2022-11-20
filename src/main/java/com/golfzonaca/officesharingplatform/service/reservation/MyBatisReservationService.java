@@ -102,7 +102,8 @@ public class MyBatisReservationService implements ReservationService {
             log.error("placeId 에 맞는 place가 없습니다.");
             return new ArrayList<>();
         }
-        Place findPlace = placeRepository.findById(placeId);
+//        Place findPlace = placeRepository.findById(placeId);
+        Place findPlace = null;
 
         LocalDate reservationDate = toLocalDate(selectedDateTimeForm.getYear().toString()
                 , selectedDateTimeForm.getMonth().toString(), selectedDateTimeForm.getDay().toString());

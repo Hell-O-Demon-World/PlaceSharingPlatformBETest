@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -19,7 +20,7 @@ public class SearchPlaceController {
     private final SearchService searchService;
 
     @PostMapping("/main/search")
-    public List<Place> findPlaces(@RequestBody SearchRequestData searchRequestData) {
+    public List<Place> findPlaces(@RequestBody Optional<SearchRequestData> searchRequestData) {
         return searchService.findPlaces(searchRequestData);
     }
 }

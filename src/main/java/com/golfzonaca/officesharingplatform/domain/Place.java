@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 @Getter
@@ -53,10 +52,6 @@ public class Place {
     //양방향 매핑
     @OneToMany(mappedBy = "place")
     private List<Room> rooms = new ArrayList<>();
-
-    //Place의 RoomType 보유 정보
-    @Transient
-    private HashSet<String> roomTypeInfo;
 
     @Builder
     public Place(Company company, RatePoint ratePoint, String placeName, String description, String openDays, LocalTime placeStart, LocalTime placeEnd, String placeAddInfo, Address address) {
