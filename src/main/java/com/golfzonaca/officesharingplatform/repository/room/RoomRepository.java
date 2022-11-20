@@ -16,4 +16,6 @@ public interface RoomRepository {
     List<Integer> findRoomTypeByPlaceId(Long placeId);
 
     List<Room> findAll(RoomSearchCond cond);
+
+    List<Room> findRoomByPlaceIdAndRoomType(Long placeId, String selectedType);
 }

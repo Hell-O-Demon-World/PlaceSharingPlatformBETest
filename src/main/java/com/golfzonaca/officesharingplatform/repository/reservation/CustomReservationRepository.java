@@ -59,4 +59,9 @@ public class CustomReservationRepository implements ReservationRepository {
     public List<Reservation> findAll(ReservationSearchCond cond) {
         return queryReservationRepository.findAll(cond);
     }
+
+    @Override
+    public List<Reservation> findAllByPlaceIdAndRoomTypeAndDate(Long placeId, String roomType, LocalDate date) {
+        return queryReservationRepository.findAllByPlaceIdAndRoomTypeAndDate(placeId, roomType, date);
+    }
 }

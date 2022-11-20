@@ -14,6 +14,7 @@ import com.golfzonaca.officesharingplatform.repository.roomkind.RoomKindReposito
 import com.golfzonaca.officesharingplatform.repository.user.UserRepository;
 import com.golfzonaca.officesharingplatform.web.reservation.form.ResRequestData;
 import com.golfzonaca.officesharingplatform.web.reservation.form.SelectedDateTimeForm;
+import com.golfzonaca.officesharingplatform.web.reservation.form.TimeListForm;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
@@ -102,19 +103,19 @@ public class MyBatisReservationService implements ReservationService {
             log.error("placeId 에 맞는 place가 없습니다.");
             return new ArrayList<>();
         }
-
+        String selectedRoomType = selectedDateTimeForm.getSelectedType();
+        String selectedYear = selectedDateTimeForm.getYear().toString();
+        String selectedMonth = selectedDateTimeForm.getMonth().toString();
+        String selectedDay = selectedDateTimeForm.getDay().toString();
         Place findPlace = placeRepository.findById(placeId).get();
 
-        LocalDate reservationDate = toLocalDate(selectedDateTimeForm.getYear().toString()
-                , selectedDateTimeForm.getMonth().toString(), selectedDateTimeForm.getDay().toString());
-        String reservationDayOfWeek = reservationDate.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.US);
-        List<String> placeOpenList = Arrays.asList(findPlace.getOpenDays().split(", "));
+        String reservationDayOfWeek = getReservationAvailableDaysOfWeek(selectedYear, selectedMonth, selectedDay);
+        List<String> placeOpenList = getPlaceOpenList(findPlace);
 
         Map<Integer, Boolean> inputTimeMap = getDefaultTimeMap();
         if (isOpenToday(reservationDayOfWeek, placeOpenList)) {
-            Long roomKindId = roomKindRepository.findIdByRoomType(selectedDateTimeForm.getSelectedType());
-            List<Room> reservationRoomList = roomRepository.findRoomByPlaceIdAndRoomKindId(placeId, roomKindId);
-            List<Reservation> findReservationList = reservationRepository.findAllByPlaceIdAndRoomKindIdAndDate(placeId, roomKindId, reservationDate);
+            List<Room> reservationRoomList = roomRepository.findRoomByPlaceIdAndRoomType(placeId, selectedRoomType);
+            List<Reservation> findReservationList = reservationRepository.findAllByPlaceIdAndRoomTypeAndDate(placeId, selectedRoomType, toLocalDate(selectedYear, selectedMonth, selectedDay));
 
             int totalReservationCount = reservationRoomList.size();
             int beforeReservationCount = countBeforeReservationList(findReservationList);
@@ -149,6 +150,19 @@ public class MyBatisReservationService implements ReservationService {
             }
         }
         return parsingMapToList(inputTimeMap);
+    }
+
+    private String getReservationAvailableDaysOfWeek(String selectedYear, String selectedMonth, String selectedDay) {
+        LocalDate reservationDate = toLocalDate(selectedYear, selectedMonth, selectedDay);
+        return getDaysOfWeek(reservationDate);
+    }
+
+    private static String getDaysOfWeek(LocalDate localDate) {
+        return localDate.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.US);
+    }
+
+    private static List<String> getPlaceOpenList(Place place) {
+        return Arrays.asList(place.getOpenDays().split(", "));
     }
 
     private List<Integer> parsingMapToList(Map<Integer, Boolean> inputTimeMap) {

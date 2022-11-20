@@ -1,21 +1,17 @@
 package com.golfzonaca.officesharingplatform.repository.room;
 
 import com.golfzonaca.officesharingplatform.domain.Room;
-import com.golfzonaca.officesharingplatform.repository.reservation.ReservationSearchCond;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
-import static com.golfzonaca.officesharingplatform.domain.QReservation.reservation;
 import static com.golfzonaca.officesharingplatform.domain.QRoom.room;
-
+import static com.golfzonaca.officesharingplatform.domain.QRoomKind.roomKind;
 
 @Transactional
 @Repository
@@ -67,4 +63,19 @@ public class QueryRoomRepository {
         return null;
     }
 
+    private BooleanExpression eqRoomType(String roomType) {
+        if (roomKind != null) {
+            return room.roomKind.roomType.eq(roomType);
+        }
+        return null;
+    }
+
+    public List<Room> findAllByPlaceIdAndRoomType(Long id, String roomType) {
+        Optional<Long> placeId = Optional.ofNullable(id);
+        return query
+                .select(room)
+                .from(room)
+                .where(eqPlaceId(placeId), eqRoomType(roomType))
+                .fetch();
+    }
 }

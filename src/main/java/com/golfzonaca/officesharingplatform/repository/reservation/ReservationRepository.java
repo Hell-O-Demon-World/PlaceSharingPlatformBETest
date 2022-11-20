@@ -20,4 +20,6 @@ public interface ReservationRepository {
     void deleteById(Long reservationId);
 
     List<Reservation> findAll(ReservationSearchCond cond);
+
+    List<Reservation> findAllByPlaceIdAndRoomTypeAndDate(Long placeId, String roomType, LocalDate date);
 }
