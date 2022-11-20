@@ -23,11 +23,10 @@ public class IdPwAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        SecurityContext context = SecurityContextHolder.getContext();
-        System.out.println("principal = " + context);
+//        SecurityContext context = SecurityContextHolder.getContext();
+//        System.out.println("principal = " + context);
 
         String userId = String.valueOf(authentication.getPrincipal());
-
         UserDetails userDetails = userDetailsService.loadUserByUsername(userId);
 
         if (!this.passwordEncoder.matches(authentication.getCredentials().toString(), userDetails.getPassword())) {
