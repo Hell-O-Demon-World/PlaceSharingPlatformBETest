@@ -1,4 +1,4 @@
-package com.golfzonaca.officesharingplatform.web.search.form;
+package com.golfzonaca.officesharingplatform.web.search.dto;
 
 import com.golfzonaca.officesharingplatform.domain.type.RoomType;
 import lombok.AllArgsConstructor;
