@@ -5,6 +5,7 @@ import com.golfzonaca.officesharingplatform.config.auth.token.JwtManager;
 import com.golfzonaca.officesharingplatform.domain.Place;
 import com.golfzonaca.officesharingplatform.domain.Reservation;
 import com.golfzonaca.officesharingplatform.domain.Room;
+import com.golfzonaca.officesharingplatform.domain.User;
 import com.golfzonaca.officesharingplatform.repository.company.CompanyRepository;
 import com.golfzonaca.officesharingplatform.repository.place.PlaceRepository;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
@@ -20,7 +21,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
@@ -102,8 +102,8 @@ public class MyBatisReservationService implements ReservationService {
             log.error("placeId 에 맞는 place가 없습니다.");
             return new ArrayList<>();
         }
-//        Place findPlace = placeRepository.findById(placeId);
-        Place findPlace = null;
+
+        Place findPlace = placeRepository.findById(placeId).get();
 
         LocalDate reservationDate = toLocalDate(selectedDateTimeForm.getYear().toString()
                 , selectedDateTimeForm.getMonth().toString(), selectedDateTimeForm.getDay().toString());
@@ -217,12 +217,34 @@ public class MyBatisReservationService implements ReservationService {
 
     @Override
     public Map<String, String> ResRequestValidation(long placeId, ResRequestData resRequestData) throws JsonProcessingException {
+        Place place = placeRepository.findById(placeId).get();
+        User user = userRepository.findById(JwtManager.getIdByToken(resRequestData.getAccessToken()));
+        Room room = null;
+        for (Room candidate : place.getRooms()) {
+            if (candidate.getRoomKind().getRoomType().equals(resRequestData.getSelectedType())) {
+                room = candidate;
+                break;
+            }
+        }
+
+        LocalDate resStartDate = toLocalDate(resRequestData.getYear(), resRequestData.getMonth(), resRequestData.getDay());
+        LocalDate resEndDate = toLocalDate(resRequestData.getYear(), resRequestData.getMonth(), resRequestData.getDay());
+        LocalTime resStartTime = toLocalTime(resRequestData.getStartTime());
+        LocalTime resEndTime = toLocalTime(resRequestData.getEndTime());
+
+        Reservation reservation = new Reservation(place, user, room, resStartDate, resStartTime, resEndDate, resEndTime);
+        reservationRepository.save(reservation);
+        return null;
+
+        /*
         Map<String, String> errorMap = new LinkedHashMap<>();
         Long userId = JwtManager.getIdByToken(resRequestData.getAccessToken());
+        System.out.println("userId = " + userId);
 
         Boolean registeredStatus = userRepository.validateUserByUserId(userId);
+        System.out.println("registeredStatus = " + registeredStatus);
 
-        if (!registeredStatus) {
+        if (registeredStatus) {
             errorMap.put("InvalidUserError", "등록되지 않은 회원입니다.");
             return errorMap;
         }
@@ -245,12 +267,12 @@ public class MyBatisReservationService implements ReservationService {
         String resStartDayOfWeek = resStartDate.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.US);
         String resEndDayOfWeek = resEndDate.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.US);
 
-/*
+
         if (!(placeRepository.findOpenDaysById(placeId).contains(resStartDayOfWeek)) || !(placeRepository.findOpenDaysById(placeId).contains(resEndDayOfWeek))) {
             errorMap.put("InvalidOpenDaysError", "선택하신 요일은 휴무일입니다.");
             return errorMap;
         }
-*/
+
 
         if (resStartTime.equals(resEndTime)) {
             errorMap.put("InvalidResTimeError", "최소 1시간 이상 예약 가능합니다.");
@@ -271,7 +293,7 @@ public class MyBatisReservationService implements ReservationService {
 
         List<Reservation> findResList = findResByPlaceIdAndRoomKindId(placeId, roomTypeId, resStartDate, resEndDate);
         
-/*
+
         if (findResList.size() == 0) {
             reservationRepository.save(new Reservation(placeRepository.findById(placeId), userRepository.findById(userId), roo))
             Place place = new Place();
@@ -295,7 +317,7 @@ public class MyBatisReservationService implements ReservationService {
             reservationRepository.save(reservation);
             return errorMap;
         }
- */
+
         for (Reservation reservation : findResList) {
             if ((reservation.getResStartTime().isBefore(resStartTime) || reservation.getResStartTime().equals(resStartTime)) && reservation.getResEndTime().isAfter(resStartTime)) {
                 if (reservation.getUser().getId() != userId) {
@@ -319,17 +341,20 @@ public class MyBatisReservationService implements ReservationService {
             errorMap.put("DuplicatedResForRoomError", "해당 Place 에 선택하신 타입의 이용가능한 사무공간이 없습니다.");
             return errorMap;
         }
-        
-/*
-        Place place = new Place();
-        place.setId(placeId);
-        User user = new User();
-        user.setId(userId);
-        RoomKind roomKind = new RoomKind();
-        roomKind.setId(roomTypeId);
-        Room room = new Room();
-        room.setId(findRoomIdList.get(0));
-        room.setRoomKind(roomKind);
+        System.out.println("roomTypeId = " + roomTypeId);
+        Place place = Place.builder()
+                .id(placeId)
+                .build();
+        User user = User.builder()
+                .id(userId)
+                .build();
+        RoomKind roomKind = RoomKind.builder()
+                .id(roomTypeId)
+                .build();
+        Room room = Room.builder()
+                .id(findRoomIdList.get(0))
+                .roomKind(roomKind)
+                .build();
         Reservation reservation = Reservation.builder()
                 .place(place)
                 .user(user)
@@ -340,8 +365,8 @@ public class MyBatisReservationService implements ReservationService {
                 .resEndTime(resEndTime)
                 .build();
         reservationRepository.save(reservation);
-*/
         return errorMap;
+*/
     }
 
     private boolean isOpenToday(String reservationDayOfWeek, List<String> placeOpenList) {

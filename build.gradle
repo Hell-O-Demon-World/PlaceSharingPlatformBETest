@@ -48,7 +48,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
 //  spring security 추가
-    implementation 'org.springframework.boot:spring-boot-starter-security:2.7.4'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
 
 //  gson 추가
     implementation 'com.google.code.gson:gson:2.10'

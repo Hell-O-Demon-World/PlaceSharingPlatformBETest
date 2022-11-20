@@ -1,5 +1,6 @@
 package com.golfzonaca.officesharingplatform.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,6 +11,8 @@ import javax.persistence.*;
 @Entity
 @Table(name = "USER", uniqueConstraints = {@UniqueConstraint(name = "USER", columnNames = {"USER_MAIL", "USER_TEL", "MILEAGE_ID"})})
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class User {
 
     @Id
@@ -31,14 +34,13 @@ public class User {
     @Column(name = "USER_JOB", nullable = false)
     private String job;
 
-    @Column(name = "USER_PLACE", nullable = false)
+    @Column(name = "PREFER_TYPE", nullable = false)
     private String userPlace;
 
     @OneToOne
     @JoinColumn(name = "MILEAGE_ID")
     private Mileage mileage;
 
-    @Builder
     public User(String username, String email, String password, String phoneNumber, String job, String userPlace, Mileage mileage) {
         this.username = username;
         this.email = email;

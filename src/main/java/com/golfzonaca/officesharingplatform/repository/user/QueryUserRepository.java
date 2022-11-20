@@ -55,35 +55,35 @@ public class QueryUserRepository {
 
     private BooleanExpression likeName(String name) {
         if (StringUtils.hasText(name)) {
-            return user.username.like("%" + name + "%");
+            return user.username.like(name);
         }
         return null;
     }
 
     private BooleanExpression likeMail(String mail) {
         if (StringUtils.hasText(mail)) {
-            return user.email.like("%" + mail + "%");
+            return user.email.like(mail);
         }
         return null;
     }
 
     private BooleanExpression likeJob(String job) {
         if (StringUtils.hasText(job)) {
-            return user.job.like("%" + job + "%");
+            return user.job.like(job);
         }
         return null;
     }
 
     private BooleanExpression likePhoneNumber(String phoneNumber) {
         if (StringUtils.hasText(phoneNumber)) {
-            return user.phoneNumber.like("%" + phoneNumber + "%");
+            return user.phoneNumber.like(phoneNumber);
         }
         return null;
     }
 
     private BooleanExpression likeUserPlace(String userPlace) {
         if (StringUtils.hasText(userPlace)) {
-            return user.userPlace.like("%" + userPlace + "%");
+            return user.userPlace.like(userPlace);
         }
         return null;
     }
