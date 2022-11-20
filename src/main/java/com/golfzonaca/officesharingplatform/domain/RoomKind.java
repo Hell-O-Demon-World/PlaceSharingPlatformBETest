@@ -16,12 +16,11 @@ import javax.persistence.*;
 public class RoomKind {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "ROOM_TYPE", nullable = false)
     private String roomType;
-    
+
     @Column(name = "PRICE", nullable = false)
     private int price;
 }

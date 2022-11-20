@@ -26,9 +26,11 @@ public class Place {
     @JoinColumn(name = "COMPANY_ID")
     private Company company;
 
+/*
     @OneToOne
     @JoinColumn(name = "RATEPOINT_ID")
     private RatePoint ratePoint;
+*/
 
     @Column(name = "PLACE_NAME", nullable = false, length = 30)
     private String placeName;
@@ -58,7 +60,7 @@ public class Place {
 
     public Place(Company company, RatePoint ratePoint, String placeName, String description, String openDays, LocalTime placeStart, LocalTime placeEnd, String placeAddInfo, Address address) {
         this.company = company;
-        this.ratePoint = ratePoint;
+//        this.ratePoint = ratePoint;
         this.placeName = placeName;
         this.description = description;
         this.openDays = openDays;
