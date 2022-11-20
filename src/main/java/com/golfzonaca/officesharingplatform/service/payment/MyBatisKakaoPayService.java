@@ -3,11 +3,17 @@ package com.golfzonaca.officesharingplatform.service.payment;
 import com.golfzonaca.officesharingplatform.domain.Payment;
 import com.golfzonaca.officesharingplatform.domain.Reservation;
 import com.golfzonaca.officesharingplatform.domain.RoomKind;
+import com.golfzonaca.officesharingplatform.domain.User;
 import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayApprovalForm;
 import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayReady;
+import com.golfzonaca.officesharingplatform.domain.type.PayStatus;
+import com.golfzonaca.officesharingplatform.domain.type.PayType;
+import com.golfzonaca.officesharingplatform.repository.mileage.MileageRepository;
+import com.golfzonaca.officesharingplatform.repository.mybatis.dto.MileageUpdateDto;
 import com.golfzonaca.officesharingplatform.repository.payment.PaymentRepository;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
 import com.golfzonaca.officesharingplatform.repository.roomkind.RoomKindRepository;
+import com.golfzonaca.officesharingplatform.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
@@ -24,7 +30,6 @@ import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 
 @Slf4j
 @Service
@@ -37,6 +42,8 @@ public class MyBatisKakaoPayService implements KakaoPayService {
     private final ReservationRepository reservationRepository;
     private final RoomKindRepository roomKindRepository;
     private final PaymentRepository paymentRepository;
+    private final UserRepository userRepository;
+    private final MileageRepository mileageRepository;
 
     @Override
     public String kakaoPayReady() {
@@ -142,12 +149,31 @@ public class MyBatisKakaoPayService implements KakaoPayService {
         long payPrice = kakaoPayApprovalForm.getAmount().getTotal();
 //        String payStatus = kakaoPayApprovalForm.getPayment_method_type(); -> 막은이유 : DB에서 enum으로 선언되어있어서 enum타입에 맞는 애들이 들어가야함
         String payStatus = checkPayStatus(userId, roomId); // 한 사람이 같은 방을 2번(9~10am , 1pm~2pm 이런식으로) 예약한 경우도 생각해야하나?
+//        String payStatus = "선결제";
         long payMileage = kakaoPayApprovalForm.getAmount().getPoint();
-//        String payType = kakaoPayApprovalForm.getPayment_method_type(); -> 막은이유 : DB에서 enum으로 선언되어있어서 enum타입에 맞는 애들이 들어가야함
-        String payType = "보증금";
+
+        String payType = String.valueOf(PayType.FullPayment.getDescription());
+        if (payStatus.equals(PayStatus.PREPAYMENT.getDescription())) { // 선결제일 때
+            // 마일리지 5퍼
+            // 페이타입 고치기
+            // String payType = kakaoPayApprovalForm.getPayment_method_type(); -> 막은이유 : DB에서 enum으로 선언되어있어서 enum타입에 맞는 애들이 들어가야함
+
+            // 선결제이면 총 가격의 5% 적립
+            // 마일리지 테이블을 없애고 , 유저 테이블에 포인트 필드를 넣는거는 어떨까?
+            accumulationMileage(userId, payPrice);
+
+        } else { // 현장결제일 때
+
+            if (!kakaoPayApprovalForm.getItem_name().contains("OFFICE")) {
+                // 페이타입 고치기
+                payType = String.valueOf(PayType.Deposit.getDescription());
+                payPrice = calculateDeposit(payPrice);
+            }
+        }
         String payApiCode = kakaoPayApprovalForm.getTid();
 
         Payment payment = new Payment(userId, roomId, payDate, payTime, payPrice, payStatus, payMileage, payType, payApiCode);
+        log.info(payment.toString());
 
         paymentRepository.save(payment);
     }
@@ -155,12 +181,32 @@ public class MyBatisKakaoPayService implements KakaoPayService {
     public String checkPayStatus(long userId, long roomId) {
         String payStatus;
 
-        if (reservationRepository.findByUserIdAndRoomId(userId, roomId) != null) {
+        if (reservationRepository.findByUserIdAndRoomId(userId, roomId) == null) {
             payStatus = "선결제";
         } else {
             payStatus = "현장결제";
         }
         return payStatus;
+    }
+
+    public void accumulationMileage(long userId, long payPrice) {
+        // 5프로 적립 쿼리 날리기
+
+        int addMileage = (int) (payPrice * 0.05);
+
+        User user = userRepository.findById(userId);
+        int startMileage = mileageRepository.findById(user.getMileageId()).getPoint();
+
+        int point = addMileage + startMileage;
+        MileageUpdateDto mileageUpdateDto = new MileageUpdateDto(point);
+        log.info(mileageUpdateDto.toString());
+
+        mileageRepository.update(user.getMileageId(), mileageUpdateDto);
+
+    }
+
+    public long calculateDeposit(long payPrice) {
+        return (long) (payPrice * 0.2);
     }
 
     public LocalDate toLocalDate(LocalDateTime localDateTime) {

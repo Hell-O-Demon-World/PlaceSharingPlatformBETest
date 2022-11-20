@@ -3,9 +3,9 @@
 <mapper namespace="com.golfzonaca.officesharingplatform.repository.mybatis.PaymentMapper">
 
     <insert id="save" useGeneratedKeys="true" keyProperty="id">
-        insert into payment (user_id, room_id, pay_date, pay_time, pay_price, pay_status, pay_mileage, pay_type,
-                                 pay_api_code)
-        values (#{userId}, #{roomId}, #{payDate},#{payTime}, #{payPrice}, #{payStatus}, #{payMileage}, #{payType},
+        insert into payment (user_id, room_id, pay_date, pay_time, pay_price, pay_mileage, pay_status, pay_type,
+                             pay_api_code)
+        values (#{userId}, #{roomId}, #{payDate}, #{payTime}, #{payPrice}, #{payMileage}, #{payStatus}, #{payType},
                 #{payApiCode})
     </insert>
 
