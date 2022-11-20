@@ -2,9 +2,7 @@ package com.golfzonaca.officesharingplatform.service.reservation;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.golfzonaca.officesharingplatform.config.auth.token.JwtManager;
-import com.golfzonaca.officesharingplatform.domain.Place;
-import com.golfzonaca.officesharingplatform.domain.Reservation;
-import com.golfzonaca.officesharingplatform.domain.Room;
+import com.golfzonaca.officesharingplatform.domain.*;
 import com.golfzonaca.officesharingplatform.repository.company.CompanyRepository;
 import com.golfzonaca.officesharingplatform.repository.place.PlaceRepository;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
@@ -218,10 +216,12 @@ public class MyBatisReservationService implements ReservationService {
     public Map<String, String> ResRequestValidation(long placeId, ResRequestData resRequestData) throws JsonProcessingException {
         Map<String, String> errorMap = new LinkedHashMap<>();
         Long userId = JwtManager.getIdByToken(resRequestData.getAccessToken());
+        System.out.println("userId = " + userId);
 
         Boolean registeredStatus = userRepository.validateUserByUserId(userId);
+        System.out.println("registeredStatus = " + registeredStatus);
 
-        if (!registeredStatus) {
+        if (registeredStatus) {
             errorMap.put("InvalidUserError", "등록되지 않은 회원입니다.");
             return errorMap;
         }
@@ -318,17 +318,20 @@ public class MyBatisReservationService implements ReservationService {
             errorMap.put("DuplicatedResForRoomError", "해당 Place 에 선택하신 타입의 이용가능한 사무공간이 없습니다.");
             return errorMap;
         }
-        
-/*
-        Place place = new Place();
-        place.setId(placeId);
-        User user = new User();
-        user.setId(userId);
-        RoomKind roomKind = new RoomKind();
-        roomKind.setId(roomTypeId);
-        Room room = new Room();
-        room.setId(findRoomIdList.get(0));
-        room.setRoomKind(roomKind);
+        System.out.println("roomTypeId = " + roomTypeId);
+        Place place = Place.builder()
+                .id(placeId)
+                .build();
+        User user = User.builder()
+                .id(userId)
+                .build();
+        RoomKind roomKind = RoomKind.builder()
+                .id(roomTypeId)
+                .build();
+        Room room = Room.builder()
+                .id(findRoomIdList.get(0))
+                .roomKind(roomKind)
+                .build();
         Reservation reservation = Reservation.builder()
                 .place(place)
                 .user(user)
@@ -339,7 +342,6 @@ public class MyBatisReservationService implements ReservationService {
                 .resEndTime(resEndTime)
                 .build();
         reservationRepository.save(reservation);
-*/
         return errorMap;
     }
 

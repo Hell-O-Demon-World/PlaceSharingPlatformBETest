@@ -1,6 +1,7 @@
 package com.golfzonaca.officesharingplatform.domain;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,8 @@ import java.util.List;
 @Getter
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Place {
 
     @Id
@@ -53,7 +56,6 @@ public class Place {
     @OneToMany(mappedBy = "place")
     private List<Room> rooms = new ArrayList<>();
 
-    @Builder
     public Place(Company company, RatePoint ratePoint, String placeName, String description, String openDays, LocalTime placeStart, LocalTime placeEnd, String placeAddInfo, Address address) {
         this.company = company;
         this.ratePoint = ratePoint;

@@ -1,5 +1,7 @@
 package com.golfzonaca.officesharingplatform.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -9,6 +11,8 @@ import javax.persistence.*;
 @Entity
 @Table(name = "ROOM_KIND", uniqueConstraints = {@UniqueConstraint(name = "ROOM_KIND", columnNames = {"ROOM_TYPE"})})
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class RoomKind {
 
     @Id

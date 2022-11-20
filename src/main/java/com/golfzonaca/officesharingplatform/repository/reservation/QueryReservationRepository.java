@@ -10,6 +10,7 @@ import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 import static com.golfzonaca.officesharingplatform.domain.QReservation.reservation;
 
@@ -24,14 +25,14 @@ public class QueryReservationRepository {
     }
 
     List<Reservation> findAll(ReservationSearchCond cond) {
-        Long userId = cond.getUserId();
-        Long roomId = cond.getRoomId();
-        Long roomKindId = cond.getRoomKindId();
-        Long placeId = cond.getPlaceId();
-        LocalTime resStartTime = cond.getResStartTime();
-        LocalDate resStartDate = cond.getResStartDate();
-        LocalTime resEndTime = cond.getResEndTime();
-        LocalDate resEndDate = cond.getResEndDate();
+        Optional<Long> userId = Optional.ofNullable(cond.getUserId());
+        Optional<Long> roomId = Optional.ofNullable(cond.getRoomId());
+        Optional<Long> roomKindId = Optional.ofNullable(cond.getRoomKindId());
+        Optional<Long> placeId = Optional.ofNullable(cond.getPlaceId());
+        Optional<LocalTime> resStartTime = Optional.ofNullable(cond.getResStartTime());
+        Optional<LocalDate> resStartDate = Optional.ofNullable(cond.getResStartDate());
+        Optional<LocalTime> resEndTime = Optional.ofNullable(cond.getResEndTime());
+        Optional<LocalDate> resEndDate = Optional.ofNullable(cond.getResEndDate());
 
         return query
                 .select(reservation)
@@ -42,58 +43,58 @@ public class QueryReservationRepository {
                 .fetch();
     }
 
-    private BooleanExpression eqUserId(Long userId) {
-        if (reservation != null) {
-            return reservation.user.id.eq(userId);
+    private BooleanExpression eqUserId(Optional<Long> userId) {
+        if (userId.isPresent()) {
+            return reservation.user.id.eq(userId.get());
         }
         return null;
     }
 
-    private BooleanExpression eqRoomId(Long roomId) {
-        if (reservation != null) {
-            return reservation.room.id.eq(roomId);
+    private BooleanExpression eqRoomId(Optional<Long> roomId) {
+        if (roomId.isPresent()) {
+            return reservation.room.id.eq(roomId.get());
         }
         return null;
     }
 
-    private BooleanExpression eqRoomKindId(Long roomKindId) {
-        if (reservation != null) {
-            return reservation.room.roomKind.id.eq(roomKindId);
+    private BooleanExpression eqRoomKindId(Optional<Long> roomKindId) {
+        if (roomKindId.isPresent()) {
+            return reservation.room.roomKind.id.eq(roomKindId.get());
         }
         return null;
     }
 
-    private BooleanExpression eqPlaceId(Long placeId) {
-        if (reservation != null) {
-            return reservation.place.id.eq(placeId);
+    private BooleanExpression eqPlaceId(Optional<Long> placeId) {
+        if (placeId.isPresent()) {
+            return reservation.place.id.eq(placeId.get());
         }
         return null;
     }
 
-    private BooleanExpression eqResStartTime(LocalTime resStartTime) {
-        if (reservation != null) {
-            return reservation.resStartTime.eq(resStartTime);
+    private BooleanExpression eqResStartTime(Optional<LocalTime> resStartTime) {
+        if (resStartTime.isPresent()) {
+            return reservation.resStartTime.eq(resStartTime.get());
         }
         return null;
     }
 
-    private BooleanExpression eqResStartDate(LocalDate resStartDate) {
-        if (reservation != null) {
-            return reservation.resStartDate.eq(resStartDate);
+    private BooleanExpression eqResStartDate(Optional<LocalDate> resStartDate) {
+        if (resStartDate.isPresent()) {
+            return reservation.resStartDate.eq(resStartDate.get());
         }
         return null;
     }
 
-    private BooleanExpression eqResEndTime(LocalTime resEndTime) {
-        if (reservation != null) {
-            return reservation.resEndTime.eq(resEndTime);
+    private BooleanExpression eqResEndTime(Optional<LocalTime> resEndTime) {
+        if (resEndTime.isPresent()) {
+            return reservation.resEndTime.eq(resEndTime.get());
         }
         return null;
     }
 
-    private BooleanExpression eqResEndDate(LocalDate resEndDate) {
-        if (reservation != null) {
-            return reservation.resEndDate.eq(resEndDate);
+    private BooleanExpression eqResEndDate(Optional<LocalDate> resEndDate) {
+        if (resEndDate.isPresent()) {
+            return reservation.resEndDate.eq(resEndDate.get());
         }
         return null;
     }

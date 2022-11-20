@@ -23,7 +23,10 @@ public class CustomRoomRepository implements RoomRepository {
 
     @Override
     public List<Long> findRoomIdByPlaceIdAndRoomTypeId(Long placeId, Long roomKindId) {
-        return null;
+        return queryRoomRepository.findIdAll(RoomSearchCond.builder()
+                .placeId(placeId)
+                .roomKindId(roomKindId)
+                .build());
     }
 
     @Override
