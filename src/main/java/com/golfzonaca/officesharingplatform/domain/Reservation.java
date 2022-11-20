@@ -19,12 +19,12 @@ public class Reservation {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "PLACE_ID")
-    private Place place;
-
-    @ManyToOne
     @JoinColumn(name = "USER_ID")
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "PLACE_ID")
+    private Place place;
 
     @ManyToOne
     @JoinColumn(name = "ROOM_ID")
@@ -44,9 +44,9 @@ public class Reservation {
 
 
     @Builder
-    public Reservation(Place place, User user, Room room, LocalDate resStartDate, LocalTime resStartTime, LocalDate resEndDate, LocalTime resEndTime) {
-        this.place = place;
+    public Reservation(User user, Place place, Room room, LocalDate resStartDate, LocalTime resStartTime, LocalDate resEndDate, LocalTime resEndTime) {
         this.user = user;
+        this.place = place;
         this.room = room;
         this.resStartDate = resStartDate;
         this.resStartTime = resStartTime;

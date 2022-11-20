@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class CustomRoomKindRepository implements RoomKindRepository {
     private final SpringDataJpaRoomKindRepository jpaRoomKindRepository;
 
+    private final QueryRoomKindRepository queryRoomKindRepository;
+
     @Override
     public Long findIdByRoomType(String roomType) {
         return jpaRoomKindRepository.findIdByRoomTypeLike(roomType);
@@ -19,5 +21,10 @@ public class CustomRoomKindRepository implements RoomKindRepository {
     @Override
     public RoomKind findById(Long roomId) {
         return jpaRoomKindRepository.findById(roomId).get();
+    }
+
+    @Override
+    public boolean validRoomType(String roomType) {
+        return queryRoomKindRepository.validRoomType(roomType).isPresent();
     }
 }

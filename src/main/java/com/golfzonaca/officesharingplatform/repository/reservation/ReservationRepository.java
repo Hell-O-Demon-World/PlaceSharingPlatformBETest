@@ -1,17 +1,20 @@
 package com.golfzonaca.officesharingplatform.repository.reservation;
 
 
+import com.golfzonaca.officesharingplatform.domain.Place;
 import com.golfzonaca.officesharingplatform.domain.Reservation;
+import com.golfzonaca.officesharingplatform.domain.User;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 public interface ReservationRepository {
+    Reservation save(Reservation reservation);
+
     List<Reservation> findAllByPlaceIdAndRoomKindIdAndDate(Long placeId, Long roomKindId, LocalDate reservationDate);
 
     List<Reservation> findAllByUserId(Long userId);
-
-    Reservation save(Reservation reservation);
 
     List<Reservation> findResByPlaceIdAndRoomKindId(long placeId, long roomTypeId, LocalDate resStartDate, LocalDate resEndDate);
 
@@ -20,4 +23,8 @@ public interface ReservationRepository {
     void deleteById(Long reservationId);
 
     List<Reservation> findAll(ReservationSearchCond cond);
+
+    boolean findInResValid(User user, Place place, LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime);
+
+    List<Reservation> findResByRoomKindAndDateTime(String selectedType, LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime);
 }

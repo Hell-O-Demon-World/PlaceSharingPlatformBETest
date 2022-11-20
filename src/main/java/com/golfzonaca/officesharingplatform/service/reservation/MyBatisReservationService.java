@@ -1,17 +1,13 @@
 package com.golfzonaca.officesharingplatform.service.reservation;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.golfzonaca.officesharingplatform.config.auth.token.JwtManager;
 import com.golfzonaca.officesharingplatform.domain.Place;
 import com.golfzonaca.officesharingplatform.domain.Reservation;
 import com.golfzonaca.officesharingplatform.domain.Room;
 import com.golfzonaca.officesharingplatform.domain.User;
-import com.golfzonaca.officesharingplatform.repository.company.CompanyRepository;
 import com.golfzonaca.officesharingplatform.repository.place.PlaceRepository;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
 import com.golfzonaca.officesharingplatform.repository.room.RoomRepository;
 import com.golfzonaca.officesharingplatform.repository.roomkind.RoomKindRepository;
-import com.golfzonaca.officesharingplatform.repository.user.UserRepository;
 import com.golfzonaca.officesharingplatform.web.reservation.form.ResRequestData;
 import com.golfzonaca.officesharingplatform.web.reservation.form.SelectedDateTimeForm;
 import com.google.gson.Gson;
@@ -21,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.*;
@@ -30,9 +25,6 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 public class MyBatisReservationService implements ReservationService {
-
-    private final CompanyRepository companyRepository;
-    private final UserRepository userRepository;
     private final ReservationRepository reservationRepository;
     private final RoomRepository roomRepository;
     private final RoomKindRepository roomKindRepository;
@@ -216,9 +208,7 @@ public class MyBatisReservationService implements ReservationService {
     }
 
     @Override
-    public Map<String, String> ResRequestValidation(long placeId, ResRequestData resRequestData) throws JsonProcessingException {
-        Place place = placeRepository.findById(placeId).get();
-        User user = userRepository.findById(JwtManager.getIdByToken(resRequestData.getAccessToken()));
+    public Map<String, String> reservation(Map<String, String> errorMap, User user, Place place, ResRequestData resRequestData) {
         Room room = null;
         for (Room candidate : place.getRooms()) {
             if (candidate.getRoomKind().getRoomType().equals(resRequestData.getSelectedType())) {
@@ -226,152 +216,18 @@ public class MyBatisReservationService implements ReservationService {
                 break;
             }
         }
-
-        LocalDate resStartDate = toLocalDate(resRequestData.getYear(), resRequestData.getMonth(), resRequestData.getDay());
-        LocalDate resEndDate = toLocalDate(resRequestData.getYear(), resRequestData.getMonth(), resRequestData.getDay());
-        LocalTime resStartTime = toLocalTime(resRequestData.getStartTime());
-        LocalTime resEndTime = toLocalTime(resRequestData.getEndTime());
-
-        Reservation reservation = new Reservation(place, user, room, resStartDate, resStartTime, resEndDate, resEndTime);
-        reservationRepository.save(reservation);
-        return null;
-
-        /*
-        Map<String, String> errorMap = new LinkedHashMap<>();
-        Long userId = JwtManager.getIdByToken(resRequestData.getAccessToken());
-        System.out.println("userId = " + userId);
-
-        Boolean registeredStatus = userRepository.validateUserByUserId(userId);
-        System.out.println("registeredStatus = " + registeredStatus);
-
-        if (registeredStatus) {
-            errorMap.put("InvalidUserError", "등록되지 않은 회원입니다.");
-            return errorMap;
+        Reservation reservation = new Reservation(user, place, room, resRequestData.getDate(), resRequestData.getStartTime(), resRequestData.getDate(), resRequestData.getEndTime());
+        Reservation save = reservationRepository.save(reservation);
+        if (save == null) {
+            errorMap.put("ReservationError", "예약 실패");
+            log.info("예약에 실패하였습니다.");
         }
-
-        Long roomTypeId = roomKindRepository.findIdByRoomType(resRequestData.getSelectedType());
-
-        if (roomTypeId == -1) {
-            errorMap.put("NonexistentRoomTypeError", "선택하신 타입은 존재하지 않습니다.");
-            return errorMap;
-        }
-
-        int roomQuantity = roomRepository.countRoomQuantityByPlaceId(placeId, roomTypeId);
-
-        int resCount = 0;
-
-        LocalDate resStartDate = toLocalDate(resRequestData.getYear(), resRequestData.getMonth(), resRequestData.getDay());
-        LocalDate resEndDate = toLocalDate(resRequestData.getYear(), resRequestData.getMonth(), resRequestData.getDay());
-        LocalTime resStartTime = toLocalTime(resRequestData.getStartTime());
-        LocalTime resEndTime = toLocalTime(resRequestData.getEndTime());
-        String resStartDayOfWeek = resStartDate.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.US);
-        String resEndDayOfWeek = resEndDate.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.US);
-
-
-        if (!(placeRepository.findOpenDaysById(placeId).contains(resStartDayOfWeek)) || !(placeRepository.findOpenDaysById(placeId).contains(resEndDayOfWeek))) {
-            errorMap.put("InvalidOpenDaysError", "선택하신 요일은 휴무일입니다.");
-            return errorMap;
-        }
-
-
-        if (resStartTime.equals(resEndTime)) {
-            errorMap.put("InvalidResTimeError", "최소 1시간 이상 예약 가능합니다.");
-            return errorMap;
-        }
-
-        if (resStartDate.atTime(resStartTime).isBefore(LocalDateTime.now()) || resEndDate.atTime(resEndTime).isBefore(LocalDateTime.now())) {
-            errorMap.put("PastDateTimeError", "예약일시가 현재보다 과거입니다.");
-            return errorMap;
-        }
-
-        if (roomQuantity == 0) {
-            errorMap.put("NotExistedRoomError", "선택하신 Place 에 준비되지 않은 공간입니다.");
-            return errorMap;
-        }
-
-        List<Long> findRoomIdList = roomRepository.findRoomIdByPlaceIdAndRoomTypeId(placeId, roomTypeId);
-
-        List<Reservation> findResList = findResByPlaceIdAndRoomKindId(placeId, roomTypeId, resStartDate, resEndDate);
-        
-
-        if (findResList.size() == 0) {
-            reservationRepository.save(new Reservation(placeRepository.findById(placeId), userRepository.findById(userId), roo))
-            Place place = new Place();
-            place.setId(placeId);
-            User user = new User();
-            user.setId(userId);
-            RoomKind roomKind = new RoomKind();
-            roomKind.setId(roomTypeId);
-            Room room = new Room();
-            room.setId(findRoomIdList.get(0));
-            room.setRoomKind(roomKind);
-            Reservation reservation = Reservation.builder()
-                    .place(place)
-                    .user(user)
-                    .room(room)
-                    .resStartDate(resStartDate)
-                    .resStartTime(resStartTime)
-                    .resEndDate(resEndDate)
-                    .resEndTime(resEndTime)
-                    .build();
-            reservationRepository.save(reservation);
-            return errorMap;
-        }
-
-        for (Reservation reservation : findResList) {
-            if ((reservation.getResStartTime().isBefore(resStartTime) || reservation.getResStartTime().equals(resStartTime)) && reservation.getResEndTime().isAfter(resStartTime)) {
-                if (reservation.getUser().getId() != userId) {
-                    resCount++;
-                    findRoomIdList.remove(reservation.getRoom().getId());
-                } else {
-                    errorMap.put("DuplicatedResForUserError", "선택하신 시간과 공간에 대한 예약 내역이 존재합니다.");
-                    return errorMap;
-                }
-            } else if (resStartTime.isBefore(reservation.getResStartTime()) && resEndTime.isAfter(reservation.getResStartTime())) {
-                if (reservation.getUser().getId() != userId) {
-                    resCount++;
-                    findRoomIdList.remove(reservation.getRoom().getId());
-                } else {
-                    errorMap.put("DuplicatedResForUserError", "선택하신 시간과 공간에 대한 예약 내역이 존재합니다.");
-                    return errorMap;
-                }
-            }
-        }
-        if (roomQuantity == resCount) {
-            errorMap.put("DuplicatedResForRoomError", "해당 Place 에 선택하신 타입의 이용가능한 사무공간이 없습니다.");
-            return errorMap;
-        }
-        System.out.println("roomTypeId = " + roomTypeId);
-        Place place = Place.builder()
-                .id(placeId)
-                .build();
-        User user = User.builder()
-                .id(userId)
-                .build();
-        RoomKind roomKind = RoomKind.builder()
-                .id(roomTypeId)
-                .build();
-        Room room = Room.builder()
-                .id(findRoomIdList.get(0))
-                .roomKind(roomKind)
-                .build();
-        Reservation reservation = Reservation.builder()
-                .place(place)
-                .user(user)
-                .room(room)
-                .resStartDate(resStartDate)
-                .resStartTime(resStartTime)
-                .resEndDate(resEndDate)
-                .resEndTime(resEndTime)
-                .build();
-        reservationRepository.save(reservation);
         return errorMap;
-*/
     }
 
     private boolean isOpenToday(String reservationDayOfWeek, List<String> placeOpenList) {
-        Map<String, Boolean> plcaeOpenMap = getOpenDayMap(placeOpenList);
-        return plcaeOpenMap.get(reservationDayOfWeek);
+        Map<String, Boolean> placeOpenMap = getOpenDayMap(placeOpenList);
+        return placeOpenMap.get(reservationDayOfWeek);
     }
 
     public LocalDate toLocalDate(String year, String month, String day) {
@@ -379,11 +235,5 @@ public class MyBatisReservationService implements ReservationService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuu, M, d");
         LocalDate resDate = LocalDate.parse(StringType, formatter);
         return resDate;
-    }
-
-    public LocalTime toLocalTime(String hour) {
-        String StringType = String.format("%s, %s, %s", hour, "0", "0");
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("H, m, s");
-        return LocalTime.parse(StringType, formatter);
     }
 }

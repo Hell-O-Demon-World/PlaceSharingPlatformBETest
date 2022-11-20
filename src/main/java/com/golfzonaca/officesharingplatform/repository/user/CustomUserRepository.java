@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @Transactional
@@ -20,8 +21,8 @@ public class CustomUserRepository implements UserRepository {
     }
 
     @Override
-    public User findById(Long id) {
-        return jpaUserRepository.findById(id).get();
+    public Optional<User> findById(Long id) {
+        return jpaUserRepository.findById(id);
     }
 
     @Override

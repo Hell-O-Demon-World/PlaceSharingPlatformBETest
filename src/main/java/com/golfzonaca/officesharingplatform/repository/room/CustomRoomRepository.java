@@ -1,11 +1,13 @@
 package com.golfzonaca.officesharingplatform.repository.room;
 
+import com.golfzonaca.officesharingplatform.domain.Place;
 import com.golfzonaca.officesharingplatform.domain.Room;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
 @Repository
 @Transactional
 @RequiredArgsConstructor
@@ -42,5 +44,10 @@ public class CustomRoomRepository implements RoomRepository {
     @Override
     public List<Room> findAll(RoomSearchCond cond) {
         return queryRoomRepository.findAll(cond);
+    }
+
+    @Override
+    public List<Room> findRoomByPlaceAndRoomKind(Place place, String selectedType) {
+        return queryRoomRepository.findRoomByPlaceAndRoomKind(place, selectedType);
     }
 }

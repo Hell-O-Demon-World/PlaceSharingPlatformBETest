@@ -26,6 +26,4 @@ public class CustomPlaceRepository implements PlaceRepository {
     public List<Place> findPlaces(SearchRequestData searchRequestData) {
         return queryPlaceRepository.findPlaces(searchRequestData);
     }
-
-
 }

@@ -1,6 +1,7 @@
 package com.golfzonaca.officesharingplatform.repository.room;
 
 
+import com.golfzonaca.officesharingplatform.domain.Place;
 import com.golfzonaca.officesharingplatform.domain.Room;
 
 import java.util.List;
@@ -16,4 +17,6 @@ public interface RoomRepository {
     List<Integer> findRoomTypeByPlaceId(Long placeId);
 
     List<Room> findAll(RoomSearchCond cond);
+
+    List<Room> findRoomByPlaceAndRoomKind(Place place, String selectedType);
 }
