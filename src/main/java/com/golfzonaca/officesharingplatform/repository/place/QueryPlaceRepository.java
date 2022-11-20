@@ -1,7 +1,6 @@
 package com.golfzonaca.officesharingplatform.repository.place;
 
 import com.golfzonaca.officesharingplatform.domain.Place;
-import com.golfzonaca.officesharingplatform.domain.type.RoomType;
 import com.golfzonaca.officesharingplatform.web.search.dto.SearchRequestData;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -33,7 +32,7 @@ public class QueryPlaceRepository {
         String day = searchRequestData.getDay();
         LocalTime startTime = searchRequestData.getStartTime();
         LocalTime endTime = searchRequestData.getEndTime();
-        RoomType roomType = searchRequestData.getRoomType();
+        String roomType = searchRequestData.getRoomType();
 
 
         return query
@@ -69,7 +68,7 @@ public class QueryPlaceRepository {
     private BooleanExpression beforeStartTime(LocalTime startTime) {
         if (startTime != null) {
             if (StringUtils.hasText(startTime.toString())) {
-                return place.placeStart.before(startTime);
+                return place.placeStart.loe(startTime);
             }
         }
         return null;
@@ -78,16 +77,16 @@ public class QueryPlaceRepository {
     private BooleanExpression afterEndTime(LocalTime endTime) {
         if (endTime != null) {
             if (StringUtils.hasText(endTime.toString())) {
-                return place.placeEnd.after(endTime);
+                return place.placeEnd.goe(endTime);
             }
         }
         return null;
     }
 
-    private BooleanExpression likeRoomType(RoomType roomType) {
+    private BooleanExpression likeRoomType(String roomType) {
         if (roomType != null) {
-            if (StringUtils.hasText(roomType.toString())) {
-                return roomKind.roomType.contains(String.valueOf(roomType));
+            if (StringUtils.hasText(roomType)) {
+                return roomKind.roomType.contains(roomType);
             }
         }
         return null;
