@@ -46,9 +46,10 @@ public class MyBatisKakaoPayService implements KakaoPayService {
 
         RestTemplate restTemplate = new RestTemplate();
 
+        long reservationNumber = 12L;
         Reservation reservation = null; // Reservation 에서 Param 으로 넘겨받을 예정
-        if (reservationRepository.findById(12L).isPresent()) {
-            reservation = reservationRepository.findById(12L).get();
+        if (reservationRepository.findById(reservationNumber).isPresent()) {
+            reservation = reservationRepository.findById(reservationNumber).get();
         }
         User user = reservation.getUser(); // Reservation 에서 Param 으로 넘겨받을 예정
         RoomKind roomKind = reservation.getRoom().getRoomKind();
@@ -91,10 +92,10 @@ public class MyBatisKakaoPayService implements KakaoPayService {
         log.info("Started kakaoPayInfo method");
 
         RestTemplate restTemplate = new RestTemplate();
-
+        long reservationId = 12L;
         Reservation reservation = null; // Reservation 에서 Param 으로 넘겨받을 예정
-        if (reservationRepository.findById(12L).isPresent()) {
-            reservation = reservationRepository.findById(12L).get();
+        if (reservationRepository.findById(reservationId).isPresent()) {
+            reservation = reservationRepository.findById(reservationId).get();
         }
         User user = reservation.getUser(); // Reservation 에서 Param 으로 넘겨받을 예정
         Room room = reservation.getRoom();
@@ -123,7 +124,7 @@ public class MyBatisKakaoPayService implements KakaoPayService {
             kakaoPayApprovalForm = restTemplate.postForObject(new URI(HOST + "/v1/payment/approve"), body, KakaoPayApprovalForm.class);
             log.info("" + kakaoPayApprovalForm);
 
-            savePaymentInfo(user, room, kakaoPayApprovalForm);
+            savePaymentInfo(reservation, user, room, kakaoPayApprovalForm);
             return kakaoPayApprovalForm;
 
         } catch (RestClientException e) {
@@ -142,7 +143,7 @@ public class MyBatisKakaoPayService implements KakaoPayService {
         return String.valueOf((int) (Integer.parseInt(calculatePayPrice) * 0.9));
     }
 
-    public void savePaymentInfo(User user, Room room, KakaoPayApprovalForm kakaoPayApprovalForm) {
+    public void savePaymentInfo(Reservation reservation, User user, Room room, KakaoPayApprovalForm kakaoPayApprovalForm) {
         //TODO 1 : Payment 테이블에 roomId에 적절한 것 찾아야함
 //        long roomId = Integer.parseInt(kakaoPayApprovalForm.getItem_code()); // roomId는 not null인데  null로 들어옴
 
@@ -153,7 +154,7 @@ public class MyBatisKakaoPayService implements KakaoPayService {
         //TODO 2 : Payment 테이블에 payStatus 적절한 것 찾아야함
         //TODO 3 : Reservation 테이블에서 예외상황 생각해야함
 //        String payStatus = kakaoPayApprovalForm.getPayment_method_type(); -> 막은이유 : DB에서 enum으로 선언되어있어서 enum타입에 맞는 애들이 들어가야함
-        PayStatus payStatus = checkPayStatus(user, room); // 한 사람이 같은 방을 2번(9~10am , 1pm~2pm 이런식으로) 예약한 경우도 생각해야하나?
+        PayStatus payStatus = checkPayStatus(reservation); // 한 사람이 같은 방을 2번(9~10am , 1pm~2pm 이런식으로) 예약한 경우도 생각해야하나?
 //        String payStatus = "선결제";
         long payMileage = kakaoPayApprovalForm.getAmount().getPoint();
 
@@ -174,10 +175,10 @@ public class MyBatisKakaoPayService implements KakaoPayService {
         paymentRepository.save(payment);
     }
 
-    public PayStatus checkPayStatus(User user, Room room) {
+    public PayStatus checkPayStatus(Reservation reservation) {
         PayStatus payStatus;
 
-        if (reservationRepository.findByUserAndRoom(user, room).isEmpty()) {
+        if (reservation == null) {
             payStatus = PayStatus.PREPAYMENT;
         } else {
             payStatus = PayStatus.POSTPAYMENT;
