@@ -1,6 +1,5 @@
 package com.golfzonaca.officesharingplatform.domain;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

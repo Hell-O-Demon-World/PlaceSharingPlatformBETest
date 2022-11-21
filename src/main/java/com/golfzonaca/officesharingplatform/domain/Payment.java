@@ -7,7 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Getter
 @Entity
@@ -28,7 +29,9 @@ public class Payment {
     private Room room;
 
     @Column(name = "PAY_DATE", nullable = false)
-    private LocalDateTime payDateTime;
+    private LocalDate payDate;
+    @Column(name = "PAY_TIME", nullable = false)
+    private LocalTime payTime;
 
     @Column(name = "PAY_PRICE", nullable = false)
     private long price;
@@ -43,19 +46,21 @@ public class Payment {
     @Column(name = "PAY_TYPE", nullable = false)
     @Enumerated(EnumType.STRING)
     private PayType type;
-    
+
     @Column(name = "PAY_API_CODE", nullable = false)
     private String apiCode;
 
     @Builder
-    public Payment(User user, Room room, LocalDateTime payDateTime, long price, PayStatus status, long savedMileage, PayType type, String apiCode) {
+    public Payment(User user, Room room, LocalDate payDate, LocalTime payTime, long price, PayStatus status, long savedMileage, PayType type, String apiCode) {
         this.user = user;
         this.room = room;
-        this.payDateTime = payDateTime;
+        this.payDate = payDate;
+        this.payTime = payTime;
         this.price = price;
         this.status = status;
         this.savedMileage = savedMileage;
         this.type = type;
         this.apiCode = apiCode;
+
     }
 }

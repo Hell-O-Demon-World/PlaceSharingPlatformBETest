@@ -29,4 +29,8 @@ public interface ReservationRepository {
     List<Reservation> findResByRoomKindAndDateTime(String selectedType, LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime);
 
     List<Reservation> findAllByPlaceIdAndRoomTypeAndDate(Long placeId, String roomType, LocalDate date);
+
+    Reservation findById(Long reservationId);
+
+    Reservation findByUserIdAndRoomId(long userId, long roomId);
 }

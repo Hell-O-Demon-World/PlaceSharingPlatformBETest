@@ -42,4 +42,16 @@
         from reservation
         where id = #{reservationId}
     </select>
+
+    <select id="findById" resultType="Reservation">
+        select *
+        from reservation
+        where id = #{id}
+    </select>
+
+    <select id="findByUserIdAndRoomId" resultType="Reservation">
+        select *
+        from reservation
+        where user_id = #{userId} and room_id = #{roomId}
+    </select>
 </mapper>
