@@ -67,7 +67,7 @@ public class ReservationController {
 
         if (errorMap.isEmpty()) {
             errorMap = reservationService.reservation(errorMap, findUser.get(), findPlace.get(), resRequestData);
-            kakaoPayService.kakaoPayReady(Long.valueOf(errorMap.get("reservationId")));
+            kakaoPayService.kakaoPayReady(Long.parseLong(errorMap.get("reservationId")));
             return errorMap;
         }
         return errorMap;
