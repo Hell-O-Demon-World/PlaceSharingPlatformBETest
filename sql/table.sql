@@ -133,3 +133,17 @@ create table reservation
             references user (ID)
             on delete cascade
 );
+
+create table payment
+(
+    ID           bigint unsigned auto_increment primary key,
+    USER_ID      bigint unsigned not null,
+    ROOM_ID      bigint unsigned not null,
+    PAY_DATE     date        not null comment 'API 결제 결과에서 가져오기',
+    PAY_TIME     time        not null comment 'API 결제 결과에서 가져오기',
+    PAY_PRICE    bigint unsigned not null comment '50000',
+    PAY_STATUS   enum ('PREPAYMENT', 'POSTPAYMENT') not null comment '선결제, 현장결제',
+    PAY_MILEAGE  bigint unsigned not null,
+    PAY_TYPE     enum ('DEPOSIT', 'BALANCE', 'FULLPAYMENT') not null,
+    PAY_API_CODE varchar(30) not null comment 'API 결제를 통해 생성되는 거래 번호'
+);
