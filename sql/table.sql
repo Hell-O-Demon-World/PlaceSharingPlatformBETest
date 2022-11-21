@@ -145,5 +145,13 @@ create table payment
     PAY_STATUS   enum ('PREPAYMENT', 'POSTPAYMENT') not null comment '선결제, 현장결제',
     PAY_MILEAGE  bigint unsigned not null,
     PAY_TYPE     enum ('DEPOSIT', 'BALANCE', 'FULLPAYMENT') not null,
-    PAY_API_CODE varchar(30) not null comment 'API 결제를 통해 생성되는 거래 번호'
+    PAY_API_CODE varchar(30) not null comment 'API 결제를 통해 생성되는 거래 번호',
+    constraint FK_USER_TO_PAYMENT_1
+        foreign key (USER_ID)
+            references user (ID)
+            on delete cascade,
+    constraint FK_ROOM_TO_PAYMENT_1
+        foreign key (ROOM_ID)
+            references ROOM (ID)
+            on delete cascade
 );
