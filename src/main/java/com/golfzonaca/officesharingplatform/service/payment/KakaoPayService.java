@@ -7,6 +7,6 @@ public interface KakaoPayService {
 
     String kakaoPayReady(Long reservationId);
 
-    KakaoPayApprovalForm kakaoPayInfo(String pg_tokenpg_token);
+    KakaoPayApprovalForm kakaoPayInfo(Long reservationId, String pg_token);
 
 }

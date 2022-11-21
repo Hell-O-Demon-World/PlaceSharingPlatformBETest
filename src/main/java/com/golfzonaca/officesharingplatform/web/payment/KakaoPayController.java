@@ -25,18 +25,19 @@ public class KakaoPayController {
     }
 
     @PostMapping("/kakaoPay")
-    public String kakaoPay(Long reservationId) {
+    public String kakaoPay(Long reservationId) { //ReservationController 에서 Param 으로 전달받을 예정
         return "redirect:" + kakaoPayService.kakaoPayReady(reservationId);
     }
 
     @GetMapping("/{reservationId}/kakaoPaySuccess")
-    public String kakaoPaySuccess(@PathVariable Long reservationId, @RequestParam("pg_token") String pg_token, RedirectAttributes model) {
-        model.addAttribute("pg_token", pg_token);
+    public String kakaoPaySuccess(@PathVariable Long reservationId, @RequestParam("pg_token") String pg_token, RedirectAttributes redirectAttributes) {
+        redirectAttributes.addAttribute("pg_token", pg_token);
+        redirectAttributes.addAttribute("reservationId", reservationId);
         return "redirect:/kakaoPaySuccess";
     }
 
     @GetMapping("/kakaoPaySuccess")
-    public void kakaoPaySuccesss(@RequestParam("pg_token") String pg_token, Model model) {
-        model.addAttribute("info", kakaoPayService.kakaoPayInfo(pg_token));
+    public void kakaoPaySuccesss(@RequestParam("pg_token") String pg_token, @RequestParam("reservationId") Long reservationId, Model model) {
+        model.addAttribute("info", kakaoPayService.kakaoPayInfo(reservationId, pg_token));
     }
 }

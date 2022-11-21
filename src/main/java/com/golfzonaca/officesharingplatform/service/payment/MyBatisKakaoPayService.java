@@ -5,10 +5,8 @@ import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayApprovalForm;
 import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayReady;
 import com.golfzonaca.officesharingplatform.domain.type.PayStatus;
 import com.golfzonaca.officesharingplatform.domain.type.PayType;
-import com.golfzonaca.officesharingplatform.repository.mileage.MileageRepository;
 import com.golfzonaca.officesharingplatform.repository.payment.PaymentRepository;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
-import com.golfzonaca.officesharingplatform.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
@@ -36,8 +34,6 @@ public class MyBatisKakaoPayService implements KakaoPayService {
     private KakaoPayApprovalForm kakaoPayApprovalForm;
     private final ReservationRepository reservationRepository;
     private final PaymentRepository paymentRepository;
-    private final UserRepository userRepository;
-    private final MileageRepository mileageRepository;
 
     @Override
     public String kakaoPayReady(Long reservationId) {
@@ -46,7 +42,7 @@ public class MyBatisKakaoPayService implements KakaoPayService {
 
         RestTemplate restTemplate = new RestTemplate();
 
-        reservationId = 12L;
+        reservationId = 12L; // 아직 값을 받지 않아서 임시로 넣음
         Reservation reservation = null; // Reservation 에서 Param 으로 넘겨받을 예정
         if (reservationRepository.findById(reservationId).isPresent()) {
             reservation = reservationRepository.findById(reservationId).get();
@@ -88,11 +84,10 @@ public class MyBatisKakaoPayService implements KakaoPayService {
     }
 
     @Override
-    public KakaoPayApprovalForm kakaoPayInfo(String pg_token) {
+    public KakaoPayApprovalForm kakaoPayInfo(Long reservationId, String pg_token) {
         log.info("Started kakaoPayInfo method");
 
         RestTemplate restTemplate = new RestTemplate();
-        long reservationId = 12L;
         Reservation reservation = null; // Reservation 에서 Param 으로 넘겨받을 예정
         if (reservationRepository.findById(reservationId).isPresent()) {
             reservation = reservationRepository.findById(reservationId).get();
