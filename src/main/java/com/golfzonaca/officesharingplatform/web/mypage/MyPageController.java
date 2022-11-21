@@ -21,7 +21,7 @@ public class MyPageController {
     public MyPage myPageForm(@RequestParam("accessToken") String accessToken) throws JsonProcessingException {
         return MyPage.builder()
 
-                .userName(userRepository.findById(JwtManager.getIdByToken(accessToken)).getUsername())
+                .userName(userRepository.findById(JwtManager.getIdByToken(accessToken)).get().getUsername())
 
                 .myPageReservationList(myPageReservationFormService.getMyPageReservationListByUserId(JwtManager.getIdByToken(accessToken)))
                 .build();

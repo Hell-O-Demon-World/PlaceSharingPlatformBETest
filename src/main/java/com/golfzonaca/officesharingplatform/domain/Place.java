@@ -1,6 +1,5 @@
 package com.golfzonaca.officesharingplatform.domain;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,7 +24,6 @@ public class Place {
     @ManyToOne
     @JoinColumn(name = "COMPANY_ID")
     private Company company;
-
 
 /*
     @OneToOne

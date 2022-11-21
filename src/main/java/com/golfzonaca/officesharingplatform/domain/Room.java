@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -13,7 +15,7 @@ import javax.persistence.*;
 @Builder
 @AllArgsConstructor
 public class Room {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -28,6 +30,10 @@ public class Room {
 
     @Column(name = "TOTAL_NUM", nullable = false)
     private int totalNum;
+
+    //양방향 매핑
+    @OneToMany(mappedBy = "room")
+    private List<Reservation> reservationList = new ArrayList<>();
 
     @Builder
     public Room(RoomKind roomKind, Place place, int totalNum) {

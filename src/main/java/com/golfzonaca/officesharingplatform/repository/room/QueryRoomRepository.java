@@ -1,10 +1,12 @@
 package com.golfzonaca.officesharingplatform.repository.room;
 
+import com.golfzonaca.officesharingplatform.domain.Place;
 import com.golfzonaca.officesharingplatform.domain.Room;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -32,6 +34,7 @@ public class QueryRoomRepository {
                 .where(eqRoomKindId(roomKindId), eqPlaceId(placeId), eqTotalNum(totalNum))
                 .fetch();
     }
+
     List<Room> findAll(RoomSearchCond cond) {
         Optional<Long> roomKindId = Optional.ofNullable(cond.getRoomKindId());
         Optional<Long> placeId = Optional.ofNullable(cond.getPlaceId());
@@ -43,6 +46,14 @@ public class QueryRoomRepository {
                 .where(eqRoomKindId(roomKindId), eqPlaceId(placeId), eqTotalNum(totalNum))
                 .fetch();
     }
+
+    public List<Room> findRoomByPlaceAndRoomKind(Place place, String selectedType) {
+        return query
+                .selectFrom(room)
+                .where(placeEq(place), roomTypeLike(selectedType))
+                .fetch();
+    }
+
     private BooleanExpression eqRoomKindId(Optional<Long> roomKindId) {
         if (roomKindId.isPresent()) {
             return room.roomKind.id.eq(roomKindId.get());
@@ -56,6 +67,7 @@ public class QueryRoomRepository {
         }
         return null;
     }
+
     private BooleanExpression eqTotalNum(Optional<Integer> totalNum) {
         if (totalNum.isPresent()) {
             return room.totalNum.eq(totalNum.get());
@@ -63,9 +75,23 @@ public class QueryRoomRepository {
         return null;
     }
 
+    private BooleanExpression placeEq(Place place) {
+        if (place != null) {
+            return room.place.eq(place);
+        }
+        return null;
+    }
+
     private BooleanExpression eqRoomType(String roomType) {
         if (roomKind != null) {
             return room.roomKind.roomType.eq(roomType);
+        }
+        return null;
+    }
+
+    private BooleanExpression roomTypeLike(String selectedType) {
+        if (StringUtils.hasText(selectedType)) {
+            return room.roomKind.roomType.like(selectedType);
         }
         return null;
     }

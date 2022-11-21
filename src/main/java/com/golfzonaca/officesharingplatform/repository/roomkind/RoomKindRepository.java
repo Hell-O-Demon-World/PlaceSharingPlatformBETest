@@ -6,4 +6,6 @@ public interface RoomKindRepository {
     Long findIdByRoomType(String roomType);
 
     RoomKind findById(Long roomId);
+
+    boolean validRoomType(String roomType);
 }

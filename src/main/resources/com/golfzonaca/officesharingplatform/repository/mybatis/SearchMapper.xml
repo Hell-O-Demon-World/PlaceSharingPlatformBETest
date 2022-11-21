@@ -3,7 +3,7 @@
 <mapper namespace="com.golfzonaca.officesharingplatform.repository.mybatis.SearchMapper">
 
     <select id="findPlaceBySearchWord"
-            resultType="com.golfzonaca.officesharingplatform.web.search.form.SearchPlaceResultData">
+            resultType="com.golfzonaca.officesharingplatform.web.search.dto.SearchPlaceResultData">
         select id, place_name, address_id, place_addinfo
         from place
         <where>

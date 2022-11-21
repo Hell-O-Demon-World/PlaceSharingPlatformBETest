@@ -2,6 +2,7 @@ package com.golfzonaca.officesharingplatform.repository.mybatis;
 
 import com.golfzonaca.officesharingplatform.domain.Reservation;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -20,4 +21,8 @@ public interface ReservationMapper {
     List<Integer> findRoomTypeByPlaceId(long placeId);
 
     void deleteById(Long reservationId);
+
+    Reservation findById(Long reservationId);
+
+    Reservation findByUserIdAndRoomId(@Param("userId")long userId, @Param("roomId")long roomId);
 }

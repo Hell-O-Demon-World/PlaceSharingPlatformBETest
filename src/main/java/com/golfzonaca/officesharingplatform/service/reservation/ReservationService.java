@@ -1,7 +1,8 @@
 package com.golfzonaca.officesharingplatform.service.reservation;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.golfzonaca.officesharingplatform.domain.Place;
 import com.golfzonaca.officesharingplatform.domain.Reservation;
+import com.golfzonaca.officesharingplatform.domain.User;
 import com.golfzonaca.officesharingplatform.web.reservation.form.ResRequestData;
 import com.golfzonaca.officesharingplatform.web.reservation.form.SelectedDateTimeForm;
 import com.google.gson.JsonObject;
@@ -18,6 +19,6 @@ public interface ReservationService {
 
     List<Reservation> findResByPlaceIdAndRoomKindId(long placeId, long roomTypeId, LocalDate resStartDate, LocalDate resEndDate);
 
-    Map<String, String> ResRequestValidation(long placeId, ResRequestData resRequestData) throws JsonProcessingException;
+    Map<String, String> reservation(Map<String, String> errorMap, User user, Place place, ResRequestData resRequestData);
 
 }
