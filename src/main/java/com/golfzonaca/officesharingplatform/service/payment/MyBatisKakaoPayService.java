@@ -40,16 +40,16 @@ public class MyBatisKakaoPayService implements KakaoPayService {
     private final MileageRepository mileageRepository;
 
     @Override
-    public String kakaoPayReady() {
+    public String kakaoPayReady(Long reservationId) {
 
         log.info("Started kakaoPayReady method");
 
         RestTemplate restTemplate = new RestTemplate();
 
-        long reservationNumber = 12L;
+        reservationId = 12L;
         Reservation reservation = null; // Reservation 에서 Param 으로 넘겨받을 예정
-        if (reservationRepository.findById(reservationNumber).isPresent()) {
-            reservation = reservationRepository.findById(reservationNumber).get();
+        if (reservationRepository.findById(reservationId).isPresent()) {
+            reservation = reservationRepository.findById(reservationId).get();
         }
         User user = reservation.getUser(); // Reservation 에서 Param 으로 넘겨받을 예정
         RoomKind roomKind = reservation.getRoom().getRoomKind();
@@ -70,7 +70,7 @@ public class MyBatisKakaoPayService implements KakaoPayService {
         params.add("quantity", "1");
         params.add("total_amount", calculatePayPrice);
         params.add("tax_free_amount", taxFreeAmount(calculatePayPrice));
-        params.add("approval_url", "http://localhost:8080/kakaoPaySuccess");
+        params.add("approval_url", "http://localhost:8080/" + reservationId + "/kakaoPaySuccess");
         params.add("cancel_url", "http://localhost:8080/kakaoPayCancel");
         params.add("fail_url", "http://localhost:8080/kakaoPaySuccessFail");
 

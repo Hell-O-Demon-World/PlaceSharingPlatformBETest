@@ -5,8 +5,8 @@ import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayApprovalForm;
 
 public interface KakaoPayService {
 
-    String kakaoPayReady();
+    String kakaoPayReady(Long reservationId);
 
-    KakaoPayApprovalForm kakaoPayInfo(String pg_token);
+    KakaoPayApprovalForm kakaoPayInfo(String pg_tokenpg_token);
 
 }
