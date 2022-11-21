@@ -29,7 +29,6 @@ import java.util.*;
 public class CustomReservationService implements ReservationService {
     private final ReservationRepository reservationRepository;
     private final RoomRepository roomRepository;
-    private final RoomKindRepository roomKindRepository;
     private final PlaceRepository placeRepository;
 
     @Override
