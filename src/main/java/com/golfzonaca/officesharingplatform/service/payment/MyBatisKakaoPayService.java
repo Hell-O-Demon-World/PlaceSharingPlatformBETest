@@ -157,13 +157,13 @@ public class MyBatisKakaoPayService implements KakaoPayService {
 //        String payStatus = "선결제";
         long payMileage = kakaoPayApprovalForm.getAmount().getPoint();
 
-        PayType payType = PayType.FullPayment;
+        PayType payType = PayType.FULLPAYMENT;
 
         if (payStatus.equals(PayStatus.PREPAYMENT)) { // 선결제일 때
             accumulationMileage(user, payPrice);
         } else { // 현장결제일 때
             if (!kakaoPayApprovalForm.getItem_name().contains("OFFICE")) {
-                payType = PayType.Deposit;
+                payType = PayType.DEPOSIT;
                 payPrice = calculateDeposit(payPrice);
             }
         }
