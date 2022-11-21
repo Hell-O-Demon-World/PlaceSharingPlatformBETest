@@ -89,4 +89,9 @@ public class CustomReservationRepository implements ReservationRepository {
     public Optional<Reservation> findByUserAndRoom(User user, Room room) {
         return queryReservationRepository.findByUserAndRoom(user, room);
     }
+
+    public List<Reservation> findAllLimit(ReservationSearchCond cond, Integer maxNum) {
+        return queryReservationRepository.findAllLimit(cond, maxNum);
+
+    }
 }

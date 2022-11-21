@@ -35,4 +35,6 @@ public interface ReservationRepository {
     Optional<Reservation> findById(Long reservationId);
 
     Optional<Reservation> findByUserAndRoom(User user, Room room);
+
+    List<Reservation> findAllLimit(ReservationSearchCond cond, Integer maxNum);
 }
