@@ -244,6 +244,7 @@ public class MyBatisReservationService implements ReservationService {
             errorMap.put("ReservationError", "예약 실패");
             log.info("예약에 실패하였습니다.");
         }
+        errorMap.put("reservationId", save.getId().toString());
         return errorMap;
     }
 

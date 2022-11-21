@@ -6,6 +6,7 @@ import com.golfzonaca.officesharingplatform.domain.Place;
 import com.golfzonaca.officesharingplatform.domain.User;
 import com.golfzonaca.officesharingplatform.repository.place.PlaceRepository;
 import com.golfzonaca.officesharingplatform.repository.user.UserRepository;
+import com.golfzonaca.officesharingplatform.service.payment.KakaoPayService;
 import com.golfzonaca.officesharingplatform.service.reservation.ReservationService;
 import com.golfzonaca.officesharingplatform.web.reservation.form.ResRequestData;
 import com.golfzonaca.officesharingplatform.web.reservation.form.SelectedDateTimeForm;
@@ -30,6 +31,7 @@ public class ReservationController {
     private final ReservationValidation reservationValidation;
     private final PlaceRepository placeRepository;
     private final UserRepository userRepository;
+    private final KakaoPayService kakaoPayService;
 
     @GetMapping("places/{placeId}")
     public JsonObject findRoom(@PathVariable long placeId) {
@@ -62,9 +64,10 @@ public class ReservationController {
         }
 
         errorMap = reservationValidation.validation(errorMap, findUser.get(), findPlace.get(), resRequestData);
-        
+
         if (errorMap.isEmpty()) {
             errorMap = reservationService.reservation(errorMap, findUser.get(), findPlace.get(), resRequestData);
+            kakaoPayService.kakaoPayReady(Long.valueOf(errorMap.get("reservationId")));
             return errorMap;
         }
         return errorMap;

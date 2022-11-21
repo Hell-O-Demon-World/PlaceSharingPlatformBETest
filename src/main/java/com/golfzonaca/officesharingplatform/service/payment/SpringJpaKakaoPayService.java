@@ -27,7 +27,7 @@ import java.time.LocalTime;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class MyBatisKakaoPayService implements KakaoPayService {
+public class SpringJpaKakaoPayService implements KakaoPayService {
 
     private static final String HOST = "https://kapi.kakao.com/";
     private KakaoPayReady kakaoPayReady;
@@ -36,18 +36,17 @@ public class MyBatisKakaoPayService implements KakaoPayService {
     private final PaymentRepository paymentRepository;
 
     @Override
-    public String kakaoPayReady(Long reservationId) {
+    public String kakaoPayReady(long reservationId) {
 
         log.info("Started kakaoPayReady method");
 
         RestTemplate restTemplate = new RestTemplate();
 
-        reservationId = 12L; // 아직 값을 받지 않아서 임시로 넣음
-        Reservation reservation = null; // Reservation 에서 Param 으로 넘겨받을 예정
+        Reservation reservation = null;
         if (reservationRepository.findById(reservationId).isPresent()) {
             reservation = reservationRepository.findById(reservationId).get();
         }
-        User user = reservation.getUser(); // Reservation 에서 Param 으로 넘겨받을 예정
+        User user = reservation.getUser();
         RoomKind roomKind = reservation.getRoom().getRoomKind();
         String calculatePayPrice = calculatePayPrice(reservation, roomKind);
 
@@ -84,15 +83,15 @@ public class MyBatisKakaoPayService implements KakaoPayService {
     }
 
     @Override
-    public KakaoPayApprovalForm kakaoPayInfo(Long reservationId, String pg_token) {
+    public KakaoPayApprovalForm kakaoPayInfo(long reservationId, String pg_token) {
         log.info("Started kakaoPayInfo method");
 
         RestTemplate restTemplate = new RestTemplate();
-        Reservation reservation = null; // Reservation 에서 Param 으로 넘겨받을 예정
+        Reservation reservation = null;
         if (reservationRepository.findById(reservationId).isPresent()) {
             reservation = reservationRepository.findById(reservationId).get();
         }
-        User user = reservation.getUser(); // Reservation 에서 Param 으로 넘겨받을 예정
+        User user = reservation.getUser();
         Room room = reservation.getRoom();
         RoomKind roomKind = reservation.getRoom().getRoomKind();
         String calculatePayPrice = calculatePayPrice(reservation, roomKind);
