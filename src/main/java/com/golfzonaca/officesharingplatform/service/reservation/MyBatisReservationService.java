@@ -211,6 +211,15 @@ public class MyBatisReservationService implements ReservationService {
     public Map<String, String> reservation(Map<String, String> errorMap, User user, Place place, ResRequestData resRequestData) {
         Room room = null;
         for (Room candidate : place.getRooms()) {
+            if (candidate.getReservationList().size() != 0) {
+                for (Reservation reservation : candidate.getReservationList()) {
+                    
+                }
+            }
+        }
+
+
+        for (Room candidate : place.getRooms()) {
             if (candidate.getRoomKind().getRoomType().equals(resRequestData.getSelectedType())) {
                 room = candidate;
                 break;
