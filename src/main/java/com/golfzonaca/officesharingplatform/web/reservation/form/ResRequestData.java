@@ -17,5 +17,4 @@ public class ResRequestData {
     private LocalDate date;
     private LocalTime startTime;
     private LocalTime endTime;
-    private String accessToken;
 }

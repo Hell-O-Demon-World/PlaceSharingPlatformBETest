@@ -50,6 +50,7 @@ public class QueryRoomRepository {
     public List<Room> findRoomByPlaceAndRoomKind(Place place, String selectedType) {
         return query
                 .selectFrom(room)
+                .innerJoin(room.roomKind)
                 .where(placeEq(place), roomTypeLike(selectedType))
                 .fetch();
     }

@@ -1,6 +1,7 @@
 package com.golfzonaca.officesharingplatform.web.reservation;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.golfzonaca.officesharingplatform.annotation.TokenUserId;
 import com.golfzonaca.officesharingplatform.config.auth.token.JwtManager;
 import com.golfzonaca.officesharingplatform.domain.Place;
 import com.golfzonaca.officesharingplatform.domain.User;
@@ -46,7 +47,7 @@ public class ReservationController {
     }
 
     @PostMapping("places/{placeId}/book")
-    public Map book(@PathVariable long placeId, @RequestBody ResRequestData resRequestData) throws JsonProcessingException {
+    public Map book(@TokenUserId Long userId, @PathVariable long placeId, @RequestBody ResRequestData resRequestData) {
         Map<String, String> errorMap = new LinkedHashMap<>();
 
         Optional<Place> findPlace = placeRepository.findById(placeId);
@@ -55,7 +56,7 @@ public class ReservationController {
             return errorMap;
         }
 
-        Optional<User> findUser = userRepository.findById(JwtManager.getIdByToken(resRequestData.getAccessToken()));
+        Optional<User> findUser = userRepository.findById(userId);
         if (findUser.isEmpty()) {
             errorMap.put("InvalidUserError", "등록되지 않은 회원입니다.");
             return errorMap;

@@ -77,4 +77,9 @@ public class CustomReservationRepository implements ReservationRepository {
     public List<Reservation> findAllByPlaceIdAndRoomTypeAndDate(Long placeId, String roomType, LocalDate date) {
         return queryReservationRepository.findAllByPlaceIdAndRoomTypeAndDate(placeId, roomType, date);
     }
+
+    @Override
+    public List<Reservation> findAllLimit(ReservationSearchCond cond, Integer maxNum) {
+        return queryReservationRepository.findAllLimit(cond, maxNum);
+    }
 }

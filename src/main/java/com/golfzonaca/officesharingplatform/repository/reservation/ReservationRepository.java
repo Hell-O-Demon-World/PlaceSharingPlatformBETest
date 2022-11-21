@@ -29,4 +29,6 @@ public interface ReservationRepository {
     List<Reservation> findResByRoomKindAndDateTime(String selectedType, LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime);
 
     List<Reservation> findAllByPlaceIdAndRoomTypeAndDate(Long placeId, String roomType, LocalDate date);
+
+    List<Reservation> findAllLimit(ReservationSearchCond cond, Integer maxNum);
 }
