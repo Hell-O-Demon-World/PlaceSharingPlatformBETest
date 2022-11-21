@@ -34,7 +34,6 @@ public class MyBatisMyPageService implements MyPageService{
         List<Reservation> reservationList = reservationRepository.findAllLimit(ReservationSearchCond.builder()
                 .userId(userId)
                 .build(), order);
-        System.out.println("reservationList = " + reservationList);
         reservationRepository.deleteById( reservationList.get(order).getId());
     }
 
