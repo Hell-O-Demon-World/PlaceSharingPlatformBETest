@@ -1,8 +1,6 @@
 package com.golfzonaca.officesharingplatform.repository.reservation;
 
-import com.golfzonaca.officesharingplatform.domain.Place;
-import com.golfzonaca.officesharingplatform.domain.Reservation;
-import com.golfzonaca.officesharingplatform.domain.User;
+import com.golfzonaca.officesharingplatform.domain.*;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
@@ -57,6 +55,27 @@ public class QueryReservationRepository {
                 .selectFrom(reservation)
                 .where(roomTypeLike(selectedType), startDateEquals(startDate), startTimeLoe(startTime), endDateEquals(endDate), endTimeGoe(endTime))
                 .fetch();
+    }
+
+    public List<Reservation> findAllByPlaceIdAndRoomTypeAndDate(Long placeId, String roomType, LocalDate date) {
+        Optional<Long> optionalPlaceId = Optional.ofNullable(placeId);
+        Optional<String> optionalRoomType = Optional.ofNullable(roomType);
+        Optional<LocalDate> optionalLocalDate = Optional.ofNullable(date);
+        return query
+                .select(reservation)
+                .from(reservation)
+                .where(eqPlaceId(optionalPlaceId), eqRoomType(optionalRoomType), eqResStartDate(optionalLocalDate))
+                .fetch();
+    }
+
+    public Optional<Reservation> findByUserAndRoom(User user, Room room) {
+        if (user != null && room != null) {
+            return Optional.ofNullable(query
+                    .selectFrom(reservation)
+                    .where(userEquals(user), roomEquals(room))
+                    .fetchOne());
+        }
+        return null;
     }
 
     private BooleanExpression userEquals(User user) {
@@ -192,14 +211,11 @@ public class QueryReservationRepository {
         return null;
     }
 
-    public List<Reservation> findAllByPlaceIdAndRoomTypeAndDate(Long placeId, String roomType, LocalDate date) {
-        Optional<Long> optionalPlaceId = Optional.ofNullable(placeId);
-        Optional<String> optionalRoomType = Optional.ofNullable(roomType);
-        Optional<LocalDate> optionalLocalDate = Optional.ofNullable(date);
-        return query
-                .select(reservation)
-                .from(reservation)
-                .where(eqPlaceId(optionalPlaceId), eqRoomType(optionalRoomType), eqResStartDate(optionalLocalDate))
-                .fetch();
+
+    private BooleanExpression roomEquals(Room room) {
+        if (room != null) {
+            return QRoom.room.eq(room);
+        }
+        return null;
     }
 }

@@ -21,4 +21,14 @@ public class Mileage {
     public Mileage(long point) {
         this.point = point;
     }
+
+    public long addPoint(long userPoint, long addPoint) {
+        this.point = userPoint + addPoint;
+        return point;
+    }
+
+    public long minusPoint(long userPoint, long minusPoint) {
+        this.point = userPoint - minusPoint;
+        return point;
+    }
 }

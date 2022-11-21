@@ -1,18 +1,21 @@
 package com.golfzonaca.officesharingplatform.repository.payment;
 
 import com.golfzonaca.officesharingplatform.domain.Payment;
-import com.golfzonaca.officesharingplatform.repository.mybatis.PaymentMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
+@Transactional
 @RequiredArgsConstructor
-public class MybatisPaymentRepository implements PaymentRepository {
+public class CustomPaymentRepository implements PaymentRepository {
 
-    private final PaymentMapper paymentMapper;
+    private final SpringJpaPaymentRepository jpaRepository;
+    private final QueryPaymentRepository queryPaymentRepository;
+
 
     @Override
     public void save(Payment payment) {
-        paymentMapper.save(payment);
+        jpaRepository.save(payment);
     }
 }

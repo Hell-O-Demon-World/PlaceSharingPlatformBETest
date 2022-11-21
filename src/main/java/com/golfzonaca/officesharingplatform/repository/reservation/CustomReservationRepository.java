@@ -2,6 +2,7 @@ package com.golfzonaca.officesharingplatform.repository.reservation;
 
 import com.golfzonaca.officesharingplatform.domain.Place;
 import com.golfzonaca.officesharingplatform.domain.Reservation;
+import com.golfzonaca.officesharingplatform.domain.Room;
 import com.golfzonaca.officesharingplatform.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -11,6 +12,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @Transactional
@@ -76,5 +78,15 @@ public class CustomReservationRepository implements ReservationRepository {
     @Override
     public List<Reservation> findAllByPlaceIdAndRoomTypeAndDate(Long placeId, String roomType, LocalDate date) {
         return queryReservationRepository.findAllByPlaceIdAndRoomTypeAndDate(placeId, roomType, date);
+    }
+
+    @Override
+    public Optional<Reservation> findById(Long reservationId) {
+        return jpaReservationRepository.findById(reservationId);
+    }
+
+    @Override
+    public Optional<Reservation> findByUserAndRoom(User user, Room room) {
+        return queryReservationRepository.findByUserAndRoom(user, room);
     }
 }

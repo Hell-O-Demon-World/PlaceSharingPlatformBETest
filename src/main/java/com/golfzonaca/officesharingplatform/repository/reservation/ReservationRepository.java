@@ -3,11 +3,13 @@ package com.golfzonaca.officesharingplatform.repository.reservation;
 
 import com.golfzonaca.officesharingplatform.domain.Place;
 import com.golfzonaca.officesharingplatform.domain.Reservation;
+import com.golfzonaca.officesharingplatform.domain.Room;
 import com.golfzonaca.officesharingplatform.domain.User;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface ReservationRepository {
     Reservation save(Reservation reservation);
@@ -30,7 +32,7 @@ public interface ReservationRepository {
 
     List<Reservation> findAllByPlaceIdAndRoomTypeAndDate(Long placeId, String roomType, LocalDate date);
 
-    Reservation findById(Long reservationId);
+    Optional<Reservation> findById(Long reservationId);
 
-    Reservation findByUserIdAndRoomId(long userId, long roomId);
+    Optional<Reservation> findByUserAndRoom(User user, Room room);
 }
