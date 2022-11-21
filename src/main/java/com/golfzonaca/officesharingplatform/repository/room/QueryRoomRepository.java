@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.golfzonaca.officesharingplatform.domain.QRoom.room;
-
+import static com.golfzonaca.officesharingplatform.domain.QRoomKind.roomKind;
 
 @Transactional
 @Repository
@@ -82,10 +82,26 @@ public class QueryRoomRepository {
         return null;
     }
 
+    private BooleanExpression eqRoomType(String roomType) {
+        if (roomKind != null) {
+            return room.roomKind.roomType.eq(roomType);
+        }
+        return null;
+    }
+
     private BooleanExpression roomTypeLike(String selectedType) {
         if (StringUtils.hasText(selectedType)) {
             return room.roomKind.roomType.like(selectedType);
         }
         return null;
+    }
+
+    public List<Room> findAllByPlaceIdAndRoomType(Long id, String roomType) {
+        Optional<Long> placeId = Optional.ofNullable(id);
+        return query
+                .select(room)
+                .from(room)
+                .where(eqPlaceId(placeId), eqRoomType(roomType))
+                .fetch();
     }
 }

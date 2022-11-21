@@ -1,6 +1,7 @@
 package com.golfzonaca.officesharingplatform.domain;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,8 @@ import java.time.LocalTime;
 @Getter
 @Entity
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class Reservation {
 
     @Id
@@ -43,9 +46,9 @@ public class Reservation {
     private LocalTime resEndTime;
 
 
-    @Builder
     public Reservation(User user, Place place, Room room, LocalDate resStartDate, LocalTime resStartTime, LocalDate resEndDate, LocalTime resEndTime) {
         this.user = user;
+        this.place = place;
         this.place = place;
         this.room = room;
         this.resStartDate = resStartDate;

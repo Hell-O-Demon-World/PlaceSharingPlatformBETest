@@ -32,7 +32,7 @@ public class Room {
     private int totalNum;
 
     //양방향 매핑
-    @OneToMany(mappedBy = "reservation")
+    @OneToMany(mappedBy = "room")
     private List<Reservation> reservationList = new ArrayList<>();
 
     @Builder

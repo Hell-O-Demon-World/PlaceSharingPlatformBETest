@@ -171,7 +171,6 @@ public class QueryReservationRepository {
         return null;
     }
 
-
     private BooleanExpression roomTypeLike(String selectedType) {
         if (StringUtils.hasText(selectedType)) {
             return reservation.room.roomKind.roomType.like(selectedType);
@@ -184,5 +183,23 @@ public class QueryReservationRepository {
             return reservation.resEndTime.goe(endTime);
         }
         return null;
+    }
+
+    private BooleanExpression eqRoomType(Optional<String> optionalRoomType) {
+        if (optionalRoomType.isPresent()) {
+            return reservation.room.roomKind.roomType.eq(optionalRoomType.get());
+        }
+        return null;
+    }
+
+    public List<Reservation> findAllByPlaceIdAndRoomTypeAndDate(Long placeId, String roomType, LocalDate date) {
+        Optional<Long> optionalPlaceId = Optional.ofNullable(placeId);
+        Optional<String> optionalRoomType = Optional.ofNullable(roomType);
+        Optional<LocalDate> optionalLocalDate = Optional.ofNullable(date);
+        return query
+                .select(reservation)
+                .from(reservation)
+                .where(eqPlaceId(optionalPlaceId), eqRoomType(optionalRoomType), eqResStartDate(optionalLocalDate))
+                .fetch();
     }
 }

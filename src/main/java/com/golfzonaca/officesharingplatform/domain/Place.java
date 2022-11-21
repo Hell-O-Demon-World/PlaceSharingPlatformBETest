@@ -26,11 +26,11 @@ public class Place {
     @JoinColumn(name = "COMPANY_ID")
     private Company company;
 
-    /*
-        @OneToOne
-        @JoinColumn(name = "RATEPOINT_ID")
-        private RatePoint ratePoint;
-    */
+/*
+    @OneToOne
+    @JoinColumn(name = "RATEPOINT_ID")
+    private RatePoint ratePoint;
+*/
 
     @Column(name = "PLACE_NAME", nullable = false, length = 30)
     private String placeName;
