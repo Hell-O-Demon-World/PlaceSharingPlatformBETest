@@ -30,7 +30,7 @@ public class PrincipalDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException(username);
         }
         Set<GrantedAuthority> grantedAuthorityList = new HashSet<>();
-        SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority("ROLE_USER");
+        SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority("USER");
         grantedAuthorityList.add(simpleGrantedAuthority);
 
         return PrincipalDetails.builder()
