@@ -2,6 +2,7 @@ package com.golfzonaca.officesharingplatform.web.reservation.form;
 
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data

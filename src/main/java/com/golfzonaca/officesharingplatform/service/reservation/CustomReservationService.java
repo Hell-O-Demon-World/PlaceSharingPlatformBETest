@@ -4,12 +4,15 @@ import com.golfzonaca.officesharingplatform.domain.Place;
 import com.golfzonaca.officesharingplatform.domain.Reservation;
 import com.golfzonaca.officesharingplatform.domain.Room;
 import com.golfzonaca.officesharingplatform.domain.User;
+import com.golfzonaca.officesharingplatform.domain.type.Weekdays;
 import com.golfzonaca.officesharingplatform.repository.place.PlaceRepository;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
 import com.golfzonaca.officesharingplatform.repository.room.RoomRepository;
 import com.golfzonaca.officesharingplatform.repository.roomkind.RoomKindRepository;
+import com.golfzonaca.officesharingplatform.web.reservation.form.DefaultTimeOfDay;
 import com.golfzonaca.officesharingplatform.web.reservation.form.ResRequestData;
 import com.golfzonaca.officesharingplatform.web.reservation.form.SelectedDateTimeForm;
+import com.golfzonaca.officesharingplatform.web.reservation.form.StringDateForm;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
@@ -17,31 +20,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.*;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class MyBatisReservationService implements ReservationService {
+public class CustomReservationService implements ReservationService {
     private final ReservationRepository reservationRepository;
     private final RoomRepository roomRepository;
     private final RoomKindRepository roomKindRepository;
     private final PlaceRepository placeRepository;
-
-    private enum Weekdays {
-        Mon(1), Tue(2), Wed(3), Thu(4), Fri(5), Sat(6), Sun(7);
-        private final int description;
-
-        Weekdays(int description) {
-            this.description = description;
-        }
-
-        public int getDescription() {
-            return description;
-        }
-    }
 
     @Override
     public JsonObject findRoom(long placeId) {
@@ -106,7 +95,7 @@ public class MyBatisReservationService implements ReservationService {
         Map<Integer, Boolean> inputTimeMap = getDefaultTimeMap();
         if (isOpenToday(reservationDayOfWeek, placeOpenList)) {
             List<Room> reservationRoomList = roomRepository.findRoomByPlaceIdAndRoomType(placeId, selectedRoomType);
-            List<Reservation> findReservationList = reservationRepository.findAllByPlaceIdAndRoomTypeAndDate(placeId, selectedRoomType, toLocalDate(selectedYear, selectedMonth, selectedDay));
+            List<Reservation> findReservationList = reservationRepository.findAllByPlaceIdAndRoomTypeAndDate(placeId, selectedRoomType, StringDateForm.toLocalDate(selectedYear, selectedMonth, selectedDay));
 
             int totalReservationCount = reservationRoomList.size();
             int beforeReservationCount = countBeforeReservationList(findReservationList);
@@ -144,7 +133,7 @@ public class MyBatisReservationService implements ReservationService {
     }
 
     private String getReservationAvailableDaysOfWeek(String selectedYear, String selectedMonth, String selectedDay) {
-        LocalDate reservationDate = toLocalDate(selectedYear, selectedMonth, selectedDay);
+        LocalDate reservationDate = StringDateForm.toLocalDate(selectedYear, selectedMonth, selectedDay);
         return getDaysOfWeek(reservationDate);
     }
 
@@ -197,8 +186,8 @@ public class MyBatisReservationService implements ReservationService {
 
     private Map<Integer, Boolean> getDefaultTimeMap() {
         Map<Integer, Boolean> timeMap = new HashMap<>();
-        for (int i = 0; i < 24; i++) {
-            timeMap.put(i, false);
+        for (int time: DefaultTimeOfDay.getTimes()) {
+            timeMap.put(time, false);
         }
         return timeMap;
     }
@@ -231,7 +220,6 @@ public class MyBatisReservationService implements ReservationService {
             }
         }
 
-
         for (Room candidate : place.getRooms()) {
             if (candidate.getRoomKind().getRoomType().equals(resRequestData.getSelectedType())) {
                 room = candidate;
@@ -250,12 +238,5 @@ public class MyBatisReservationService implements ReservationService {
     private boolean isOpenToday(String reservationDayOfWeek, List<String> placeOpenList) {
         Map<String, Boolean> placeOpenMap = getOpenDayMap(placeOpenList);
         return placeOpenMap.get(reservationDayOfWeek);
-    }
-
-    public LocalDate toLocalDate(String year, String month, String day) {
-        String StringType = String.format("%s, %s, %s", year, month, day);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuu, M, d");
-        LocalDate resDate = LocalDate.parse(StringType, formatter);
-        return resDate;
     }
 }
