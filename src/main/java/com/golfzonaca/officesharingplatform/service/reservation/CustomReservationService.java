@@ -106,30 +106,35 @@ public class CustomReservationService implements ReservationService {
             if (hasFullReservation(totalReservationCount, beforeReservationCount)) {
                 inputTimeMap = setStartTimeAndEndTime(inputTimeMap, startTime, endTime);
             } else {
-                for (Reservation reservation : findReservationList) {
-                    for (int i = reservation.getResStartTime().getHour(); i < reservation.getResEndTime().getHour(); i++) {
-                        if (inputTimeMap.get(i) == true) {
-                            continue;
-                        }
-                        inputTimeMap.replace(i, false, true);
-                    }
-                }
-
-                for (int i = startTime; i < endTime; i++) {
-                    if (inputTimeMap.get(i) == true) {
-                        break;
-                    }
-                    inputTimeMap.replace(i, false, true);
-                }
-                for (int i = endTime - 1; i > startTime; i--) {
-                    if (inputTimeMap.get(i) == true) {
-                        break;
-                    }
-                    inputTimeMap.replace(i, false, true);
-                }
+                inputTimeMap = getAvailableRoomMap(inputTimeMap, findReservationList, startTime, endTime);
             }
         }
         return parsingMapToList(inputTimeMap);
+    }
+
+    private Map<Integer, Boolean> getAvailableRoomMap(Map<Integer, Boolean> inputTimeMap, List<Reservation> findReservationList, int startTime, int endTime) {
+        for (Reservation reservation : findReservationList) {
+            for (int i = reservation.getResStartTime().getHour(); i < reservation.getResEndTime().getHour(); i++) {
+                if (inputTimeMap.get(i) == true) {
+                    continue;
+                }
+                inputTimeMap.replace(i, false, true);
+            }
+        }
+
+        for (int i = startTime; i < endTime; i++) {
+            if (inputTimeMap.get(i) == true) {
+                break;
+            }
+            inputTimeMap.replace(i, false, true);
+        }
+        for (int i = endTime - 1; i > startTime; i--) {
+            if (inputTimeMap.get(i) == true) {
+                break;
+            }
+            inputTimeMap.replace(i, false, true);
+        }
+        return inputTimeMap;
     }
 
     private String getReservationAvailableDaysOfWeek(String selectedYear, String selectedMonth, String selectedDay) {
