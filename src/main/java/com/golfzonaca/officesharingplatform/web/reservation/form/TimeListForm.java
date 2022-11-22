@@ -1,11 +1,12 @@
 package com.golfzonaca.officesharingplatform.web.reservation.form;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
+@AllArgsConstructor
 public class TimeListForm {
     private List<Integer> timeList;
 }

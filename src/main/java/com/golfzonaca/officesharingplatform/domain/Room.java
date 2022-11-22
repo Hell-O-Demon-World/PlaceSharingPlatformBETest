@@ -41,4 +41,8 @@ public class Room {
         this.place = place;
         this.totalNum = totalNum;
     }
+
+    public Room(Long id) {
+        this.id = id;
+    }
 }

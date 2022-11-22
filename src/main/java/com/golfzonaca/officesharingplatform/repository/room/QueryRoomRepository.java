@@ -4,6 +4,7 @@ import com.golfzonaca.officesharingplatform.domain.Place;
 import com.golfzonaca.officesharingplatform.domain.Room;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -15,6 +16,7 @@ import java.util.Optional;
 import static com.golfzonaca.officesharingplatform.domain.QRoom.room;
 import static com.golfzonaca.officesharingplatform.domain.QRoomKind.roomKind;
 
+@Slf4j
 @Transactional
 @Repository
 public class QueryRoomRepository {
@@ -25,6 +27,7 @@ public class QueryRoomRepository {
     }
 
     List<Long> findIdAll(RoomSearchCond cond) {
+        log.info("Room findIdAll cond = {}", cond);
         Optional<Long> roomKindId = Optional.ofNullable(cond.getRoomKindId());
         Optional<Long> placeId = Optional.ofNullable(cond.getPlaceId());
         Optional<Integer> totalNum = Optional.ofNullable(cond.getTotalNum());
@@ -36,6 +39,7 @@ public class QueryRoomRepository {
     }
 
     List<Room> findAll(RoomSearchCond cond) {
+        log.info("Room findAll cond = {}", cond);
         Optional<Long> roomKindId = Optional.ofNullable(cond.getRoomKindId());
         Optional<Long> placeId = Optional.ofNullable(cond.getPlaceId());
         Optional<Integer> totalNum = Optional.ofNullable(cond.getTotalNum());
@@ -48,6 +52,7 @@ public class QueryRoomRepository {
     }
 
     public List<Room> findRoomByPlaceAndRoomKind(Place place, String selectedType) {
+        log.info("Room findRoomByPlaceAndRoomKind");
         return query
                 .selectFrom(room)
                 .innerJoin(room.roomKind)
@@ -98,10 +103,12 @@ public class QueryRoomRepository {
     }
 
     public List<Room> findAllByPlaceIdAndRoomType(Long id, String roomType) {
+        log.info("Room findAllByPlaceIdAndRoomType");
         Optional<Long> placeId = Optional.ofNullable(id);
         return query
                 .select(room)
                 .from(room)
+                .innerJoin(room.roomKind)
                 .where(eqPlaceId(placeId), eqRoomType(roomType))
                 .fetch();
     }

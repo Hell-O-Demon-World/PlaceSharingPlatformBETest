@@ -1,19 +1,14 @@
 package com.golfzonaca.officesharingplatform.web.reservation;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.golfzonaca.officesharingplatform.annotation.TokenUserId;
-import com.golfzonaca.officesharingplatform.config.auth.token.JwtManager;
 import com.golfzonaca.officesharingplatform.domain.Place;
 import com.golfzonaca.officesharingplatform.domain.User;
-import com.golfzonaca.officesharingplatform.repository.place.PlaceRepository;
-import com.golfzonaca.officesharingplatform.repository.user.UserRepository;
-import com.golfzonaca.officesharingplatform.service.payment.KakaoPayService;
+import com.golfzonaca.officesharingplatform.service.place.PlaceService;
 import com.golfzonaca.officesharingplatform.service.reservation.ReservationService;
+import com.golfzonaca.officesharingplatform.service.user.UserService;
 import com.golfzonaca.officesharingplatform.web.reservation.form.ResRequestData;
-import com.golfzonaca.officesharingplatform.web.reservation.form.SelectedDateTimeForm;
+import com.golfzonaca.officesharingplatform.web.reservation.form.SelectedTypeAndDayForm;
 import com.golfzonaca.officesharingplatform.web.reservation.form.TimeListForm;
-import com.golfzonaca.officesharingplatform.web.reservation.validation.ReservationValidation;
-import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -29,49 +23,42 @@ import java.util.Optional;
 public class ReservationController {
 
     private final ReservationService reservationService;
-    private final ReservationValidation reservationValidation;
-    private final PlaceRepository placeRepository;
-    private final UserRepository userRepository;
-    private final KakaoPayService kakaoPayService;
+    private final PlaceService placeService;
+    private final UserService userService;
 
     @GetMapping("places/{placeId}")
-    public JsonObject findRoom(@PathVariable long placeId) {
-        JsonObject responseData = reservationService.findRoom(placeId);
-        return responseData;
+    public Map<String, String> findRoom(@PathVariable long placeId) {
+        return reservationService.findRoom(placeId);
     }
 
     @PostMapping("/places/{placeId}")
-    public TimeListForm selectedDateTime(@PathVariable String placeId, @Valid @RequestBody SelectedDateTimeForm selectedDateTimeForm) {
-        TimeListForm timeListForm = new TimeListForm();
-
-        timeListForm.setTimeList(reservationService.getReservationTimeList(Long.parseLong(placeId), selectedDateTimeForm));
-        return timeListForm;
+    public TimeListForm selectedDateTime(@PathVariable long placeId, @Valid @RequestBody SelectedTypeAndDayForm selectedTypeAndDayForm) {
+        return new TimeListForm(reservationService.getReservationTimeList(placeId, selectedTypeAndDayForm));
     }
 
     @PostMapping("places/{placeId}/book")
     public Map book(@TokenUserId Long userId, @PathVariable long placeId, @RequestBody ResRequestData resRequestData) {
-        Map<String, String> errorMap = new LinkedHashMap<>();
+        Map<String, String> response = new LinkedHashMap<>();
 
-        Optional<Place> findPlace = placeRepository.findById(placeId);
-        if (findPlace.isEmpty()) {
-            errorMap.put("NonexistentPlaceError", "존재하지 않는 공간입니다.");
-            return errorMap;
+        User user = userService.findById(userId);
+        if (user == null) {
+            response.put("InvalidUserError", "등록되지 않은 회원입니다.");
+            return response;
         }
 
-        Optional<User> findUser = userRepository.findById(userId);
-        if (findUser.isEmpty()) {
-            errorMap.put("InvalidUserError", "등록되지 않은 회원입니다.");
-            return errorMap;
+        Place place = placeService.findById(placeId);
+        if (place == null) {
+            response.put("NonexistentPlaceError", "존재하지 않는 공간입니다.");
+            return response;
         }
 
-        errorMap = reservationValidation.validation(errorMap, findUser.get(), findPlace.get(), resRequestData);
+        response = reservationService.validation(response, user, place, resRequestData);
 
-        if (errorMap.isEmpty()) {
-            errorMap = reservationService.reservation(errorMap, findUser.get(), findPlace.get(), resRequestData);
-            kakaoPayService.kakaoPayReady(Long.parseLong(errorMap.get("reservationId")));
-            return errorMap;
+        if (response.isEmpty()) {
+            response = reservationService.saveReservation(response, user, place, resRequestData);
+            return response;
         }
-        return errorMap;
+        return response;
     }
 }
 

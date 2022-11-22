@@ -2,13 +2,13 @@ package com.golfzonaca.officesharingplatform.web.reservation.form;
 
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@Data
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class ResRequestData {
