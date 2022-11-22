@@ -1,7 +1,8 @@
 package com.golfzonaca.officesharingplatform.repository.place;
 
 import com.golfzonaca.officesharingplatform.domain.Place;
-import com.golfzonaca.officesharingplatform.web.search.dto.SearchRequestData;
+import com.golfzonaca.officesharingplatform.web.search.dto.RequestFilterData;
+import com.golfzonaca.officesharingplatform.web.search.dto.RequestSearchData;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
@@ -26,13 +27,27 @@ public class QueryPlaceRepository {
         this.query = new JPAQueryFactory(em);
     }
 
-    public List<Place> findPlaces(SearchRequestData searchRequestData) {
+    public List<Place> findPlaces(RequestSearchData requestSearchData) {
 
-        String searchWord = searchRequestData.getSearchWord();
-        String day = searchRequestData.getDay();
-        LocalTime startTime = searchRequestData.getStartTime();
-        LocalTime endTime = searchRequestData.getEndTime();
-        String roomType = searchRequestData.getRoomType();
+        String searchWord = requestSearchData.getSearchWord();
+
+        return query
+                .selectFrom(place)
+                .join(place.rooms, room)
+                .join(room.roomKind, roomKind)
+                .where(likeName(searchWord).or(likeAddress(searchWord)))
+                .groupBy(place)
+                .fetch();
+    }
+
+    public List<Place> filterPlaces(RequestFilterData requestFilterData) {
+
+        String day = requestFilterData.getDay();
+        requestFilterData.getStartTime();
+        requestFilterData.getEndTime();
+        String city = requestFilterData.getCity();
+        String subCity = requestFilterData.getSubCity();
+        String roomType = requestFilterData.getType();
 
 
         return query
@@ -78,15 +93,6 @@ public class QueryPlaceRepository {
         if (endTime != null) {
             if (StringUtils.hasText(endTime.toString())) {
                 return place.placeEnd.goe(endTime);
-            }
-        }
-        return null;
-    }
-
-    private BooleanExpression likeRoomType(String roomType) {
-        if (roomType != null) {
-            if (StringUtils.hasText(roomType)) {
-                return roomKind.roomType.contains(roomType);
             }
         }
         return null;

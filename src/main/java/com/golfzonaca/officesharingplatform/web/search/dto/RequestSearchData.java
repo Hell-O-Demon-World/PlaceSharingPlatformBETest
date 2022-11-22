@@ -4,15 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalTime;
-
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SearchRequestData {
+public class RequestSearchData {
     private String searchWord;
-    private String day;
-    private LocalTime startTime;
-    private LocalTime endTime;
-    private String roomType;
 }

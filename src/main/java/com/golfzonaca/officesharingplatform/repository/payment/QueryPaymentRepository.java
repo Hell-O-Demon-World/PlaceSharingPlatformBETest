@@ -1,7 +1,7 @@
 package com.golfzonaca.officesharingplatform.repository.payment;
 
 import com.golfzonaca.officesharingplatform.domain.Place;
-import com.golfzonaca.officesharingplatform.web.search.dto.SearchRequestData;
+import com.golfzonaca.officesharingplatform.web.search.dto.RequestSearchData;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
@@ -26,13 +26,13 @@ public class QueryPaymentRepository {
         this.query = new JPAQueryFactory(em);
     }
 
-    public List<Place> findPlaces(SearchRequestData searchRequestData) {
+    public List<Place> findPlaces(RequestSearchData requestSearchData) {
 
-        String searchWord = searchRequestData.getSearchWord();
-        String day = searchRequestData.getDay();
-        LocalTime startTime = searchRequestData.getStartTime();
-        LocalTime endTime = searchRequestData.getEndTime();
-        String roomType = searchRequestData.getRoomType();
+        String searchWord = requestSearchData.getSearchWord();
+        String day = requestSearchData.getDay();
+        LocalTime startTime = requestSearchData.getStartTime();
+        LocalTime endTime = requestSearchData.getEndTime();
+        String roomType = requestSearchData.getRoomType();
 
 
         return query
