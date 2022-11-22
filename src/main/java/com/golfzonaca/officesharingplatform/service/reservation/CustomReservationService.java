@@ -231,6 +231,7 @@ public class CustomReservationService implements ReservationService {
             }
         }
         Reservation reservation = new Reservation(user, place, room, resRequestData.getDate(), resRequestData.getStartTime(), resRequestData.getDate(), resRequestData.getEndTime());
+//        Reservation reservation = new Reservation(new User(user.getId()), new Place(place.getId()), new Room(room.getId()), resRequestData.getDate(), resRequestData.getStartTime(), resRequestData.getDate(), resRequestData.getEndTime());
         Reservation save = reservationRepository.save(reservation);
         if (save == null) {
             errorMap.put("ReservationError", "예약 실패");

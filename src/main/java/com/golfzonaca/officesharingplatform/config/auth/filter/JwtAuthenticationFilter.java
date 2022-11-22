@@ -25,7 +25,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         String jwt = request.getHeader("Authorization");
-
+        System.out.println("jwt = " + jwt);
         if(jwt != null && JwtManager.validateJwt(jwt)){
             String id = JwtManager.getInfo(jwt, "id");
             Authentication authentication = getAuthentication(Long.valueOf(id));

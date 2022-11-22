@@ -3,6 +3,7 @@ package com.golfzonaca.officesharingplatform.repository.reservation;
 import com.golfzonaca.officesharingplatform.domain.*;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -16,6 +17,7 @@ import java.util.Optional;
 import static com.golfzonaca.officesharingplatform.domain.QReservation.reservation;
 
 
+@Slf4j
 @Transactional
 @Repository
 public class QueryReservationRepository {
@@ -26,6 +28,7 @@ public class QueryReservationRepository {
     }
 
     List<Reservation> findAll(ReservationSearchCond cond) {
+        log.info("Reservation findAll cond = {}", cond);
         Optional<Long> userId = Optional.ofNullable(cond.getUserId());
         Optional<Long> roomId = Optional.ofNullable(cond.getRoomId());
         Optional<Long> placeId = Optional.ofNullable(cond.getPlaceId());
@@ -36,9 +39,6 @@ public class QueryReservationRepository {
 
         return query
                 .selectFrom(reservation)
-                .innerJoin(reservation.user)
-                .innerJoin(reservation.room)
-                .innerJoin(reservation.place)
                 .where(eqUserId(userId), eqRoomId(roomId), eqPlaceId(placeId)
                         , eqResStartTime(resStartTime), eqResStartDate(resStartDate)
                         , eqResEndTime(resEndTime), eqResEndDate(resEndDate))
@@ -46,6 +46,7 @@ public class QueryReservationRepository {
     }
 
     List<Reservation> findAllLimit(ReservationSearchCond cond, Integer maxNum) {
+        log.info("Reservation findAllLimit cond = {}, maxNum = {}", cond, maxNum);
         Optional<Long> userId = Optional.ofNullable(cond.getUserId());
         Optional<Long> roomId = Optional.ofNullable(cond.getRoomId());
         Optional<Long> placeId = Optional.ofNullable(cond.getPlaceId());
@@ -66,15 +67,16 @@ public class QueryReservationRepository {
                 .fetch();
     }
     public List<Reservation> findInResValid(User user, Place place, LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
+        log.info("Reservation findInResValid");
         return query
-                .selectFrom(reservation)/*
-                .innerJoin(reservation.user)
-                .innerJoin(reservation.place)*/
+                .selectFrom(reservation)
                 .where(userEquals(user), PlaceEquals(place), startDateEquals(startDate), endDateEquals(endDate), startTimeLoe(startTime).and(endTimeGt(startTime)).or(startTimeGt(startTime).and(startTimeLt(endTime))))
                 .fetch();
     }
 
-    public List<Reservation> findResByRoomKindAndDateTime(String selectedType, LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
+    public List<Reservation> findResByRoomKindAndDateTime(String selectedType, LocalDate startDate, LocalTime startTime
+            , LocalDate endDate, LocalTime endTime) {
+        log.info("Reservation findResByRoomKindAndDateTime");
         return query
                 .selectFrom(reservation)
                 .innerJoin(reservation.room.roomKind)
@@ -83,12 +85,14 @@ public class QueryReservationRepository {
     }
 
     public List<Reservation> findAllByPlaceIdAndRoomTypeAndDate(Long placeId, String roomType, LocalDate date) {
+        log.info("Reservation findAllByPlaceIdAndRoomTypeAndDate");
         Optional<Long> optionalPlaceId = Optional.ofNullable(placeId);
         Optional<String> optionalRoomType = Optional.ofNullable(roomType);
         Optional<LocalDate> optionalLocalDate = Optional.ofNullable(date);
         return query
                 .select(reservation)
                 .from(reservation)
+                .innerJoin(reservation.room.roomKind)
                 .where(eqPlaceId(optionalPlaceId), eqRoomType(optionalRoomType), eqResStartDate(optionalLocalDate))
                 .fetch();
     }

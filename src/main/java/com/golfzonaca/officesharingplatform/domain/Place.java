@@ -68,4 +68,8 @@ public class Place {
         this.placeAddInfo = placeAddInfo;
         this.address = address;
     }
+
+    public Place(Long id) {
+        this.id = id;
+    }
 }

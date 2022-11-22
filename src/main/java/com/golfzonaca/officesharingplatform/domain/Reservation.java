@@ -49,11 +49,16 @@ public class Reservation {
     public Reservation(User user, Place place, Room room, LocalDate resStartDate, LocalTime resStartTime, LocalDate resEndDate, LocalTime resEndTime) {
         this.user = user;
         this.place = place;
-        this.place = place;
         this.room = room;
         this.resStartDate = resStartDate;
         this.resStartTime = resStartTime;
         this.resEndDate = resEndDate;
         this.resEndTime = resEndTime;
+    }
+
+    public Reservation toEntity() {
+        return Reservation.builder()
+                .user(new User())
+                .build();
     }
 }

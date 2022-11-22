@@ -41,6 +41,10 @@ public class User {
     @JoinColumn(name = "MILEAGE_ID")
     private Mileage mileage;
 
+    public User(Long id) {
+        this.id = id;
+    }
+
     public User(String username, String email, String password, String phoneNumber, String job, String userPlace, Mileage mileage) {
         this.username = username;
         this.email = email;
