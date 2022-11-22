@@ -4,8 +4,7 @@ import com.golfzonaca.officesharingplatform.domain.Place;
 import com.golfzonaca.officesharingplatform.domain.Reservation;
 import com.golfzonaca.officesharingplatform.domain.User;
 import com.golfzonaca.officesharingplatform.web.reservation.form.ResRequestData;
-import com.golfzonaca.officesharingplatform.web.reservation.form.SelectedDateTimeForm;
-import com.google.gson.JsonObject;
+import com.golfzonaca.officesharingplatform.web.reservation.form.SelectedTypeAndDayForm;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -13,12 +12,13 @@ import java.util.Map;
 
 public interface ReservationService {
 
-    JsonObject findRoom(long placeId);
+    Map<String, String> findRoom(long placeId);
 
-    List<Integer> getReservationTimeList(Long placeId, SelectedDateTimeForm selectedDateTimeForm);
+    List<Integer> getReservationTimeList(Long placeId, SelectedTypeAndDayForm selectedTypeAndDayForm);
 
     List<Reservation> findResByPlaceIdAndRoomKindId(long placeId, long roomTypeId, LocalDate resStartDate, LocalDate resEndDate);
 
-    Map<String, String> reservation(Map<String, String> errorMap, User user, Place place, ResRequestData resRequestData);
+    Map<String, String> saveReservation(Map<String, String> response, User user, Place place, ResRequestData resRequestData);
 
+    Map<String, String> validation(Map<String, String> response, User user, Place place, ResRequestData resRequestData);
 }

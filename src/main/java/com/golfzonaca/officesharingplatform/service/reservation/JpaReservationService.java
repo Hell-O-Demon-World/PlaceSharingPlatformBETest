@@ -8,13 +8,12 @@ import com.golfzonaca.officesharingplatform.domain.type.Weekdays;
 import com.golfzonaca.officesharingplatform.repository.place.PlaceRepository;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
 import com.golfzonaca.officesharingplatform.repository.room.RoomRepository;
-import com.golfzonaca.officesharingplatform.repository.roomkind.RoomKindRepository;
+import com.golfzonaca.officesharingplatform.service.reservation.validation.ReservationProcessValidation;
+import com.golfzonaca.officesharingplatform.service.reservation.validation.ReservationRequestValidation;
+import com.golfzonaca.officesharingplatform.web.formatter.TimeFormatter;
 import com.golfzonaca.officesharingplatform.web.reservation.form.DefaultTimeOfDay;
 import com.golfzonaca.officesharingplatform.web.reservation.form.ResRequestData;
-import com.golfzonaca.officesharingplatform.web.reservation.form.SelectedDateTimeForm;
-import com.golfzonaca.officesharingplatform.web.reservation.form.StringDateForm;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
+import com.golfzonaca.officesharingplatform.web.reservation.form.SelectedTypeAndDayForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,75 +25,56 @@ import java.util.*;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class CustomReservationService implements ReservationService {
+public class JpaReservationService implements ReservationService {
     private final ReservationRepository reservationRepository;
     private final RoomRepository roomRepository;
     private final PlaceRepository placeRepository;
+    private final ReservationRequestValidation reservationRequestValidation;
+    private final ReservationProcessValidation reservationProcessValidation;
 
     @Override
-    public JsonObject findRoom(long placeId) {
-        List<Integer> meetingRoomList = new ArrayList<>();
-        List<Integer> officeList = new ArrayList<>();
-        JsonObject responseData = new JsonObject();
 
-        List<Integer> findRoomTypeList = roomRepository.findRoomTypeByPlaceId(placeId);
-
-        int deskQuantity = Collections.frequency(findRoomTypeList, 1);
-        responseData.addProperty("desk", deskQuantity != 0);
-
-        for (int i = 0; i < 5; i++) {
-            if (Collections.frequency(findRoomTypeList, i + 1) != 0) {
-                if (i + 1 == 2) {
-                    meetingRoomList.add(4);
-                } else if (i + 1 == 3) {
-                    meetingRoomList.add(6);
-                } else if (i + 1 == 4) {
-                    meetingRoomList.add(10);
-                } else if (i + 1 == 5) {
-                    meetingRoomList.add(20);
-                }
-            }
+    public Map<String, String> findRoom(long placeId) {
+        Map<String, String> response = new LinkedHashMap<>();
+        Place place;
+        Optional<Place> findPlace = placeRepository.findById(placeId);
+        if (findPlace.isEmpty()) {
+            response.put("NonExistPlaceError", "존재하지 않는 공간입니다.");
+            return response;
         }
-        String meetingRoom = new Gson().toJson(meetingRoomList);
-        responseData.addProperty("meetingRoom", meetingRoom);
+        place = findPlace.get();
 
-        for (int i = 0; i < 4; i++) {
-            if (Collections.frequency(findRoomTypeList, i + 6) != 0) {
-                if (i + 6 == 6) {
-                    officeList.add(20);
-                } else if (i + 6 == 7) {
-                    officeList.add(40);
-                } else if (i + 6 == 8) {
-                    officeList.add(70);
-                } else {
-                    officeList.add(100);
-                }
-            }
+        if (place.getRooms().isEmpty()) {
+            response.put("NonExistRoomsError", "해당 공간에 등록된 대여공간이 없습니다.");
+            return response;
         }
-        String office = new Gson().toJson(officeList);
-        responseData.addProperty("office", office);
-        return responseData;
+        List<Room> roomList = place.getRooms();
+        Set<String> roomSet = new HashSet<>();
+        for (Room room : roomList) {
+            roomSet.add(room.getRoomKind().getRoomType());
+        }
+        response.put("room", roomSet.toString().replace("[", "").replace("]", ""));
+        return response;
     }
 
     @Override
-    public List<Integer> getReservationTimeList(Long placeId, SelectedDateTimeForm selectedDateTimeForm) {
-        if (placeRepository.findById(placeId) == null) {
+    public List<Integer> getReservationTimeList(Long placeId, SelectedTypeAndDayForm selectedTypeAndDayForm) {
+        Optional<Place> result = placeRepository.findById(placeId);
+        if (result.isEmpty()) {
             log.error("placeId 에 맞는 place가 없습니다.");
             return new ArrayList<>();
         }
-        String selectedRoomType = selectedDateTimeForm.getSelectedType();
-        String selectedYear = selectedDateTimeForm.getYear().toString();
-        String selectedMonth = selectedDateTimeForm.getMonth().toString();
-        String selectedDay = selectedDateTimeForm.getDay().toString();
-        Place findPlace = placeRepository.findById(placeId).get();
+        Place findPlace = result.get();
+        String selectedRoomType = selectedTypeAndDayForm.getSelectedType();
+        String selectedDay = selectedTypeAndDayForm.getDay();
 
-        String reservationDayOfWeek = getReservationAvailableDaysOfWeek(selectedYear, selectedMonth, selectedDay);
+        String reservationDayOfWeek = getReservationAvailableDaysOfWeek(selectedDay);
         List<String> placeOpenList = getPlaceOpenList(findPlace);
 
         Map<Integer, Boolean> inputTimeMap = getDefaultTimeMap();
         if (isOpenToday(reservationDayOfWeek, placeOpenList)) {
             List<Room> reservationRoomList = roomRepository.findRoomByPlaceIdAndRoomType(placeId, selectedRoomType);
-            List<Reservation> findReservationList = reservationRepository.findAllByPlaceIdAndRoomTypeAndDate(placeId, selectedRoomType, StringDateForm.toLocalDate(selectedYear, selectedMonth, selectedDay));
+            List<Reservation> findReservationList = reservationRepository.findAllByPlaceIdAndRoomTypeAndDate(placeId, selectedRoomType, TimeFormatter.toLocalDate(selectedDay));
 
             int totalReservationCount = reservationRoomList.size();
             int beforeReservationCount = countBeforeReservationList(findReservationList);
@@ -109,6 +89,31 @@ public class CustomReservationService implements ReservationService {
             }
         }
         return parsingMapToList(inputTimeMap);
+    }
+
+    @Override
+    public Map<String, String> validation(Map<String, String> response, User user, Place place, ResRequestData resRequestData) {
+        response = reservationRequestValidation.validation(response, user, place, resRequestData);
+        return response;
+    }
+
+    @Override
+    public Map<String, String> saveReservation(Map<String, String> response, User user, Place place, ResRequestData resRequestData) {
+        Room room = reservationProcessValidation.selectAvailableRoomForReservation(place, resRequestData);
+        if (room == null) {
+            response.put("NonexistentRoomTypeInPlaceError", "선택하신 타입은 해당 공간에 존재하지 않습니다.");
+            return response;
+        }
+
+        Reservation reservation = new Reservation(user, place, room, resRequestData.getDate(), resRequestData.getStartTime(), resRequestData.getDate(), resRequestData.getEndTime());
+        Reservation save = reservationRepository.save(reservation);
+        if (save == null) {
+            response.put("ReservationError", "예약 실패");
+            log.error("예약에 실패하였습니다.");
+            return response;
+        }
+        response.put("reservationId", save.getId().toString());
+        return response;
     }
 
     private Map<Integer, Boolean> getAvailableRoomMap(Map<Integer, Boolean> inputTimeMap, List<Reservation> findReservationList, int startTime, int endTime) {
@@ -136,9 +141,8 @@ public class CustomReservationService implements ReservationService {
         return inputTimeMap;
     }
 
-    private String getReservationAvailableDaysOfWeek(String selectedYear, String selectedMonth, String selectedDay) {
-        LocalDate reservationDate = StringDateForm.toLocalDate(selectedYear, selectedMonth, selectedDay);
-        return getDaysOfWeek(reservationDate);
+    private String getReservationAvailableDaysOfWeek(String day) {
+        return getDaysOfWeek(TimeFormatter.toLocalDate(day));
     }
 
     private static String getDaysOfWeek(LocalDate localDate) {
@@ -155,7 +159,7 @@ public class CustomReservationService implements ReservationService {
 
         while (itr.hasNext()) {
             Map.Entry<Integer, Boolean> entry = itr.next();
-            if (entry.getValue() == true) {
+            if (entry.getValue()) {
                 resultTimeList.add(entry.getKey());
             }
         }
@@ -190,7 +194,7 @@ public class CustomReservationService implements ReservationService {
 
     private Map<Integer, Boolean> getDefaultTimeMap() {
         Map<Integer, Boolean> timeMap = new HashMap<>();
-        for (int time: DefaultTimeOfDay.getTimes()) {
+        for (int time : DefaultTimeOfDay.getTimes()) {
             timeMap.put(time, false);
         }
         return timeMap;
@@ -211,34 +215,6 @@ public class CustomReservationService implements ReservationService {
     @Override
     public List<Reservation> findResByPlaceIdAndRoomKindId(long placeId, long roomTypeId, LocalDate resStartDate, LocalDate resEndDate) {
         return reservationRepository.findResByPlaceIdAndRoomKindId(placeId, roomTypeId, resStartDate, resEndDate);
-    }
-
-    @Override
-    public Map<String, String> reservation(Map<String, String> errorMap, User user, Place place, ResRequestData resRequestData) {
-        Room room = null;
-        for (Room candidate : place.getRooms()) {
-            if (candidate.getReservationList().size() != 0) {
-                for (Reservation reservation : candidate.getReservationList()) {
-
-                }
-            }
-        }
-
-        for (Room candidate : place.getRooms()) {
-            if (candidate.getRoomKind().getRoomType().equals(resRequestData.getSelectedType())) {
-                room = candidate;
-                break;
-            }
-        }
-        Reservation reservation = new Reservation(user, place, room, resRequestData.getDate(), resRequestData.getStartTime(), resRequestData.getDate(), resRequestData.getEndTime());
-//        Reservation reservation = new Reservation(new User(user.getId()), new Place(place.getId()), new Room(room.getId()), resRequestData.getDate(), resRequestData.getStartTime(), resRequestData.getDate(), resRequestData.getEndTime());
-        Reservation save = reservationRepository.save(reservation);
-        if (save == null) {
-            errorMap.put("ReservationError", "예약 실패");
-            log.info("예약에 실패하였습니다.");
-        }
-        errorMap.put("reservationId", save.getId().toString());
-        return errorMap;
     }
 
     private boolean isOpenToday(String reservationDayOfWeek, List<String> placeOpenList) {
