@@ -1,4 +1,4 @@
-package com.golfzonaca.officesharingplatform.domain.payment;
+package com.golfzonaca.officesharingplatform.domain.payment.kakaopay;
 
 import lombok.Data;
 

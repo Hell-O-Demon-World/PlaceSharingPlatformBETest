@@ -5,8 +5,9 @@ import com.golfzonaca.officesharingplatform.domain.Reservation;
 import com.golfzonaca.officesharingplatform.domain.Room;
 import com.golfzonaca.officesharingplatform.domain.RoomKind;
 import com.golfzonaca.officesharingplatform.domain.User;
-import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayApprovalForm;
-import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayReady;
+import com.golfzonaca.officesharingplatform.domain.payment.CompanyId;
+import com.golfzonaca.officesharingplatform.domain.payment.kakaopay.KakaoPayApprovalForm;
+import com.golfzonaca.officesharingplatform.domain.payment.kakaopay.KakaoPayReady;
 import com.golfzonaca.officesharingplatform.repository.payment.PaymentRepository;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
 import com.golfzonaca.officesharingplatform.service.payment.requestform.RequestBodyApproveConverter;
@@ -55,7 +56,7 @@ public class SpringJpaKakaoPayService implements KakaoPayService {
 
         //서버요청 바디
         RequestBodyReadyConverter requestBodyConverter = RequestBodyReadyConverter.builder()
-                .cid("TC0ONETIME")
+                .cid(CompanyId.kakaoPayCid)
                 .partnerOrderId(String.valueOf(reservation.getId()))
                 .partnerUserId(String.valueOf(reservation.getId()))
                 .itemName(roomKind.getRoomType())
@@ -95,7 +96,7 @@ public class SpringJpaKakaoPayService implements KakaoPayService {
 
         // 서버로 요청할 Body
         RequestBodyApproveConverter requestBodyApproveConverter = RequestBodyApproveConverter.builder()
-                .cid("TC0ONETIME")
+                .cid(CompanyId.kakaoPayCid)
                 .tid(kakaoPayReady.getTid())
                 .partnerOrderId(String.valueOf(reservation.getId()))
                 .partnerUserId(String.valueOf(reservation.getId()))
