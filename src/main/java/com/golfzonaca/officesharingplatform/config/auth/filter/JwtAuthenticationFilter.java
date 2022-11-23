@@ -6,7 +6,6 @@ import com.golfzonaca.officesharingplatform.config.auth.token.JwtManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -17,7 +16,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.security.InvalidParameterException;
 
 @Slf4j
 @Component
@@ -30,7 +28,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String jwt = request.getHeader("Authorization");
         if (jwt != null && JwtManager.isAccessToken(jwt) && JwtManager.validateJwt(jwt)) {
-            System.out.println("ok");
             String id = JwtManager.getInfo(jwt, "id");
             Authentication authentication = getAuthentication(Long.valueOf(id));
             SecurityContextHolder.getContext().setAuthentication(authentication);

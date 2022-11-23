@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.security.jwt.Jwt;
 import org.springframework.security.jwt.JwtHelper;
 import org.springframework.security.jwt.crypto.sign.MacSigner;
@@ -13,14 +12,14 @@ import org.springframework.security.jwt.crypto.sign.MacSigner;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Map;
-import java.util.Optional;
 import java.util.TimeZone;
 
 public class JwtManager {
-    private static final MacSigner macSigner = new MacSigner("will-b-fine");
+    private static final MacSigner macSigner = new MacSigner("Hell-o-World");
     private static final Gson gson = new Gson();
 
     public static Jwt createJwt(String id, String status){
+        System.out.println("macSigner = " + macSigner);
         return JwtHelper.encode(createPayload(id, status), macSigner);
     }
 
@@ -50,11 +49,7 @@ public class JwtManager {
         JsonObject jsonObject = getJsonObject(jwt);
         JsonElement statusJson = jsonObject.get("status");
         String status = statusJson.getAsString();
-        if (status.equals("access")) {
-            return true;
-        } else {
-            return false;
-        }
+        return status.equals("access");
     }
     public static boolean validateJwt(String jwt){
 
