@@ -4,7 +4,9 @@ import com.golfzonaca.officesharingplatform.config.auth.PrincipalDetailsService;
 import com.golfzonaca.officesharingplatform.config.auth.token.IdPwAuthenticationToken;
 import com.golfzonaca.officesharingplatform.config.auth.token.JwtManager;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -15,7 +17,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.security.InvalidParameterException;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -25,8 +29,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         String jwt = request.getHeader("Authorization");
-        System.out.println("jwt = " + jwt);
-        if(jwt != null && JwtManager.validateJwt(jwt)){
+        if (jwt != null && JwtManager.isAccessToken(jwt) && JwtManager.validateJwt(jwt)) {
+            System.out.println("ok");
             String id = JwtManager.getInfo(jwt, "id");
             Authentication authentication = getAuthentication(Long.valueOf(id));
             SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -38,6 +42,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private Authentication getAuthentication(Long id) {
 
         UserDetails userDetails = principalDetailsService.loadUserByUserId(id);
-        return new IdPwAuthenticationToken(userDetails.getUsername(), null, userDetails.getAuthorities());
+        return new IdPwAuthenticationToken(userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities());
     }
 }

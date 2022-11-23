@@ -1,6 +1,7 @@
 package com.golfzonaca.officesharingplatform.config;
 
 import com.golfzonaca.officesharingplatform.config.auth.PrincipalDetailsService;
+import com.golfzonaca.officesharingplatform.config.auth.exception.JwtAuthenticationEntryPoint;
 import com.golfzonaca.officesharingplatform.config.auth.filter.JsonIdPwAuthenticationProcessingFilter;
 import com.golfzonaca.officesharingplatform.config.auth.filter.JwtAuthenticationFilter;
 import com.golfzonaca.officesharingplatform.config.auth.handler.JwtSuccessHandler;
@@ -22,7 +23,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 @RequiredArgsConstructor
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+//@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
     private final PrincipalDetailsService principalDetailsService;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
@@ -54,10 +55,14 @@ public class SecurityConfig {
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests()
-                .antMatchers("/user/mypage").hasRole("USER");
+                .antMatchers("/mypage", "/auth/refresh").hasRole("USER");
         http.addFilterAt(jsonIdPwAuthenticationProcessingFilter(), UsernamePasswordAuthenticationFilter.class);
-        http.addFilterBefore(jwtAuthenticationFilter, JsonIdPwAuthenticationProcessingFilter.class);
+        http.exceptionHandling()
+                .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
+                .and()
+                .addFilterBefore(jwtAuthenticationFilter, JsonIdPwAuthenticationProcessingFilter.class);
         http.userDetailsService(principalDetailsService);
+
         return http.build();
     }
 

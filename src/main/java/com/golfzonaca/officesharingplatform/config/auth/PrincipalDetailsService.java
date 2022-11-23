@@ -4,6 +4,8 @@ import com.golfzonaca.officesharingplatform.domain.User;
 import com.golfzonaca.officesharingplatform.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,7 +30,7 @@ public class PrincipalDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException(username);
         }
         Set<GrantedAuthority> grantedAuthorityList = new HashSet<>();
-        SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority("USER");
+        SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority("ROLE_USER");
         grantedAuthorityList.add(simpleGrantedAuthority);
 
         return PrincipalDetails.builder()
@@ -38,6 +40,7 @@ public class PrincipalDetailsService implements UserDetailsService {
                 .build();
     }
 
+//    @PreAuthorize("hasRole('ROLE_USER')")
     public UserDetails loadUserByUserId(Long userId) throws UsernameNotFoundException {
         User findUser = userRepository.findById(userId).get();
         Set<GrantedAuthority> grantedAuthorityList = new HashSet<>();

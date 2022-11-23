@@ -1,10 +1,15 @@
 package com.golfzonaca.officesharingplatform.web.auth;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.golfzonaca.officesharingplatform.annotation.TokenUserId;
+import com.golfzonaca.officesharingplatform.config.auth.token.JwtManager;
 import com.golfzonaca.officesharingplatform.domain.User;
 import com.golfzonaca.officesharingplatform.service.auth.MyBatisAuthService;
+import com.golfzonaca.officesharingplatform.web.auth.form.RefreshTokenForm;
 import com.golfzonaca.officesharingplatform.web.auth.form.SignUpSaveForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
@@ -39,5 +44,10 @@ public class AuthController {
         }
 
         return errorMap;
+    }
+
+    @GetMapping("/refresh")
+    public void refreshToken() {
+
     }
 }

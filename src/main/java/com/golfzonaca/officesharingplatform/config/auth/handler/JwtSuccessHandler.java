@@ -28,11 +28,12 @@ public class JwtSuccessHandler implements AuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         try (PrintWriter writer = response.getWriter()) {
-            Jwt jwt = JwtManager.createJwt(userRepository.findByMailLike(authentication.getPrincipal().toString()).getId().toString());
+            Jwt accessJwt = JwtManager.createJwt(userRepository.findByMailLike(authentication.getPrincipal().toString()).getId().toString(), "access");
+            Jwt refreshJwt = JwtManager.createJwt(userRepository.findByMailLike(authentication.getPrincipal().toString()).getId().toString(), "refresh");
 
             JsonObject json = new JsonObject();
-            json.addProperty("accessToken", jwt.getEncoded());
-
+            json.addProperty("accessToken", accessJwt.getEncoded());
+            json.addProperty("refreshToken", refreshJwt.getEncoded());
             response.setStatus(HttpStatus.ACCEPTED.value());
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.setCharacterEncoding(StandardCharsets.UTF_8.toString());
