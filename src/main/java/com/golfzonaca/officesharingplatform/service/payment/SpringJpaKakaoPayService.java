@@ -90,9 +90,7 @@ public class SpringJpaKakaoPayService implements KakaoPayService {
             kakaoPayUtility.savePaymentInfo(paymentRepository, reservation, user, room, kakaoPayApprovalForm1);
             return kakaoPayApprovalForm;
 
-        } catch (RestClientException e) {
-            log.error(e.toString());
-        } catch (URISyntaxException e) {
+        } catch (RestClientException | URISyntaxException e) {
             log.error(e.toString());
         }
         return null;
