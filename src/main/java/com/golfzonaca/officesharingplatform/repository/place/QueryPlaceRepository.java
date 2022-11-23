@@ -1,8 +1,9 @@
 package com.golfzonaca.officesharingplatform.repository.place;
 
 import com.golfzonaca.officesharingplatform.domain.Place;
-import com.golfzonaca.officesharingplatform.web.search.dto.RequestFilterData;
-import com.golfzonaca.officesharingplatform.web.search.dto.RequestSearchData;
+import com.golfzonaca.officesharingplatform.web.formatter.TimeFormatter;
+import com.golfzonaca.officesharingplatform.web.search.dto.request.RequestFilterData;
+import com.golfzonaca.officesharingplatform.web.search.dto.request.RequestSearchData;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
@@ -20,7 +21,6 @@ import static com.golfzonaca.officesharingplatform.domain.QRoomKind.roomKind;
 @Repository
 @Transactional
 public class QueryPlaceRepository {
-
     private final JPAQueryFactory query;
 
     public QueryPlaceRepository(EntityManager em) {
@@ -33,18 +33,26 @@ public class QueryPlaceRepository {
 
         return query
                 .selectFrom(place)
-                .join(place.rooms, room)
-                .join(room.roomKind, roomKind)
+                .innerJoin(place.rooms, room)
+                .innerJoin(room.roomKind, roomKind)
                 .where(likeName(searchWord).or(likeAddress(searchWord)))
                 .groupBy(place)
                 .fetch();
     }
 
     public List<Place> filterPlaces(RequestFilterData requestFilterData) {
-
-        String day = requestFilterData.getDay();
-        requestFilterData.getStartTime();
-        requestFilterData.getEndTime();
+        String day = null;
+        if (StringUtils.hasText(requestFilterData.getDay())) {
+            day = TimeFormatter.toDayOfTheWeek(TimeFormatter.toLocalDate(requestFilterData.getDay()));
+        }
+        LocalTime startTime = null;
+        if (StringUtils.hasText(requestFilterData.getStartTime())) {
+            startTime = TimeFormatter.toLocalTime(requestFilterData.getStartTime());
+        }
+        LocalTime endTime = null;
+        if (StringUtils.hasText(requestFilterData.getEndTime())) {
+            endTime = TimeFormatter.toLocalTime(requestFilterData.getEndTime());
+        }
         String city = requestFilterData.getCity();
         String subCity = requestFilterData.getSubCity();
         String roomType = requestFilterData.getType();
@@ -54,21 +62,21 @@ public class QueryPlaceRepository {
                 .selectFrom(place)
                 .join(place.rooms, room)
                 .join(room.roomKind, roomKind)
-                .where(likeName(searchWord).or(likeAddress(searchWord)), likeDay(day), beforeStartTime(startTime), afterEndTime(endTime), likeRoomType(roomType))
+                .where(likeAddress(city), likeAddress(subCity), likeDay(day), beforeStartTime(startTime), afterEndTime(endTime), likeRoomType(roomType))
                 .groupBy(place)
                 .fetch();
     }
 
-    private BooleanExpression likeName(String searchWord) {
-        if (StringUtils.hasText(searchWord)) {
-            return place.placeName.contains(searchWord);
+    private BooleanExpression likeName(String name) {
+        if (StringUtils.hasText(name)) {
+            return place.placeName.contains(name);
         }
         return null;
     }
 
-    private BooleanExpression likeAddress(String searchWord) {
-        if (StringUtils.hasText(searchWord)) {
-            return place.address.address.contains(searchWord);
+    private BooleanExpression likeAddress(String address) {
+        if (StringUtils.hasText(address)) {
+            return place.address.address.contains(address);
         }
         return null;
     }
@@ -94,6 +102,13 @@ public class QueryPlaceRepository {
             if (StringUtils.hasText(endTime.toString())) {
                 return place.placeEnd.goe(endTime);
             }
+        }
+        return null;
+    }
+
+    private BooleanExpression likeRoomType(String roomType) {
+        if (StringUtils.hasText(roomType)) {
+            return room.roomKind.roomType.contains(roomType);
         }
         return null;
     }

@@ -11,8 +11,8 @@ import com.golfzonaca.officesharingplatform.repository.room.RoomRepository;
 import com.golfzonaca.officesharingplatform.service.reservation.validation.ReservationProcessValidation;
 import com.golfzonaca.officesharingplatform.service.reservation.validation.ReservationRequestValidation;
 import com.golfzonaca.officesharingplatform.web.formatter.TimeFormatter;
+import com.golfzonaca.officesharingplatform.web.reservation.dto.process.ProcessReservationData;
 import com.golfzonaca.officesharingplatform.web.reservation.form.DefaultTimeOfDay;
-import com.golfzonaca.officesharingplatform.web.reservation.form.ResRequestData;
 import com.golfzonaca.officesharingplatform.web.reservation.form.SelectedTypeAndDayForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -92,20 +92,20 @@ public class JpaReservationService implements ReservationService {
     }
 
     @Override
-    public Map<String, String> validation(Map<String, String> response, User user, Place place, ResRequestData resRequestData) {
-        response = reservationRequestValidation.validation(response, user, place, resRequestData);
+    public Map<String, String> validation(Map<String, String> response, User user, Place place, ProcessReservationData data) {
+        response = reservationRequestValidation.validation(response, user, place, data);
         return response;
     }
 
     @Override
-    public Map<String, String> saveReservation(Map<String, String> response, User user, Place place, ResRequestData resRequestData) {
-        Room room = reservationProcessValidation.selectAvailableRoomForReservation(place, resRequestData);
+    public Map<String, String> saveReservation(Map<String, String> response, User user, Place place, ProcessReservationData data) {
+        Room room = reservationProcessValidation.selectAvailableRoomForReservation(place, data);
         if (room == null) {
             response.put("NonexistentRoomTypeInPlaceError", "선택하신 타입은 해당 공간에 존재하지 않습니다.");
             return response;
         }
 
-        Reservation reservation = new Reservation(user, place, room, resRequestData.getDate(), resRequestData.getStartTime(), resRequestData.getDate(), resRequestData.getEndTime());
+        Reservation reservation = new Reservation(user, place, room, data.getDate(), data.getStartTime(), data.getDate(), data.getEndTime());
         Reservation save = reservationRepository.save(reservation);
         if (save == null) {
             response.put("ReservationError", "예약 실패");

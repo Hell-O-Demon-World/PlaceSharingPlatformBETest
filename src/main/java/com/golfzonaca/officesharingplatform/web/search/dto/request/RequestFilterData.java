@@ -1,9 +1,11 @@
-package com.golfzonaca.officesharingplatform.web.search.dto;
+package com.golfzonaca.officesharingplatform.web.search.dto.request;
 
+import com.golfzonaca.officesharingplatform.annotation.RequestFilterDataNotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@RequestFilterDataNotBlank(day = "day", startTime = "startTime", endTime = "endTime", city = "city", subCity = "subCity", type = "type")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor

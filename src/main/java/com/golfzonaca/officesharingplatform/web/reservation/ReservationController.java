@@ -6,11 +6,14 @@ import com.golfzonaca.officesharingplatform.domain.User;
 import com.golfzonaca.officesharingplatform.service.place.PlaceService;
 import com.golfzonaca.officesharingplatform.service.reservation.ReservationService;
 import com.golfzonaca.officesharingplatform.service.user.UserService;
-import com.golfzonaca.officesharingplatform.web.reservation.form.ResRequestData;
+import com.golfzonaca.officesharingplatform.web.formatter.TimeFormatter;
+import com.golfzonaca.officesharingplatform.web.reservation.dto.process.ProcessReservationData;
+import com.golfzonaca.officesharingplatform.web.reservation.dto.request.ResRequestData;
 import com.golfzonaca.officesharingplatform.web.reservation.form.SelectedTypeAndDayForm;
 import com.golfzonaca.officesharingplatform.web.reservation.form.TimeListForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -37,8 +40,9 @@ public class ReservationController {
     }
 
     @PostMapping("places/{placeId}/book")
-    public Map book(@TokenUserId Long userId, @PathVariable long placeId, @RequestBody ResRequestData resRequestData) {
+    public Map book(@TokenUserId Long userId, @PathVariable long placeId, @Validated @RequestBody ResRequestData resRequestData) {
         Map<String, String> response = new LinkedHashMap<>();
+        ProcessReservationData processReservationData = getProcessReservationData(resRequestData);
 
         User user = userService.findById(userId);
         if (user == null) {
@@ -52,13 +56,17 @@ public class ReservationController {
             return response;
         }
 
-        response = reservationService.validation(response, user, place, resRequestData);
+        response = reservationService.validation(response, user, place, processReservationData);
 
         if (response.isEmpty()) {
-            response = reservationService.saveReservation(response, user, place, resRequestData);
+            response = reservationService.saveReservation(response, user, place, processReservationData);
             return response;
         }
         return response;
+    }
+
+    private ProcessReservationData getProcessReservationData(ResRequestData resRequestData) {
+        return new ProcessReservationData(resRequestData.getSelectedType(), TimeFormatter.toLocalDate(resRequestData.getDate()), TimeFormatter.toLocalTime(resRequestData.getStartTime()), TimeFormatter.toLocalTime(resRequestData.getEndTime()));
     }
 }
 

@@ -6,7 +6,7 @@ import com.golfzonaca.officesharingplatform.domain.User;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
 import com.golfzonaca.officesharingplatform.repository.room.RoomRepository;
 import com.golfzonaca.officesharingplatform.repository.roomkind.RoomKindRepository;
-import com.golfzonaca.officesharingplatform.web.reservation.form.ResRequestData;
+import com.golfzonaca.officesharingplatform.web.reservation.dto.process.ProcessReservationData;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -26,16 +26,16 @@ public class ReservationRequestValidation {
     private final RoomKindRepository roomKindRepository;
     private final ReservationRepository reservationRepository;
 
-    public Map<String, String> validation(Map<String, String> response, User user, Place place, ResRequestData resRequestData) {
-        response = validRoomType(response, resRequestData.getSelectedType());
-        response = validBusinessDay(response, place, resRequestData.getDate());
-        response = validResTimeBetweenPlaceOpeningTime(response, place, resRequestData.getStartTime(), resRequestData.getEndTime());
-        response = validStartTimeBeforeEndTime(response, resRequestData.getStartTime(), resRequestData.getEndTime());
-        response = validMinUnitOfTime(response, resRequestData.getStartTime(), resRequestData.getEndTime());
-        response = validPastnessOfDateTime(response, LocalDateTime.of(resRequestData.getDate(), resRequestData.getStartTime()), LocalDateTime.of(resRequestData.getDate(), resRequestData.getEndTime()));
-        response = existRoomTypeInPlace(response, place, resRequestData.getSelectedType());
-        response = validDuplicatedResForSameUser(response, user, place, resRequestData.getDate(), resRequestData.getStartTime(), resRequestData.getDate(), resRequestData.getEndTime());
-        response = validRestRoomForSelectedPlaceAndDateTime(response, place, resRequestData.getSelectedType(), resRequestData.getDate(), resRequestData.getStartTime(), resRequestData.getDate(), resRequestData.getEndTime());
+    public Map<String, String> validation(Map<String, String> response, User user, Place place, ProcessReservationData data) {
+        response = validRoomType(response, data.getSelectedType());
+        response = validBusinessDay(response, place, data.getDate());
+        response = validResTimeBetweenPlaceOpeningTime(response, place, data.getStartTime(), data.getEndTime());
+        response = validStartTimeBeforeEndTime(response, data.getStartTime(), data.getEndTime());
+        response = validMinUnitOfTime(response, data.getStartTime(), data.getEndTime());
+        response = validPastnessOfDateTime(response, LocalDateTime.of(data.getDate(), data.getStartTime()), LocalDateTime.of(data.getDate(), data.getEndTime()));
+        response = existRoomTypeInPlace(response, place, data.getSelectedType());
+        response = validDuplicatedResForSameUser(response, user, place, data.getDate(), data.getStartTime(), data.getDate(), data.getEndTime());
+        response = validRestRoomForSelectedPlaceAndDateTime(response, place, data.getSelectedType(), data.getDate(), data.getStartTime(), data.getDate(), data.getEndTime());
         return response;
     }
 

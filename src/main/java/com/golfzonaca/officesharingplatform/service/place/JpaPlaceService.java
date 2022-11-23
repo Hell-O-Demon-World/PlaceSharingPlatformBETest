@@ -5,6 +5,7 @@ import com.golfzonaca.officesharingplatform.repository.place.PlaceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -12,6 +13,11 @@ import java.util.Optional;
 public class JpaPlaceService implements PlaceService {
 
     private final PlaceRepository placeRepository;
+
+    @Override
+    public List<Place> findAllPlaces() {
+        return placeRepository.findAllPlaces();
+    }
 
     @Override
     public Place findById(long placeId) {

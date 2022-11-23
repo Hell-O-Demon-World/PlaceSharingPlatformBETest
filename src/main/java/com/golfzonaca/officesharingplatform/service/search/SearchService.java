@@ -1,8 +1,8 @@
 package com.golfzonaca.officesharingplatform.service.search;
 
 import com.golfzonaca.officesharingplatform.domain.Place;
-import com.golfzonaca.officesharingplatform.web.search.dto.RequestFilterData;
-import com.golfzonaca.officesharingplatform.web.search.dto.RequestSearchData;
+import com.golfzonaca.officesharingplatform.web.search.dto.request.RequestFilterData;
+import com.golfzonaca.officesharingplatform.web.search.dto.request.RequestSearchData;
 
 import java.util.List;
 

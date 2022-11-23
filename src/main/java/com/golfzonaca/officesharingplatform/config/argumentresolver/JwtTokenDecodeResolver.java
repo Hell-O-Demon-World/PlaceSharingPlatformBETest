@@ -1,9 +1,7 @@
 package com.golfzonaca.officesharingplatform.config.argumentresolver;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.golfzonaca.officesharingplatform.annotation.TokenUserId;
 import com.golfzonaca.officesharingplatform.config.auth.token.JwtManager;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;

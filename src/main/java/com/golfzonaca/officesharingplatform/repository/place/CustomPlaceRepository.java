@@ -1,8 +1,8 @@
 package com.golfzonaca.officesharingplatform.repository.place;
 
 import com.golfzonaca.officesharingplatform.domain.Place;
-import com.golfzonaca.officesharingplatform.web.search.dto.RequestFilterData;
-import com.golfzonaca.officesharingplatform.web.search.dto.RequestSearchData;
+import com.golfzonaca.officesharingplatform.web.search.dto.request.RequestFilterData;
+import com.golfzonaca.officesharingplatform.web.search.dto.request.RequestSearchData;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +17,11 @@ public class CustomPlaceRepository implements PlaceRepository {
 
     private final SpringJpaPlaceRepository jpaRepository;
     private final QueryPlaceRepository queryPlaceRepository;
+
+    @Override
+    public List<Place> findAllPlaces() {
+        return jpaRepository.findAll();
+    }
 
     @Override
     public Optional<Place> findById(long id) {

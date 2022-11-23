@@ -7,9 +7,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.concurrent.ConcurrentHashMap;
 
 
@@ -22,8 +22,7 @@ public class AuthController {
 
     @ResponseBody
     @PostMapping("/signup")
-    public ConcurrentHashMap<String, Object> signup(@Valid @RequestBody SignUpSaveForm signUpSaveForm, BindingResult bindingResult) {
-
+    public ConcurrentHashMap<String, Object> signup(@Validated @RequestBody SignUpSaveForm signUpSaveForm, BindingResult bindingResult) {
         ConcurrentHashMap<String, Object> errorMap = new ConcurrentHashMap<>();
         if (bindingResult.hasErrors()) {
             for (ObjectError objectError : bindingResult.getAllErrors()) {
