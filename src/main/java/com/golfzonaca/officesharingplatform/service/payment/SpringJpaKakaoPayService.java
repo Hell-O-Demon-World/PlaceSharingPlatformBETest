@@ -1,10 +1,7 @@
 package com.golfzonaca.officesharingplatform.service.payment;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.golfzonaca.officesharingplatform.domain.Reservation;
-import com.golfzonaca.officesharingplatform.domain.Room;
-import com.golfzonaca.officesharingplatform.domain.RoomKind;
-import com.golfzonaca.officesharingplatform.domain.User;
+import com.golfzonaca.officesharingplatform.domain.*;
 import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayApprovalForm;
 import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayReady;
 import com.golfzonaca.officesharingplatform.repository.payment.PaymentRepository;
@@ -121,7 +118,7 @@ public class SpringJpaKakaoPayService implements KakaoPayService {
 
     private RequestBodyApproveConverter getRequestApprovalConverter(String partnerOrderId, String partnerUserId, String pgToken, String totalAmount) {
         RequestBodyApproveConverter requestBodyApproveConverter = new RequestBodyApproveConverter();
-        requestBodyApproveConverter.toEntity(CompanyId.kakaoPayCid, kakaoPayReady.getTid()
+        requestBodyApproveConverter.toEntity(CompanyId.KAKAOPAYCID, kakaoPayReady.getTid()
                 , partnerOrderId, partnerUserId, pgToken, totalAmount);
         return requestBodyApproveConverter;
     }
