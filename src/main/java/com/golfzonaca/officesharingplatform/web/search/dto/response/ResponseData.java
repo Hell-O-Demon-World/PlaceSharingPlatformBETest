@@ -12,4 +12,14 @@ public class ResponseData {
     private String name;
     private String address;
     private String mainInfo;
+
+    @Override
+    public String toString() {
+        return "{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", address='" + address + '\'' +
+                ", mainInfo='" + mainInfo + '\'' +
+                '}';
+    }
 }
