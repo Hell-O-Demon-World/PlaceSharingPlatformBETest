@@ -1,8 +1,6 @@
 package com.golfzonaca.officesharingplatform.config.auth;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
 import org.springframework.security.core.CredentialsContainer;
@@ -10,10 +8,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.SpringSecurityCoreVersion;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
 import java.util.Set;
 
-@Data
-@AllArgsConstructor
 @Builder
 public class PrincipalDetails implements UserDetails, CredentialsContainer {
     private static final long serialVersionUID = SpringSecurityCoreVersion.SERIAL_VERSION_UID;
@@ -26,8 +23,9 @@ public class PrincipalDetails implements UserDetails, CredentialsContainer {
     private final boolean enabled;
     private final Set<GrantedAuthority> authorities;
 
-    public PrincipalDetails(String username, String password, Set<GrantedAuthority> authorities) {
-        this(username, password, true, true, true, true, authorities);
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return authorities;
     }
 
     @Override

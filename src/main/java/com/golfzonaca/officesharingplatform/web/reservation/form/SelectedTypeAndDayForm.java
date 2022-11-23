@@ -7,3 +7,4 @@ public class SelectedTypeAndDayForm {
     private String selectedType;
     private String day;
 }
+

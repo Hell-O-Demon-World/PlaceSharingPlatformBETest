@@ -4,6 +4,7 @@ import com.golfzonaca.officesharingplatform.annotation.TokenUserId;
 import com.golfzonaca.officesharingplatform.domain.MyPage;
 import com.golfzonaca.officesharingplatform.service.mypage.MyPageService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
