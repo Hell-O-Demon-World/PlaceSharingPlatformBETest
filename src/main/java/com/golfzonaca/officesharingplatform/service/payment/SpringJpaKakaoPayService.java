@@ -78,7 +78,58 @@ public class SpringJpaKakaoPayService implements KakaoPayService {
         return "/pay";
     }
 
+    // input:    카카오페이가 승인해주고 난 뒤에 받은 정보
+    // output : KakaoPayApprovalForm
     @Override
+    public KakaoPayApprovalForm kakaoPayInfo(long reservationId, String pg_token) {
+        Reservation reservation = getReservation(reservationId);
+        HttpEntity<MultiValueMap<String, String>> body = getBody(reservation, pg_token);
+
+        try {
+            KakaoPayApprovalForm kakaoPayApprovalForm1 = kakaoPayApprovalForm.toEntity(HOST, body);
+            log.info("" + kakaoPayApprovalForm);
+            User user = reservation.getUser();
+            Room room = reservation.getRoom();
+            kakaoPayUtility.savePaymentInfo(paymentRepository, reservation, user, room, kakaoPayApprovalForm1);
+            return kakaoPayApprovalForm;
+
+        } catch (RestClientException e) {
+            log.error(e.toString());
+        } catch (URISyntaxException e) {
+            log.error(e.toString());
+        }
+        return null;
+    }
+
+    private HttpEntity<MultiValueMap<String, String>> getBody(Reservation reservation, String pg_token) {
+        RoomKind roomKind = reservation.getRoom().getRoomKind();
+        String setPartnerOrderId = String.valueOf(reservation.getId());
+        String partnerUserId = String.valueOf(reservation.getId());
+        String calculatePayPrice = kakaoPayUtility.calculatePayPrice(reservation, roomKind);
+        RequestBodyApproveConverter requestBodyApproveConverter = getRequestApprovalConverter(setPartnerOrderId, partnerUserId, pg_token, calculatePayPrice);
+        return getHttpEntity(requestBodyApproveConverter);
+    }
+
+    @Override
+    public KakaoPayApprovalForm save(KakaoPayApprovalForm kakaoPayApprovalForm) {
+        return kakaoPayApprovalForm;
+    }
+
+    private HttpEntity<MultiValueMap<String, String>> getHttpEntity(RequestBodyApproveConverter requestBodyApproveConverter) {
+        return new HttpEntity<>(kakaoPayUtility.multiValueMapConverter(new ObjectMapper(), requestBodyApproveConverter), httpheaders);
+    }
+
+    private RequestBodyApproveConverter getRequestApprovalConverter(String partnerOrderId, String partnerUserId, String pgToken, String totalAmount) {
+        RequestBodyApproveConverter requestBodyApproveConverter = new RequestBodyApproveConverter();
+        requestBodyApproveConverter.toEntity(CompanyId.kakaoPayCid, kakaoPayReady.getTid()
+                , partnerOrderId, partnerUserId, pgToken, totalAmount);
+        return requestBodyApproveConverter;
+    }
+
+    private Reservation getReservation(long reservationId) {
+        return reservationRepository.findById(reservationId).get();
+    }
+    /*@Override
     public KakaoPayApprovalForm kakaoPayInfo(long reservationId, String pg_token) {
         log.info("Started kakaoPayInfo method");
 
@@ -118,6 +169,6 @@ public class SpringJpaKakaoPayService implements KakaoPayService {
             log.error(e.toString());
         }
         return null;
-    }
+    }*/
 }
 
