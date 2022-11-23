@@ -18,8 +18,17 @@ public class JwtManager {
     private static final MacSigner macSigner = new MacSigner("Hell-o-World");
     private static final Gson gson = new Gson();
 
+    public static Jwt createAccessJwt(Long userId) {
+        Jwt newToken = JwtManager.createJwt(userId.toString(), "access");
+        return newToken;
+    }
+
+    public static Jwt createRefreshJwt(Long userId) {
+        Jwt newToken = JwtManager.createJwt(userId.toString(), "refresh");
+        return newToken;
+    }
+
     public static Jwt createJwt(String id, String status){
-        System.out.println("macSigner = " + macSigner);
         return JwtHelper.encode(createPayload(id, status), macSigner);
     }
 
