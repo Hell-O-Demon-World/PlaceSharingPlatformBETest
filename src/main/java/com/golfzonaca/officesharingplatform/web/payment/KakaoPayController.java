@@ -1,6 +1,6 @@
 package com.golfzonaca.officesharingplatform.web.payment;
 
-import com.golfzonaca.officesharingplatform.domain.payment.kakaopay.KakaoPayApprovalForm;
+import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayApprovalForm;
 import com.golfzonaca.officesharingplatform.service.payment.KakaoPayService;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;

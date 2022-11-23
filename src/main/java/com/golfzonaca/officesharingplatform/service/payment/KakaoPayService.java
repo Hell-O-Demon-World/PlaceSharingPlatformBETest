@@ -1,7 +1,7 @@
 package com.golfzonaca.officesharingplatform.service.payment;
 
 
-import com.golfzonaca.officesharingplatform.domain.payment.kakaopay.KakaoPayApprovalForm;
+import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayApprovalForm;
 
 public interface KakaoPayService {
 

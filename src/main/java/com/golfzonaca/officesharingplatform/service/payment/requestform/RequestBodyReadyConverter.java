@@ -24,6 +24,4 @@ public class RequestBodyReadyConverter {
     private String approvalUrl; // 결제 성공 시 redirect url
     private String cancelUrl; // 결제 취소 시 redirect url
     private String failUrl; // 결제 실패 시 redirect url
-
-    //static final 로 박아버리거나 method 하나 만들어보기 (cid)
 }
