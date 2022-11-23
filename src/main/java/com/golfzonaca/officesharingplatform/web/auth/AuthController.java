@@ -11,6 +11,7 @@ import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 
@@ -27,7 +28,7 @@ public class AuthController {
         ConcurrentHashMap<String, Object> errorMap = new ConcurrentHashMap<>();
         if (bindingResult.hasErrors()) {
             for (ObjectError objectError : bindingResult.getAllErrors()) {
-                errorMap.put(objectError.getCode() + "ValidationError", objectError.getDefaultMessage());
+                errorMap.put(objectError.getCode() + "ValidationError", Objects.requireNonNull(objectError.getDefaultMessage()));
             }
             return errorMap;
         }

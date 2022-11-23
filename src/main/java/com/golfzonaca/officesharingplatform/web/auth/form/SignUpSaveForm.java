@@ -44,9 +44,9 @@ public class SignUpSaveForm {
     }
 
     private String getChangePreferString(List<PreferType> preferType) {
-        String changePreferString = "".concat("desk:" + String.valueOf(preferType.get(0).isDesk()) + "&"
-                + "meetingroom:" + String.valueOf(preferType.get(0).isMeetingroom()) + "&"
-                + "office:" + String.valueOf(preferType.get(0).isOffice()));
+        String changePreferString = "".concat("desk:" + (preferType.get(0).isDesk()) + "&"
+                + "meetingroom:" + (preferType.get(0).isMeetingroom()) + "&"
+                + "office:" + (preferType.get(0).isOffice()));
         return changePreferString;
     }
 }
