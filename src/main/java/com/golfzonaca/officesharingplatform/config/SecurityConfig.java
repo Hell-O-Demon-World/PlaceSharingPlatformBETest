@@ -24,7 +24,6 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 
 @RequiredArgsConstructor
 @EnableWebSecurity
-//@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
     private final PrincipalDetailsService principalDetailsService;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
