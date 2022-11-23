@@ -1,15 +1,11 @@
 package com.golfzonaca.officesharingplatform.web.auth;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.golfzonaca.officesharingplatform.annotation.TokenUserId;
-import com.golfzonaca.officesharingplatform.config.auth.token.JwtManager;
 import com.golfzonaca.officesharingplatform.domain.User;
-import com.golfzonaca.officesharingplatform.service.auth.MyBatisAuthService;
-import com.golfzonaca.officesharingplatform.web.auth.form.RefreshTokenForm;
+import com.golfzonaca.officesharingplatform.service.auth.AuthService;
+import com.golfzonaca.officesharingplatform.service.auth.CustomAuthService;
 import com.golfzonaca.officesharingplatform.web.auth.form.SignUpSaveForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @RequiredArgsConstructor
 @RequestMapping("/auth")
 public class AuthController {
-    private final MyBatisAuthService myBatisAuthService;
+    private final AuthService customAuthService;
 
     @ResponseBody
     @PostMapping("/signup")
@@ -38,7 +34,7 @@ public class AuthController {
         }
 
         User user = signUpSaveForm.toEntity();
-        if (!myBatisAuthService.join(user)) {
+        if (!customAuthService.join(user)) {
             errorMap.put("EmailError", "중복된 이메일 입니다.");
             return errorMap;
         }
