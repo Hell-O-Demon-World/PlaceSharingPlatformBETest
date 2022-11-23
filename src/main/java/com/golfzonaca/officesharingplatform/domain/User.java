@@ -41,6 +41,10 @@ public class User {
     @JoinColumn(name = "MILEAGE_ID")
     private Mileage mileage;
 
+    @OneToOne
+    @JoinColumn(name = "REFRESH_TOKEN_ID")
+    private RefreshToken refreshToken;
+
     public User(Long id) {
         this.id = id;
     }

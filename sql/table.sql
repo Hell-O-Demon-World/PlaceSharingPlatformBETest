@@ -155,3 +155,13 @@ create table payment
             references ROOM (ID)
             on delete cascade
 );
+create table refresh_token
+(
+    ID            bigint unsigned auto_increment primary key ,
+    USER_ID       bigint unsigned not null,
+    ENCODED_TOKEN VARCHAR(147) not null,
+    constraint FK_USER_TO_REFRESH_TOKEN_1
+        foreign key (USER_ID)
+            references user (ID)
+            on delete cascade
+);
