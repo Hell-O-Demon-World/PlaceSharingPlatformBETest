@@ -20,11 +20,6 @@ public class CustomRefreshTokenRepository implements RefreshTokenRepository{
     }
 
     @Override
-    public RefreshToken findByID(Long id) {
-        return jpaRefreshTokenRepository.findById(id).get();
-    }
-
-    @Override
     public Optional<RefreshToken> findFirstById(Long id) {
         return queryRefreshTokenRepository.findFirstById(id);
     }
@@ -33,6 +28,10 @@ public class CustomRefreshTokenRepository implements RefreshTokenRepository{
     public Optional<RefreshToken> findFirstByUserId(Long userId) {
         return queryRefreshTokenRepository.findFirstByUserId(userId);
     }
+    public RefreshToken findByID(Long id) {
+        return jpaRefreshTokenRepository.findById(id).get();
+    }
+
 
     @Override
     public Boolean isContainByUserId(Long userId) {

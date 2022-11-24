@@ -18,11 +18,11 @@ public class CustomRefreshTokenService implements RefreshTokenService {
 
     @Override
     public RefreshToken create(RefreshToken token) {
-        RefreshToken refreshToken = RefreshToken.builder()
-                .user(token.getUser())
-                .encodedToken(token.getEncodedToken())
-                .build();
-        return refreshTokenRepository.save(refreshToken);
+//        RefreshToken refreshToken = RefreshToken.builder()
+//                .user(token.getUser())
+//                .encodedToken(token.getEncodedToken())
+//                .build();
+        return refreshTokenRepository.save(token);
     }
 
     @Override
