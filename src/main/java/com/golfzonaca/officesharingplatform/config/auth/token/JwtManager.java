@@ -2,9 +2,11 @@ package com.golfzonaca.officesharingplatform.config.auth.token;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.golfzonaca.officesharingplatform.service.refreshtoken.RefreshTokenService;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.jwt.Jwt;
 import org.springframework.security.jwt.JwtHelper;
 import org.springframework.security.jwt.crypto.sign.MacSigner;
@@ -14,6 +16,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.TimeZone;
 
+@RequiredArgsConstructor
 public class JwtManager {
     private static final MacSigner macSigner = new MacSigner("Hell-o-World");
     private static final Gson gson = new Gson();
@@ -28,25 +31,25 @@ public class JwtManager {
         return newToken;
     }
 
-    public static Jwt createJwt(String id, String status){
+    public static Jwt createJwt(String id, String status) {
         return JwtHelper.encode(createPayload(id, status), macSigner);
     }
 
-    private static String createPayload(String id, String status){
+    private static String createPayload(String id, String status) {
 
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("id", id);
         jsonObject.addProperty("status", status);
-        jsonObject.addProperty("iat",getIssueAt());
+        jsonObject.addProperty("iat", getIssueAt());
 
         return gson.toJson(jsonObject);
     }
 
-    private static long getIssueAt(){
+    private static long getIssueAt() {
         return System.currentTimeMillis();
     }
 
-    public static boolean validateAccessJwt(String jwt){
+    public static boolean validateAccessJwt(String jwt) {
         JsonObject jsonObject = getJsonObject(jwt);
         JsonElement iatJson = jsonObject.get("iat");
         long iat = iatJson.getAsLong();
@@ -60,7 +63,8 @@ public class JwtManager {
         String status = statusJson.getAsString();
         return status.equals("access");
     }
-    public static boolean validateJwt(String jwt){
+
+    public static boolean validateJwt(String jwt) {
 
         JsonObject jsonObject = getJsonObject(jwt);
         JsonElement iatJson = jsonObject.get("iat");
@@ -75,17 +79,18 @@ public class JwtManager {
         }
     }
 
-    public static boolean validateRefreshJwt(String jwt){
+    public static boolean validateRefreshJwt(String jwt) {
 
         JsonObject jsonObject = getJsonObject(jwt);
         JsonElement iatJson = jsonObject.get("iat");
         long iat = iatJson.getAsLong();
         LocalDateTime iatDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(iat), TimeZone.getDefault().toZoneId());
 
-        return iatDateTime.plusWeeks(1).isAfter(LocalDateTime.now());
+//        return iatDateTime.plusWeeks(1).isAfter(LocalDateTime.now());
+        return iatDateTime.plusSeconds(1).isAfter(LocalDateTime.now());
     }
 
-    public static String getInfo(String jwt, String attr){
+    public static String getInfo(String jwt, String attr) {
 
         JsonObject jsonObject = getJsonObject(jwt);
         JsonElement jsonElement = jsonObject.get(attr);
