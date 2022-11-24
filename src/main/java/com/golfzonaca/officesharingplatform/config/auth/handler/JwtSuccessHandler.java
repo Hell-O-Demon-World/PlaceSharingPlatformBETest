@@ -63,7 +63,7 @@ public class JwtSuccessHandler implements AuthenticationSuccessHandler {
         }
         Jwt refreshJwt = JwtManager.createRefreshJwt(userId);
         refreshToken.updateToken(refreshJwt.getEncoded());
-//        refreshTokenService.create(refreshToken);
+        refreshTokenService.create(refreshToken);
         return refreshJwt;
     }
 }
