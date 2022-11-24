@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -40,6 +42,10 @@ public class User {
     @OneToOne
     @JoinColumn(name = "MILEAGE_ID")
     private Mileage mileage;
+
+    //양방향 매핑
+    @OneToMany(mappedBy = "ratingWriter")
+    private List<Rating> ratings = new ArrayList<>();
 
     public User(Long id) {
         this.id = id;

@@ -11,6 +11,12 @@ create table mileage
     POINT bigint unsigned not null
 );
 
+create table ratepoint
+(
+    ID          bigint unsigned auto_increment primary key,
+    RATINGPOINT float unsigned not null
+);
+
 create table company
 (
     ID              bigint unsigned auto_increment primary key,
@@ -42,6 +48,7 @@ create table place
     PLACE_END         time        not null,
     PLACE_ADDINFO     varchar(50) not null,
     ADDRESS_ID        bigint unsigned not null,
+    RATEPOINT_ID      bigint unsigned not null,
     constraint PLACE_NAME
         unique (PLACE_NAME),
     constraint FK_ADDRESS_TO_PLACE_1
@@ -51,8 +58,31 @@ create table place
     constraint FK_COMPANY_TO_PLACE_1
         foreign key (COMPANY_ID)
             references company (ID)
+            on delete cascade,
+    constraint FK_RATEPOINT_TO_PLACE_1
+        foreign key (RATEPOINT_ID)
+            references ratepoint (ID)
             on delete cascade
 );
+
+create table rating
+(
+    ID            bigint unsigned auto_increment primary key,
+    PLACE_ID      bigint unsigned not null,
+    RATING_SCORE  float unsigned not null,
+    RATING_REVIEW varchar(200) not null,
+    RATING_WRITER bigint unsigned not null,
+    RATING_TIME   datetime     not null,
+    constraint FK_PLACE_TO_RATING_1
+        foreign key (PLACE_ID)
+            references place (ID)
+            on delete cascade,
+    constraint FK_USER_TO_RATING_1
+        foreign key (RATING_WRITER)
+            references user (ID)
+            on delete cascade
+);
+
 
 create table room_kind
 (

@@ -11,7 +11,7 @@ public class SpringJpaDslRatePointService implements RatePointService {
     private final RatePointRepository ratePointRepository;
 
     @Override
-    public RatePoint update(RatePoint ratePoint) {
-        return ratePointRepository.update(ratePoint);
+    public void update(RatePoint ratePoint, Float ratingScore) {
+        ratePointRepository.update(ratePoint, ratingScore);
     }
 }

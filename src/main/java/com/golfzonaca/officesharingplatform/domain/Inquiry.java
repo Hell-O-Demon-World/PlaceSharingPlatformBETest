@@ -29,17 +29,22 @@ public class Inquiry {
     private String content;
 
     @Column(name = "INQUIRY_STATUS", nullable = false)
-    private boolean status;
+    private boolean answerPresent;
 
     @Column(name = "INQUIRY_TIME", nullable = false)
-    private LocalDateTime time;
+    private LocalDateTime dateTime;
 
     @Builder
-    public Inquiry(User user, String title, String content, boolean status, LocalDateTime time) {
+    public Inquiry(User user, String title, String content, boolean answerPresent, LocalDateTime dateTime) {
         this.user = user;
         this.title = title;
         this.content = content;
-        this.status = status;
-        this.time = time;
+        this.answerPresent = answerPresent;
+        this.dateTime = dateTime;
+    }
+
+    public void UpdateInquiry(String title, String content) {
+        this.title = title;
+        this.content = content;
     }
 }

@@ -4,5 +4,5 @@ import com.golfzonaca.officesharingplatform.domain.RatePoint;
 
 public interface RatePointRepository {
 
-    RatePoint update(RatePoint ratePoint);
+    void update(RatePoint ratePoint, Float ratingScore);
 }

@@ -25,11 +25,13 @@ public class Place {
     @JoinColumn(name = "COMPANY_ID")
     private Company company;
 
-/*
     @OneToOne
     @JoinColumn(name = "RATEPOINT_ID")
     private RatePoint ratePoint;
-*/
+
+    @OneToOne
+    @JoinColumn(name = "ADDRESS_ID")
+    private Address address;
 
     @Column(name = "PLACE_NAME", nullable = false, length = 30)
     private String placeName;
@@ -49,17 +51,17 @@ public class Place {
     @Column(name = "PLACE_ADDINFO", nullable = false)
     private String placeAddInfo;
 
-    @OneToOne
-    @JoinColumn(name = "ADDRESS_ID")
-    private Address address;
-
     //양방향 매핑
     @OneToMany(mappedBy = "place")
     private List<Room> rooms = new ArrayList<>();
 
+    @OneToMany(mappedBy = "place")
+    private List<Rating> ratings = new ArrayList<>();
+
+
     public Place(Company company, RatePoint ratePoint, String placeName, String description, String openDays, LocalTime placeStart, LocalTime placeEnd, String placeAddInfo, Address address) {
         this.company = company;
-//        this.ratePoint = ratePoint;
+        this.ratePoint = ratePoint;
         this.placeName = placeName;
         this.description = description;
         this.openDays = openDays;

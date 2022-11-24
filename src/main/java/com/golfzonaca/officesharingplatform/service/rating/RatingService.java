@@ -1,14 +1,16 @@
 package com.golfzonaca.officesharingplatform.service.rating;
 
 import com.golfzonaca.officesharingplatform.domain.Rating;
+import com.golfzonaca.officesharingplatform.web.rating.dto.RatingSaveData;
+import com.golfzonaca.officesharingplatform.web.rating.dto.RatingUpdateData;
 
 public interface RatingService {
 
-    Rating save(Rating rating);
+    void save(Long userId, long placeId, RatingSaveData ratingSaveData);
 
-    Rating update(Rating rating);
+    Rating findById(long ratingId);
 
-    void delete(Rating rating);
+    void update(Long userId, long ratingId, RatingUpdateData updateData);
 
-//    List<Rating> findByPlace(Place place);
+    void delete(Long userId, long ratingId);
 }
