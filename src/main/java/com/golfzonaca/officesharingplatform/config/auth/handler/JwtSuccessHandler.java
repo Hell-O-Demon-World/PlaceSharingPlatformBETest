@@ -47,7 +47,7 @@ public class JwtSuccessHandler implements AuthenticationSuccessHandler {
         RefreshToken refreshToken = new RefreshToken();
         if (refreshTokenService.existToken(userId)) {
             refreshToken = refreshTokenService.getRefreshToken(userId);
-        }
+        } 
         return getJwt(userId, refreshToken);
     }
 
@@ -56,10 +56,12 @@ public class JwtSuccessHandler implements AuthenticationSuccessHandler {
             Jwt refreshJwt = JwtHelper.decode(refreshToken.getEncodedToken());
             log.info("RefreshToken available ::: using current RefreshToken");
             return refreshJwt;
-        } else if (!JwtManager.validateRefreshJwt(refreshToken.getEncodedToken())) {
+        } else if (refreshToken.getId() != null && !JwtManager.validateRefreshJwt(refreshToken.getEncodedToken())) {
             log.info("RefreshToken expired ::: create new RefreshToken And Save");
         } else {
             log.info("Can't find RefreshToken ::: create new RefreshToken And Save");
+//            User findUser = userRepository.findById(userId).get();
+//            refreshToken.updateUser(findUser);
         }
         Jwt refreshJwt = JwtManager.createRefreshJwt(userId);
         refreshToken.updateToken(refreshJwt.getEncoded());

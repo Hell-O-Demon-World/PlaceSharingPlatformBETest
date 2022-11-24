@@ -38,4 +38,8 @@ public class RefreshToken {
     public void updateToken(String encodedToken) {
         this.encodedToken = encodedToken;
     }
+
+    public void updateUser(User findUser) {
+        this.user = findUser;
+    }
 }
