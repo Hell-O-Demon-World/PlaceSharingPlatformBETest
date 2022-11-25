@@ -26,12 +26,6 @@ public class Certification {
 	
 	@SerializedName("birth")
 	int birth;
-
-	@SerializedName("phone")
-	String phone;
-
-	@SerializedName("carrier")
-	String carrier;
 	
 	@SerializedName("certified")
 	boolean certified;
@@ -44,9 +38,6 @@ public class Certification {
 	
 	@SerializedName("unique_in_site")
 	String unique_in_site;
-
-	@SerializedName("origin")
-	String origin;
 
 	public String getImpUid() {
 		return imp_uid;
@@ -76,10 +67,6 @@ public class Certification {
 		return new Date( birth * 1000L );
 	}
 
-	public String getPhone() { return phone; }
-
-	public String getCarrier() { return carrier; }
-
 	public boolean isCertified() {
 		return certified;
 	}
@@ -95,8 +82,5 @@ public class Certification {
 	public String getUniqueInSite() {
 		return unique_in_site;
 	}
-
-	public String getOrigin() {
-		return origin;
-	}
+	
 }

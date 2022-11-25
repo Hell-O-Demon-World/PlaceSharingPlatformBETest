@@ -1,8 +1,8 @@
 package com.golfzonaca.officesharingplatform.IamportRestClient;
 
-import com.siot.IamportRestClient.request.payco.OrderStatusData;
-import com.siot.IamportRestClient.response.IamportResponse;
-import com.siot.IamportRestClient.response.payco.OrderStatus;
+import com.golfzonaca.officesharingplatform.IamportRestClient.request.payco.OrderStatusData;
+import com.golfzonaca.officesharingplatform.IamportRestClient.response.IamportResponse;
+import com.golfzonaca.officesharingplatform.IamportRestClient.response.payco.OrderStatus;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Header;

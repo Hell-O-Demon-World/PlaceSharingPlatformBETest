@@ -11,16 +11,16 @@ public class PaymentBalance {
 	BigDecimal amount;
 	
 	@SerializedName("cash_receipt")
-	Balance cash_receipt;
+    Balance cash_receipt;
 	
 	@SerializedName("primary")
-	Balance primary;
+    Balance primary;
 	
 	@SerializedName("secondary")
-	Balance secondary;
+    Balance secondary;
 	
 	@SerializedName("discount")
-	Balance discount;
+    Balance discount;
 	
 	@SerializedName("histories")
 	List<PaymentBalanceEntry> histories;

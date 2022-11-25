@@ -14,12 +14,6 @@ public class CancelData {
 	
 	@SerializedName("amount")
 	private BigDecimal amount;
-
-	@SerializedName("tax_free")
-	private BigDecimal tax_free;
-
-	@SerializedName("checksum")
-	private BigDecimal checksum;
 	
 	@SerializedName("reason")
 	private String reason;
@@ -35,9 +29,6 @@ public class CancelData {
 	
 	@SerializedName("escrow_confirmed")
 	private boolean escrow_confirmed;
-
-	@SerializedName("extra")
-	private ExtraRequesterEntry extra;
 	
 	public CancelData(String uid, boolean imp_uid_or_not) {
 		if ( imp_uid_or_not ) {
@@ -50,14 +41,6 @@ public class CancelData {
 	public CancelData(String uid, boolean imp_uid_or_not, BigDecimal amount) {
 		this(uid, imp_uid_or_not);
 		this.amount = amount;
-	}
-
-	public void setTax_free(BigDecimal tax_free) {
-		this.tax_free = tax_free;
-	}
-
-	public void setChecksum(BigDecimal checksum) {
-		this.checksum = checksum;
 	}
 
 	public void setReason(String reason) {
@@ -79,12 +62,5 @@ public class CancelData {
 	public void setEscrowConfirmed(boolean escrow_confirmed) {
 		this.escrow_confirmed = escrow_confirmed;
 	}
-
-	public ExtraRequesterEntry getExtra() {
-		return extra;
-	}
-
-	public void setExtra(ExtraRequesterEntry extra) {
-		this.extra = extra;
-	}
+	
 }

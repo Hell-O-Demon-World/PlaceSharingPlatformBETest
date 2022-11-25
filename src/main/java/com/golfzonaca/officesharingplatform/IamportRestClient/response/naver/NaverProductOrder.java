@@ -2,8 +2,6 @@ package com.golfzonaca.officesharingplatform.IamportRestClient.response.naver;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.Date;
-
 public class NaverProductOrder {
 
 	@SerializedName("product_order_id")
@@ -30,26 +28,14 @@ public class NaverProductOrder {
 	@SerializedName("product_option_name")
 	String product_option_name;
 	
-	@SerializedName("product_amount")
-	int product_amount;
-	
-	@SerializedName("delivery_amount")
-	int delivery_amount;
-	
 	@SerializedName("quantity")
 	int quantity;
 	
 	@SerializedName("orderer")
-	NaverOrderer orderer;
+    NaverOrderer orderer;
 	
 	@SerializedName("shipping_address")
-	NaverShippingAddress shipping_address;
-	
-	@SerializedName("shipping_memo")
-	String shipping_memo;
-	
-	@SerializedName("shipping_due")
-	long shipping_due;
+    NaverShippingAddress shipping_address;
 
 	public String getProductOrderId() {
 		return product_order_id;
@@ -83,14 +69,6 @@ public class NaverProductOrder {
 		return product_option_name;
 	}
 
-	public int getProductAmount() {
-		return product_amount;
-	}
-
-	public int getDeliveryAmount() {
-		return delivery_amount;
-	}
-
 	public int getQuantity() {
 		return quantity;
 	}
@@ -101,14 +79,6 @@ public class NaverProductOrder {
 
 	public NaverShippingAddress getShippingAddress() {
 		return shipping_address;
-	}
-
-	public String getShippingMemo() {
-		return shipping_memo;
-	}
-
-	public Date getShippingDue() {
-		return new Date( shipping_due * 1000L );
 	}
 	
 }

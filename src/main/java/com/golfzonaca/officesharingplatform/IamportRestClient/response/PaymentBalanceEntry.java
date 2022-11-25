@@ -7,22 +7,22 @@ import java.util.Date;
 public class PaymentBalanceEntry {
 
 	@SerializedName("cash_receipt")
-	Balance cash_receipt;
+    Balance cash_receipt;
 	
 	@SerializedName("primary")
-	Balance primary;
+    Balance primary;
 	
 	@SerializedName("secondary")
-	Balance secondary;
+    Balance secondary;
 	
 	@SerializedName("discount")
-	Balance discount;
+    Balance discount;
 	
 	@SerializedName("created")
 	Date created;
 	
 	public PaymentBalanceEntry(Balance cash_receipt, Balance primary, Balance secondary, Balance discount,
-			Date created) {
+                               Date created) {
 		super();
 		this.cash_receipt = cash_receipt;
 		this.primary = primary;
