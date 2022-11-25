@@ -18,6 +18,7 @@ configurations {
 
 repositories {
     mavenCentral()
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
@@ -69,6 +70,16 @@ dependencies {
 //  테스트에서 Lombok 사용
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
+
+//  Jitpack 사용
+    implementation 'com.github.iamport:iamport-rest-client-java:Tag'
+
+//  retrofit2 사용
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+
+//  iamport 사용  
+    implementation group: 'com.github.iamport', name: 'iamport-rest-client-java', version: '0.2.0'
+
 }
 
 tasks.named('test') {
@@ -78,3 +89,4 @@ tasks.named('test') {
 clean {
     delete file('src/main/generated')
 }
+
