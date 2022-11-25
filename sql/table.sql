@@ -65,24 +65,6 @@ create table place
             on delete cascade
 );
 
-create table rating
-(
-    ID            bigint unsigned auto_increment primary key,
-    PLACE_ID      bigint unsigned not null,
-    RATING_SCORE  float unsigned not null,
-    RATING_REVIEW varchar(200) not null,
-    RATING_WRITER bigint unsigned not null,
-    RATING_TIME   datetime     not null,
-    constraint FK_PLACE_TO_RATING_1
-        foreign key (PLACE_ID)
-            references place (ID)
-            on delete cascade,
-    constraint FK_USER_TO_RATING_1
-        foreign key (RATING_WRITER)
-            references user (ID)
-            on delete cascade
-);
-
 create table room_kind
 (
     ID        bigint unsigned not null primary key,
@@ -109,6 +91,24 @@ create table user
     constraint FK_MILEAGE_TO_USER_1
         foreign key (MILEAGE_ID)
             references mileage (ID)
+            on delete cascade
+);
+
+create table rating
+(
+    ID            bigint unsigned auto_increment primary key,
+    PLACE_ID      bigint unsigned not null,
+    RATING_SCORE  float unsigned not null,
+    RATING_REVIEW varchar(200) not null,
+    RATING_WRITER bigint unsigned not null,
+    RATING_TIME   datetime     not null,
+    constraint FK_PLACE_TO_RATING_1
+        foreign key (PLACE_ID)
+            references place (ID)
+            on delete cascade,
+    constraint FK_USER_TO_RATING_1
+        foreign key (RATING_WRITER)
+            references user (ID)
             on delete cascade
 );
 

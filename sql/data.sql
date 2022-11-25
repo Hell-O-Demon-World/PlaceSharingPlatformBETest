@@ -134,76 +134,46 @@ VALUES (15, 'test12345', '$2a$10$Yay9kD83V4krSLX2FmoHDe9lTaBrdvH3RgraJxPbQvIumrY
         '김철수', 36);
 
 INSERT INTO place (ID, COMPANY_ID, PLACE_NAME, PLACE_DESCRIPTION, PLACE_OPENDAYS, PLACE_START, PLACE_END, PLACE_ADDINFO,
-                   ADDRESS_ID)
+                   ADDRESS_ID, RATEPOINT_ID)
 VALUES (1, 1, '골프존타워서울본관', '골프존타워서울본관입니다.', 'Mon, Tue, Wed, Thu, Fri', '08:00:00', '18:00:00',
-        'Wifi, Coffee, Parking, Monitor', 12);
+        'Wifi, Coffee, Parking, Monitor', 12, 3);
 INSERT INTO place (ID, COMPANY_ID, PLACE_NAME, PLACE_DESCRIPTION, PLACE_OPENDAYS, PLACE_START, PLACE_END, PLACE_ADDINFO,
-                   ADDRESS_ID)
+                   ADDRESS_ID, RATEPOINT_ID)
 VALUES (2, 1, '골프존타워서울R&D센터', '골프존타워서울R&D센터입니다.', 'Mon, Tue, Wed, Thu, Fri', '08:00:00', '18:00:00',
-        'Wifi, Coffee, Parking, Monitor', 13);
+        'Wifi, Coffee, Parking, Monitor', 13, 4);
 INSERT INTO place (ID, COMPANY_ID, PLACE_NAME, PLACE_DESCRIPTION, PLACE_OPENDAYS, PLACE_START, PLACE_END, PLACE_ADDINFO,
-                   ADDRESS_ID)
+                   ADDRESS_ID, RATEPOINT_ID)
 VALUES (3, 1, '골프존대전신사옥및골프복합문화센터', '골프존대전신사옥및골프복합문화센터입니다.', 'Mon, Tue, Wed, Thu, Fri', '08:00:00', '18:00:00',
-        'Wifi, Coffee, Parking, Monitor', 14);
+        'Wifi, Coffee, Parking, Monitor', 14, 5);
 INSERT INTO place (ID, COMPANY_ID, PLACE_NAME, PLACE_DESCRIPTION, PLACE_OPENDAYS, PLACE_START, PLACE_END, PLACE_ADDINFO,
-                   ADDRESS_ID)
+                   ADDRESS_ID, RATEPOINT_ID)
 VALUES (4, 2, 'KOSTA', '오리역 3번 출구 앞 하나프라자 6층에 위치하고 있습니다.', 'Mon, Tue, Wed, Thu, Fri', '08:30:00', '18:00:00', 'Wifi',
-        15);
+        15, 6);
 INSERT INTO place (ID, COMPANY_ID, PLACE_NAME, PLACE_DESCRIPTION, PLACE_OPENDAYS, PLACE_START, PLACE_END, PLACE_ADDINFO,
-                   ADDRESS_ID)
-VALUES (5, 3, 'NAVER', 'NAVER', 'Mon, Tue, Wed, Thu, Fri', '08:00:00', '18:00:00', 'Wifi, Coffee, Parking, Monitor',
-        16);
+                   ADDRESS_ID, RATEPOINT_ID)
+VALUES (5, 3, 'NAVER', 'NAVER', 'Mon, Tue, Wed, Thu, Fri', '08:00:00', '18:00:00', 'Wifi, Coffee, Parking, Monitor', 16,
+        7);
 INSERT INTO place (ID, COMPANY_ID, PLACE_NAME, PLACE_DESCRIPTION, PLACE_OPENDAYS, PLACE_START, PLACE_END, PLACE_ADDINFO,
-                   ADDRESS_ID)
+                   ADDRESS_ID, RATEPOINT_ID)
 VALUES (6, 3, 'NAVER 1784', 'NAVER 1784', 'Mon, Tue, Wed, Thu, Fri, Sat, Sun', '00:00:00', '23:59:00',
-        'Wifi, Coffee, Parking, Monitor', 17);
+        'Wifi, Coffee, Parking, Monitor', 17, 8);
 INSERT INTO place (ID, COMPANY_ID, PLACE_NAME, PLACE_DESCRIPTION, PLACE_OPENDAYS, PLACE_START, PLACE_END, PLACE_ADDINFO,
-                   ADDRESS_ID)
+                   ADDRESS_ID, RATEPOINT_ID)
 VALUES (7, 4, '카카오 판교아지트', '카카오 판교아지트', 'Mon, Tue, Wed, Thu', '07:00:00', '17:00:00', 'Wifi, Coffee, Parking, Monitor',
-        18);
+        18, 9);
 INSERT INTO place (ID, COMPANY_ID, PLACE_NAME, PLACE_DESCRIPTION, PLACE_OPENDAYS, PLACE_START, PLACE_END, PLACE_ADDINFO,
-                   ADDRESS_ID)
+                   ADDRESS_ID, RATEPOINT_ID)
 VALUES (8, 4, '카카오 스페이스닷투', '카카오 스페이스닷투', 'Mon, Tue, Wed, Thu, Fri', '09:00:00', '18:00:00',
-        'Wifi, Coffee, Parking, Monitor', 19);
+        'Wifi, Coffee, Parking, Monitor', 19, 10);
 INSERT INTO place (ID, COMPANY_ID, PLACE_NAME, PLACE_DESCRIPTION, PLACE_OPENDAYS, PLACE_START, PLACE_END, PLACE_ADDINFO,
-                   ADDRESS_ID)
+                   ADDRESS_ID, RATEPOINT_ID)
 VALUES (9, 5, '쿠팡', '쿠팡', 'Mon, Tue, Wed, Thu, Fri, Sat, Sun', '00:00:00', '23:59:00', 'Wifi, Coffee, Parking, Monitor',
-        20);
+        20, 11);
 INSERT INTO place (ID, COMPANY_ID, PLACE_NAME, PLACE_DESCRIPTION, PLACE_OPENDAYS, PLACE_START, PLACE_END, PLACE_ADDINFO,
-                   ADDRESS_ID)
+                   ADDRESS_ID, RATEPOINT_ID)
 VALUES (10, 6, '우아한형제들', '우아한형제들', 'Mon, Tue, Wed, Thu, Fri, Sat, Sun', '08:00:00', '23:59:00',
-        'Wifi, Coffee, Parking, Monitor', 21);
-INSERT INTO place (ID, COMPANY_ID, PLACE_NAME, PLACE_DESCRIPTION, PLACE_OPENDAYS, PLACE_START, PLACE_END, PLACE_ADDINFO,
-                   ADDRESS_ID)
-VALUES (11, 6, '우아한테크코스', '우아한테크코스', 'Mon, Tue, Wed, Thu, Fri', '08:00:00', '22:00:00',
-        'Wifi, Coffee, Parking, Monitor', 22);
-INSERT INTO place (ID, COMPANY_ID, PLACE_NAME, PLACE_DESCRIPTION, PLACE_OPENDAYS, PLACE_START, PLACE_END, PLACE_ADDINFO,
-                   ADDRESS_ID)
-VALUES (12, 7, '당근마켓', '당근마켓', 'Mon, Tue, Wed, Thu, Fri, Sat, Sun', '01:00:00', '19:00:00',
-        'Wifi, Coffee, Parking, Monitor', 23);
-INSERT INTO place (ID, COMPANY_ID, PLACE_NAME, PLACE_DESCRIPTION, PLACE_OPENDAYS, PLACE_START, PLACE_END, PLACE_ADDINFO,
-                   ADDRESS_ID)
-VALUES (13, 8, '토스', '토스', 'Mon, Tue, Wed, Thu, Fri, Sat, Sun', '01:00:00', '23:00:00',
-        'Wifi, Coffee, Parking, Monitor', 24);
-INSERT INTO place (ID, COMPANY_ID, PLACE_NAME, PLACE_DESCRIPTION, PLACE_OPENDAYS, PLACE_START, PLACE_END, PLACE_ADDINFO,
-                   ADDRESS_ID)
-VALUES (14, 9, '삼성SDS', '삼성SDS', 'Mon, Tue, Wed, Thu', '09:00:00', '18:00:00', 'Wifi, Coffee, Parking, Monitor', 25);
-INSERT INTO place (ID, COMPANY_ID, PLACE_NAME, PLACE_DESCRIPTION, PLACE_OPENDAYS, PLACE_START, PLACE_END, PLACE_ADDINFO,
-                   ADDRESS_ID)
-VALUES (15, 10, '넥슨코리아', '넥슨코리아', 'Mon, Tue, Wed, Thu, Fri, Sat, Sun', '09:00:00', '20:00:00',
-        'Wifi, Coffee, Parking, Monitor', 26);
-INSERT INTO place (ID, COMPANY_ID, PLACE_NAME, PLACE_DESCRIPTION, PLACE_OPENDAYS, PLACE_START, PLACE_END, PLACE_ADDINFO,
-                   ADDRESS_ID)
-VALUES (16, 11, '삼성전자', '삼성전자', 'Mon, Tue, Wed, Thu, Fri, Sat, Sun', '09:00:00', '18:00:00',
-        'Wifi, Coffee, Parking, Monitor', 27);
-INSERT INTO place (ID, COMPANY_ID, PLACE_NAME, PLACE_DESCRIPTION, PLACE_OPENDAYS, PLACE_START, PLACE_END, PLACE_ADDINFO,
-                   ADDRESS_ID)
-VALUES (20, 12, '맥도날드 오리역점', '맥도날드 오리역점', 'Mon, Tue, Wed, Thu, Fri, Sat, Sun', '04:00:00', '22:00:00', 'Wifi, Coffee',
-        32);
-INSERT INTO place (ID, COMPANY_ID, PLACE_NAME, PLACE_DESCRIPTION, PLACE_OPENDAYS, PLACE_START, PLACE_END, PLACE_ADDINFO,
-                   ADDRESS_ID)
-VALUES (47, 2, '코스타 가산', '코스타 가산', 'Mon, Tue, Wed, Thu, Fri', '09:00:00', '18:00:00', 'Wifi, Coffee, Parking, Monitor',
-        50);
+        'Wifi, Coffee, Parking, Monitor', 21, 12);
+
 
 INSERT INTO room_kind (ID, ROOM_TYPE, PRICE)
 VALUES (1, 'DESK', '10000');
