@@ -34,7 +34,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
             String refreshPath = "/auth/refresh";
             if (path.equals(refreshPath)) {
                 String refreshToken = token;
-                if (JwtManager.validateJwt(refreshToken)) {
+                if (JwtManager.validateJwt(refreshToken) && JwtManager.getInfo(refreshToken, "status").equals("refresh")) {
                     Jwt newAccessToken = getNewAccessToken(refreshToken);
                     JsonObject jsonObject = encodedTokenToJson(newAccessToken.getEncoded(), refreshToken);
                     log.info("JWTExpiredException::: Create New AccessToken");

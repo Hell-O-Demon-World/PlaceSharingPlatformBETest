@@ -28,13 +28,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String jwt = request.getHeader("Authorization");
 
-        if (jwt != null && JwtManager.isAccessToken(jwt) && JwtManager.validateJwt(jwt)) {
+        if (request.getServletPath().equals("/auth/refresh")) {
+        } else if (jwt != null && JwtManager.isAccessToken(jwt) && JwtManager.validateJwt(jwt)) {
             String id = JwtManager.getInfo(jwt, "id");
             Authentication authentication = getAuthentication(Long.valueOf(id));
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
-        filterChain.doFilter(request,response);
+        filterChain.doFilter(request, response);
     }
 
     private Authentication getAuthentication(Long id) {

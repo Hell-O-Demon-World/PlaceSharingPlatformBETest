@@ -53,7 +53,8 @@ public class JwtManager {
     }
 
     private static LocalDateTime getRefreshTime(LocalDateTime iatDateTime) {
-        return iatDateTime.plusWeeks(1);
+//        return iatDateTime.plusWeeks(1);
+        return iatDateTime.plusSeconds(1);
     }
 
     private static boolean isTimeOverIat(long iat, String status) {
