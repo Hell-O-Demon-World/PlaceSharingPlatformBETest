@@ -74,10 +74,37 @@ create table room_kind
         unique (ROOM_TYPE)
 );
 
+create table role
+(
+    ID   bigint unsigned not null primary key,
+    role enum ('USER', 'MANAGER') not null,
+    constraint ROLE
+        unique (role)
+);
+
+create table manager
+(
+    ID      bigint unsigned auto_increment primary key,
+    ROLE_ID bigint unsigned default 2 not null,
+    NAME    varchar(20)  not null,
+    EMAIL   varchar(32)  not null,
+    PW      varchar(100) not null,
+    TEL     varchar(22)  not null,
+    constraint EMAIL
+        unique (EMAIL),
+    constraint TEL
+        unique (TEL),
+    constraint FK_ROLE_TO_MANAGER_1
+        foreign key (ROLE_ID)
+            references ROLE (ID)
+            on delete cascade
+);
+
 create table user
 (
     ID          bigint unsigned auto_increment primary key,
     MILEAGE_ID  bigint unsigned not null,
+    ROLE_ID     bigint unsigned default 1 not null,
     USER_MAIL   varchar(32)  not null,
     USER_PW     varchar(100) not null,
     USER_NAME   varchar(20)  not null,
@@ -91,24 +118,22 @@ create table user
     constraint FK_MILEAGE_TO_USER_1
         foreign key (MILEAGE_ID)
             references mileage (ID)
+            on delete cascade,
+    constraint FK_ROLE_TO_USER_1
+        foreign key (ROLE_ID)
+            references ROLE (ID)
             on delete cascade
 );
 
-create table rating
+create table refresh_token
 (
     ID            bigint unsigned auto_increment primary key,
-    PLACE_ID      bigint unsigned not null,
-    RATING_SCORE  float unsigned not null,
-    RATING_REVIEW varchar(200) not null,
-    RATING_WRITER bigint unsigned not null,
-    RATING_TIME   datetime     not null,
-    constraint FK_PLACE_TO_RATING_1
-        foreign key (PLACE_ID)
-            references place (ID)
-            on delete cascade,
-    constraint FK_USER_TO_RATING_1
-        foreign key (RATING_WRITER)
-            references user (ID)
+    USER_ID       bigint unsigned not null,
+    ENCODED_TOKEN varchar(147) not null,
+    constraint user_id
+        unique (USER_ID),
+    constraint FK_USER_TO_REFRESH_TOKEN_1
+        foreign key (USER_ID) references user (ID)
             on delete cascade
 );
 
@@ -185,15 +210,21 @@ create table payment
             on delete cascade
 );
 
-create table refresh_token
+create table rating
 (
     ID            bigint unsigned auto_increment primary key,
-    USER_ID       bigint unsigned not null,
-    ENCODED_TOKEN varchar(147) not null,
-    constraint user_id
-        unique (USER_ID),
-    constraint FK_USER_TO_REFRESH_TOKEN_1
-        foreign key (USER_ID) references user (ID)
+    PLACE_ID      bigint unsigned not null,
+    RATING_SCORE  float unsigned not null,
+    RATING_REVIEW varchar(200) not null,
+    RATING_WRITER bigint unsigned not null,
+    RATING_TIME   datetime     not null,
+    constraint FK_PLACE_TO_RATING_1
+        foreign key (PLACE_ID)
+            references place (ID)
+            on delete cascade,
+    constraint FK_USER_TO_RATING_1
+        foreign key (RATING_WRITER)
+            references user (ID)
             on delete cascade
 );
 

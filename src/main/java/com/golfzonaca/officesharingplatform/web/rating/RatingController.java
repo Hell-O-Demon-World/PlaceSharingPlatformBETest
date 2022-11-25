@@ -36,7 +36,7 @@ public class RatingController {
     }
 
     @GetMapping("/{placeId}/rating/{ratingId}/delete")
-    public String deleteRating(@TokenUserId Long userId, @PathVariable long placeId, @PathVariable long ratingId, BindingResult bindingResult) {
+    public String deleteRating(@TokenUserId Long userId, @PathVariable long placeId, @PathVariable long ratingId) {
         ratingService.delete(userId, ratingId);
         return "ok";
     }

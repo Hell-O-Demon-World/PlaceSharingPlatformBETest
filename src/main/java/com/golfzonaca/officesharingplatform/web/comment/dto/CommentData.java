@@ -1,4 +1,4 @@
-package com.golfzonaca.officesharingplatform.web.inquiry.dto;
+package com.golfzonaca.officesharingplatform.web.comment.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,9 +9,7 @@ import javax.validation.constraints.NotBlank;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class InquiryUpdateData {
+public class CommentData {
     @NotBlank
-    private String title;
-    @NotBlank
-    private String question;
+    private String context;
 }

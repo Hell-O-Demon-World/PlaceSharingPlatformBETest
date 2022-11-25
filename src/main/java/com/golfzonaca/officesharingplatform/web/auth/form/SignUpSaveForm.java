@@ -2,7 +2,9 @@ package com.golfzonaca.officesharingplatform.web.auth.form;
 
 import com.golfzonaca.officesharingplatform.annotation.PhoneNum;
 import com.golfzonaca.officesharingplatform.domain.Mileage;
+import com.golfzonaca.officesharingplatform.domain.Role;
 import com.golfzonaca.officesharingplatform.domain.User;
+import com.golfzonaca.officesharingplatform.domain.type.RoleType;
 import com.golfzonaca.officesharingplatform.web.auth.form.prefertype.PreferType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -40,7 +42,7 @@ public class SignUpSaveForm {
     public User toEntity() {
 
         String changePreferString = getChangePreferString(preferType);
-        return new User(name, email, password, phoneNumber, job, changePreferString, new Mileage(0L));
+        return new User(name, email, password, phoneNumber, job, changePreferString, new Mileage(0L), new Role(1L, RoleType.ROLE_USER));
     }
 
     private String getChangePreferString(List<PreferType> preferType) {

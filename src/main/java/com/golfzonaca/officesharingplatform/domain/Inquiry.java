@@ -22,24 +22,23 @@ public class Inquiry {
     @JoinColumn(name = "USER_ID")
     private User user;
 
-    @Column(name = "INQUIRY_TITLE", length = 40, nullable = false)
+    @Column(name = "TITLE", length = 40, nullable = false)
     private String title;
 
-    @Column(name = "INQUIRY_CONTENT", length = 400, nullable = false)
+    @Column(name = "QUESTION", length = 400, nullable = false)
     private String content;
 
-    @Column(name = "INQUIRY_STATUS", nullable = false)
-    private boolean answerPresent;
-
-    @Column(name = "INQUIRY_TIME", nullable = false)
+    @Column(name = "WRITETIME", nullable = false)
     private LocalDateTime dateTime;
 
+    @OneToOne(mappedBy = "inquiry")
+    private InquiryStatus inquiryStatus;
+
     @Builder
-    public Inquiry(User user, String title, String content, boolean answerPresent, LocalDateTime dateTime) {
+    public Inquiry(User user, String title, String content, LocalDateTime dateTime) {
         this.user = user;
         this.title = title;
         this.content = content;
-        this.answerPresent = answerPresent;
         this.dateTime = dateTime;
     }
 
