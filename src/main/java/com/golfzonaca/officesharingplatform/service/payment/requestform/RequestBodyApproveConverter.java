@@ -2,8 +2,6 @@ package com.golfzonaca.officesharingplatform.service.payment.requestform;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import com.golfzonaca.officesharingplatform.domain.payment.CompanyId;
-import com.golfzonaca.officesharingplatform.domain.payment.kakaopay.KakaoPayReady;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

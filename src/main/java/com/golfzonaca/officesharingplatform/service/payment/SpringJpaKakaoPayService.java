@@ -2,7 +2,7 @@ package com.golfzonaca.officesharingplatform.service.payment;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.golfzonaca.officesharingplatform.domain.*;
-import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayApprovalForm;
+import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayApproval;
 import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayReady;
 import com.golfzonaca.officesharingplatform.repository.payment.PaymentRepository;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
@@ -15,10 +15,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
-
-import java.net.URI;
-import java.net.URISyntaxException;
 
 @Slf4j
 @Service
@@ -27,22 +23,17 @@ public class SpringJpaKakaoPayService implements KakaoPayService {
 
     private static final String HOST = "https://kapi.kakao.com/";
     private static final HttpHeaders httpheaders = new HttpHeaders();
-    private KakaoPayReady kakaoPayReady;
-    private KakaoPayApprovalForm kakaoPayApprovalForm;
+    private KakaoPayReady kakaoPayReady = new KakaoPayReady();
     private final ReservationRepository reservationRepository;
     private final PaymentRepository paymentRepository;
-    private final KakaoPayUtilityImpl kakaoPayUtility;
+    private final KakaoPayUtility kakaoPayUtility;
 
     @Override
     public String kakaoPayReady(long reservationId) {
         log.info("Started kakaoPayReady method");
 
-        RestTemplate restTemplate = new RestTemplate();
+        Reservation reservation = findReservation(reservationId);
 
-        Reservation reservation = null;
-        if (reservationRepository.findById(reservationId).isPresent()) {
-            reservation = reservationRepository.findById(reservationId).get();
-        }
         User user = reservation.getUser();
         RoomKind roomKind = reservation.getRoom().getRoomKind();
         String calculatePayPrice = kakaoPayUtility.calculatePayPrice(reservation, roomKind);
@@ -51,46 +42,53 @@ public class SpringJpaKakaoPayService implements KakaoPayService {
         kakaoPayUtility.makeHttpHeader(httpheaders);
 
         //서버요청 바디
-        RequestBodyReadyConverter requestBodyConverter = RequestBodyReadyConverter.builder()
-                .cid("TC0ONETIME")
+        RequestBodyReadyConverter requestBodyReadyConverter = requestBodyReadyConverter(reservation, roomKind, "1", calculatePayPrice);
+        HttpEntity<MultiValueMap<String, String>> body = new HttpEntity<>(kakaoPayUtility.multiValueMapConverter(new ObjectMapper(), requestBodyReadyConverter), httpheaders);
+
+        kakaoPayReady = kakaoPayUtility.kakaoPayGetTid(HOST, body);
+//        return kakaoPayUtility.kakaoPayReadyToEntity(HOST, body);
+        return kakaoPayReady.getNext_redirect_pc_url();
+    }
+
+    public Reservation findReservation(long reservationId) {
+        if (reservationRepository.findById(reservationId).isPresent()) {
+            return reservationRepository.findById(reservationId).get();
+        }
+        return null;
+    }
+
+    public RequestBodyReadyConverter requestBodyReadyConverter(Reservation reservation,
+                                                               RoomKind roomKind,
+                                                               String quantity,
+                                                               String calculatePayPrice) {
+        return RequestBodyReadyConverter.builder()
+                .cid(CompanyId.KAKAOPAYCID)
                 .partnerOrderId(String.valueOf(reservation.getId()))
                 .partnerUserId(String.valueOf(reservation.getId()))
                 .itemName(roomKind.getRoomType())
-                .quantity("1")
+                .quantity(quantity)
                 .totalAmount(calculatePayPrice)
                 .taxFreeAmount(calculatePayPrice)
-                .approvalUrl("http://localhost:8080/" + reservationId + "/kakaoPaySuccess")
+                .approvalUrl("http://localhost:8080/" + reservation.getId() + "/kakaoPaySuccess")
                 .cancelUrl("http://localhost:8080/kakaoPayCancel")
                 .failUrl("http://localhost:8080/kakaoPaySuccessFail").build();
-
-        HttpEntity<MultiValueMap<String, String>> body = new HttpEntity<>(kakaoPayUtility.multiValueMapConverter(new ObjectMapper(), requestBodyConverter), httpheaders);
-        try {
-            kakaoPayReady = restTemplate.postForObject(new URI(HOST + "/v1/payment/ready"), body, KakaoPayReady.class);
-            return kakaoPayReady.getNext_redirect_pc_url();
-        } catch (RestClientException e) {
-            log.error(e.toString());
-        } catch (URISyntaxException e) {
-            log.error(e.toString());
-        }
-        return "/pay";
     }
 
     // input:    카카오페이가 승인해주고 난 뒤에 받은 정보
     // output : KakaoPayApprovalForm
     @Override
-    public KakaoPayApprovalForm kakaoPayInfo(long reservationId, String pg_token) {
+    public KakaoPayApproval kakaoPayInfo(long reservationId, String pg_token) {
         Reservation reservation = getReservation(reservationId);
         HttpEntity<MultiValueMap<String, String>> body = getBody(reservation, pg_token);
-
         try {
-            KakaoPayApprovalForm kakaoPayApprovalForm1 = kakaoPayApprovalForm.toEntity(HOST, body);
-            log.info("" + kakaoPayApprovalForm);
+            KakaoPayApproval kakaoPayApproval = kakaoPayUtility.toEntity(HOST, body);
+            log.info("" + kakaoPayApproval);
             User user = reservation.getUser();
             Room room = reservation.getRoom();
-            kakaoPayUtility.savePaymentInfo(paymentRepository, reservation, user, room, kakaoPayApprovalForm1);
-            return kakaoPayApprovalForm;
+            kakaoPayUtility.savePaymentInfo(paymentRepository, reservation, user, room, kakaoPayApproval);
+            return kakaoPayApproval;
 
-        } catch (RestClientException | URISyntaxException e) {
+        } catch (RestClientException e) {
             log.error(e.toString());
         }
         return null;
@@ -101,24 +99,24 @@ public class SpringJpaKakaoPayService implements KakaoPayService {
         String setPartnerOrderId = String.valueOf(reservation.getId());
         String partnerUserId = String.valueOf(reservation.getId());
         String calculatePayPrice = kakaoPayUtility.calculatePayPrice(reservation, roomKind);
-        RequestBodyApproveConverter requestBodyApproveConverter = getRequestApprovalConverter(setPartnerOrderId, partnerUserId, pg_token, calculatePayPrice);
+        RequestBodyApproveConverter requestBodyApproveConverter = RequestBodyApproveConverter(setPartnerOrderId, partnerUserId, pg_token, calculatePayPrice);
         return getHttpEntity(requestBodyApproveConverter);
     }
 
     @Override
-    public KakaoPayApprovalForm save(KakaoPayApprovalForm kakaoPayApprovalForm) {
-        return kakaoPayApprovalForm;
+    public KakaoPayApproval save(KakaoPayApproval KakaoPayApproval) {
+        return KakaoPayApproval;
     }
 
     private HttpEntity<MultiValueMap<String, String>> getHttpEntity(RequestBodyApproveConverter requestBodyApproveConverter) {
         return new HttpEntity<>(kakaoPayUtility.multiValueMapConverter(new ObjectMapper(), requestBodyApproveConverter), httpheaders);
     }
 
-    private RequestBodyApproveConverter getRequestApprovalConverter(String partnerOrderId, String partnerUserId, String pgToken, String totalAmount) {
+    private RequestBodyApproveConverter RequestBodyApproveConverter(String partnerOrderId, String partnerUserId, String pgToken, String totalAmount) {
         RequestBodyApproveConverter requestBodyApproveConverter = new RequestBodyApproveConverter();
-        requestBodyApproveConverter.toEntity(CompanyId.KAKAOPAYCID, kakaoPayReady.getTid()
+
+        return requestBodyApproveConverter.toEntity(CompanyId.KAKAOPAYCID, kakaoPayReady.getTid()
                 , partnerOrderId, partnerUserId, pgToken, totalAmount);
-        return requestBodyApproveConverter;
     }
 
     private Reservation getReservation(long reservationId) {
