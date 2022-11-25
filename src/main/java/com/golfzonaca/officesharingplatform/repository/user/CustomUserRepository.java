@@ -31,6 +31,11 @@ public class CustomUserRepository implements UserRepository {
     }
 
     @Override
+    public Boolean isUniqueTel(String tel) {
+        return !queryUserRepository.findByTelLike(tel).isPresent();
+    }
+
+    @Override
     public Boolean isContainByEmail(String email) {
         return queryUserRepository.isContainByEmail(email).isEmpty();
     }

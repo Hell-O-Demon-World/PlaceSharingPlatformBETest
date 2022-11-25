@@ -26,7 +26,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         String path = request.getServletPath();
-        // TODO: 1. isHeader            // TODO: 2. isToken
+        // TODO: 1. isHeader, TODO: 2. isToken
         String token = Optional.ofNullable(request.getHeader("Authorization"))
                 .orElseThrow(() -> new NullPointerException("HTTPHeaderException::: No Authorization Parameter in HttpHeader"));
         if (!token.isEmpty()) {

@@ -34,9 +34,12 @@ public class AuthController {
         }
 
         User user = signUpSaveForm.toEntity();
-        if (!customAuthService.join(user)) {
+        if (!customAuthService.isAvailableEmail(user.getEmail())) {
             errorMap.put("EmailError", "중복된 이메일 입니다.");
-            return errorMap;
+        } else if (!customAuthService.isAvailableTelNum(user.getPhoneNumber())) {
+            errorMap.put("PhoneNumberError", "이미 사용하고 있는 전화번호 입니다.");
+        } else {
+            customAuthService.join(user);
         }
 
         return errorMap;

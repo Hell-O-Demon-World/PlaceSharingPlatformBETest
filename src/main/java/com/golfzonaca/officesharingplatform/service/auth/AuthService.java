@@ -5,7 +5,8 @@ import com.golfzonaca.officesharingplatform.domain.User;
 
 public interface AuthService {
 
-    boolean emailCheck(String email);
-    Boolean join(User user);
+    boolean isAvailableEmail(String email);
+    void join(User user);
+    public boolean isAvailableTelNum(String phoneNumber);
 
 }

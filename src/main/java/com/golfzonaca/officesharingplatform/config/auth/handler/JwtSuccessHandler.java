@@ -35,7 +35,6 @@ public class JwtSuccessHandler implements AuthenticationSuccessHandler {
         User findUser = userRepository.findByMailLike(authentication.getPrincipal().toString());
         Jwt accessJwt = JwtManager.createAccessJwt(findUser.getId());
         Jwt refreshJwt = createRefreshJwt(findUser.getId());
-
         JsonObject json = new JsonObject();
         json.addProperty("accessToken", accessJwt.getEncoded());
         json.addProperty("refreshToken", refreshJwt.getEncoded());
@@ -45,6 +44,8 @@ public class JwtSuccessHandler implements AuthenticationSuccessHandler {
 
     private Jwt createRefreshJwt(Long userId) {
         RefreshToken refreshToken = new RefreshToken();
+        System.out.println("userId = " + userId);
+        System.out.println("refreshTokenService.existToken(userId) = " + refreshTokenService.existToken(userId));
         if (refreshTokenService.existToken(userId)) {
             refreshToken = refreshTokenService.getRefreshToken(userId);
         }
@@ -65,6 +66,7 @@ public class JwtSuccessHandler implements AuthenticationSuccessHandler {
         }
         Jwt refreshJwt = JwtManager.createRefreshJwt(userId);
         refreshToken.updateToken(refreshJwt.getEncoded());
+        refreshTokenService.create(refreshToken);
         return refreshJwt;
     }
 }
