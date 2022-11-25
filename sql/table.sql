@@ -83,7 +83,6 @@ create table rating
             on delete cascade
 );
 
-
 create table room_kind
 (
     ID        bigint unsigned not null primary key,
@@ -183,5 +182,69 @@ create table payment
     constraint FK_ROOM_TO_PAYMENT_1
         foreign key (ROOM_ID)
             references ROOM (ID)
+            on delete cascade
+);
+
+create table refresh_token
+(
+    ID            bigint unsigned auto_increment primary key,
+    USER_ID       bigint unsigned not null,
+    ENCODED_TOKEN varchar(147) not null,
+    constraint user_id
+        unique (USER_ID),
+    constraint FK_USER_TO_REFRESH_TOKEN_1
+        foreign key (USER_ID) references user (ID)
+            on delete cascade
+);
+
+create table inquiry
+(
+    ID        bigint unsigned auto_increment primary key,
+    USER_ID   bigint unsigned not null,
+    TITLE     varchar(40)  not null,
+    QUESTION  varchar(400) not null,
+    WRITETIME datetime     not null,
+    constraint FK_USER_TO_INQUIRY_1
+        foreign key (USER_ID)
+            references user (ID)
+            on delete cascade
+);
+
+create table inquirystatus
+(
+    ID         bigint unsigned auto_increment primary key,
+    INQUIRY_ID bigint unsigned not null,
+    STATUS     BOOLEAN default false not null,
+    constraint FK_INQUIRY_TO_INQUIRYSTATUS_1
+        foreign key (INQUIRY_ID)
+            references inquiry (ID)
+            on delete cascade
+);
+
+create table answer
+(
+    ID         bigint unsigned auto_increment primary key,
+    INQUIRY_ID bigint unsigned not null,
+    ANSWER     varchar(400) not null,
+    constraint FK_INQUIRY_TO_ANSWER_1
+        foreign key (INQUIRY_ID)
+            references inquiry (ID)
+            on delete cascade
+);
+
+create table comment
+(
+    ID            bigint unsigned auto_increment primary key,
+    PLACE_ID      bigint unsigned not null,
+    USER_ID       bigint unsigned not null,
+    CONTEXT       varchar(40) not null,
+    WRITEDATETIME datetime    not null,
+    constraint FK_PLACE_TO_COMMENT_1
+        foreign key (PLACE_ID)
+            references place (ID)
+            on delete cascade,
+    constraint FK_USER_TO_COMMENT_1
+        foreign key (USER_ID)
+            references user (ID)
             on delete cascade
 );
