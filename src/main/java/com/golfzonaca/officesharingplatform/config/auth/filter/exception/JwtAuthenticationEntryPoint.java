@@ -6,8 +6,6 @@ import com.golfzonaca.officesharingplatform.config.auth.token.JwtManager;
 import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.jwt.Jwt;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -17,7 +15,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Optional;
 
 @Slf4j
@@ -37,7 +34,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
             String refreshPath = "/auth/refresh";
             if (path.equals(refreshPath)) {
                 String refreshToken = token;
-                if (JwtManager.validateRefreshJwt(refreshToken)) {
+                if (JwtManager.validateJwt(refreshToken)) {
                     Jwt newAccessToken = getNewAccessToken(refreshToken);
                     JsonObject jsonObject = encodedTokenToJson(newAccessToken.getEncoded(), refreshToken);
                     log.info("JWTExpiredException::: Create New AccessToken");

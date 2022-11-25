@@ -1,5 +1,6 @@
 package com.golfzonaca.officesharingplatform.config.auth.filter;
 
+import com.golfzonaca.officesharingplatform.config.auth.filter.dto.IdPwDto;
 import com.golfzonaca.officesharingplatform.config.auth.token.IdPwAuthenticationToken;
 import org.springframework.boot.json.GsonJsonParser;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -28,8 +29,8 @@ public class JsonIdPwAuthenticationProcessingFilter extends AbstractAuthenticati
 
         Map<String, Object> parseJsonMap = parseJsonMap(request);
 
-        String id = (String) parseJsonMap.get("id");
-        String pw = (String) parseJsonMap.get("pw");
+        String id = (String) parseJsonMap.get(IdPwDto.id);
+        String pw = (String) parseJsonMap.get(IdPwDto.pw);
 
         IdPwAuthenticationToken idPwAuthenticationToken = new IdPwAuthenticationToken(id, pw);
         idPwAuthenticationToken.setDetails(super.authenticationDetailsSource.buildDetails(request));

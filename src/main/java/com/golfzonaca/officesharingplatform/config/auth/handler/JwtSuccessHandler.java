@@ -1,6 +1,5 @@
 package com.golfzonaca.officesharingplatform.config.auth.handler;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.golfzonaca.officesharingplatform.config.auth.filter.servlet.JwtHttpServletProvider;
 import com.golfzonaca.officesharingplatform.config.auth.token.JwtManager;
 import com.golfzonaca.officesharingplatform.domain.RefreshToken;
@@ -24,6 +23,7 @@ import java.io.IOException;
 
 @Slf4j
 @Component
+@Transactional
 @RequiredArgsConstructor
 public class JwtSuccessHandler implements AuthenticationSuccessHandler {
     private final UserRepository userRepository;
@@ -52,11 +52,11 @@ public class JwtSuccessHandler implements AuthenticationSuccessHandler {
     }
 
     private Jwt getJwt(Long userId, RefreshToken refreshToken) {
-        if (refreshToken.getId() != null && JwtManager.validateRefreshJwt(refreshToken.getEncodedToken())) {
+        if (refreshToken.getId() != null && JwtManager.validateJwt(refreshToken.getEncodedToken())) {
             Jwt refreshJwt = JwtHelper.decode(refreshToken.getEncodedToken());
             log.info("RefreshToken available ::: using current RefreshToken");
             return refreshJwt;
-        } else if (refreshToken.getId() != null && !JwtManager.validateRefreshJwt(refreshToken.getEncodedToken())) {
+        } else if (refreshToken.getId() != null && !JwtManager.validateJwt(refreshToken.getEncodedToken())) {
             log.info("RefreshToken expired ::: create new RefreshToken And Save");
         } else {
             log.info("Can't find RefreshToken ::: create new RefreshToken And Save");
@@ -65,7 +65,6 @@ public class JwtSuccessHandler implements AuthenticationSuccessHandler {
         }
         Jwt refreshJwt = JwtManager.createRefreshJwt(userId);
         refreshToken.updateToken(refreshJwt.getEncoded());
-        refreshTokenService.create(refreshToken);
         return refreshJwt;
     }
 }

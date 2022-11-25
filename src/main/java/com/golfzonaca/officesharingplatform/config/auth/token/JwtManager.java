@@ -2,7 +2,6 @@ package com.golfzonaca.officesharingplatform.config.auth.token;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.golfzonaca.officesharingplatform.service.refreshtoken.RefreshTokenService;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -49,12 +48,21 @@ public class JwtManager {
         return System.currentTimeMillis();
     }
 
-    public static boolean validateAccessJwt(String jwt) {
-        JsonObject jsonObject = getJsonObject(jwt);
-        JsonElement iatJson = jsonObject.get("iat");
-        long iat = iatJson.getAsLong();
+    private static LocalDateTime getAccessTime(LocalDateTime iatDateTime) {
+        return iatDateTime.plusMinutes(30);
+    }
+
+    private static LocalDateTime getRefreshTime(LocalDateTime iatDateTime) {
+        return iatDateTime.plusWeeks(1);
+    }
+
+    private static boolean isTimeOverIat(long iat, String status) {
         LocalDateTime iatDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(iat), TimeZone.getDefault().toZoneId());
-        return iatDateTime.plusMinutes(30).isAfter(LocalDateTime.now());
+        if (status.equals("access")) {
+            return getAccessTime(iatDateTime).isAfter(LocalDateTime.now());
+        } else {
+            return getRefreshTime(iatDateTime).isAfter(LocalDateTime.now());
+        }
     }
 
     public static boolean isAccessToken(String jwt) {
@@ -71,23 +79,7 @@ public class JwtManager {
         long iat = iatJson.getAsLong();
         JsonElement statusJson = jsonObject.get("status");
         String status = statusJson.getAsString();
-        LocalDateTime iatDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(iat), TimeZone.getDefault().toZoneId());
-        if (status.equals("refresh")) {
-            return iatDateTime.plusWeeks(1).isAfter(LocalDateTime.now());
-        } else {
-            return iatDateTime.plusMinutes(30).isAfter(LocalDateTime.now());
-        }
-    }
-
-    public static boolean validateRefreshJwt(String jwt) {
-
-        JsonObject jsonObject = getJsonObject(jwt);
-        JsonElement iatJson = jsonObject.get("iat");
-        long iat = iatJson.getAsLong();
-        LocalDateTime iatDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(iat), TimeZone.getDefault().toZoneId());
-
-//        return iatDateTime.plusWeeks(1).isAfter(LocalDateTime.now());
-        return iatDateTime.plusSeconds(1).isAfter(LocalDateTime.now());
+        return isTimeOverIat(iat, status);
     }
 
     public static String getInfo(String jwt, String attr) {

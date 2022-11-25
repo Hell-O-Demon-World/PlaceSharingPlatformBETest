@@ -1,10 +1,9 @@
 package com.golfzonaca.officesharingplatform.config;
 
 import com.golfzonaca.officesharingplatform.config.auth.PrincipalDetailsService;
-import com.golfzonaca.officesharingplatform.config.auth.filter.exception.JwtAuthenticationEntryPoint;
 import com.golfzonaca.officesharingplatform.config.auth.filter.JsonIdPwAuthenticationProcessingFilter;
 import com.golfzonaca.officesharingplatform.config.auth.filter.JwtAuthenticationFilter;
-import com.golfzonaca.officesharingplatform.config.auth.filter.servlet.JwtHttpServletProvider;
+import com.golfzonaca.officesharingplatform.config.auth.filter.exception.JwtAuthenticationEntryPoint;
 import com.golfzonaca.officesharingplatform.config.auth.handler.JwtSuccessHandler;
 import com.golfzonaca.officesharingplatform.config.auth.provider.IdPwAuthenticationProvider;
 import lombok.RequiredArgsConstructor;
