@@ -2,7 +2,6 @@ package com.golfzonaca.officesharingplatform.web.auth;
 
 import com.golfzonaca.officesharingplatform.domain.User;
 import com.golfzonaca.officesharingplatform.service.auth.AuthService;
-import com.golfzonaca.officesharingplatform.service.auth.CustomAuthService;
 import com.golfzonaca.officesharingplatform.web.auth.form.SignUpSaveForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
