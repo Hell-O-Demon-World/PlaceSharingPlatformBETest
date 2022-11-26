@@ -87,4 +87,10 @@ public class QueryUserRepository {
         }
         return null;
     }
+
+    public Optional<User> findByTelLike(String phoneNumber) {
+        return Optional.ofNullable(query.selectFrom(user)
+                .where(user.phoneNumber.eq(phoneNumber))
+                .fetchFirst());
+    }
 }

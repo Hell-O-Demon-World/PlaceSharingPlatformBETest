@@ -14,6 +14,8 @@ public interface UserRepository {
 
     User findByMailLike(String email);
 
+    Boolean isUniqueTel(String tel);
+
     Boolean isContainByEmail(String email);
 
     Integer countContainByEmail(String email);
