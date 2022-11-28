@@ -279,3 +279,15 @@ create table comment
             references user (ID)
             on delete cascade
 );
+
+create table roomstatus
+(
+    `ID`      BIGINT UNSIGNED primary key NOT NULL auto_increment,
+    `ROOM_ID` BIGINT UNSIGNED NOT NULL,
+    `STATUS`  BOOLEAN DEFAULT true NOT NULL,
+    constraint FK_ROOM_TO_ROOMSTATUS_1
+        foreign key (ROOM_ID)
+            references ROOM (ID)
+            on update cascade
+            on delete cascade
+);
