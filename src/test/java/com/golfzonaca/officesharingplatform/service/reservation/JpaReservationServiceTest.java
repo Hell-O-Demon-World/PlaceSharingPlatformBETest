@@ -44,13 +44,39 @@ class JpaReservationServiceTest {
                 .build();
         List<ReservationTest> findReservationList = getReservationTestList();
         List<Room> reservedRoomList = getReservationRoomList();
+        int selectedStartTime = 11;
         //when
         Map<Integer, ReservedRoom> reservedRoomMap = getReservedRoomMap(findPlace, findReservationList, reservedRoomList);
-        
-        for (int i = 0; i < reservedRoomMap.size(); i++) {
 
+        int plusMaxPointer = selectedStartTime;
+        int minusMinPointer = selectedStartTime;
+        for (int i = 0; i < reservedRoomMap.size(); i++) {
+            ReservedRoom reservedRoom = reservedRoomMap.get(i);
+            int plusPointer = selectedStartTime;
+            int minusPointer = selectedStartTime;
+            for (int j = selectedStartTime; j < findPlace.getPlaceEnd().getHour() - 1; j++) {
+                if (reservedRoom.timeStates.get(j) && reservedRoom.timeStates.get(j + 1)) {
+                    plusPointer = j + 1;
+                }
+            }
+            if (plusPointer > plusMaxPointer) {
+                plusMaxPointer = plusPointer;
+            }
+            for (int j = selectedStartTime; j > findPlace.getPlaceStart().getHour(); j--) {
+                if (reservedRoom.timeStates.get(j) && reservedRoom.timeStates.get(j - 1)) {
+                    minusPointer = j - 1;
+                }
+            }
+            if (minusPointer < minusMinPointer) {
+                minusMinPointer = minusPointer;
+            }
         }
 
+        List<Integer> result = new ArrayList<>();
+        for (int i = minusMinPointer; i < plusMaxPointer + 1; i++) {
+            result.add(i);
+        }
+        System.out.println("result = " + result);
 
     }
 
