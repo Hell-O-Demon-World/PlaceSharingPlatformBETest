@@ -24,7 +24,6 @@ public class IamPortController {
         OnetimePaymentData onetimeData = new OnetimePaymentData("1q2w3e4r", new BigDecimal(1), new CardInfo("1111-2222-3333-4444", "2022-01", "990101", "00"));
 //        onetimeData.setPg("jtnet");
         onetimeData.setPg("nice");
-        IamportResponse<Payment> response = iamportClient.onetimePayment(onetimeData);
-        return response;
+        return iamportClient.onetimePayment(onetimeData);
     }
 }
