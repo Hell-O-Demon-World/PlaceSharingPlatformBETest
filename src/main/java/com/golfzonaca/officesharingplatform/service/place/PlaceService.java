@@ -8,4 +8,10 @@ public interface PlaceService {
     List<Place> findAllPlaces();
 
     Place findById(long placeId);
+
+    boolean isOpenDay(Long id, String day);
+
+    boolean isExistPlace(long placeId);
+
+    boolean isOpenToday(Long id, String startTime);
 }

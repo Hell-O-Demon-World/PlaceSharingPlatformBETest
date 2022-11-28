@@ -40,7 +40,7 @@ public class ReservationRequestValidation {
     }
 
     private Map<String, String> validRoomType(Map<String, String> response, String roomType) {
-        boolean existence = roomKindRepository.validRoomType(roomType);
+        boolean existence = roomKindRepository.findByRoomType(roomType);
         if (existence) {
             return response;
         }

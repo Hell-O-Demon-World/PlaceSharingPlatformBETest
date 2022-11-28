@@ -83,9 +83,19 @@ public class QueryReservationRepository {
                 .where(roomTypeLike(selectedType), startDateEquals(startDate), startTimeLoe(startTime), endDateEquals(endDate), endTimeGoe(endTime))
                 .fetch();
     }
-
+    public List<Reservation> findAllByPlaceIdAndRoomTypeAndDateAndStartTime(Long placeId, String roomType, LocalDate date, LocalTime startTime) {
+        Optional<Long> optionalPlaceId = Optional.ofNullable(placeId);
+        Optional<String> optionalRoomType = Optional.ofNullable(roomType);
+        Optional<LocalDate> optionalLocalDate = Optional.ofNullable(date);
+        Optional<LocalTime> optionalLocalTime = Optional.ofNullable(startTime);
+        return query
+                .select(reservation)
+                .from(reservation)
+                .innerJoin(reservation.room.roomKind)
+                .where(eqPlaceId(optionalPlaceId), eqRoomType(optionalRoomType), eqResStartDate(optionalLocalDate), reservation.resStartTime.before(startTime), reservation.resEndTime.loe(startTime))
+                .fetch();
+    }
     public List<Reservation> findAllByPlaceIdAndRoomTypeAndDate(Long placeId, String roomType, LocalDate date) {
-        log.info("Reservation findAllByPlaceIdAndRoomTypeAndDate");
         Optional<Long> optionalPlaceId = Optional.ofNullable(placeId);
         Optional<String> optionalRoomType = Optional.ofNullable(roomType);
         Optional<LocalDate> optionalLocalDate = Optional.ofNullable(date);
@@ -247,4 +257,6 @@ public class QueryReservationRepository {
         }
         return null;
     }
+
+
 }

@@ -21,7 +21,7 @@ public class QueryRoomKindRepository {
         this.query = new JPAQueryFactory(em);
     }
 
-    public Optional<RoomKind> validRoomType(String roomType) {
+    public Optional<RoomKind> findByRoomType(String roomType) {
         return Optional.ofNullable(query
                 .selectFrom(roomKind)
                 .where(likeRoomType(roomType))

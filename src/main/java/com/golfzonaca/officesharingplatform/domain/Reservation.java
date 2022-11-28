@@ -61,4 +61,9 @@ public class Reservation {
                 .user(new User())
                 .build();
     }
+
+    public void upDateTime(LocalTime resStartTime, LocalTime resEndTime) {
+        this.resStartTime = resStartTime;
+        this.resEndTime = resEndTime;
+    }
 }

@@ -6,5 +6,6 @@ import lombok.Data;
 public class SelectedTypeAndDayForm {
     private String selectedType;
     private String day;
+    private String startTime;
 }
 
