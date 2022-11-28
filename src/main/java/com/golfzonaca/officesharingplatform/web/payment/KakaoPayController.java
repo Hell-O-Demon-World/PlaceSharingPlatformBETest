@@ -18,6 +18,10 @@ public class KakaoPayController {
     @Autowired
     private KakaoPayService kakaoPayService;
 
+    public KakaoPayController(KakaoPayService kakaoPayService) {
+        this.kakaoPayService = kakaoPayService;
+    }
+
     @GetMapping("/kakaoPay")
     public void kakaoPayGet() {
     }

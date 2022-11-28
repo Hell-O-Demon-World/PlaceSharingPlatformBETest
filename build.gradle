@@ -80,7 +80,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
 
 //  iamport 사용
-    implementation group: 'com.github.iamport', name: 'iamport-rest-client-java', version: '0.2.0'
+    implementation group: 'com.github.iamport', name: 'iamport-rest-client-java', version: '0.2.22'
 
 }
 
