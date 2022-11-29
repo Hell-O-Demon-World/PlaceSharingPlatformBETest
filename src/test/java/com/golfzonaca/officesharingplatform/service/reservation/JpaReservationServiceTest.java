@@ -2,6 +2,7 @@ package com.golfzonaca.officesharingplatform.service.reservation;
 
 import com.golfzonaca.officesharingplatform.domain.*;
 import com.golfzonaca.officesharingplatform.web.formatter.TimeFormatter;
+import com.golfzonaca.officesharingplatform.web.reservation.dto.process.ProcessReservationData;
 import com.golfzonaca.officesharingplatform.web.reservation.form.DefaultTimeOfDay;
 import com.golfzonaca.officesharingplatform.web.reservation.form.SelectedTypeAndDayForm;
 import lombok.Builder;
@@ -34,6 +35,21 @@ class JpaReservationServiceTest {
         private LocalTime resStartTime;
         private LocalDate resEndDate;
         private LocalTime resEndTime;
+    }
+
+    @Test
+    public Room getResultRoom(Place place, ProcessReservationData data) {
+        //given
+        Place findPlace = Place.builder().id(5L)
+                .placeStart(TimeFormatter.toLocalTime("8"))
+                .placeEnd(TimeFormatter.toLocalTime("18"))
+                .company(Company.builder().id(3L).build())
+                .build();
+//        List<ReservationTest> findReservationList = getReservationTestList2();
+        List<Room> reservedRoomList = getReservationRoomList();
+        Room room = null;
+
+        return room;
     }
 
     @Test

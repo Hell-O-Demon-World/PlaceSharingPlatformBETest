@@ -59,16 +59,13 @@ public class ReservationRequestValidation {
 
     private Map<String, String> validResTimeBetweenPlaceOpeningTime(Map<String, String> response, Place place, LocalTime resStartTime, LocalTime resEndTime) {
         if (place.getPlaceStart().getHour() <= resStartTime.getHour() && resStartTime.getHour() < place.getPlaceEnd().getHour()) {
-            if (place.getPlaceStart().getHour() < resEndTime.getHour() && resEndTime.getHour() + 1 <= place.getPlaceEnd().getHour()) {
-                return response;
-            } else {
+            if (place.getPlaceStart().getHour() >= resEndTime.getHour() || resEndTime.getHour() + 1 > place.getPlaceEnd().getHour()) {
                 response.put("InvalidResEndTimeError", "선택하신 예약 종료 시간은 영업 시간이 아닙니다.");
-                return response;
             }
         } else {
             response.put("InvalidResStartTimeError", "선택하신 예약 시작 시간은 영업 시간이 아닙니다.");
-            return response;
         }
+        return response;
     }
 
 
