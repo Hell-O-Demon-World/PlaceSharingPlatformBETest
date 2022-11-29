@@ -165,7 +165,7 @@ VALUES (5, 3, 16, 5, 'NAVER', 'NAVER', 'Mon, Tue, Wed, Thu, Fri', '08:00:00', '1
         'Wifi, Coffee, Parking, Monitor');
 INSERT INTO place (ID, COMPANY_ID, ADDRESS_ID, RATEPOINT_ID, PLACE_NAME, PLACE_DESCRIPTION,
                    PLACE_OPENDAYS, PLACE_START, PLACE_END, PLACE_ADDINFO)
-VALUES (6, 3, 17, 6, 'NAVER 1784', 'NAVER 1784', 'Mon, Tue, Wed, Thu, Fri, Sat, Sun', '00:00:00', '23:59:00',
+VALUES (6, 3, 17, 6, 'NAVER 1784', 'NAVER 1784', 'Mon, Tue, Wed, Thu, Fri, Sat, Sun', '00:00:00', '23:00:00',
         'Wifi, Coffee, Parking, Monitor');
 INSERT INTO place (ID, COMPANY_ID, ADDRESS_ID, RATEPOINT_ID, PLACE_NAME, PLACE_DESCRIPTION,
                    PLACE_OPENDAYS, PLACE_START, PLACE_END, PLACE_ADDINFO)
@@ -177,11 +177,11 @@ VALUES (8, 4, 19, 8, '카카오 스페이스닷투', '카카오 스페이스닷�
         'Wifi, Coffee, Parking, Monitor');
 INSERT INTO place (ID, COMPANY_ID, ADDRESS_ID, RATEPOINT_ID, PLACE_NAME, PLACE_DESCRIPTION,
                    PLACE_OPENDAYS, PLACE_START, PLACE_END, PLACE_ADDINFO)
-VALUES (9, 5, 20, 9, '쿠팡', '쿠팡', 'Mon, Tue, Wed, Thu, Fri, Sat, Sun', '00:00:00', '23:59:00',
+VALUES (9, 5, 20, 9, '쿠팡', '쿠팡', 'Mon, Tue, Wed, Thu, Fri, Sat, Sun', '00:00:00', '23:00:00',
         'Wifi, Coffee, Parking, Monitor');
 INSERT INTO place (ID, COMPANY_ID, ADDRESS_ID, RATEPOINT_ID, PLACE_NAME, PLACE_DESCRIPTION,
                    PLACE_OPENDAYS, PLACE_START, PLACE_END, PLACE_ADDINFO)
-VALUES (10, 6, 21, 10, '우아한형제들', '우아한형제들', 'Mon, Tue, Wed, Thu, Fri, Sat, Sun', '08:00:00', '23:59:00',
+VALUES (10, 6, 21, 10, '우아한형제들', '우아한형제들', 'Mon, Tue, Wed, Thu, Fri, Sat, Sun', '08:00:00', '23:00:00',
         'Wifi, Coffee, Parking, Monitor');
 INSERT INTO place (ID, COMPANY_ID, ADDRESS_ID, RATEPOINT_ID, PLACE_NAME, PLACE_DESCRIPTION,
                    PLACE_OPENDAYS, PLACE_START, PLACE_END, PLACE_ADDINFO)
