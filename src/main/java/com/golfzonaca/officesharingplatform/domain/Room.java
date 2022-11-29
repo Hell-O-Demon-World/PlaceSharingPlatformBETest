@@ -6,13 +6,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 @Getter
 @Entity
-@NoArgsConstructor
 @Builder
+@NoArgsConstructor
 @AllArgsConstructor
 public class Room {
 
@@ -28,21 +28,16 @@ public class Room {
     @JoinColumn(name = "PLACE_ID")
     private Place place;
 
-    @Column(name = "TOTAL_NUM", nullable = false)
-    private int totalNum;
-
     //양방향 매핑
     @OneToMany(mappedBy = "room")
-    private List<Reservation> reservationList = new ArrayList<>();
+    private List<Reservation> reservationList = new LinkedList<>();
+
+    @OneToOne(mappedBy = "room")
+    private RoomStatus roomStatus;
 
     @Builder
-    public Room(RoomKind roomKind, Place place, int totalNum) {
+    public Room(RoomKind roomKind, Place place) {
         this.roomKind = roomKind;
         this.place = place;
-        this.totalNum = totalNum;
-    }
-
-    public Room(Long id) {
-        this.id = id;
     }
 }

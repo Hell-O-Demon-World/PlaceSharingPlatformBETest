@@ -27,4 +27,9 @@ public class Address {
         this.address = address;
         this.postalCode = postalCode;
     }
+
+    public void updateAddress(String postalCode, String address) {
+        this.postalCode = postalCode;
+        this.address = address;
+    }
 }

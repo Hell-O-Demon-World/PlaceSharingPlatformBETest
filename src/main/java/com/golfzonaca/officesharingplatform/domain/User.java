@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.LinkedList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -41,11 +43,19 @@ public class User {
     @JoinColumn(name = "MILEAGE_ID")
     private Mileage mileage;
 
+    @ManyToOne
+    @JoinColumn(name = "ROLE_ID")
+    private Role role;
+
+    //양방향 매핑
+    @OneToMany(mappedBy = "ratingWriter")
+    private List<Rating> ratings = new LinkedList<>();
+
     public User(Long id) {
         this.id = id;
     }
 
-    public User(String username, String email, String password, String phoneNumber, String job, String userPlace, Mileage mileage) {
+    public User(String username, String email, String password, String phoneNumber, String job, String userPlace, Mileage mileage, Role role) {
         this.username = username;
         this.email = email;
         this.password = password;
@@ -53,13 +63,18 @@ public class User {
         this.job = job;
         this.userPlace = userPlace;
         this.mileage = mileage;
+        this.role = role;
     }
 
-    public void setPassword(String password) {
+    public void updatePassword(String password) {
         this.password = password;
     }
 
-    public void setMileage(Mileage mileage) {
+    public void updateMileage(Mileage mileage) {
         this.mileage = mileage;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }

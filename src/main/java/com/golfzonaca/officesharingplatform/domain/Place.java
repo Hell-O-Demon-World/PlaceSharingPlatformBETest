@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalTime;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 @Getter
@@ -25,11 +25,13 @@ public class Place {
     @JoinColumn(name = "COMPANY_ID")
     private Company company;
 
-/*
     @OneToOne
     @JoinColumn(name = "RATEPOINT_ID")
     private RatePoint ratePoint;
-*/
+
+    @OneToOne
+    @JoinColumn(name = "ADDRESS_ID")
+    private Address address;
 
     @Column(name = "PLACE_NAME", nullable = false, length = 30)
     private String placeName;
@@ -49,17 +51,17 @@ public class Place {
     @Column(name = "PLACE_ADDINFO", nullable = false)
     private String placeAddInfo;
 
-    @OneToOne
-    @JoinColumn(name = "ADDRESS_ID")
-    private Address address;
-
     //양방향 매핑
     @OneToMany(mappedBy = "place")
-    private List<Room> rooms = new ArrayList<>();
+    private List<Room> rooms = new LinkedList<>();
+
+    @OneToMany(mappedBy = "place")
+    private List<Rating> ratings = new LinkedList<>();
+
 
     public Place(Company company, RatePoint ratePoint, String placeName, String description, String openDays, LocalTime placeStart, LocalTime placeEnd, String placeAddInfo, Address address) {
         this.company = company;
-//        this.ratePoint = ratePoint;
+        this.ratePoint = ratePoint;
         this.placeName = placeName;
         this.description = description;
         this.openDays = openDays;
@@ -69,7 +71,31 @@ public class Place {
         this.address = address;
     }
 
-    public Place(Long id) {
-        this.id = id;
+    public void updateAddress(Address address) {
+        this.address = address;
+    }
+
+    public void updatePlaceName(String placeName) {
+        this.placeName = placeName;
+    }
+
+    public void updateDescription(String description) {
+        this.description = description;
+    }
+
+    public void updateOpenDays(String openDays) {
+        this.openDays = openDays;
+    }
+
+    public void updatePlaceStart(LocalTime placeStart) {
+        this.placeStart = placeStart;
+    }
+
+    public void updatePlaceEnd(LocalTime placeEnd) {
+        this.placeEnd = placeEnd;
+    }
+
+    public void updatePlaceAddInfo(String placeAddInfo) {
+        this.placeAddInfo = placeAddInfo;
     }
 }
