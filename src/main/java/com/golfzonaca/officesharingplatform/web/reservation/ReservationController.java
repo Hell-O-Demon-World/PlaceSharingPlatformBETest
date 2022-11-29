@@ -3,6 +3,7 @@ package com.golfzonaca.officesharingplatform.web.reservation;
 import com.golfzonaca.officesharingplatform.annotation.TokenUserId;
 import com.golfzonaca.officesharingplatform.domain.Place;
 import com.golfzonaca.officesharingplatform.domain.User;
+import com.golfzonaca.officesharingplatform.repository.roomkind.RoomKindRepository;
 import com.golfzonaca.officesharingplatform.service.place.PlaceService;
 import com.golfzonaca.officesharingplatform.service.reservation.ReservationService;
 import com.golfzonaca.officesharingplatform.service.user.UserService;
@@ -17,8 +18,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @RestController
@@ -28,6 +28,7 @@ public class ReservationController {
     private final ReservationService reservationService;
     private final PlaceService placeService;
     private final UserService userService;
+    private final RoomKindRepository roomKindRepository;
 
     @GetMapping("places/{placeId}")
     public Map<String, String> findRoom(@PathVariable long placeId) {
@@ -36,7 +37,24 @@ public class ReservationController {
 
     @PostMapping("/places/{placeId}")
     public TimeListForm selectedDateTime(@PathVariable long placeId, @Valid @RequestBody SelectedTypeAndDayForm selectedTypeAndDayForm) {
-        return new TimeListForm(reservationService.getReservationTimeList(placeId, selectedTypeAndDayForm));
+        List<Integer> resultTimeList = new ArrayList<>();
+        Map<String, String> errorMap = new HashMap<>();
+        if (!placeService.isExistPlace(placeId)) {
+            errorMap.put("placeError", "선택하신 공간은 존재하지 않습니다.");
+            return new TimeListForm(resultTimeList, errorMap);
+        } else if (!placeService.isOpenDay(placeId, selectedTypeAndDayForm.getDay())) {
+            errorMap.put("placeError", "선택하신 날짜는 영업 일이 아닙니다.");
+            return new TimeListForm(resultTimeList, errorMap);
+        } else if (!placeService.isOpenToday(placeId, selectedTypeAndDayForm.getStartTime())) {
+            errorMap.put("placeError", "선택하신 시간은 영업 시간이 아닙니다.");
+            return new TimeListForm(resultTimeList, errorMap);
+        } else if (!roomKindRepository.findByRoomType(selectedTypeAndDayForm.getSelectedType())) {
+            errorMap.put("roomTypeError", "선택하신 공간유형은 존재하지 않습니다.");
+            return new TimeListForm(resultTimeList, errorMap);
+        }
+        resultTimeList = reservationService.getReservationTimeList(placeId, selectedTypeAndDayForm);
+
+        return new TimeListForm(resultTimeList, errorMap);
     }
 
     @PostMapping("places/{placeId}/book")

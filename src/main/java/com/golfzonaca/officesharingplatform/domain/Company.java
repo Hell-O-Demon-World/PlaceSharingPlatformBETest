@@ -1,5 +1,6 @@
 package com.golfzonaca.officesharingplatform.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,6 +11,8 @@ import java.util.List;
 
 @Getter
 @Entity
+@Builder
+@AllArgsConstructor
 @Table(uniqueConstraints = {@UniqueConstraint(name = "Company", columnNames = {"COMPANY_LOGINID", "COMPANY_NAME", "COMPANY_TEL", "COMPANY_REGNUM"})})
 @NoArgsConstructor
 public class Company {
@@ -43,7 +46,6 @@ public class Company {
     @OneToMany(mappedBy = "company")
     private List<Place> placeList = new LinkedList<>();
 
-    @Builder
     public Company(String loginId, String pw, String name, String tel, String regNum, String repName, Address address) {
         this.loginId = loginId;
         Pw = pw;

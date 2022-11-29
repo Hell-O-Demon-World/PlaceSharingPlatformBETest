@@ -3,6 +3,7 @@ package com.golfzonaca.officesharingplatform.repository.place;
 import com.golfzonaca.officesharingplatform.domain.Place;
 import com.golfzonaca.officesharingplatform.web.search.dto.request.RequestFilterData;
 import com.golfzonaca.officesharingplatform.web.search.dto.request.RequestSearchData;
+import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,5 +37,15 @@ public class CustomPlaceRepository implements PlaceRepository {
     @Override
     public List<Place> filterPlaces(RequestFilterData requestFilterData) {
         return queryPlaceRepository.filterPlaces(requestFilterData);
+    }
+
+    @Override
+    public String findOpenDayById(Long id) {
+        return queryPlaceRepository.findOpenDayById(id);
+    }
+
+    @Override
+    public Tuple findStartAndEndTimeById(Long id) {
+        return queryPlaceRepository.findStartAndEndTimeById(id);
     }
 }

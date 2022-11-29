@@ -24,7 +24,8 @@ public class CustomRoomKindRepository implements RoomKindRepository {
     }
 
     @Override
-    public boolean validRoomType(String roomType) {
-        return queryRoomKindRepository.validRoomType(roomType).isPresent();
+    public boolean findByRoomType(String roomType) {
+        return queryRoomKindRepository.findByRoomType(roomType).isPresent();
     }
+
 }

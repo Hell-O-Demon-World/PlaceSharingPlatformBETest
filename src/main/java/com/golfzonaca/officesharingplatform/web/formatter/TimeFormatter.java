@@ -17,8 +17,8 @@ public class TimeFormatter {
     }
 
 
-    public static LocalTime toLocalTime(String num) {
+    public static LocalTime toLocalTime(String hour) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("H");
-        return LocalTime.parse(num, formatter);
+        return LocalTime.parse(hour, formatter);
     }
 }

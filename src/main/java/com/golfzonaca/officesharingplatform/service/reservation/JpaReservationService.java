@@ -8,17 +8,20 @@ import com.golfzonaca.officesharingplatform.domain.type.Weekdays;
 import com.golfzonaca.officesharingplatform.repository.place.PlaceRepository;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
 import com.golfzonaca.officesharingplatform.repository.room.RoomRepository;
+import com.golfzonaca.officesharingplatform.service.reservation.dto.ReservedRoom;
 import com.golfzonaca.officesharingplatform.service.reservation.validation.ReservationProcessValidation;
 import com.golfzonaca.officesharingplatform.service.reservation.validation.ReservationRequestValidation;
 import com.golfzonaca.officesharingplatform.web.formatter.TimeFormatter;
 import com.golfzonaca.officesharingplatform.web.reservation.dto.process.ProcessReservationData;
 import com.golfzonaca.officesharingplatform.web.reservation.form.DefaultTimeOfDay;
 import com.golfzonaca.officesharingplatform.web.reservation.form.SelectedTypeAndDayForm;
+import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.TextStyle;
 import java.util.*;
 
@@ -58,37 +61,73 @@ public class JpaReservationService implements ReservationService {
 
     @Override
     public List<Integer> getReservationTimeList(Long placeId, SelectedTypeAndDayForm selectedTypeAndDayForm) {
-        Optional<Place> result = placeRepository.findById(placeId);
-        if (result.isEmpty()) {
-            log.error("placeId 에 맞는 place가 없습니다.");
+        Optional<Place> resultPlace = placeRepository.findById(placeId);
+        if (resultPlace.isEmpty()) {
+            log.error("placeId 에 맞는 place 가 없습니다.");
             return new ArrayList<>();
         }
-        Place findPlace = result.get();
+        Place findPlace = resultPlace.get();
         String selectedRoomType = selectedTypeAndDayForm.getSelectedType();
         String selectedDay = selectedTypeAndDayForm.getDay();
+        int selectedStartTime = Integer.parseInt(selectedTypeAndDayForm.getStartTime());
 
-        String reservationDayOfWeek = getReservationAvailableDaysOfWeek(selectedDay);
-        List<String> placeOpenList = getPlaceOpenList(findPlace);
+        List<Room> reservedRoomList = roomRepository.findRoomByPlaceIdAndRoomType(placeId, selectedRoomType);
+        List<Reservation> findReservationList = reservationRepository.findAllByPlaceIdAndRoomTypeAndDate(placeId, selectedRoomType, TimeFormatter.toLocalDate(selectedDay));
 
-        Map<Integer, Boolean> inputTimeMap = getDefaultTimeMap();
-        if (isOpenToday(reservationDayOfWeek, placeOpenList)) {
-            List<Room> reservationRoomList = roomRepository.findRoomByPlaceIdAndRoomType(placeId, selectedRoomType);
-            List<Reservation> findReservationList = reservationRepository.findAllByPlaceIdAndRoomTypeAndDate(placeId, selectedRoomType, TimeFormatter.toLocalDate(selectedDay));
+        int totalReservationCount = reservedRoomList.size();
+        int beforeReservationCount = countBeforeReservationList(findReservationList);
 
-            int totalReservationCount = reservationRoomList.size();
-            int beforeReservationCount = countBeforeReservationList(findReservationList);
+        int startTime = resultPlace.get().getPlaceStart().getHour();
+        int endTime = resultPlace.get().getPlaceEnd().getHour();
+        Map<Integer, Boolean> inputTimeMap = setStartTimeAndEndTime(getDefaultTimeMap(), startTime, endTime);
 
-            int startTime = findPlace.getPlaceStart().getHour();
-            int endTime = findPlace.getPlaceEnd().getHour();
-
-            if (hasFullReservation(totalReservationCount, beforeReservationCount)) {
-                inputTimeMap = setStartTimeAndEndTime(inputTimeMap, startTime, endTime);
-            } else {
-                inputTimeMap = getAvailableRoomMap(inputTimeMap, findReservationList, startTime, endTime);
-            }
+        if (!hasFullReservation(totalReservationCount, beforeReservationCount)) {
+            Map<Integer, ReservedRoom> reservedRoomMap = getReservedRoomMap(findPlace, findReservationList, reservedRoomList);
+            return getResultList(findPlace, selectedStartTime, reservedRoomMap);
         }
         return parsingMapToList(inputTimeMap);
     }
+
+    private List<Integer> getResultList(Place findPlace, int selectedStartTime, Map<Integer, ReservedRoom> reservedRoomMap) {
+        int plusMaxPointer = selectedStartTime;
+        int minusMinPointer = selectedStartTime;
+        for (int i = 0; i < reservedRoomMap.size(); i++) {
+            ReservedRoom reservedRoom = reservedRoomMap.get(i);
+            int plusPointer = selectedStartTime;
+            int minusPointer = selectedStartTime;
+            if (!(plusMaxPointer == findPlace.getPlaceEnd().getHour())) {
+                for (int j = selectedStartTime; j < findPlace.getPlaceEnd().getHour() - 1; j++) {
+                    if (reservedRoom.getTimeState(j) && reservedRoom.getTimeState(j + 1)) {
+                        plusPointer = j + 1;
+                    } else {
+                        break;
+                    }
+                }
+                if (plusPointer > plusMaxPointer) {
+                    plusMaxPointer = plusPointer;
+                }
+            }
+            if (!(minusMinPointer == findPlace.getPlaceStart().getHour())) {
+                for (int j = selectedStartTime; j > findPlace.getPlaceStart().getHour(); j--) {
+                    if (reservedRoom.getTimeState(j) && reservedRoom.getTimeState(j - 1)) {
+                        minusPointer = j - 1;
+                    } else {
+                        break;
+                    }
+                }
+                if (minusPointer < minusMinPointer) {
+                    minusMinPointer = minusPointer;
+                }
+            }
+        }
+
+        List<Integer> result = new ArrayList<>();
+        for (int i = minusMinPointer; i < plusMaxPointer + 1; i++) {
+            result.add(i);
+        }
+        return result;
+    }
+
 
     @Override
     public Map<String, String> validation(Map<String, String> response, User user, Place place, ProcessReservationData data) {
@@ -104,6 +143,8 @@ public class JpaReservationService implements ReservationService {
             return response;
         }
 
+//        Room resultRoom = getResultRoom();
+
         Reservation reservation = new Reservation(user, place, room, data.getDate(), data.getStartTime(), data.getDate(), data.getEndTime());
         Reservation save = reservationRepository.save(reservation);
         if (save == null) {
@@ -115,49 +156,50 @@ public class JpaReservationService implements ReservationService {
         return response;
     }
 
-    private Map<Integer, Boolean> getAvailableRoomMap(Map<Integer, Boolean> inputTimeMap, List<Reservation> findReservationList, int startTime, int endTime) {
-        for (Reservation reservation : findReservationList) {
-            for (int i = reservation.getResStartTime().getHour(); i < reservation.getResEndTime().getHour(); i++) {
-                if (inputTimeMap.get(i) == true) {
-                    continue;
+    @Override
+    public List<Reservation> findResByPlaceIdAndRoomKindId(long placeId, long roomTypeId, LocalDate resStartDate, LocalDate resEndDate) {
+        return reservationRepository.findResByPlaceIdAndRoomKindId(placeId, roomTypeId, resStartDate, resEndDate);
+    }
+
+    /**
+     * Room 단위로 예약된 모든 목록을 반환
+     */
+    private Map<Integer, ReservedRoom> getReservedRoomMap(Place findPlace, List<Reservation> findReservationList, List<Room> reservedRoomList) {
+        Map<Integer, ReservedRoom> reservedRoomMap = new HashMap<>();
+        for (int i = 0; i < reservedRoomList.size(); i++) {
+            ReservedRoom reservedRoom = new ReservedRoom(reservedRoomList.get(i).getId());
+            reservedRoomMap.put(i, reservedRoom);
+        }
+
+        for (int i = 0; i < reservedRoomMap.size(); i++) {
+            ReservedRoom reservedRoom = reservedRoomMap.get(i);
+            for (Reservation reservation : findReservationList) {
+                if (reservedRoom.getRoomId().equals(reservation.getRoom().getId())) {
+                    for (int time = reservation.getResStartTime().getHour(); time < reservation.getResEndTime().getHour(); time++) {
+                        if (reservedRoom.getTimeState(time) && isOpenToday(findPlace, time)) {
+                            reservedRoom.getTimeStates().replace(time, false);
+                        }
+                    }
+                    reservedRoom.setStartAndEndTimeMap(findPlace.getPlaceStart(), findPlace.getPlaceEnd());
+                    reservedRoomMap.replace(i, reservedRoom);
                 }
-                inputTimeMap.replace(i, false, true);
             }
         }
-
-        for (int i = startTime; i < endTime; i++) {
-            if (inputTimeMap.get(i) == true) {
-                break;
-            }
-            inputTimeMap.replace(i, false, true);
-        }
-        for (int i = endTime - 1; i > startTime; i--) {
-            if (inputTimeMap.get(i) == true) {
-                break;
-            }
-            inputTimeMap.replace(i, false, true);
-        }
-        return inputTimeMap;
+        return reservedRoomMap;
     }
 
-    private String getReservationAvailableDaysOfWeek(String day) {
-        return getDaysOfWeek(TimeFormatter.toLocalDate(day));
-    }
-
-    private static String getDaysOfWeek(LocalDate localDate) {
-        return localDate.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.US);
-    }
-
-    private static List<String> getPlaceOpenList(Place place) {
-        return Arrays.asList(place.getOpenDays().split(", "));
+    /**
+     * 입력 받은 시간(time)이 place의 영업 시간 내에 존재하는지 여부 확인
+     */
+    private boolean isOpenToday(Place findPlace, Integer time) {
+        LocalTime now = TimeFormatter.toLocalTime(Integer.toString(time));
+        return now.isAfter(findPlace.getPlaceStart().minusHours(1)) && now.isBefore(findPlace.getPlaceEnd());
     }
 
     private List<Integer> parsingMapToList(Map<Integer, Boolean> inputTimeMap) {
         List<Integer> resultTimeList = new ArrayList<>();
-        Iterator<Map.Entry<Integer, Boolean>> itr = inputTimeMap.entrySet().iterator();
 
-        while (itr.hasNext()) {
-            Map.Entry<Integer, Boolean> entry = itr.next();
+        for (Map.Entry<Integer, Boolean> entry : inputTimeMap.entrySet()) {
             if (entry.getValue()) {
                 resultTimeList.add(entry.getKey());
             }
@@ -166,11 +208,7 @@ public class JpaReservationService implements ReservationService {
     }
 
     private boolean hasFullReservation(int totalReservationCount, int beforeReservationCount) {
-        boolean available = false;
-        if (totalReservationCount - beforeReservationCount > 0) {
-            available = true;
-        }
-        return available;
+        return totalReservationCount - beforeReservationCount > 0;
     }
 
     private Map<Integer, Boolean> setStartTimeAndEndTime(Map<Integer, Boolean> inputTimeMap, int startTime, int endTime) {
@@ -185,8 +223,8 @@ public class JpaReservationService implements ReservationService {
 
     private int countBeforeReservationList(List<Reservation> findReservationList) {
         Set<Long> countRoomIdSet = new HashSet<>();
-        for (int i = 0; i < findReservationList.size(); i++) {
-            countRoomIdSet.add(findReservationList.get(i).getRoom().getId());
+        for (Reservation reservation : findReservationList) {
+            countRoomIdSet.add(reservation.getRoom().getId());
         }
         return countRoomIdSet.size();
     }
@@ -199,25 +237,4 @@ public class JpaReservationService implements ReservationService {
         return timeMap;
     }
 
-    private Map<String, Boolean> getOpenDayMap(List<String> placeOpenList) {
-        Map<String, Boolean> openDayMap = new LinkedHashMap<>();
-        for (Weekdays item : Weekdays.values()) {
-            if (placeOpenList.contains(item.toString())) {
-                openDayMap.put(item.toString(), true);
-            } else {
-                openDayMap.put(item.toString(), false);
-            }
-        }
-        return openDayMap;
-    }
-
-    @Override
-    public List<Reservation> findResByPlaceIdAndRoomKindId(long placeId, long roomTypeId, LocalDate resStartDate, LocalDate resEndDate) {
-        return reservationRepository.findResByPlaceIdAndRoomKindId(placeId, roomTypeId, resStartDate, resEndDate);
-    }
-
-    private boolean isOpenToday(String reservationDayOfWeek, List<String> placeOpenList) {
-        Map<String, Boolean> placeOpenMap = getOpenDayMap(placeOpenList);
-        return placeOpenMap.get(reservationDayOfWeek);
-    }
 }

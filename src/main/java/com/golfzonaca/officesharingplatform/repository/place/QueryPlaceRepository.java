@@ -4,6 +4,7 @@ import com.golfzonaca.officesharingplatform.domain.Place;
 import com.golfzonaca.officesharingplatform.web.formatter.TimeFormatter;
 import com.golfzonaca.officesharingplatform.web.search.dto.request.RequestFilterData;
 import com.golfzonaca.officesharingplatform.web.search.dto.request.RequestSearchData;
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
@@ -67,6 +68,21 @@ public class QueryPlaceRepository {
                 .fetch();
     }
 
+    public String findOpenDayById(Long id) {
+        return query
+                .select(place.openDays)
+                .from(place)
+                .where(place.id.eq(id))
+                .fetchFirst();
+    }
+
+    public Tuple findStartAndEndTimeById(Long id) {
+        return query.select(place.placeStart, place.placeEnd)
+                .from(place)
+                .where(place.id.eq(id))
+                .fetchFirst();
+    }
+
     private BooleanExpression likeName(String name) {
         if (StringUtils.hasText(name)) {
             return place.placeName.contains(name);
@@ -112,4 +128,5 @@ public class QueryPlaceRepository {
         }
         return null;
     }
+
 }
