@@ -122,46 +122,5 @@ public class SpringJpaKakaoPayService implements KakaoPayService {
     private Reservation getReservation(long reservationId) {
         return reservationRepository.findById(reservationId).get();
     }
-    /*@Override
-    public KakaoPayApprovalForm kakaoPayInfo(long reservationId, String pg_token) {
-        log.info("Started kakaoPayInfo method");
-
-        RestTemplate restTemplate = new RestTemplate();
-        Reservation reservation = null;
-        if (reservationRepository.findById(reservationId).isPresent()) {
-            reservation = reservationRepository.findById(reservationId).get();
-        }
-
-        User user = reservation.getUser();
-        Room room = reservation.getRoom();
-        RoomKind roomKind = reservation.getRoom().getRoomKind();
-        String calculatePayPrice = kakaoPayUtility.calculatePayPrice(reservation, roomKind);
-
-        // 서버로 요청할 Body
-        RequestBodyApproveConverter requestBodyApproveConverter = RequestBodyApproveConverter.builder()
-                .cid("TC0ONETIME")
-                .tid(kakaoPayReady.getTid())
-                .partnerOrderId(String.valueOf(reservation.getId()))
-                .partnerUserId(String.valueOf(reservation.getId()))
-                .pgToken(pg_token)
-                .totalAmount(calculatePayPrice)
-                .build();
-
-        HttpEntity<MultiValueMap<String, String>> body = new HttpEntity<>(kakaoPayUtility.multiValueMapConverter(new ObjectMapper(), requestBodyApproveConverter), httpheaders);
-
-        try {
-            kakaoPayApprovalForm = restTemplate.postForObject(new URI(HOST + "/v1/payment/approve"), body, KakaoPayApprovalForm.class);
-            log.info("" + kakaoPayApprovalForm);
-
-            kakaoPayUtility.savePaymentInfo(paymentRepository, reservation, user, room, kakaoPayApprovalForm);
-            return kakaoPayApprovalForm;
-
-        } catch (RestClientException e) {
-            log.error(e.toString());
-        } catch (URISyntaxException e) {
-            log.error(e.toString());
-        }
-        return null;
-    }*/
 }
 

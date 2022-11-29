@@ -33,7 +33,7 @@ public class KakaoPayUtilityImpl implements KakaoPayUtility {
 
     @Override
     public void accumulationMileage(User user, long payPrice) {
-        long addMileage = (long) (payPrice * 0.05);
+        long addMileage = (long) (payPrice * 0.05); // 마일리지를 사용했으면 마일리지 사용한 금액은 빼고 사용자가 지불한 금액에 대해서 %적용 해서 마일리지 계산해주기
         user.getMileage().addPoint(user.getMileage().getPoint(), addMileage);
     }
 

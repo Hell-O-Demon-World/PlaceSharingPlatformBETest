@@ -34,21 +34,21 @@ public class Payment {
     private LocalTime payTime;
 
     @Column(name = "PAY_PRICE", nullable = false)
-    private long price;
+    private long price; //마일리지를 제외한 돈 나가는거
 
     @Column(name = "PAY_STATUS", nullable = false)
     @Enumerated(EnumType.STRING)
     private PayStatus status;
 
     @Column(name = "PAY_MILEAGE", nullable = false)
-    private long savedMileage;
+    private long savedMileage; //사용한 마일리지
 
     @Column(name = "PAY_TYPE", nullable = false)
     @Enumerated(EnumType.STRING)
     private PayType type;
 
     @Column(name = "PAY_API_CODE", nullable = false)
-    private String apiCode;
+    private String apiCode; //결제하면 주문번호 튀어나오는거
 
     @Builder
     public Payment(User user, Room room, LocalDate payDate, LocalTime payTime, long price, PayStatus status, long savedMileage, PayType type, String apiCode) {
