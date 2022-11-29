@@ -188,11 +188,11 @@ create table payment
     SAVED_MILEAGE  bigint unsigned not null,
     PAY_TYPE       enum ('DEPOSIT', 'BALANCE', 'FULLPAYMENT') not null,
     PAY_API_CODE   varchar(30) not null comment 'API 결제를 통해 생성되는 거래 번호',
+    PG             enum ('KAKAOPAY', 'NICEPAY') not null,
     constraint PAY_API_CODE
         unique (PAY_API_CODE),
     constraint FK_RESERVATION_TO_PAYMENT_1
         foreign key (RESERVATION_ID) references reservation (ID)
-            on update cascade on delete cascade
 );
 
 create table rating

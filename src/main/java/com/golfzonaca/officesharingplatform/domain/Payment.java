@@ -56,7 +56,6 @@ public class Payment {
     private PG pg;
 
     @Builder
-
     public Payment(Reservation reservation, LocalDate payDate, LocalTime payTime, long price, long payMileage, PayStatus status, long savedMileage, PayType type, String apiCode, PG pg) {
         this.reservation = reservation;
         this.payDate = payDate;
