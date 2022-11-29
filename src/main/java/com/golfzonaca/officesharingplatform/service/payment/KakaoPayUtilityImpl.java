@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.golfzonaca.officesharingplatform.domain.*;
 import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayApproval;
 import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayReady;
+import com.golfzonaca.officesharingplatform.domain.type.PG;
 import com.golfzonaca.officesharingplatform.domain.type.PayStatus;
 import com.golfzonaca.officesharingplatform.domain.type.PayType;
 import com.golfzonaca.officesharingplatform.repository.payment.PaymentRepository;
@@ -69,8 +70,9 @@ public class KakaoPayUtilityImpl implements KakaoPayUtility {
         LocalDate payDate = this.toLocalDate(localDateTime);
         LocalTime payTime = this.toLocalTime(localDateTime);
         long payPrice = kakaoPayApproval.getAmount().getTotal();
+        long payMileage = 0L; //추후 변경예정
         PayStatus payStatus = checkPayStatus(reservation);
-        long payMileage = kakaoPayApproval.getAmount().getPoint();
+        long savedMileage = kakaoPayApproval.getAmount().getPoint();
 
         PayType payType = PayType.FULLPAYMENT;
 
@@ -84,7 +86,7 @@ public class KakaoPayUtilityImpl implements KakaoPayUtility {
         }
         String payApiCode = kakaoPayApproval.getTid();
 
-        Payment payment = new Payment(user, room, payDate, payTime, payPrice, payStatus, payMileage, payType, payApiCode);
+        Payment payment = new Payment(reservation, payDate, payTime, payPrice, payMileage, payStatus, savedMileage, payType, payApiCode, PG.KAKAOPAY);
 
         paymentRepository.save(payment);
     }
@@ -149,7 +151,7 @@ public class KakaoPayUtilityImpl implements KakaoPayUtility {
     }
 
     @Override
-    public KakaoPayReady kakaoPayGetTid(String host, HttpEntity<MultiValueMap<String, String>> body){
+    public KakaoPayReady kakaoPayGetTid(String host, HttpEntity<MultiValueMap<String, String>> body) {
         RestTemplate restTemplate = new RestTemplate();
 
         try {
