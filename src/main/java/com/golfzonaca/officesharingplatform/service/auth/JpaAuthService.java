@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class CustomAuthService implements AuthService {
+public class JpaAuthService implements AuthService {
     private final UserRepository userRepository;
     private final MileageService mileageService;
     private final RoleRepository roleRepository;

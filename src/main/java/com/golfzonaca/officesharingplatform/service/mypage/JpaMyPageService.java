@@ -16,11 +16,12 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class SpringDataJpaMyPageService implements MyPageService{
+public class JpaMyPageService implements MyPageService {
     private final UserRepository userRepository;
     private final ReservationRepository reservationRepository;
     private final PlaceRepository placeRepository;
     private final RoomKindRepository roomKindRepository;
+
     @Override
     public MyPage createMyPageForm(Long userId) {
         return MyPage.builder()
@@ -34,7 +35,7 @@ public class SpringDataJpaMyPageService implements MyPageService{
         List<Reservation> reservationList = reservationRepository.findAllLimit(ReservationSearchCond.builder()
                 .userId(userId)
                 .build(), order + 1);
-        reservationRepository.deleteById( reservationList.get(order).getId());
+        reservationRepository.deleteById(reservationList.get(order).getId());
     }
 
     public List<MyPageReservationForm> getMyPageReservationListByUserId(long userId) {

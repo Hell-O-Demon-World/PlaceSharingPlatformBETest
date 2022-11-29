@@ -57,12 +57,7 @@ public class Place {
 
     @OneToMany(mappedBy = "place")
     private List<Rating> ratings = new LinkedList<>();
-
-
-    @OneToMany(mappedBy = "place")
-    private List<Rating> ratings = new ArrayList<>();
-
-
+    
     public Place(Company company, RatePoint ratePoint, String placeName, String description, String openDays, LocalTime placeStart, LocalTime placeEnd, String placeAddInfo, Address address) {
         this.company = company;
         this.ratePoint = ratePoint;
