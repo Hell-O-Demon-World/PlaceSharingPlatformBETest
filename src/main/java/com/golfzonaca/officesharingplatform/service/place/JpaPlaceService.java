@@ -3,14 +3,12 @@ package com.golfzonaca.officesharingplatform.service.place;
 import com.golfzonaca.officesharingplatform.domain.Place;
 import com.golfzonaca.officesharingplatform.repository.place.PlaceRepository;
 import com.golfzonaca.officesharingplatform.web.formatter.TimeFormatter;
-import com.golfzonaca.officesharingplatform.web.reservation.form.DefaultTimeOfDay;
 import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -57,6 +55,9 @@ public class JpaPlaceService implements PlaceService {
         Tuple startAndEndTime = placeRepository.findStartAndEndTimeById(id);
         LocalTime start = startAndEndTime.get(0, LocalTime.class);
         LocalTime end = startAndEndTime.get(1, LocalTime.class);
+        if (Objects.requireNonNull(end).getHour() - Objects.requireNonNull(start).getHour() == 0) {
+            return true;
+        }
         return localStartTime.isAfter(Objects.requireNonNull(start))
                 && localStartTime.isBefore(Objects.requireNonNull(end));
     }

@@ -4,7 +4,9 @@ import com.golfzonaca.officesharingplatform.domain.*;
 import com.golfzonaca.officesharingplatform.web.formatter.TimeFormatter;
 import com.golfzonaca.officesharingplatform.web.reservation.form.DefaultTimeOfDay;
 import com.golfzonaca.officesharingplatform.web.reservation.form.SelectedTypeAndDayForm;
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -14,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @RequiredArgsConstructor
 class JpaReservationServiceTest {
@@ -44,7 +46,7 @@ class JpaReservationServiceTest {
                 .build();
         List<ReservationTest> findReservationList = getReservationTestList();
         List<Room> reservedRoomList = getReservationRoomList();
-        int selectedStartTime = 11;
+        int selectedStartTime = 17;
         //when
         Map<Integer, ReservedRoom> reservedRoomMap = getReservedRoomMap(findPlace, findReservationList, reservedRoomList);
 
@@ -54,24 +56,31 @@ class JpaReservationServiceTest {
             ReservedRoom reservedRoom = reservedRoomMap.get(i);
             int plusPointer = selectedStartTime;
             int minusPointer = selectedStartTime;
-            for (int j = selectedStartTime; j < findPlace.getPlaceEnd().getHour() - 1; j++) {
-                if (reservedRoom.timeStates.get(j) && reservedRoom.timeStates.get(j + 1)) {
-                    plusPointer = j + 1;
+            if (!(plusMaxPointer == findPlace.getPlaceEnd().getHour())) {
+                for (int j = selectedStartTime; j < findPlace.getPlaceEnd().getHour() - 1; j++) {
+                    if (reservedRoom.timeStates.get(j) && reservedRoom.timeStates.get(j + 1)) {
+                        plusPointer = j + 1;
+                    } else {
+                        break;
+                    }
+                }
+                if (plusPointer > plusMaxPointer) {
+                    plusMaxPointer = plusPointer;
                 }
             }
-            if (plusPointer > plusMaxPointer) {
-                plusMaxPointer = plusPointer;
-            }
-            for (int j = selectedStartTime; j > findPlace.getPlaceStart().getHour(); j--) {
-                if (reservedRoom.timeStates.get(j) && reservedRoom.timeStates.get(j - 1)) {
-                    minusPointer = j - 1;
+            if (!(minusMinPointer == findPlace.getPlaceStart().getHour())) {
+                for (int j = selectedStartTime; j > findPlace.getPlaceStart().getHour(); j--) {
+                    if (reservedRoom.timeStates.get(j) && reservedRoom.timeStates.get(j - 1)) {
+                        minusPointer = j - 1;
+                    } else {
+                        break;
+                    }
                 }
-            }
-            if (minusPointer < minusMinPointer) {
-                minusMinPointer = minusPointer;
+                if (minusPointer < minusMinPointer) {
+                    minusMinPointer = minusPointer;
+                }
             }
         }
-
         List<Integer> result = new ArrayList<>();
         for (int i = minusMinPointer; i < plusMaxPointer + 1; i++) {
             result.add(i);
@@ -92,8 +101,8 @@ class JpaReservationServiceTest {
             for (ReservationTest reservationTest : findReservationList) {
                 if (reservedRoom.roomId.equals(reservationTest.roomId)) {
                     for (int time = reservationTest.resStartTime.getHour(); time < reservationTest.resEndTime.getHour(); time++) {
-                        if (!reservedRoom.timeStates.get(time) && isOpenToday(findPlace, time)) {
-                            reservedRoom.timeStates.replace(time, true);
+                        if (reservedRoom.timeStates.get(time) && isOpenToday(findPlace, time)) {
+                            reservedRoom.timeStates.replace(time, false);
                         }
                     }
                     reservedRoom.setStartAndEndTimeMap(findPlace.getPlaceStart(), findPlace.getPlaceEnd());
@@ -124,7 +133,7 @@ class JpaReservationServiceTest {
         ReservedRoom reservedRoom1 = new ReservedRoom(2L);
         reservedRoom.setStartAndEndTimeMap(TimeFormatter.toLocalTime("18"), TimeFormatter.toLocalTime("4"));
         reservedRoom1.setStartAndEndTimeMap(TimeFormatter.toLocalTime("4"), TimeFormatter.toLocalTime("18"));
-        Map<Integer, ReservedRoom> reservedRoomMap = new HashMap<Integer, ReservedRoom>();
+        Map<Integer, ReservedRoom> reservedRoomMap = new HashMap<>();
         reservedRoomMap.put(1, reservedRoom);
         reservedRoomMap.put(2, reservedRoom1);
 
@@ -250,33 +259,6 @@ class JpaReservationServiceTest {
 
     }
 
-    private Map<Integer, Boolean> getDefaultTimeMap(Place place) {
-        Map<Integer, Boolean> defaultTimeMap = getStartAndEndTimeMap(place.getPlaceStart(), place.getPlaceEnd());
-
-        return defaultTimeMap;
-    }
-
-    private Map<Integer, Boolean> getTimeMap() {
-        Map<Integer, Boolean> timeMap = new HashMap<>();
-        for (int time : DefaultTimeOfDay.getTimes()) {
-            timeMap.put(time, false);
-        }
-        return timeMap;
-    }
-
-    private Map<Integer, Boolean> getStartAndEndTimeMap(LocalTime startLocalTime, LocalTime endLocalTime) {
-        Map<Integer, Boolean> resultMap = getTimeMap();
-        int startTime = startLocalTime.getHour();
-        int endTime = endLocalTime.getHour();
-        if (endTime == 0) {
-            endTime = 24;
-        }
-        for (int i = startTime; i < endTime; i++) {
-            resultMap.replace(i, false, true);
-        }
-        return resultMap;
-    }
-
     private static List<Room> getReservationRoomList() {
         List<Room> findRoomList = new ArrayList<>();
         for (long i = 49; i < 59; i++) {
@@ -326,27 +308,18 @@ class JpaReservationServiceTest {
     }
 
     private static class ReservedRoom {
-        private Long roomId;
+        private final Long roomId;
         private Map<Integer, Boolean> timeStates;
-
-//        public ReservedRoom(Long roomId, LocalTime startTime, LocalTime endTime) {
-//            this.roomId = roomId;
-//            this.timeStates = getStartAndEndTimeMap(startTime, endTime);
-//        }
 
         public ReservedRoom(Long roomId) {
             this.roomId = roomId;
             this.timeStates = getTimeMap();
         }
 
-        private Long getRoomId() {
-            return this.roomId;
-        }
-
         private Map<Integer, Boolean> getTimeMap() {
             Map<Integer, Boolean> timeMap = new HashMap<>();
             for (int time : DefaultTimeOfDay.getTimes()) {
-                timeMap.put(time, false);
+                timeMap.put(time, true);
             }
             return timeMap;
         }
