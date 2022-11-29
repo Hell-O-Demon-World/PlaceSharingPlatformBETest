@@ -1,10 +1,10 @@
 package com.golfzonaca.officesharingplatform.domain.type;
 
-public enum PayType {
-    DEPOSIT("보증금"), BALANCE("잔금"), FULLPAYMENT("전체 결제");
+public enum RoleType {
+    ROLE_USER("사용자"), ROLE_MANAGER("운영자");
     private final String description;
 
-    PayType(String description) {
+    RoleType(String description) {
         this.description = description;
     }
 
