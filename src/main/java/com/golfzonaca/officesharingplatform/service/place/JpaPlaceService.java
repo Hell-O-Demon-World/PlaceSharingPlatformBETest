@@ -70,7 +70,6 @@ public class JpaPlaceService implements PlaceService {
             Place place = places.get(i);
             mainPlaceData.put(i, new PlaceDto(place.getId().toString(), place.getPlaceName(), place.getAddress().getAddress(), stringToList(place.getPlaceAddInfo()), place.getDescription(), excludeOpenDays(stringToList(place.getOpenDays())), place.getPlaceStart().toString(), place.getPlaceEnd().toString(), processingRoomInfo(place.getRooms())));
         }
-
         return mainPlaceData;
     }
 
@@ -79,7 +78,7 @@ public class JpaPlaceService implements PlaceService {
     }
 
     private List<String> excludeOpenDays(List<String> openDays) {
-        List<String> daysOfWeek = Arrays.asList("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun");
+        List<String> daysOfWeek = new ArrayList<>(Arrays.asList("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"));
         for (String openDay : openDays) {
             daysOfWeek.remove(openDay);
         }
@@ -87,12 +86,52 @@ public class JpaPlaceService implements PlaceService {
     }
 
     private Map<String, String> processingRoomInfo(List<Room> rooms) {
-        List<String> roomType = new ArrayList<>();
-        List<String> price = new ArrayList<>();
+        Map<String, String> roomInfo = new LinkedHashMap<>();
+        calculateMinPriceForDesk(rooms, roomInfo);
+        calculateMinPriceForMeetingRoom(rooms, roomInfo);
+        calculateMinPriceForOffice(rooms, roomInfo);
+        return roomInfo;
+    }
+
+    private void calculateMinPriceForDesk(List<Room> rooms, Map<String, String> roomInfo) {
         for (Room room : rooms) {
-            room.getRoomKind().getRoomType();
-            String.valueOf(room.getRoomKind().getPrice());
+            if (room.getRoomKind().getRoomType().contains("DESK")) {
+                if (roomInfo.containsKey("DESK")) {
+                    if (room.getRoomKind().getPrice() < Integer.parseInt(roomInfo.get("DESK"))) {
+                        roomInfo.put("DESK", String.valueOf(room.getRoomKind().getPrice()));
+                    }
+                } else {
+                    roomInfo.put("DESK", String.valueOf(room.getRoomKind().getPrice()));
+                }
+            }
         }
-        return null;
+    }
+
+    private void calculateMinPriceForMeetingRoom(List<Room> rooms, Map<String, String> roomInfo) {
+        for (Room room : rooms) {
+            if (room.getRoomKind().getRoomType().contains("MEETINGROOM")) {
+                if (roomInfo.containsKey("MEETINGROOM")) {
+                    if (room.getRoomKind().getPrice() < Integer.parseInt(roomInfo.get("MEETINGROOM"))) {
+                        roomInfo.put("MEETINGROOM", String.valueOf(room.getRoomKind().getPrice()));
+                    }
+                } else {
+                    roomInfo.put("MEETINGROOM", String.valueOf(room.getRoomKind().getPrice()));
+                }
+            }
+        }
+    }
+
+    private void calculateMinPriceForOffice(List<Room> rooms, Map<String, String> roomInfo) {
+        for (Room room : rooms) {
+            if (room.getRoomKind().getRoomType().contains("OFFICE")) {
+                if (roomInfo.containsKey("OFFICE")) {
+                    if (room.getRoomKind().getPrice() < Integer.parseInt(roomInfo.get("OFFICE"))) {
+                        roomInfo.put("OFFICE", String.valueOf(room.getRoomKind().getPrice()));
+                    }
+                } else {
+                    roomInfo.put("OFFICE", String.valueOf(room.getRoomKind().getPrice()));
+                }
+            }
+        }
     }
 }
