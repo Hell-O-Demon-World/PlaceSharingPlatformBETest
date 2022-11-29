@@ -1,6 +1,6 @@
 package com.golfzonaca.officesharingplatform.web.payment;
 
-import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayApprovalForm;
+import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayApproval;
 import com.golfzonaca.officesharingplatform.service.payment.KakaoPayService;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +18,10 @@ public class KakaoPayController {
     @Autowired
     private KakaoPayService kakaoPayService;
 
+    public KakaoPayController(KakaoPayService kakaoPayService) {
+        this.kakaoPayService = kakaoPayService;
+    }
+
     @GetMapping("/kakaoPay")
     public void kakaoPayGet() {
     }
@@ -29,7 +33,7 @@ public class KakaoPayController {
     }
 
     @GetMapping("/{reservationId}/kakaoPaySuccess")
-    public KakaoPayApprovalForm kakaoPaySuccess(@PathVariable long reservationId, @RequestParam("pg_token") String pg_token, RedirectAttributes redirectAttributes) {
+    public KakaoPayApproval kakaoPaySuccess(@PathVariable long reservationId, @RequestParam("pg_token") String pg_token, RedirectAttributes redirectAttributes) {
         redirectAttributes.addAttribute("pg_token", pg_token);
         redirectAttributes.addAttribute("reservationId", reservationId);
         return kakaoPayService.kakaoPayInfo(reservationId, pg_token);
