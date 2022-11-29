@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -44,6 +45,15 @@ public class SearchPlaceController {
         return normalResponse(searchService.filterPlaces(requestFilterData));
     }
 
+    @GetMapping("/main/test")
+    public String testPlaces() {
+        List<Place> places = placeService.findAllPlaces();
+        for (Place place : places) {
+            log.info("place.getRatePoint().getId()={}, place.getRatePoint().getRatingPoint()={}", place.getRatePoint().getId(), place.getRatePoint().getRatingPoint());
+        }
+        return "ok";
+    }
+
     private JsonObject normalResponse(List<Place> resultList) {
         JsonObject response = new JsonObject();
 
@@ -58,5 +68,4 @@ public class SearchPlaceController {
         response.addProperty(key, value);
         return response;
     }
-
 }

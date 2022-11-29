@@ -42,7 +42,7 @@ public class SignUpSaveForm {
     public User toEntity() {
 
         String changePreferString = getChangePreferString(preferType);
-        return new User(name, email, password, phoneNumber, job, changePreferString, new Mileage(0L));
+        return new User(name, email, password, phoneNumber, job, changePreferString, new Mileage(0L), new Role(1L, RoleType.ROLE_USER));
     }
 
     private String getChangePreferString(List<PreferType> preferType) {

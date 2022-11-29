@@ -16,7 +16,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class MyBatisMyPageService implements MyPageService{
+public class SpringDataJpaMyPageService implements MyPageService{
     private final UserRepository userRepository;
     private final ReservationRepository reservationRepository;
     private final PlaceRepository placeRepository;
