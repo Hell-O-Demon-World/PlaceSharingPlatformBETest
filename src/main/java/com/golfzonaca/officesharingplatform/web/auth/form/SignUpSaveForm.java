@@ -2,7 +2,9 @@ package com.golfzonaca.officesharingplatform.web.auth.form;
 
 import com.golfzonaca.officesharingplatform.annotation.PhoneNum;
 import com.golfzonaca.officesharingplatform.domain.Mileage;
+import com.golfzonaca.officesharingplatform.domain.Role;
 import com.golfzonaca.officesharingplatform.domain.User;
+import com.golfzonaca.officesharingplatform.domain.type.RoleType;
 import com.golfzonaca.officesharingplatform.web.auth.form.prefertype.PreferType;
 import lombok.AllArgsConstructor;
 import lombok.Data;

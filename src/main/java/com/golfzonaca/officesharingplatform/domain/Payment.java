@@ -1,7 +1,7 @@
 package com.golfzonaca.officesharingplatform.domain;
 
-import com.golfzonaca.backoffice.domain.type.PayStatus;
-import com.golfzonaca.backoffice.domain.type.PayType;
+import com.golfzonaca.officesharingplatform.domain.type.PayStatus;
+import com.golfzonaca.officesharingplatform.domain.type.PayType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

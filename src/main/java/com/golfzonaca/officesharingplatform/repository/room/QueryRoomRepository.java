@@ -30,11 +30,10 @@ public class QueryRoomRepository {
         log.info("Room findIdAll cond = {}", cond);
         Optional<Long> roomKindId = Optional.ofNullable(cond.getRoomKindId());
         Optional<Long> placeId = Optional.ofNullable(cond.getPlaceId());
-        Optional<Integer> totalNum = Optional.ofNullable(cond.getTotalNum());
         return query
                 .select(room.id)
                 .from(room)
-                .where(eqRoomKindId(roomKindId), eqPlaceId(placeId), eqTotalNum(totalNum))
+                .where(eqRoomKindId(roomKindId), eqPlaceId(placeId))
                 .fetch();
     }
 
@@ -42,12 +41,11 @@ public class QueryRoomRepository {
         log.info("Room findAll cond = {}", cond);
         Optional<Long> roomKindId = Optional.ofNullable(cond.getRoomKindId());
         Optional<Long> placeId = Optional.ofNullable(cond.getPlaceId());
-        Optional<Integer> totalNum = Optional.ofNullable(cond.getTotalNum());
 
         return query
                 .select(room)
                 .from(room)
-                .where(eqRoomKindId(roomKindId), eqPlaceId(placeId), eqTotalNum(totalNum))
+                .where(eqRoomKindId(roomKindId), eqPlaceId(placeId))
                 .fetch();
     }
 
@@ -70,13 +68,6 @@ public class QueryRoomRepository {
     private BooleanExpression eqPlaceId(Optional<Long> placeId) {
         if (placeId.isPresent()) {
             return room.place.id.eq(placeId.get());
-        }
-        return null;
-    }
-
-    private BooleanExpression eqTotalNum(Optional<Integer> totalNum) {
-        if (totalNum.isPresent()) {
-            return room.totalNum.eq(totalNum.get());
         }
         return null;
     }

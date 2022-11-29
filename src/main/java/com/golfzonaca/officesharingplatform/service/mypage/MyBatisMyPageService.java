@@ -33,7 +33,7 @@ public class MyBatisMyPageService implements MyPageService{
     public void cancelByOrderAndUserId(Integer order, Long userId) {
         List<Reservation> reservationList = reservationRepository.findAllLimit(ReservationSearchCond.builder()
                 .userId(userId)
-                .build(), order);
+                .build(), order + 1);
         reservationRepository.deleteById( reservationList.get(order).getId());
     }
 
@@ -50,7 +50,7 @@ public class MyBatisMyPageService implements MyPageService{
             Reservation findReservation = findReservationList.get(i);
             MyPageReservationForm myPageReservationForm = MyPageReservationForm.builder()
                     .resDate(findReservation.getResStartDate().toString() + "~" + findReservationList.get(i).getResEndDate().toString())
-                    .placeName(placeRepository.findById(findReservation.getPlace().getId()).get().getPlaceName())
+                    .placeName(placeRepository.findById(findReservation.getRoom().getPlace().getId()).get().getPlaceName())
                     .roomKind(roomKindRepository.findById(findReservation.getRoom().getRoomKind().getId()).getRoomType())
                     .resTime(findReservation.getResStartTime().toString() + "~" + findReservation.getResEndTime().toString())
                     .build();

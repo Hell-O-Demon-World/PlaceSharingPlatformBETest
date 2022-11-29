@@ -145,7 +145,7 @@ public class JpaReservationService implements ReservationService {
 
 //        Room resultRoom = getResultRoom();
 
-        Reservation reservation = new Reservation(user, place, room, data.getDate(), data.getStartTime(), data.getDate(), data.getEndTime());
+        Reservation reservation = new Reservation(user, room, data.getDate(), data.getStartTime(), data.getDate(), data.getEndTime());
         Reservation save = reservationRepository.save(reservation);
         if (save == null) {
             response.put("ReservationError", "예약 실패");
@@ -157,8 +157,8 @@ public class JpaReservationService implements ReservationService {
     }
 
     @Override
-    public List<Reservation> findResByPlaceIdAndRoomKindId(long placeId, long roomTypeId, LocalDate resStartDate, LocalDate resEndDate) {
-        return reservationRepository.findResByPlaceIdAndRoomKindId(placeId, roomTypeId, resStartDate, resEndDate);
+    public List<Reservation> findResByPlaceIdAndRoomKindId(long roomTypeId, LocalDate resStartDate, LocalDate resEndDate) {
+        return reservationRepository.findResByPlaceIdAndRoomKindId(roomTypeId, resStartDate, resEndDate);
     }
 
     /**

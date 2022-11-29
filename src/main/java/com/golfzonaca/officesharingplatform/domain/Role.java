@@ -1,6 +1,6 @@
 package com.golfzonaca.officesharingplatform.domain;
 
-import com.golfzonaca.backoffice.domain.type.RoleType;
+import com.golfzonaca.officesharingplatform.domain.type.RoleType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

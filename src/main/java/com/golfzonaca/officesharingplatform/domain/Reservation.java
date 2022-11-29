@@ -26,10 +26,6 @@ public class Reservation {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "PLACE_ID")
-    private Place place;
-
-    @ManyToOne
     @JoinColumn(name = "ROOM_ID")
     private Room room;
 
@@ -46,9 +42,8 @@ public class Reservation {
     private LocalTime resEndTime;
 
 
-    public Reservation(User user, Place place, Room room, LocalDate resStartDate, LocalTime resStartTime, LocalDate resEndDate, LocalTime resEndTime) {
+    public Reservation(User user, Room room, LocalDate resStartDate, LocalTime resStartTime, LocalDate resEndDate, LocalTime resEndTime) {
         this.user = user;
-        this.place = place;
         this.room = room;
         this.resStartDate = resStartDate;
         this.resStartTime = resStartTime;

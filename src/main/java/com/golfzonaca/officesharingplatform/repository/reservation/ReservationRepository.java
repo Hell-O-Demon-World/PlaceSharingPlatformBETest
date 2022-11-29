@@ -14,13 +14,9 @@ import java.util.Optional;
 public interface ReservationRepository {
     Reservation save(Reservation reservation);
 
-    List<Reservation> findAllByPlaceIdAndRoomKindIdAndDate(Long placeId, Long roomKindId, LocalDate reservationDate);
-
     List<Reservation> findAllByUserId(Long userId);
 
-    List<Reservation> findResByPlaceIdAndRoomKindId(long placeId, long roomTypeId, LocalDate resStartDate, LocalDate resEndDate);
-
-    List<Integer> findRoomTypeByPlaceId(long placeId);
+    List<Reservation> findResByPlaceIdAndRoomKindId(long roomTypeId, LocalDate resStartDate, LocalDate resEndDate);
 
     void deleteById(Long reservationId);
 
@@ -34,9 +30,6 @@ public interface ReservationRepository {
 
     Optional<Reservation> findById(Long reservationId);
 
-    Optional<Reservation> findByUserAndRoom(User user, Room room);
-
     List<Reservation> findAllLimit(ReservationSearchCond cond, Integer maxNum);
 
-    List<Reservation> findAllByPlaceIdAndRoomTypeAndDateAndStartTime(Long placeId, String selectedRoomType, LocalDate toLocalDate, LocalTime startTime);
 }

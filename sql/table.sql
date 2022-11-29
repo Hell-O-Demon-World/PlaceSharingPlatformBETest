@@ -134,7 +134,7 @@ create table refresh_token
 (
     ID            bigint unsigned auto_increment primary key,
     USER_ID       bigint unsigned not null,
-    ENCODED_TOKEN varchar(147) not null,
+    ENCODED_TOKEN varchar(240) not null,
     constraint user_id
         unique (USER_ID),
     constraint FK_USER_TO_REFRESH_TOKEN_1

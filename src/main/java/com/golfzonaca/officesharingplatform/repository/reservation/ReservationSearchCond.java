@@ -15,7 +15,6 @@ import java.util.Optional;
 @Builder
 public class ReservationSearchCond {
 
-    private Long placeId;
     private Long roomKindId;
     private Long userId;
     private Long roomId;

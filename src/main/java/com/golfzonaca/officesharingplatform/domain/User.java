@@ -55,7 +55,7 @@ public class User {
         this.id = id;
     }
 
-    public User(String username, String email, String password, String phoneNumber, String job, String userPlace, Mileage mileage, Role role) {
+    public User(String username, String email, String password, String phoneNumber, String job, String userPlace, Mileage mileage) {
         this.username = username;
         this.email = email;
         this.password = password;
@@ -63,7 +63,6 @@ public class User {
         this.job = job;
         this.userPlace = userPlace;
         this.mileage = mileage;
-        this.role = role;
     }
 
     public void updatePassword(String password) {
@@ -74,7 +73,8 @@ public class User {
         this.mileage = mileage;
     }
 
-    public void setRole(Role role) {
+    public void updateRole(Role role) {
         this.role = role;
     }
+
 }

@@ -143,7 +143,6 @@ class JpaReservationServiceTest {
                 .place(Place.builder().id(5L)
                         .company(Company.builder().id(3L).build())
                         .build())
-                .totalNum(1)
                 .build();
         ReservedRoom reservedRoom = new ReservedRoom(1L);
         ReservedRoom reservedRoom1 = new ReservedRoom(2L);
@@ -284,7 +283,6 @@ class JpaReservationServiceTest {
                     .place(Place.builder().id(5L)
                             .company(Company.builder().id(3L).build())
                             .build())
-                    .totalNum(1)
                     .build();
             findRoomList.add(room);
         }
@@ -299,7 +297,6 @@ class JpaReservationServiceTest {
             }
             Reservation reservation = Reservation.builder()
                     .id(i + 120L)
-                    .place(Place.builder().id(5L).build())
                     .user(User.builder().id(3L).build())
                     .room(Room.builder()
                             .id(i)
@@ -307,7 +304,6 @@ class JpaReservationServiceTest {
                             .place(Place.builder().id(5L)
                                     .company(Company.builder().id(3L).build())
                                     .build())
-                            .totalNum(1)
                             .build())
                     .resStartDate(TimeFormatter.toLocalDate("2022-12-02"))
                     .resEndDate(TimeFormatter.toLocalDate("2022-12-02"))

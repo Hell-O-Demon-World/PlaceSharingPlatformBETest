@@ -27,32 +27,17 @@ public class CustomReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public List<Reservation> findAllByPlaceIdAndRoomKindIdAndDate(Long placeId, Long roomKindId, LocalDate reservationDate) {
-        return queryReservationRepository.findAll(ReservationSearchCond.builder()
-                .placeId(placeId)
-                .roomKindId(roomKindId)
-                .resStartDate(reservationDate)
-                .build());
-    }
-
-    @Override
     public List<Reservation> findAllByUserId(Long userId) {
         return jpaReservationRepository.findAllById(Collections.singleton(userId));
     }
 
     @Override
-    public List<Reservation> findResByPlaceIdAndRoomKindId(long placeId, long roomTypeId, LocalDate resStartDate, LocalDate resEndDate) {
+    public List<Reservation> findResByPlaceIdAndRoomKindId(long roomTypeId, LocalDate resStartDate, LocalDate resEndDate) {
         return queryReservationRepository.findAll(ReservationSearchCond.builder()
-                .placeId(placeId)
                 .roomKindId(roomTypeId)
                 .resStartDate(resStartDate)
                 .resEndDate(resEndDate)
                 .build());
-    }
-
-    @Override
-    public List<Integer> findRoomTypeByPlaceId(long placeId) {
-        return jpaReservationRepository.findRoomTypeByPlaceId(placeId);
     }
 
     @Override
@@ -86,17 +71,8 @@ public class CustomReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Optional<Reservation> findByUserAndRoom(User user, Room room) {
-        return queryReservationRepository.findByUserAndRoom(user, room);
-    }
-
     public List<Reservation> findAllLimit(ReservationSearchCond cond, Integer maxNum) {
         return queryReservationRepository.findAllLimit(cond, maxNum);
-
     }
 
-    @Override
-    public List<Reservation> findAllByPlaceIdAndRoomTypeAndDateAndStartTime(Long placeId, String selectedRoomType, LocalDate date, LocalTime startTime) {
-        return queryReservationRepository.findAllByPlaceIdAndRoomTypeAndDateAndStartTime(placeId, selectedRoomType, date, startTime);
-    }
 }
