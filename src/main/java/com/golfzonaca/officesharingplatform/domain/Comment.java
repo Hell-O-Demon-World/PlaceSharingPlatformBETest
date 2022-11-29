@@ -23,17 +23,22 @@ public class Comment {
     @Column(name = "COMMENT_TEXT", nullable = false, length = 40)
     private String text;
 
-    @Column(name = "COMMENT_WRITER", nullable = false, length = 40)
-    private String writer;
-    
+    @ManyToOne
+    @JoinColumn(name = "COMMENT_WRITER")
+    private User writer;
+
     @Column(name = "COMMENT_DATETIME", nullable = false)
     private LocalDateTime dateTime;
 
     @Builder
-    public Comment(Place place, String text, String writer, LocalDateTime dateTime) {
+    public Comment(Place place, String text, User writer, LocalDateTime dateTime) {
         this.place = place;
         this.text = text;
         this.writer = writer;
         this.dateTime = dateTime;
+    }
+
+    public void updateComment(String text) {
+        this.text = text;
     }
 }

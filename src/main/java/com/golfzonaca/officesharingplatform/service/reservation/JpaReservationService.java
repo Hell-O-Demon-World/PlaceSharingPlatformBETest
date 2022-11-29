@@ -33,7 +33,6 @@ public class JpaReservationService implements ReservationService {
     private final ReservationProcessValidation reservationProcessValidation;
 
     @Override
-
     public Map<String, String> findRoom(long placeId) {
         Map<String, String> response = new LinkedHashMap<>();
         Place place;

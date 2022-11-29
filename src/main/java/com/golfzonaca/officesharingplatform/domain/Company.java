@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.LinkedList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -33,10 +35,13 @@ public class Company {
 
     @Column(name = "COMPANY_REPNAME", nullable = false, length = 20)
     private String repName;
-    
+
     @OneToOne
     @JoinColumn(name = "ADDRESS_ID")
     private Address address;
+
+    @OneToMany(mappedBy = "company")
+    private List<Place> placeList = new LinkedList<>();
 
     @Builder
     public Company(String loginId, String pw, String name, String tel, String regNum, String repName, Address address) {
