@@ -1,5 +1,6 @@
 package com.golfzonaca.officesharingplatform.domain;
 
+import com.golfzonaca.officesharingplatform.domain.type.PG;
 import com.golfzonaca.officesharingplatform.domain.type.PayStatus;
 import com.golfzonaca.officesharingplatform.domain.type.PayType;
 import lombok.Builder;
@@ -50,8 +51,12 @@ public class Payment {
     @Column(name = "PAY_API_CODE", nullable = false)
     private String apiCode;
 
+    @Column(name = "PG", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private PG pg;
+
     @Builder
-    public Payment(User user, Room room, LocalDate payDate, LocalTime payTime, long price, PayStatus status, long savedMileage, PayType type, String apiCode) {
+    public Payment(User user, Room room, LocalDate payDate, LocalTime payTime, long price, PayStatus status, long savedMileage, PayType type, String apiCode, PG pg) {
         this.user = user;
         this.room = room;
         this.payDate = payDate;
@@ -61,6 +66,6 @@ public class Payment {
         this.savedMileage = savedMileage;
         this.type = type;
         this.apiCode = apiCode;
-
+        this.pg = pg;
     }
 }

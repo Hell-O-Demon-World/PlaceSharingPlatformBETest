@@ -3,6 +3,7 @@ package com.golfzonaca.officesharingplatform.service.payment;
 import com.golfzonaca.officesharingplatform.domain.*;
 import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayApprovalForm;
 import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayReady;
+import com.golfzonaca.officesharingplatform.domain.type.PG;
 import com.golfzonaca.officesharingplatform.domain.type.PayStatus;
 import com.golfzonaca.officesharingplatform.domain.type.PayType;
 import com.golfzonaca.officesharingplatform.repository.payment.PaymentRepository;
@@ -164,7 +165,7 @@ public class SpringJpaKakaoPayService implements KakaoPayService {
         }
         String payApiCode = kakaoPayApprovalForm.getTid();
 
-        Payment payment = new Payment(user, room, payDate, payTime, payPrice, payStatus, payMileage, payType, payApiCode);
+        Payment payment = new Payment(user, room, payDate, payTime, payPrice, payStatus, payMileage, payType, payApiCode, PG.KAKAOPAY);
 
         paymentRepository.save(payment);
     }

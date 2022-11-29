@@ -1,7 +1,9 @@
 package com.golfzonaca.officesharingplatform.service.place;
 
 import com.golfzonaca.officesharingplatform.domain.Place;
+import com.golfzonaca.officesharingplatform.domain.Room;
 import com.golfzonaca.officesharingplatform.repository.place.PlaceRepository;
+import com.golfzonaca.officesharingplatform.service.place.dto.response.PlaceDto;
 import com.golfzonaca.officesharingplatform.web.formatter.TimeFormatter;
 import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
@@ -9,9 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -60,5 +60,39 @@ public class JpaPlaceService implements PlaceService {
         }
         return localStartTime.isAfter(Objects.requireNonNull(start))
                 && localStartTime.isBefore(Objects.requireNonNull(end));
+    }
+
+    @Override
+    public Map<Integer, PlaceDto> processingMainPlaceData() {
+        List<Place> places = placeRepository.findAllPlaces();
+        Map<Integer, PlaceDto> mainPlaceData = new LinkedHashMap<>();
+        for (int i = 0; i < places.size(); i++) {
+            Place place = places.get(i);
+            mainPlaceData.put(i, new PlaceDto(place.getId().toString(), place.getPlaceName(), place.getAddress().getAddress(), stringToList(place.getPlaceAddInfo()), place.getDescription(), excludeOpenDays(stringToList(place.getOpenDays())), place.getPlaceStart().toString(), place.getPlaceEnd().toString(), processingRoomInfo(place.getRooms())));
+        }
+
+        return mainPlaceData;
+    }
+
+    private List<String> stringToList(String string) {
+        return new ArrayList<>(Arrays.asList(string.split(", ")));
+    }
+
+    private List<String> excludeOpenDays(List<String> openDays) {
+        List<String> daysOfWeek = Arrays.asList("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun");
+        for (String openDay : openDays) {
+            daysOfWeek.remove(openDay);
+        }
+        return daysOfWeek;
+    }
+
+    private Map<String, String> processingRoomInfo(List<Room> rooms) {
+        List<String> roomType = new ArrayList<>();
+        List<String> price = new ArrayList<>();
+        for (Room room : rooms) {
+            room.getRoomKind().getRoomType();
+            String.valueOf(room.getRoomKind().getPrice());
+        }
+        return null;
     }
 }
