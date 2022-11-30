@@ -21,4 +21,6 @@ public interface RoomRepository {
     List<Room> findRoomByPlaceAndRoomKind(Place place, String selectedType);
 
     List<Room> findRoomByPlaceIdAndRoomType(Long placeId, String selectedType);
+
+    Room findById(Long resultRoomId);
 }
