@@ -133,11 +133,6 @@ public class JpaReservationService implements ReservationService {
 
     @Override
     public Map<String, String> saveReservation(Map<String, String> response, User user, Place place, ProcessReservationData data) {
-//        Room room = reservationProcessValidation.selectAvailableRoomForReservation(place, data);
-//        if (room == null) {
-//            response.put("NonexistentRoomTypeInPlaceError", "선택하신 타입은 해당 공간에 존재하지 않습니다.");
-//            return response;
-//        }
         LocalTime startTime = data.getStartTime();
         LocalTime endTime = data.getEndTime();
         LocalDate date = data.getDate();
@@ -213,7 +208,7 @@ public class JpaReservationService implements ReservationService {
         if (resultRoomId == -1L) {
             log.info("예약가능한 시간이 없습니다. time range = {}-{}", startTime, endTime);
             return null;
-        } 
+        }
         Room room = roomRepository.findById(resultRoomId);
         return room;
     }
