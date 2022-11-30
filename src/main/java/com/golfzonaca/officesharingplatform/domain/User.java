@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.LinkedList;
-import java.util.List;
 
 @Getter
 @Entity
@@ -46,12 +44,7 @@ public class User {
     @ManyToOne
     @JoinColumn(name = "ROLE_ID")
     private Role role;
-
-    //양방향 매핑
-    @OneToMany(mappedBy = "ratingWriter")
-    private List<Rating> ratings = new LinkedList<>();
-
-
+    
     public User(Long id) {
         this.id = id;
     }

@@ -1,12 +1,11 @@
 package com.golfzonaca.officesharingplatform.repository.rating;
 
 import com.golfzonaca.officesharingplatform.domain.Rating;
+import com.golfzonaca.officesharingplatform.exception.NonExistedRatingException;
 import com.golfzonaca.officesharingplatform.web.rating.dto.RatingUpdateData;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Repository
 @Transactional
@@ -20,8 +19,8 @@ public class SpringJpaDslRatingRepository implements RatingRepository {
     }
 
     @Override
-    public Optional<Rating> findById(long ratingId) {
-        return jpaRepository.findById(ratingId);
+    public Rating findById(long ratingId) {
+        return jpaRepository.findById(ratingId).orElseThrow(NonExistedRatingException::new);
     }
 
     @Override

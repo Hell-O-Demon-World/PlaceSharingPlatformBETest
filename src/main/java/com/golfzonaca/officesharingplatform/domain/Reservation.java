@@ -41,6 +41,8 @@ public class Reservation {
     @Column(name = "RES_ENDTIME", nullable = false)
     private LocalTime resEndTime;
 
+    @OneToOne(mappedBy = "reservation")
+    private Rating rating;
 
     public Reservation(User user, Room room, LocalDate resStartDate, LocalTime resStartTime, LocalDate resEndDate, LocalTime resEndTime) {
         this.user = user;

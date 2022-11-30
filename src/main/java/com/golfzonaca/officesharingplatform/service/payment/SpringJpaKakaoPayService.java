@@ -53,10 +53,7 @@ public class SpringJpaKakaoPayService implements KakaoPayService {
     }
 
     public Reservation findReservation(long reservationId) {
-        if (reservationRepository.findById(reservationId).isPresent()) {
-            return reservationRepository.findById(reservationId).get();
-        }
-        return null;
+        return reservationRepository.findById(reservationId);
     }
 
     public RequestBodyReadyConverter requestBodyReadyConverter(Reservation reservation,
@@ -123,7 +120,7 @@ public class SpringJpaKakaoPayService implements KakaoPayService {
     }
 
     private Reservation getReservation(long reservationId) {
-        return reservationRepository.findById(reservationId).get();
+        return reservationRepository.findById(reservationId);
     }
 }
 

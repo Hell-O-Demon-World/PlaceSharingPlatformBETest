@@ -17,26 +17,26 @@ public class RatingController {
 
     private final RatingService ratingService;
 
-    @PostMapping("/{placeId}/rating/add")
-    public String saveRating(@TokenUserId Long userId, @PathVariable long placeId, @Validated @RequestBody RatingSaveData ratingSaveData, BindingResult bindingResult) {
-        ratingService.save(userId, placeId, ratingSaveData);
+    @PostMapping("/{reservationId}/rating/add")
+    public String saveRating(@TokenUserId Long userId, @PathVariable Long reservationId, @Validated @RequestBody RatingSaveData ratingSaveData, BindingResult bindingResult) {
+        ratingService.save(userId, reservationId, ratingSaveData);
         return "ok";
     }
 
-    @GetMapping("/{placeId}/rating/{ratingId}")
-    public String ratingDetail(@PathVariable long placeId, @PathVariable long ratingId) {
+    @GetMapping("/{reservationId}/rating/{ratingId}")
+    public String ratingDetail(@PathVariable Long reservationId, @PathVariable Long ratingId) {
         ratingService.findById(ratingId);
         return "ok";
     }
 
-    @PostMapping("/{placeId}/rating/{ratingId}/edit")
-    public String editRating(@TokenUserId Long userId, @PathVariable long placeId, @PathVariable long ratingId, @Validated @RequestBody RatingUpdateData updateData, BindingResult bindingResult) {
+    @PostMapping("/{reservationId}/rating/{ratingId}/edit")
+    public String editRating(@TokenUserId Long userId, @PathVariable Long reservationId, @PathVariable Long ratingId, @Validated @RequestBody RatingUpdateData updateData, BindingResult bindingResult) {
         ratingService.update(userId, ratingId, updateData);
         return "ok";
     }
 
-    @GetMapping("/{placeId}/rating/{ratingId}/delete")
-    public String deleteRating(@TokenUserId Long userId, @PathVariable long placeId, @PathVariable long ratingId) {
+    @GetMapping("/{reservationId}/rating/{ratingId}/delete")
+    public String deleteRating(@TokenUserId Long userId, @PathVariable Long reservationId, @PathVariable Long ratingId) {
         ratingService.delete(userId, ratingId);
         return "ok";
     }

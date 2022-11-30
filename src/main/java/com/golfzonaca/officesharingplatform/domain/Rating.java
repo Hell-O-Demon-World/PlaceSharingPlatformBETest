@@ -16,9 +16,9 @@ public class Rating {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "Place_ID")
-    private Place place;
+    @OneToOne
+    @JoinColumn(name = "RESERVATION_ID")
+    private Reservation reservation;
 
     @Column(name = "RATING_SCORE", nullable = false)
     private float ratingScore;
@@ -26,22 +26,17 @@ public class Rating {
     @Column(name = "RATING_REVIEW", nullable = false)
     private String ratingReview;
 
-    @ManyToOne
-    @JoinColumn(name = "RATING_WRITER")
-    private User ratingWriter;
-
     @Column(name = "RATING_TIME", nullable = false)
     private LocalDateTime ratingTime;
 
     @Builder
-    public Rating(Place place, float ratingScore, String ratingReview, User ratingWriter, LocalDateTime ratingTime) {
-        this.place = place;
+    public Rating(Reservation reservation, float ratingScore, String ratingReview, LocalDateTime ratingTime) {
+        this.reservation = reservation;
         this.ratingScore = ratingScore;
         this.ratingReview = ratingReview;
-        this.ratingWriter = ratingWriter;
         this.ratingTime = ratingTime;
     }
-
+    
     public void UpdateRating(float ratingScore, String ratingReview) {
         this.ratingScore = ratingScore;
         this.ratingReview = ratingReview;
