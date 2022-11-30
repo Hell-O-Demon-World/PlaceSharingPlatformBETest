@@ -168,12 +168,13 @@ create table reservation
     RES_STARTTIME time not null,
     RES_ENDDATE   date not null,
     RES_ENDTIME   time not null,
+    RES_STATUS    tinyint(1) default 1 not null comment 'TRUE: 정상, FALSE: 취소',
     constraint FK_ROOM_TO_RESERVATION_1
         foreign key (ROOM_ID) references room (ID)
-            on update cascade on delete cascade,
+            on delete cascade,
     constraint FK_USER_TO_RESERVATION_1
         foreign key (USER_ID) references user (ID)
-            on update cascade on delete cascade
+            on delete cascade
 );
 
 create table payment
@@ -182,13 +183,14 @@ create table payment
     RESERVATION_ID bigint unsigned not null,
     PAY_DATE       date        not null comment 'API 결제 결과에서 가져오기',
     PAY_TIME       time        not null comment 'API 결제 결과에서 가져오기',
-    PAY_PRICE      bigint unsigned not null comment '50000',
+    PAY_PRICE      bigint unsigned not null,
     PAY_MILEAGE    bigint unsigned not null,
-    PAY_STATUS     enum ('PREPAYMENT', 'POSTPAYMENT') not null comment '선결제, 현장결제',
+    PAY_WAY        enum ('PREPAYMENT', 'POSTPAYMENT') not null comment '선결제, 현장결제',
     SAVED_MILEAGE  bigint unsigned not null,
     PAY_TYPE       enum ('DEPOSIT', 'BALANCE', 'FULLPAYMENT') not null,
     PAY_API_CODE   varchar(30) not null comment 'API 결제를 통해 생성되는 거래 번호',
     PG             enum ('KAKAOPAY', 'NICEPAY') not null,
+    PAY_STATUS     tinyint(1) default 1 not null comment 'TRUE, FALSE (정상, 취소)',
     constraint PAY_API_CODE
         unique (PAY_API_CODE),
     constraint FK_RESERVATION_TO_PAYMENT_1

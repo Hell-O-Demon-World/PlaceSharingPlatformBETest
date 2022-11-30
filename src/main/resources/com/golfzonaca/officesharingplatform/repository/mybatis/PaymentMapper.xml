@@ -5,7 +5,7 @@
     <insert id="save" useGeneratedKeys="true" keyProperty="id">
         insert into payment (user_id, room_id, pay_date, pay_time, pay_price, pay_mileage, pay_status, pay_type,
                              pay_api_code)
-        values (#{userId}, #{roomId}, #{payDate}, #{payTime}, #{payPrice}, #{payMileage}, #{payStatus}, #{payType},
+        values (#{userId}, #{roomId}, #{payDate}, #{payTime}, #{payPrice}, #{payMileage}, #{payWay}, #{payType},
                 #{payApiCode})
     </insert>
 

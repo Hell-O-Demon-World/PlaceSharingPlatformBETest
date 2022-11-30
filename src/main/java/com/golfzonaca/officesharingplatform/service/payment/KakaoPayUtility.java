@@ -7,7 +7,7 @@ import com.golfzonaca.officesharingplatform.domain.RoomKind;
 import com.golfzonaca.officesharingplatform.domain.User;
 import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayApproval;
 import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayReady;
-import com.golfzonaca.officesharingplatform.domain.type.PayStatus;
+import com.golfzonaca.officesharingplatform.domain.type.PayWay;
 import com.golfzonaca.officesharingplatform.repository.payment.PaymentRepository;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -33,7 +33,7 @@ interface KakaoPayUtility {
 
     void savePaymentInfo(PaymentRepository paymentRepository, Reservation reservation, User user, Room room, KakaoPayApproval kakaoPayApproval);
 
-    PayStatus checkPayStatus(Reservation reservation);
+    PayWay checkPayStatus(Reservation reservation);
 
     MultiValueMap<String, String> multiValueMapConverter(ObjectMapper objectMapper, Object dto);
 

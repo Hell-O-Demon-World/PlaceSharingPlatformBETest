@@ -41,16 +41,20 @@ public class Reservation {
     @Column(name = "RES_ENDTIME", nullable = false)
     private LocalTime resEndTime;
 
+    @Column(name = "RES_STATUS", nullable = false)
+    private Boolean status;
+
     @OneToOne(mappedBy = "reservation")
     private Rating rating;
 
-    public Reservation(User user, Room room, LocalDate resStartDate, LocalTime resStartTime, LocalDate resEndDate, LocalTime resEndTime) {
+    public Reservation(User user, Room room, LocalDate resStartDate, LocalTime resStartTime, LocalDate resEndDate, LocalTime resEndTime, Boolean status) {
         this.user = user;
         this.room = room;
         this.resStartDate = resStartDate;
         this.resStartTime = resStartTime;
         this.resEndDate = resEndDate;
         this.resEndTime = resEndTime;
+        this.status = status;
     }
 
     public Reservation toEntity() {
@@ -62,5 +66,9 @@ public class Reservation {
     public void upDateTime(LocalTime resStartTime, LocalTime resEndTime) {
         this.resStartTime = resStartTime;
         this.resEndTime = resEndTime;
+    }
+
+    public void updateStatus(Boolean status) {
+        this.status = status;
     }
 }
