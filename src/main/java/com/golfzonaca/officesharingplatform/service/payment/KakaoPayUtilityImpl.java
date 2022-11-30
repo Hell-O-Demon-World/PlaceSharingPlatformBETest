@@ -128,7 +128,7 @@ public class KakaoPayUtilityImpl implements KakaoPayUtility {
 
     @Override
     public HttpHeaders makeHttpHeader(HttpHeaders httpHeaders) {
-        httpHeaders.add(HttpHeaders.AUTHORIZATION, "KakaoAK " + "a8e95d70e35d823f1171ddaa015b53c4");
+        httpHeaders.add(HttpHeaders.AUTHORIZATION, "KakaoAK a8e95d70e35d823f1171ddaa015b53c4");
         httpHeaders.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
         httpHeaders.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE + ";charset=UTF-8");
         return httpHeaders;

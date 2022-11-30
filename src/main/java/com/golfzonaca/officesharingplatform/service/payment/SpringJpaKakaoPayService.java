@@ -123,7 +123,7 @@ public class SpringJpaKakaoPayService implements KakaoPayService {
 
     @Override
     public KakaoPayCancelResponse cancel(long reservationId) {
-        kakaoPayUtility.makeHttpHeader(httpheaders);
+//        kakaoPayUtility.makeHttpHeader(httpheaders);
         List<Payment> payments = paymentRepository.findByReservationId(reservationId);
 
         LocalDate currentDate = LocalDate.now();
