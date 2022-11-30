@@ -141,6 +141,7 @@ public class JpaReservationService implements ReservationService {
         Room resultRoom = getResultRoom(place, startTime, endTime, date, selectedType);
 
         Reservation reservation = new Reservation(user, resultRoom, date, startTime, date, endTime, true);
+
         Reservation save = reservationRepository.save(reservation);
         if (save == null) {
             response.put("ReservationError", "예약 실패");

@@ -1,13 +1,17 @@
 package com.golfzonaca.officesharingplatform.service.payment;
 
 
-import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayApproval;
+import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayApprovalResponse;
+import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayCancelRequest;
+import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayCancelResponse;
 
 public interface KakaoPayService {
 
     String kakaoPayReady(long reservationId);
 
-    KakaoPayApproval kakaoPayInfo(long reservationId, String pg_token);
+    KakaoPayApprovalResponse kakaoPayInfo(long reservationId, String pg_token);
 
-    KakaoPayApproval save(KakaoPayApproval kakaoPayApproval);
+    KakaoPayApprovalResponse save(KakaoPayApprovalResponse kakaoPayApprovalResponse);
+
+    KakaoPayCancelResponse cancel(long reservationId);
 }

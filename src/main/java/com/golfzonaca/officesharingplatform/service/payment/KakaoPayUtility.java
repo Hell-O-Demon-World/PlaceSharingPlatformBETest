@@ -5,8 +5,8 @@ import com.golfzonaca.officesharingplatform.domain.Reservation;
 import com.golfzonaca.officesharingplatform.domain.Room;
 import com.golfzonaca.officesharingplatform.domain.RoomKind;
 import com.golfzonaca.officesharingplatform.domain.User;
-import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayApproval;
-import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayReady;
+import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayApprovalResponse;
+import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayReadyRequest;
 import com.golfzonaca.officesharingplatform.domain.type.PayWay;
 import com.golfzonaca.officesharingplatform.repository.payment.PaymentRepository;
 import org.springframework.http.HttpEntity;
@@ -31,7 +31,10 @@ interface KakaoPayUtility {
 
     String taxFreeAmount(String calculatePayPrice);
 
-    void savePaymentInfo(PaymentRepository paymentRepository, Reservation reservation, User user, Room room, KakaoPayApproval kakaoPayApproval);
+    String vatAmount(String calculatePayPrice);
+
+
+    void savePaymentInfo(PaymentRepository paymentRepository, Reservation reservation, User user, Room room, KakaoPayApprovalResponse kakaoPayApprovalResponse);
 
     PayWay checkPayStatus(Reservation reservation);
 
@@ -39,10 +42,10 @@ interface KakaoPayUtility {
 
     HttpHeaders makeHttpHeader(HttpHeaders httpHeaders);
 
-    KakaoPayApproval toEntity(String host, HttpEntity<MultiValueMap<String, String>> body);
+    KakaoPayApprovalResponse toEntity(String host, HttpEntity<MultiValueMap<String, String>> body);
 
     String kakaoPayReadyToEntity(String host, HttpEntity<MultiValueMap<String, String>> body);
 
-    KakaoPayReady kakaoPayGetTid(String host, HttpEntity<MultiValueMap<String, String>> body);
+    KakaoPayReadyRequest kakaoPayReadyRequestApprove(String host, HttpEntity<MultiValueMap<String, String>> body);
 
 }

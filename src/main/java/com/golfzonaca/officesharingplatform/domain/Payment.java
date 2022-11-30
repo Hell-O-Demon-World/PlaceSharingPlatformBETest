@@ -72,4 +72,8 @@ public class Payment {
         this.pg = pg;
         this.payStatus = payStatus;
     }
+
+    public void updatePayStatus(Boolean payStatus) {
+        this.payStatus = payStatus;
+    }
 }
