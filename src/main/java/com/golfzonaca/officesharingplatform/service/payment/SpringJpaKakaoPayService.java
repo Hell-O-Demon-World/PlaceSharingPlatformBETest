@@ -32,7 +32,7 @@ import java.util.List;
 public class SpringJpaKakaoPayService implements KakaoPayService {
 
     private static final String HOST = "https://kapi.kakao.com/";
-    private static final HttpHeaders httpheaders = new HttpHeaders();
+    protected HttpHeaders httpheaders = new HttpHeaders();
 
     private KakaoPayReadyRequest kakaoPayReadyRequest = new KakaoPayReadyRequest();
 
@@ -40,6 +40,7 @@ public class SpringJpaKakaoPayService implements KakaoPayService {
 
     private final ReservationRepository reservationRepository;
     private final PaymentRepository paymentRepository;
+
 
     @Override
     public String kakaoPayReady(long reservationId) {
@@ -123,7 +124,10 @@ public class SpringJpaKakaoPayService implements KakaoPayService {
 
     @Override
     public KakaoPayCancelResponse cancel(long reservationId) {
-//        kakaoPayUtility.makeHttpHeader(httpheaders);
+        if (httpheaders.isEmpty()) {
+            kakaoPayUtility.makeHttpHeader(httpheaders);
+        }
+
         List<Payment> payments = paymentRepository.findByReservationId(reservationId);
 
         LocalDate currentDate = LocalDate.now();
