@@ -133,15 +133,14 @@ public class JpaReservationService implements ReservationService {
 
     @Override
     public Map<String, String> saveReservation(Map<String, String> response, User user, Place place, ProcessReservationData data) {
-        Room room = reservationProcessValidation.selectAvailableRoomForReservation(place, data);
-        if (room == null) {
-            response.put("NonexistentRoomTypeInPlaceError", "선택하신 타입은 해당 공간에 존재하지 않습니다.");
-            return response;
-        }
+        LocalTime startTime = data.getStartTime();
+        LocalTime endTime = data.getEndTime();
+        LocalDate date = data.getDate();
+        String selectedType = data.getSelectedType();
 
-//        Room resultRoom = getResultRoom();
+        Room resultRoom = getResultRoom(place, startTime, endTime, date, selectedType);
 
-        Reservation reservation = new Reservation(user, room, data.getDate(), data.getStartTime(), data.getDate(), data.getEndTime());
+        Reservation reservation = new Reservation(user, resultRoom, date, startTime, date, endTime);
         Reservation save = reservationRepository.save(reservation);
         if (save == null) {
             response.put("ReservationError", "예약 실패");
@@ -150,6 +149,68 @@ public class JpaReservationService implements ReservationService {
         }
         response.put("reservationId", save.getId().toString());
         return response;
+    }
+
+    private Room getResultRoom(Place place, LocalTime startLocalTime, LocalTime endLocalTime, LocalDate date, String selectedType) {
+        int startTime = startLocalTime.getHour();
+        if (startTime == 0) {
+            startTime = 24;
+        }
+        int endTime = endLocalTime.minusHours(1).getHour();
+        if (endTime == 0) {
+            endTime = 24;
+        }
+        List<Room> reservedRoomList = roomRepository.findRoomByPlaceIdAndRoomType(place.getId(), selectedType);
+        List<Reservation> findReservationList = reservationRepository.findAllByPlaceIdAndRoomTypeAndDate(place.getId(), selectedType, date);
+
+        int maxTime = 24;
+        if (place.getPlaceEnd().getHour() > place.getPlaceStart().getHour()) {
+            maxTime = place.getPlaceEnd().getHour();
+        }
+        int maxWindowSize = maxTime - startTime;
+        int window = endTime - startTime + 1;
+        Map<Integer, ReservedRoom> reservedRoomMap = getReservedRoomMap(place, findReservationList, reservedRoomList);
+        Long resultRoomId = -1L;
+        boolean endFlag = true;
+
+        while (window <= maxWindowSize && endFlag) {
+            for (int i = 0; i < reservedRoomMap.size(); i++) {
+                ReservedRoom findReservedRoom = reservedRoomMap.get(i);
+                if (startTime == 24) {
+                    findReservedRoom.getTimeStates().put(25, false);
+                }
+                if (startTime == endTime && window == 1) {
+                    if (findReservedRoom.getTimeStates().get(startTime) && !findReservedRoom.getTimeStates().get(startTime + 1)) {
+                        resultRoomId = findReservedRoom.getRoomId();
+                        endFlag = false;
+                    }
+                } else {
+                    int pCnt = 0;
+                    for (int j = startTime; j < startTime + window; j++) {
+                        if (!findReservedRoom.getTimeStates().get(j)) {
+                            break;
+                        } else {
+                            pCnt++;
+                            if (pCnt == window && findReservedRoom.getTimeStates().get(j) && !findReservedRoom.getTimeStates().get(j + 1)) {
+                                resultRoomId = findReservedRoom.getRoomId();
+                                endFlag = false;
+                            }
+                        }
+                    }
+                }
+                if (!endFlag) {
+                    break;
+                }
+            }
+            window++;
+        }
+
+        if (resultRoomId == -1L) {
+            log.info("예약가능한 시간이 없습니다. time range = {}-{}", startTime, endTime);
+            return null;
+        }
+        Room room = roomRepository.findById(resultRoomId);
+        return room;
     }
 
     @Override
