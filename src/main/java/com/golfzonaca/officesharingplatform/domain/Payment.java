@@ -1,8 +1,8 @@
 package com.golfzonaca.officesharingplatform.domain;
 
 import com.golfzonaca.officesharingplatform.domain.type.PG;
-import com.golfzonaca.officesharingplatform.domain.type.PayStatus;
 import com.golfzonaca.officesharingplatform.domain.type.PayType;
+import com.golfzonaca.officesharingplatform.domain.type.PayWay;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,9 +37,9 @@ public class Payment {
     @Column(name = "PAY_MILEAGE", nullable = false)
     private long payMileage; //사용한 마일리지
 
-    @Column(name = "PAY_STATUS", nullable = false)
+    @Column(name = "PAY_WAY", nullable = false)
     @Enumerated(EnumType.STRING)
-    private PayStatus status;
+    private PayWay payWay;
 
     @Column(name = "SAVED_MILEAGE", nullable = false)
     private long savedMileage; //적립된 마일리지
@@ -55,18 +55,21 @@ public class Payment {
     @Enumerated(EnumType.STRING)
     private PG pg;
 
-    @Builder
+    @Column(name = "PAY_STATUS", nullable = false)
+    private Boolean payStatus; //True : 정상결제, False : 취소한 결제
 
-    public Payment(Reservation reservation, LocalDate payDate, LocalTime payTime, long price, long payMileage, PayStatus status, long savedMileage, PayType type, String apiCode, PG pg) {
+    @Builder
+    public Payment(Reservation reservation, LocalDate payDate, LocalTime payTime, long price, long payMileage, PayWay payWay, long savedMileage, PayType type, String apiCode, PG pg, Boolean payStatus) {
         this.reservation = reservation;
         this.payDate = payDate;
         this.payTime = payTime;
         this.price = price;
         this.payMileage = payMileage;
-        this.status = status;
+        this.payWay = payWay;
         this.savedMileage = savedMileage;
         this.type = type;
         this.apiCode = apiCode;
         this.pg = pg;
+        this.payStatus = payStatus;
     }
 }

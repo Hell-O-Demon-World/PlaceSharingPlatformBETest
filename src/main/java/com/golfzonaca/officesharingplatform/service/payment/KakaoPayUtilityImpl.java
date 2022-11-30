@@ -6,7 +6,7 @@ import com.golfzonaca.officesharingplatform.domain.*;
 import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayApprovalResponse;
 import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayReadyRequest;
 import com.golfzonaca.officesharingplatform.domain.type.PG;
-import com.golfzonaca.officesharingplatform.domain.type.PayStatus;
+import com.golfzonaca.officesharingplatform.domain.type.PayWay;
 import com.golfzonaca.officesharingplatform.domain.type.PayType;
 import com.golfzonaca.officesharingplatform.repository.payment.PaymentRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -73,15 +73,15 @@ public class KakaoPayUtilityImpl implements KakaoPayUtility {
         LocalDateTime localDateTime = kakaoPayApprovalResponse.getApproved_at();
         LocalDate payDate = this.toLocalDate(localDateTime);
         LocalTime payTime = this.toLocalTime(localDateTime);
-        long payPrice = kakaoPayApprovalResponse.getAmount().getTotal();
+        long payPrice = kakaoPayApprovalResponse.getAmount().getTotal(); // 총 금액을 가져옴 카카오 api 승인에서 내려주는
         long payMileage = 0L; //추후 변경예정
-        PayStatus payStatus = checkPayStatus(reservation);
+        PayWay payWay = checkPayStatus(reservation);
 //        PayStatus payStatus = PayStatus.PREPAYMENT;
         long savedMileage = kakaoPayApprovalResponse.getAmount().getPoint();
 
         PayType payType = PayType.FULLPAYMENT;
 
-        if (payStatus.equals(PayStatus.PREPAYMENT)) { // 선결제일 때
+        if (payWay.equals(PayWay.PREPAYMENT)) { // 선결제일 때
             this.accumulationMileage(user, payPrice);
         } else { // 현장결제일 때
             if (!kakaoPayApprovalResponse.getItem_name().contains("OFFICE")) {
@@ -91,21 +91,22 @@ public class KakaoPayUtilityImpl implements KakaoPayUtility {
         }
         String payApiCode = kakaoPayApprovalResponse.getTid();
 
-        Payment payment = new Payment(reservation, payDate, payTime, payPrice, payMileage, payStatus, savedMileage, payType, payApiCode, PG.KAKAOPAY);
+        Payment payment = new Payment(reservation, payDate, payTime, payPrice, payMileage, payWay, savedMileage, payType, payApiCode, PG.KAKAOPAY, true);
 
         paymentRepository.save(payment);
     }
 
     @Override
-    public PayStatus checkPayStatus(Reservation reservation) {
-        PayStatus payStatus;
+    public PayWay checkPayStatus(Reservation reservation) {
+
+        PayWay payWay;
 
         if (reservation == null) {
-            payStatus = PayStatus.PREPAYMENT;
+            payWay = PayWay.PREPAYMENT;
         } else {
-            payStatus = PayStatus.POSTPAYMENT;
+            payWay = PayWay.POSTPAYMENT;
         }
-        return payStatus;
+        return payWay;
     }
 
     @Override

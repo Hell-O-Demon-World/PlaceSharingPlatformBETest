@@ -149,8 +149,6 @@ public class SpringJpaKakaoPayService implements KakaoPayService {
                 .tid(findPayment.getApiCode())
                 .cancelAmount((int) findPayment.getPrice())
                 .cancelTaxFreeAmount((int) (findPayment.getPrice()))
-//                .cancelVatAmount((int) (0))
-//                .cancelAvailableAmount((int)findPayment.getPrice() * 2)
                 .build();
 
         HttpEntity<MultiValueMap<String, String>> body = new HttpEntity<>(kakaoPayUtility.multiValueMapConverter(new ObjectMapper(), requestBodyCancelConverter), httpheaders);
