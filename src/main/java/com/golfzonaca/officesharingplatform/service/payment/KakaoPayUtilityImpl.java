@@ -3,13 +3,12 @@ package com.golfzonaca.officesharingplatform.service.payment;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.golfzonaca.officesharingplatform.domain.*;
-import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayApproval;
-import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayReady;
+import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayApprovalResponse;
+import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayReadyRequest;
 import com.golfzonaca.officesharingplatform.domain.type.PG;
 import com.golfzonaca.officesharingplatform.domain.type.PayStatus;
 import com.golfzonaca.officesharingplatform.domain.type.PayType;
 import com.golfzonaca.officesharingplatform.repository.payment.PaymentRepository;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -64,27 +63,28 @@ public class KakaoPayUtilityImpl implements KakaoPayUtility {
     }
 
     @Override
-    public void savePaymentInfo(PaymentRepository paymentRepository, Reservation reservation, User user, Room room, KakaoPayApproval kakaoPayApproval) {
+    public void savePaymentInfo(PaymentRepository paymentRepository, Reservation reservation, User user, Room room, KakaoPayApprovalResponse kakaoPayApprovalResponse) {
 
-        LocalDateTime localDateTime = kakaoPayApproval.getApproved_at();
+        LocalDateTime localDateTime = kakaoPayApprovalResponse.getApproved_at();
         LocalDate payDate = this.toLocalDate(localDateTime);
         LocalTime payTime = this.toLocalTime(localDateTime);
-        long payPrice = kakaoPayApproval.getAmount().getTotal();
+        long payPrice = kakaoPayApprovalResponse.getAmount().getTotal();
         long payMileage = 0L; //추후 변경예정
         PayStatus payStatus = checkPayStatus(reservation);
-        long savedMileage = kakaoPayApproval.getAmount().getPoint();
+//        PayStatus payStatus = PayStatus.PREPAYMENT;
+        long savedMileage = kakaoPayApprovalResponse.getAmount().getPoint();
 
         PayType payType = PayType.FULLPAYMENT;
 
         if (payStatus.equals(PayStatus.PREPAYMENT)) { // 선결제일 때
             this.accumulationMileage(user, payPrice);
         } else { // 현장결제일 때
-            if (!kakaoPayApproval.getItem_name().contains("OFFICE")) {
+            if (!kakaoPayApprovalResponse.getItem_name().contains("OFFICE")) {
                 payType = PayType.DEPOSIT;
                 payPrice = this.calculateDeposit(payPrice);
             }
         }
-        String payApiCode = kakaoPayApproval.getTid();
+        String payApiCode = kakaoPayApprovalResponse.getTid();
 
         Payment payment = new Payment(reservation, payDate, payTime, payPrice, payMileage, payStatus, savedMileage, payType, payApiCode, PG.KAKAOPAY);
 
@@ -127,10 +127,10 @@ public class KakaoPayUtilityImpl implements KakaoPayUtility {
     }
 
     @Override
-    public KakaoPayApproval toEntity(String host, HttpEntity<MultiValueMap<String, String>> body) {
+    public KakaoPayApprovalResponse toEntity(String host, HttpEntity<MultiValueMap<String, String>> body) {
         RestTemplate restTemplate = new RestTemplate();
         try {
-            return restTemplate.postForObject(new URI(host + "/v1/payment/approve"), body, KakaoPayApproval.class);
+            return restTemplate.postForObject(new URI(host + "/v1/payment/approve"), body, KakaoPayApprovalResponse.class);
         } catch (URISyntaxException e) {
             log.error(e.getMessage());
         }
@@ -142,8 +142,8 @@ public class KakaoPayUtilityImpl implements KakaoPayUtility {
         RestTemplate restTemplate = new RestTemplate();
 
         try {
-            KakaoPayReady kakaoPayReady = restTemplate.postForObject(new URI(host + "/v1/payment/ready"), body, KakaoPayReady.class);
-            return kakaoPayReady.getNext_redirect_pc_url();
+            KakaoPayReadyRequest kakaoPayReadyRequest = restTemplate.postForObject(new URI(host + "/v1/payment/ready"), body, KakaoPayReadyRequest.class);
+            return kakaoPayReadyRequest.getNext_redirect_pc_url();
         } catch (RestClientException | URISyntaxException e) {
             log.error(e.toString());
         }
@@ -151,12 +151,12 @@ public class KakaoPayUtilityImpl implements KakaoPayUtility {
     }
 
     @Override
-    public KakaoPayReady kakaoPayGetTid(String host, HttpEntity<MultiValueMap<String, String>> body) {
+    public KakaoPayReadyRequest kakaoPayReadyRequestApprove(String host, HttpEntity<MultiValueMap<String, String>> body) {
         RestTemplate restTemplate = new RestTemplate();
 
         try {
-            KakaoPayReady kakaoPayReady = restTemplate.postForObject(new URI(host + "/v1/payment/ready"), body, KakaoPayReady.class);
-            return kakaoPayReady;
+            KakaoPayReadyRequest kakaoPayReadyRequest = restTemplate.postForObject(new URI(host + "/v1/payment/ready"), body, KakaoPayReadyRequest.class);
+            return kakaoPayReadyRequest;
         } catch (RestClientException | URISyntaxException e) {
             log.error(e.toString());
         }

@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class KakaoPayReady {
+public class KakaoPayReadyRequest {
 
     //response
     private String tid, next_redirect_pc_url;

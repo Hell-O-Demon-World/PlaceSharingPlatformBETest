@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class KakaoPayApproval {
+public class KakaoPayApprovalResponse {
 
     private String aid, tid, cid, sid;
     private String partner_order_id, partner_user_id, payment_method_type;
