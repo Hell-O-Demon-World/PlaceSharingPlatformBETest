@@ -133,11 +133,6 @@ public class JpaReservationService implements ReservationService {
 
     @Override
     public Map<String, String> saveReservation(Map<String, String> response, User user, Place place, ProcessReservationData data) {
-//        Room room = reservationProcessValidation.selectAvailableRoomForReservation(place, data);
-//        if (room == null) {
-//            response.put("NonexistentRoomTypeInPlaceError", "선택하신 타입은 해당 공간에 존재하지 않습니다.");
-//            return response;
-//        }
         LocalTime startTime = data.getStartTime();
         LocalTime endTime = data.getEndTime();
         LocalDate date = data.getDate();
