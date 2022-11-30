@@ -2,7 +2,6 @@ package com.golfzonaca.officesharingplatform.service.reservation;
 
 import com.golfzonaca.officesharingplatform.domain.*;
 import com.golfzonaca.officesharingplatform.web.formatter.TimeFormatter;
-import com.golfzonaca.officesharingplatform.web.reservation.dto.process.ProcessReservationData;
 import com.golfzonaca.officesharingplatform.web.reservation.form.DefaultTimeOfDay;
 import com.golfzonaca.officesharingplatform.web.reservation.form.SelectedTypeAndDayForm;
 import lombok.Builder;
@@ -38,18 +37,155 @@ class JpaReservationServiceTest {
     }
 
     @Test
-    public Room getResultRoom(Place place, ProcessReservationData data) {
+    public void getResultRoom() {
         //given
         Place findPlace = Place.builder().id(5L)
                 .placeStart(TimeFormatter.toLocalTime("8"))
                 .placeEnd(TimeFormatter.toLocalTime("18"))
                 .company(Company.builder().id(3L).build())
                 .build();
-//        List<ReservationTest> findReservationList = getReservationTestList2();
+        LocalDate reservationDate = TimeFormatter.toLocalDate("2022-12-10");
+        Map<Long, String> reservationFormat = getReservationFormat();
+        List<ReservationTest> findReservationList = getReservationTestList2(reservationDate, 49L, reservationFormat);
+        System.out.println("findReservationList = " + findReservationList);
         List<Room> reservedRoomList = getReservationRoomList();
-        Room room = null;
+        //when
+//        "시작시간기준"
+        int startTime = 8;
+        int endTime = 9;
 
-        return room;
+        LocalTime newStartTime = TimeFormatter.toLocalTime("1");
+        System.out.println("newStartTime.getHour() = " + newStartTime.getHour());
+        int maxTime = 24;
+        if (findPlace.getPlaceEnd().getHour() > findPlace.getPlaceStart().getHour()) {
+            maxTime = findPlace.getPlaceEnd().getHour();
+        }
+        int maxWindowSize = maxTime - startTime;
+        int window = endTime - startTime + 1;
+        Map<Integer, ReservedRoom> reservedRoomMap = getReservedRoomMap(findPlace, findReservationList, reservedRoomList);
+        Long resultRoomId = -1L;
+        boolean endFlag = true;
+
+        while (window <= maxWindowSize && endFlag) {
+            for (int i = 0; i < reservedRoomMap.size(); i++) {
+                ReservedRoom findReservedRoom = reservedRoomMap.get(i);
+                if (startTime == 24) {
+                    findReservedRoom.timeStates.put(25, false);
+                }
+                if (startTime == endTime && window == 1) {
+                    if (findReservedRoom.timeStates.get(startTime) && !findReservedRoom.timeStates.get(startTime + 1)) {
+                        resultRoomId = findReservedRoom.roomId;
+                        endFlag = false;
+                    }
+                } else {
+                    int pCnt = 0;
+                    for (int j = startTime; j < startTime + window; j++) {
+                        if (!findReservedRoom.timeStates.get(j)) {
+                            break;
+                        } else {
+                            pCnt++;
+                            if (pCnt == window && findReservedRoom.timeStates.get(j) && !findReservedRoom.timeStates.get(j + 1)) {
+                                resultRoomId = findReservedRoom.roomId;
+                                endFlag = false;
+                            }
+                        }
+                    }
+                }
+                if (!endFlag) {
+                    break;
+                }
+            }
+            window++;
+        }
+
+
+        if (resultRoomId == -1L) {
+            System.out.println(" 예약가능한 시간이 없습니다. ");
+            Room room = null;
+        }
+        System.out.println("findRoomId = " + resultRoomId);
+    }
+
+    //        while (window <= (findPlace.getPlaceEnd().getHour() - startTime) && endFlag) {
+//        for (int i = 0; i < reservedRoomMap.size(); i++) {
+//            ReservedRoom reservedRoom = reservedRoomMap.get(i);
+//            int count = 0;
+//            for (int j = startTime; j <= findPlace.getPlaceEnd().getHour() - 1; j++) {
+//                if (count > window) {
+//                    break;
+//                }
+//                Boolean aBoolean = reservedRoom.timeStates.get(j);
+//                Boolean aBoolean1 = reservedRoom.timeStates.get(j + 1);
+//                if (reservedRoom.timeStates.get(j) && reservedRoom.timeStates.get(j + 1)) {
+//                    count++;
+//                } else if (reservedRoom.timeStates.get(j) || !reservedRoom.timeStates.get(j + 1)) {
+//                    if (count == window) {
+//                        findRoomId = reservedRoom.roomId;
+//                        endFlag = false;
+//                        break;
+//                    }
+//                    break;
+//                }
+//            }/*
+//                for (int j = startTime; j < startTime + window; j++) {
+//                    if (!reservedRoom.timeStates.get(j)) {
+//                        break;
+//                    } else if (!reservedRoom.timeStates.get(j) && (window == j - startTime)) {
+//                        findRoomId = reservedRoom.roomId;
+//                        endFlag = false;
+//                        break;
+//                    }
+//                }*/
+//            if (!endFlag) {
+//                break;
+//            }
+//        }
+//
+//        window++;
+//    }
+    private static Map<Long, String> getReservationFormat() {
+        Map<Long, String> reservationFormat = new HashMap<>();
+        reservationFormat.put(49L, "11-12, 14-15, 16-18");
+        reservationFormat.put(50L, "13-16, 16-18");
+        reservationFormat.put(51L, "8-12");
+        reservationFormat.put(52L, "15-18");
+        reservationFormat.put(53L, "11-14");
+        reservationFormat.put(54L, "9-11");
+        reservationFormat.put(55L, "8-10, 12-14");
+        reservationFormat.put(56L, "8-10");
+        reservationFormat.put(57L, "10-17");
+        reservationFormat.put(58L, "9-11, 13-15, 16-17");
+        return reservationFormat;
+    }
+
+    private List<ReservationTest> getReservationTestList2(LocalDate reservationDate, Long roomId, Map<Long, String> reservationFormat) {
+        Long userId = 3L;
+        Long placeId = 5L;
+        Long roomKindId = 1L;
+        List<ReservationTest> resultReservationList = new ArrayList<>();
+        Long reservationCnt = 0L;
+        for (long rId = roomId; rId < roomId + reservationFormat.size(); rId++) {
+            String[] split1 = reservationFormat.get(rId).split(", ");
+            for (String hour : split1) {
+                String[] split = hour.split("-");
+                LocalTime resStartTime = TimeFormatter.toLocalTime(split[0]);
+                LocalTime resEndTime = TimeFormatter.toLocalTime(split[1]);
+                ReservationTest reservation = ReservationTest.builder()
+                        .id(reservationCnt)
+                        .userId(userId)
+                        .placeId(placeId)
+                        .roomId(rId)
+                        .roomKindId(roomKindId)
+                        .resStartTime(resStartTime)
+                        .resEndTime(resEndTime)
+                        .resStartDate(reservationDate)
+                        .resEndDate(reservationDate)
+                        .build();
+                resultReservationList.add(reservation);
+                reservationCnt++;
+            }
+        }
+        return resultReservationList;
     }
 
     @Test
@@ -65,7 +201,9 @@ class JpaReservationServiceTest {
         int selectedStartTime = 17;
         //when
         Map<Integer, ReservedRoom> reservedRoomMap = getReservedRoomMap(findPlace, findReservationList, reservedRoomList);
-
+        for (int i = 0; i < reservedRoomMap.size(); i++) {
+            System.out.println("reservedRoomMap = " + reservedRoomMap.get(i).getTimeMap());
+        }
         int plusMaxPointer = selectedStartTime;
         int minusMinPointer = selectedStartTime;
         for (int i = 0; i < reservedRoomMap.size(); i++) {
@@ -274,7 +412,7 @@ class JpaReservationServiceTest {
 
     }
 
-    private static List<Room> getReservationRoomList() {
+    private List<Room> getReservationRoomList() {
         List<Room> findRoomList = new ArrayList<>();
         for (long i = 49; i < 59; i++) {
             Room room = Room.builder()

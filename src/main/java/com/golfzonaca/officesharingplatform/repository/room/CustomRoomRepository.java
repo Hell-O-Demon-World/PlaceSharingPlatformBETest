@@ -55,4 +55,9 @@ public class CustomRoomRepository implements RoomRepository {
     public List<Room> findRoomByPlaceIdAndRoomType(Long placeId, String selectedType) {
         return queryRoomRepository.findAllByPlaceIdAndRoomType(placeId, selectedType);
     }
+
+    @Override
+    public Room findById(Long resultRoomId) {
+        return jpaRoomRepository.findById(resultRoomId).get();
+    }
 }
