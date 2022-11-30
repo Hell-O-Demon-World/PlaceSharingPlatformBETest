@@ -5,8 +5,6 @@ import com.golfzonaca.officesharingplatform.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class JpaUserService implements UserService {
@@ -14,7 +12,6 @@ public class JpaUserService implements UserService {
 
     @Override
     public User findById(Long userId) {
-        Optional<User> findUser = userRepository.findById(userId);
-        return findUser.orElse(null);
+        return userRepository.findById(userId);
     }
 }

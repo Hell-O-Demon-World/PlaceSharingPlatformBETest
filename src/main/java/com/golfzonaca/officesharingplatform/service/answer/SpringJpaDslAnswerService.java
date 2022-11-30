@@ -26,7 +26,7 @@ public class SpringJpaDslAnswerService implements AnswerService {
     @Override
     public void save(Long mangerId, Long inquiryId, AnswerData data) {
         Manager manager = managerRepository.findById(mangerId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 운영자입니다."));
-        Inquiry inquiry = inquiryRepository.findById(inquiryId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 문의입니다."));
+        Inquiry inquiry = inquiryRepository.findById(inquiryId);
         if (manager.getRole().getRoleType().getDescription().equals("운영자")) {
             answerRepository.save(new Answer(inquiry, data.getAnswer()));
             inquiryStatusRepository.update(inquiry.getInquiryStatus(), true);
@@ -41,7 +41,7 @@ public class SpringJpaDslAnswerService implements AnswerService {
     @Override
     public void update(Long managerId, long inquiryId, long answerId, AnswerData data) {
         Manager manager = managerRepository.findById(managerId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 운영자입니다."));
-        Inquiry inquiry = inquiryRepository.findById(inquiryId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 문의입니다."));
+        Inquiry inquiry = inquiryRepository.findById(inquiryId);
         Answer answer = answerRepository.findById(answerId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 답변입니다."));
         if (manager.getRole().getRoleType().getDescription().equals("운영자")) {
             answerRepository.update(answer, data);
@@ -51,7 +51,7 @@ public class SpringJpaDslAnswerService implements AnswerService {
     @Override
     public void delete(Long managerId, long inquiryId, long answerId) {
         Manager manager = managerRepository.findById(managerId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 운영자입니다."));
-        Inquiry inquiry = inquiryRepository.findById(inquiryId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 문의입니다."));
+        Inquiry inquiry = inquiryRepository.findById(inquiryId);
         Answer answer = answerRepository.findById(answerId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 답변입니다."));
         if (manager.getRole().getRoleType().getDescription().equals("운영자")) {
             answerRepository.delete(answer);

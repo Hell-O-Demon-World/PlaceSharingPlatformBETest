@@ -63,12 +63,11 @@ public class JpaPlaceService implements PlaceService {
     }
 
     @Override
-    public Map<Integer, PlaceDto> processingMainPlaceData() {
-        List<Place> places = placeRepository.findAllPlaces();
+    public Map<Integer, PlaceDto> processingMainPlaceData(List<Place> places) {
         Map<Integer, PlaceDto> mainPlaceData = new LinkedHashMap<>();
         for (int i = 0; i < places.size(); i++) {
             Place place = places.get(i);
-            mainPlaceData.put(i, new PlaceDto(place.getId().toString(), place.getPlaceName(), place.getAddress().getAddress(), stringToList(place.getPlaceAddInfo()), place.getDescription(), excludeOpenDays(stringToList(place.getOpenDays())), place.getPlaceStart().toString(), place.getPlaceEnd().toString(), processingRoomInfo(place.getRooms())));
+            mainPlaceData.put(i, new PlaceDto(place.getId().toString(), place.getPlaceName(), String.valueOf(place.getRatePoint().getRatingPoint()), place.getAddress().getAddress(), stringToList(place.getPlaceAddInfo()), place.getDescription(), excludeOpenDays(stringToList(place.getOpenDays())), place.getPlaceStart().toString(), place.getPlaceEnd().toString(), processingRoomInfo(place.getRooms())));
         }
         return mainPlaceData;
     }

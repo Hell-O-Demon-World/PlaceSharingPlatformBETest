@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import java.util.NoSuchElementException;
 
 @Repository
 @Transactional
@@ -21,8 +21,8 @@ public class SpringJpaDslInquiryRepository implements InquiryRepository {
     }
 
     @Override
-    public Optional<Inquiry> findById(long inquiryId) {
-        return jpaRepository.findById(inquiryId);
+    public Inquiry findById(long inquiryId) {
+        return jpaRepository.findById(inquiryId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 문의입니다."));
     }
 
     @Override

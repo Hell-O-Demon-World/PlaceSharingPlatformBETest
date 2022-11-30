@@ -25,7 +25,7 @@ public class SpringJpaDslRatingService implements RatingService {
 
     @Override
     public void save(Long userId, long placeId, RatingSaveData ratingSaveData) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 회원입니다."));
+        User user = userRepository.findById(userId);
         Place place = placeRepository.findById(placeId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 공간입니다."));
         Rating rating = new Rating(place, Float.parseFloat(ratingSaveData.getRatingScore()), ratingSaveData.getRatingReview(), user, TimeFormatter.toLocalDateTime(ratingSaveData.getRatingTime()));
         Rating rate = ratingRepository.save(rating);
@@ -39,7 +39,7 @@ public class SpringJpaDslRatingService implements RatingService {
 
     @Override
     public void update(Long userId, long ratingId, RatingUpdateData updateData) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 회원입니다."));
+        User user = userRepository.findById(userId);
         Rating rating = ratingRepository.findById(ratingId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 후기입니다."));
         if (rating.getRatingWriter() == user) {
             ratingRepository.update(rating, updateData);
@@ -49,7 +49,7 @@ public class SpringJpaDslRatingService implements RatingService {
 
     @Override
     public void delete(Long userId, long ratingId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 회원입니다."));
+        User user = userRepository.findById(userId);
         Rating rating = ratingRepository.findById(ratingId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 후기입니다."));
         if (rating.getRatingWriter() == user) {
             ratingRepository.delete(rating);

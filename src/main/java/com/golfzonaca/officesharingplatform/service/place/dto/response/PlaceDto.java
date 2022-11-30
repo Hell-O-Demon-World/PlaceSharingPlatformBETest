@@ -11,6 +11,7 @@ import java.util.Map;
 public class PlaceDto {
     String placeId;
     String placeName;
+    String ratingPoint;
     String address;
     List<String> placeInfo;
     String placeDescription;

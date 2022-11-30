@@ -24,7 +24,7 @@ public class PrincipalDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User findUser = userRepository.findByMailLike(username);
         if (findUser == null) {
-            log.info("user not found {}",username);
+            log.info("user not found {}", username);
             throw new UsernameNotFoundException(username);
         }
         Set<GrantedAuthority> role = getRole("ROLE_USER");
@@ -37,7 +37,7 @@ public class PrincipalDetailsService implements UserDetailsService {
     }
 
     public UserDetails loadUserByUserId(Long userId) throws UsernameNotFoundException {
-        User findUser = userRepository.findById(userId).get();
+        User findUser = userRepository.findById(userId);
         Set<GrantedAuthority> role = getRole("ROLE_USER");
 
         return PrincipalDetails.builder()
