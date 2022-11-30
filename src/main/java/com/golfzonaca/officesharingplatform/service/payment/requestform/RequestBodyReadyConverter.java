@@ -21,6 +21,7 @@ public class RequestBodyReadyConverter {
     private String quantity; // 상품 수량
     private String totalAmount; // 상품 총액
     private String taxFreeAmount; // 상품 비과세 금액
+    private String vatAmount; // 상품 세금
     private String approvalUrl; // 결제 성공 시 redirect url
     private String cancelUrl; // 결제 취소 시 redirect url
     private String failUrl; // 결제 실패 시 redirect url

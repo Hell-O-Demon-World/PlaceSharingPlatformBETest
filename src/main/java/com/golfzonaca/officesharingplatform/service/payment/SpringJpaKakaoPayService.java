@@ -50,12 +50,14 @@ public class SpringJpaKakaoPayService implements KakaoPayService {
         User user = reservation.getUser();
         RoomKind roomKind = reservation.getRoom().getRoomKind();
         String calculatePayPrice = kakaoPayUtility.calculatePayPrice(reservation, roomKind);
+        String taxFreeAmount = kakaoPayUtility.taxFreeAmount(calculatePayPrice);
+        String vatAmount = kakaoPayUtility.vatAmount(calculatePayPrice);
 
         //서버요청 헤더
         kakaoPayUtility.makeHttpHeader(httpheaders);
 
         //서버요청 바디
-        RequestBodyReadyConverter requestBodyReadyConverter = requestBodyReadyConverter(reservation, roomKind, "1", calculatePayPrice);
+        RequestBodyReadyConverter requestBodyReadyConverter = requestBodyReadyConverter(reservation, roomKind, "1", calculatePayPrice, taxFreeAmount, vatAmount);
         HttpEntity<MultiValueMap<String, String>> body = new HttpEntity<>(kakaoPayUtility.multiValueMapConverter(new ObjectMapper(), requestBodyReadyConverter), httpheaders);
 
         kakaoPayReadyRequest = kakaoPayUtility.kakaoPayReadyRequestApprove(HOST, body);
@@ -72,7 +74,7 @@ public class SpringJpaKakaoPayService implements KakaoPayService {
     public RequestBodyReadyConverter requestBodyReadyConverter(Reservation reservation,
                                                                RoomKind roomKind,
                                                                String quantity,
-                                                               String calculatePayPrice) {
+                                                               String calculatePayPrice, String taxFreeAmount, String vatAmount) {
         return RequestBodyReadyConverter.builder()
                 .cid(CompanyId.KAKAOPAYCID)
                 .partnerOrderId(String.valueOf(reservation.getId()))
@@ -80,7 +82,8 @@ public class SpringJpaKakaoPayService implements KakaoPayService {
                 .itemName(roomKind.getRoomType())
                 .quantity(quantity)
                 .totalAmount(calculatePayPrice)
-                .taxFreeAmount(calculatePayPrice)
+                .taxFreeAmount(taxFreeAmount)
+                .vatAmount(vatAmount)
                 .approvalUrl("http://localhost:8080/" + reservation.getId() + "/kakaoPaySuccess")
                 .cancelUrl("http://localhost:8080/kakaoPayCancel")
                 .failUrl("http://localhost:8080/kakaoPaySuccessFail").build();
@@ -144,7 +147,7 @@ public class SpringJpaKakaoPayService implements KakaoPayService {
         RequestBodyCancelConverter requestBodyCancelConverter = RequestBodyCancelConverter.builder()
                 .cid(CompanyId.KAKAOPAYCID)
                 .tid(findPayment.getApiCode())
-                .cancelAmount((int)findPayment.getPrice())
+                .cancelAmount((int) findPayment.getPrice())
                 .cancelTaxFreeAmount((int) (findPayment.getPrice()))
 //                .cancelVatAmount((int) (0))
 //                .cancelAvailableAmount((int)findPayment.getPrice() * 2)

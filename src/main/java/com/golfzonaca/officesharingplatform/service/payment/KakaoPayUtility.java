@@ -31,6 +31,8 @@ interface KakaoPayUtility {
 
     String taxFreeAmount(String calculatePayPrice);
 
+    String vatAmount(String calculatePayPrice);
+
     void savePaymentInfo(PaymentRepository paymentRepository, Reservation reservation, User user, Room room, KakaoPayApprovalResponse kakaoPayApprovalResponse);
 
     PayStatus checkPayStatus(Reservation reservation);

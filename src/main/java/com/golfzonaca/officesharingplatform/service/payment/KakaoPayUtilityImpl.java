@@ -59,7 +59,12 @@ public class KakaoPayUtilityImpl implements KakaoPayUtility {
 
     @Override
     public String taxFreeAmount(String calculatePayPrice) {
-        return String.valueOf((int) (Integer.parseInt(calculatePayPrice) * 0.9));
+        return String.valueOf((Integer.parseInt(calculatePayPrice) * 10 / 11));
+    }
+
+    @Override
+    public String vatAmount(String calculatePayPrice) {
+        return String.valueOf((Integer.parseInt(calculatePayPrice) / 11));
     }
 
     @Override
