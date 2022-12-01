@@ -28,9 +28,10 @@ public class KakaoPayController {
     }
 
     @PostMapping("/kakaoPay")
-    public String kakaoPay(@RequestBody Map<String, Long> reservationInfo) {
-        Long reservationId = reservationInfo.get("reservationId");
-        return "redirect:" + kakaoPayService.kakaoPayReady(reservationId);
+    public String kakaoPay(@RequestBody Map<String, String> reservationInfo) {
+        Long reservationId = Long.valueOf(reservationInfo.get("reservationId"));
+        String payWay = reservationInfo.get("payWay");
+        return "redirect:" + kakaoPayService.kakaoPayReady(reservationId, payWay);
     }
 
     @GetMapping("/{reservationId}/kakaoPaySuccess")

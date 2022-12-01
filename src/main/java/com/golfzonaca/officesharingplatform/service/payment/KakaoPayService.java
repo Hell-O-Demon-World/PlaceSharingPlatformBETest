@@ -7,7 +7,7 @@ import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayCancelRespons
 
 public interface KakaoPayService {
 
-    String kakaoPayReady(long reservationId);
+    String kakaoPayReady(long reservationId, String payWay);
 
     KakaoPayApprovalResponse kakaoPayInfo(long reservationId, String pg_token);
 

@@ -8,7 +8,10 @@ import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayReadyRequest;
 import com.golfzonaca.officesharingplatform.domain.type.PG;
 import com.golfzonaca.officesharingplatform.domain.type.PayType;
 import com.golfzonaca.officesharingplatform.domain.type.PayWay;
+import com.golfzonaca.officesharingplatform.domain.type.RoomType;
 import com.golfzonaca.officesharingplatform.repository.payment.PaymentRepository;
+import jdk.jfr.Registered;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -28,19 +31,10 @@ import java.util.Map;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class KakaoPayUtilityImpl implements KakaoPayUtility {
 
-
-    @Override
-    public void accumulationMileage(User user, long payPrice) {
-        long addMileage = (long) (payPrice * 0.05); // 마일리지를 사용했으면 마일리지 사용한 금액은 빼고 사용자가 지불한 금액에 대해서 %적용 해서 마일리지 계산해주기
-        user.getMileage().addPoint(user.getMileage().getPoint(), addMileage);
-    }
-
-    @Override
-    public long calculateDeposit(long payPrice) {
-        return (long) (payPrice * 0.2);
-    }
+    private final PaymentUtility paymentUtility;
 
     @Override
     public LocalDate toLocalDate(LocalDateTime localDateTime) {
@@ -52,10 +46,6 @@ public class KakaoPayUtilityImpl implements KakaoPayUtility {
         return LocalTime.from(localDateTime);
     }
 
-    @Override
-    public String calculatePayPrice(Reservation reservation, RoomKind roomKind) {
-        return String.valueOf((reservation.getResEndTime().getHour() - reservation.getResStartTime().getHour()) * roomKind.getPrice());
-    }
 
     @Override
     public String taxFreeAmount(String calculatePayPrice) {
@@ -75,40 +65,19 @@ public class KakaoPayUtilityImpl implements KakaoPayUtility {
         LocalTime payTime = this.toLocalTime(localDateTime);
         long payPrice = kakaoPayApprovalResponse.getAmount().getTotal(); // 총 금액을 가져옴 카카오 api 승인에서 내려주는
         long payMileage = 0L; //추후 변경예정
-        PayWay payWay = checkPayStatus(reservation);
 
 //        PayStatus payStatus = PayStatus.PREPAYMENT;
         long savedMileage = kakaoPayApprovalResponse.getAmount().getPoint();
 
 
+        PayWay payWay1 = PayWay.POSTPAYMENT;
         PayType payType = PayType.FULLPAYMENT;
 
-        if (payWay.equals(PayWay.PREPAYMENT)) { // 선결제일 때
-            this.accumulationMileage(user, payPrice);
-        } else { // 현장결제일 때
-            if (!kakaoPayApprovalResponse.getItem_name().contains("OFFICE")) {
-                payType = PayType.DEPOSIT;
-                payPrice = this.calculateDeposit(payPrice);
-            }
-        }
         String payApiCode = kakaoPayApprovalResponse.getTid();
 
-        Payment payment = new Payment(reservation, payDate, payTime, payPrice, payMileage, payWay, savedMileage, payType, payApiCode, PG.KAKAOPAY, true);
+        Payment payment = new Payment(reservation, payDate, payTime, payPrice, payMileage, payWay1, savedMileage, payType, payApiCode, PG.KAKAOPAY, true);
 
         paymentRepository.save(payment);
-    }
-
-    @Override
-    public PayWay checkPayStatus(Reservation reservation) {
-
-        PayWay payWay;
-
-        if (reservation == null) {
-            payWay = PayWay.PREPAYMENT;
-        } else {
-            payWay = PayWay.POSTPAYMENT;
-        }
-        return payWay;
     }
 
     @Override

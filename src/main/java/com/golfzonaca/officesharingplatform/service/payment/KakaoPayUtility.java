@@ -19,24 +19,15 @@ import java.time.LocalTime;
 
 interface KakaoPayUtility {
 
-    void accumulationMileage(User user, long payPrice);
-
-    long calculateDeposit(long payPrice);
-
     LocalDate toLocalDate(LocalDateTime localDateTime);
 
     LocalTime toLocalTime(LocalDateTime localDateTime);
-
-    String calculatePayPrice(Reservation reservation, RoomKind roomKind);
 
     String taxFreeAmount(String calculatePayPrice);
 
     String vatAmount(String calculatePayPrice);
 
-
     void savePaymentInfo(PaymentRepository paymentRepository, Reservation reservation, User user, Room room, KakaoPayApprovalResponse kakaoPayApprovalResponse);
-
-    PayWay checkPayStatus(Reservation reservation);
 
     MultiValueMap<String, String> multiValueMapConverter(ObjectMapper objectMapper, Object dto);
 

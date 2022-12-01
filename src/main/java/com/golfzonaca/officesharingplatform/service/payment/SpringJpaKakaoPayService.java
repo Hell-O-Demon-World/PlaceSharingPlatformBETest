@@ -5,6 +5,7 @@ import com.golfzonaca.officesharingplatform.domain.*;
 import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayApprovalResponse;
 import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayCancelResponse;
 import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayReadyRequest;
+import com.golfzonaca.officesharingplatform.domain.type.PayWay;
 import com.golfzonaca.officesharingplatform.repository.payment.PaymentRepository;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
 import com.golfzonaca.officesharingplatform.service.payment.requestform.RequestBodyApproveConverter;
@@ -40,19 +41,37 @@ public class SpringJpaKakaoPayService implements KakaoPayService {
 
     private final ReservationRepository reservationRepository;
     private final PaymentRepository paymentRepository;
+    private final PaymentUtility paymentUtility;
 
 
     @Override
-    public String kakaoPayReady(long reservationId) {
+    public String kakaoPayReady(long reservationId, String payWay) {
         log.info("Started kakaoPayReady method");
 
         Reservation reservation = findReservation(reservationId);
 
         User user = reservation.getUser();
         RoomKind roomKind = reservation.getRoom().getRoomKind();
-        String calculatePayPrice = kakaoPayUtility.calculatePayPrice(reservation, roomKind);
-        String taxFreeAmount = kakaoPayUtility.taxFreeAmount(calculatePayPrice);
-        String vatAmount = kakaoPayUtility.vatAmount(calculatePayPrice);
+        int totalAmount = (int) paymentUtility.calculateTotalAmount(reservation, roomKind);
+
+        String taxFreeAmount = kakaoPayUtility.taxFreeAmount(String.valueOf(totalAmount));
+        String vatAmount = kakaoPayUtility.vatAmount(String.valueOf(totalAmount));
+
+        // roomtype으로 조건 타고
+        // 보증금 요청 보내고,
+        // 선결제라면 전체금액을 요청 보내야함
+        // 현장결제라면 전체금액*0.2를 요청보내야함
+
+        String calculatePayPrice = String.valueOf(totalAmount);
+        if (roomKind.getRoomType().contains("OFFICE")) {
+            if (payWay.equals(PayWay.PREPAYMENT)) {
+                calculatePayPrice = String.valueOf(paymentUtility.calculateDeposit(totalAmount));
+            }
+        } else {
+            if (payWay.equals(PayWay.PREPAYMENT)) {
+                calculatePayPrice = String.valueOf(paymentUtility.calculateDeposit(totalAmount));
+            }
+        }
 
         //서버요청 헤더
         kakaoPayUtility.makeHttpHeader(httpheaders);
@@ -73,6 +92,8 @@ public class SpringJpaKakaoPayService implements KakaoPayService {
                                                                RoomKind roomKind,
                                                                String quantity,
                                                                String calculatePayPrice, String taxFreeAmount, String vatAmount) {
+
+
         return RequestBodyReadyConverter.builder()
                 .cid(CompanyId.KAKAOPAYCID)
                 .partnerOrderId(String.valueOf(reservation.getId()))
@@ -112,7 +133,7 @@ public class SpringJpaKakaoPayService implements KakaoPayService {
         RoomKind roomKind = reservation.getRoom().getRoomKind();
         String setPartnerOrderId = String.valueOf(reservation.getId());
         String partnerUserId = String.valueOf(reservation.getId());
-        String calculatePayPrice = kakaoPayUtility.calculatePayPrice(reservation, roomKind);
+        String calculatePayPrice = String.valueOf(paymentUtility.calculateTotalAmount(reservation, roomKind));
         RequestBodyApproveConverter requestBodyApproveConverter = RequestBodyApproveConverter(setPartnerOrderId, partnerUserId, pg_token, calculatePayPrice);
         return getHttpEntity(requestBodyApproveConverter);
     }
@@ -122,6 +143,7 @@ public class SpringJpaKakaoPayService implements KakaoPayService {
         return KakaoPayApprovalResponse;
     }
 
+    /*수정 필요*/
     @Override
     public KakaoPayCancelResponse cancel(long reservationId) {
         if (httpheaders.isEmpty()) {
@@ -147,7 +169,7 @@ public class SpringJpaKakaoPayService implements KakaoPayService {
                 .cid(CompanyId.KAKAOPAYCID)
                 .tid(findPayment.getApiCode())
                 .cancelAmount((int) findPayment.getPrice())
-                .cancelTaxFreeAmount((int) (findPayment.getPrice()))
+                .cancelTaxFreeAmount(Integer.valueOf(kakaoPayUtility.taxFreeAmount(String.valueOf(findPayment.getPrice()))))
                 .build();
         HttpEntity<MultiValueMap<String, String>> body = new HttpEntity<>(kakaoPayUtility.multiValueMapConverter(new ObjectMapper(), requestBodyCancelConverter), httpheaders);
 
