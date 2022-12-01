@@ -1,10 +1,10 @@
 package com.golfzonaca.officesharingplatform.domain.type;
 
-public enum PayStatus {
-    PREPAYMENT("선결제"), POSTPAYMENT("현장결제");
+public enum PG {
+    KAKAOPAY("카카오페이"), NICEPAY("나이스페이");
     private final String description;
 
-    PayStatus(String description) {
+    PG(String description) {
         this.description = description;
     }
 

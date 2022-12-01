@@ -25,7 +25,7 @@ public class SpringJpaDslCommentService implements CommentService {
 
     @Override
     public void save(Long userId, Long placeId, CommentData data) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
+        User user = userRepository.findById(userId);
         Place place = placeRepository.findById(placeId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 공간입니다."));
         commentRepository.save(new Comment(place, data.getContext(), user, LocalDateTime.now()));
     }

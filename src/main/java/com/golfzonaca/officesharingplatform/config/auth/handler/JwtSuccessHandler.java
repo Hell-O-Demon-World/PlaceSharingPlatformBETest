@@ -61,7 +61,7 @@ public class JwtSuccessHandler implements AuthenticationSuccessHandler {
             log.info("RefreshToken expired ::: create new RefreshToken And Save");
         } else {
             log.info("Can't find RefreshToken ::: create new RefreshToken And Save");
-            User findUser = userRepository.findById(userId).get();
+            User findUser = userRepository.findById(userId);
             refreshToken.updateUser(findUser);
         }
         Jwt refreshJwt = JwtManager.createRefreshJwt(userId);

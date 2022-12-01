@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Repository
 @Transactional
 @RequiredArgsConstructor
@@ -17,5 +19,10 @@ public class CustomPaymentRepository implements PaymentRepository {
     @Override
     public void save(Payment payment) {
         jpaRepository.save(payment);
+    }
+
+    @Override
+    public List<Payment> findByReservationId(long reservationId) {
+        return queryPaymentRepository.findByReservationId(reservationId);
     }
 }

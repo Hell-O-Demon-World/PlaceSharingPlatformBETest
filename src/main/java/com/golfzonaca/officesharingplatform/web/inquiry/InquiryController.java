@@ -1,6 +1,7 @@
 package com.golfzonaca.officesharingplatform.web.inquiry;
 
 import com.golfzonaca.officesharingplatform.annotation.TokenUserId;
+import com.golfzonaca.officesharingplatform.domain.Inquiry;
 import com.golfzonaca.officesharingplatform.service.answer.AnswerService;
 import com.golfzonaca.officesharingplatform.service.inquiry.InquiryService;
 import com.golfzonaca.officesharingplatform.web.inquiry.dto.AnswerData;
@@ -25,7 +26,7 @@ public class InquiryController {
 
     @GetMapping("/inquiry/{inquiryId}")
     public String inquiryDetail(@PathVariable long inquiryId) {
-        inquiryService.findById(inquiryId);
+        Inquiry inquiry = inquiryService.findById(inquiryId);
         return "ok";
     }
 

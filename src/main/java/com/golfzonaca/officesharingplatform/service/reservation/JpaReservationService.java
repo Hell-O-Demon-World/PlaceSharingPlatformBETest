@@ -293,6 +293,7 @@ public class JpaReservationService implements ReservationService {
     public Map<String, Object> saveReservation(User user, Place place, ProcessReservationData data) {
         Map<String, Object> result = new LinkedHashMap<>();
         Map<String, String> errorMap = new HashMap<>();
+
         LocalTime startTime = data.getStartTime();
         LocalTime endTime = data.getEndTime();
         LocalDate date = data.getStartDate();

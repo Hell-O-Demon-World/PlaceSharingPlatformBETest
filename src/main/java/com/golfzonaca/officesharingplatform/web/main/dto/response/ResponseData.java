@@ -1,4 +1,4 @@
-package com.golfzonaca.officesharingplatform.web.search.dto.response;
+package com.golfzonaca.officesharingplatform.web.main.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

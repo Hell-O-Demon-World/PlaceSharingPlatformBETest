@@ -2,11 +2,11 @@ package com.golfzonaca.officesharingplatform.repository.user;
 
 import com.golfzonaca.officesharingplatform.domain.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 @Transactional
@@ -21,8 +21,8 @@ public class CustomUserRepository implements UserRepository {
     }
 
     @Override
-    public Optional<User> findById(Long id) {
-        return jpaUserRepository.findById(id);
+    public User findById(Long id) {
+        return jpaUserRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("찾을 수 없는 유저입니다."));
     }
 
     @Override

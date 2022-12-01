@@ -2,8 +2,8 @@ package com.golfzonaca.officesharingplatform.repository.reservation;
 
 import com.golfzonaca.officesharingplatform.domain.Place;
 import com.golfzonaca.officesharingplatform.domain.Reservation;
-import com.golfzonaca.officesharingplatform.domain.Room;
 import com.golfzonaca.officesharingplatform.domain.User;
+import com.golfzonaca.officesharingplatform.exception.NonExistedReservationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,7 +12,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 @Transactional
@@ -69,10 +68,10 @@ public class CustomReservationRepository implements ReservationRepository {
     public Optional<Reservation> findByPlaceIdAndRoomTypeAndDate(Long placeId, String roomType, LocalDate date) {
         return queryReservationRepository.findFirst(placeId, roomType, date);
     }
-
+    
     @Override
-    public Optional<Reservation> findById(Long reservationId) {
-        return jpaReservationRepository.findById(reservationId);
+    public Reservation findById(Long reservationId) {
+        return jpaReservationRepository.findById(reservationId).orElseThrow(() -> new NonExistedReservationException("존재하지 않는 예약입니다."));
     }
 
     @Override

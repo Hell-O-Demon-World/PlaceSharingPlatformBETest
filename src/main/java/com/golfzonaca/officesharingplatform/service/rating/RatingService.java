@@ -6,11 +6,11 @@ import com.golfzonaca.officesharingplatform.web.rating.dto.RatingUpdateData;
 
 public interface RatingService {
 
-    void save(Long userId, long placeId, RatingSaveData ratingSaveData);
+    void save(Long userId, Long reservationId, RatingSaveData ratingSaveData);
 
     Rating findById(long ratingId);
 
-    void update(Long userId, long ratingId, RatingUpdateData updateData);
+    void update(Long reservationId, long ratingId, RatingUpdateData updateData);
 
     void delete(Long userId, long ratingId);
 }

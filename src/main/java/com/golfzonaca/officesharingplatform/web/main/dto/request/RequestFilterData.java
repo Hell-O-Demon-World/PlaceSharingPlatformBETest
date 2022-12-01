@@ -1,4 +1,4 @@
-package com.golfzonaca.officesharingplatform.web.search.dto.request;
+package com.golfzonaca.officesharingplatform.web.main.dto.request;
 
 import com.golfzonaca.officesharingplatform.annotation.RequestFilterDataNotBlank;
 import lombok.AllArgsConstructor;

@@ -16,8 +16,11 @@ configurations {
     }
 }
 
-repositories {
-    mavenCentral()
+allprojects {
+    repositories {
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+    }
 }
 
 dependencies {
@@ -29,7 +32,7 @@ dependencies {
 //	JPA, Spring Data JPA 추가
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
-    //Querydsl 추가
+//  Querydsl 추가
     implementation 'com.querydsl:querydsl-jpa'
     annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jpa"
     annotationProcessor "jakarta.annotation:jakarta.annotation-api"
@@ -69,6 +72,16 @@ dependencies {
 //  테스트에서 Lombok 사용
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
+
+//  Jitpack 사용
+    implementation 'com.github.iamport:iamport-rest-client-java:Tag'
+
+//  retrofit2 사용
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+
+//  iamport 사용
+    implementation group: 'com.github.iamport', name: 'iamport-rest-client-java', version: '0.2.22'
+
 }
 
 tasks.named('test') {
@@ -78,3 +91,4 @@ tasks.named('test') {
 clean {
     delete file('src/main/generated')
 }
+
