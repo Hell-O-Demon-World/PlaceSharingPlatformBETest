@@ -17,5 +17,8 @@ public interface PlaceService {
 
     boolean isOpenToday(Long id, String startTime);
 
+    boolean selectedDateValidation(String startDate, String startDate1);
+
     Map<Integer, PlaceDto> processingMainPlaceData(List<Place> places);
+
 }

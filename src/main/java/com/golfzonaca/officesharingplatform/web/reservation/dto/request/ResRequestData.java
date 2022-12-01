@@ -15,7 +15,9 @@ public class ResRequestData {
     @NotBlank
     private String selectedType;
     @NotBlank
-    private String date;
+    private String startDate;
+    @NotBlank
+    private String endDate;
     @NotBlank
     private String startTime;
     @NotBlank

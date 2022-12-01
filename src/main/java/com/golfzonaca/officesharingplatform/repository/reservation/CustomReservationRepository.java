@@ -65,6 +65,11 @@ public class CustomReservationRepository implements ReservationRepository {
     }
 
     @Override
+    public Optional<Reservation> findByPlaceIdAndRoomTypeAndDate(Long placeId, String roomType, LocalDate date) {
+        return queryReservationRepository.findFirst(placeId, roomType, date);
+    }
+    
+    @Override
     public Reservation findById(Long reservationId) {
         return jpaReservationRepository.findById(reservationId).orElseThrow(() -> new NonExistedReservationException("존재하지 않는 예약입니다."));
     }

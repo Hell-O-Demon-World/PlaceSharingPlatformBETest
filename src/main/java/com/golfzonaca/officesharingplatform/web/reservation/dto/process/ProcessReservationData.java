@@ -13,7 +13,8 @@ import java.time.LocalTime;
 @AllArgsConstructor
 public class ProcessReservationData {
     private String selectedType;
-    private LocalDate date;
+    private LocalDate startDate;
+    private LocalDate endDate;
     private LocalTime startTime;
     private LocalTime endTime;
 }
