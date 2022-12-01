@@ -61,4 +61,12 @@ public class JpaPlaceService implements PlaceService {
         return localStartTime.isAfter(Objects.requireNonNull(start))
                 && localStartTime.isBefore(Objects.requireNonNull(end));
     }
+
+    @Override
+    public boolean selectedDateValidation(String startDate, String endDate) {
+        LocalDate startLocalDate = TimeFormatter.toLocalDate(startDate);
+        LocalDate endLocalDate = TimeFormatter.toLocalDate(endDate);
+
+        return startLocalDate.isBefore(endLocalDate.plusDays(1));
+    }
 }

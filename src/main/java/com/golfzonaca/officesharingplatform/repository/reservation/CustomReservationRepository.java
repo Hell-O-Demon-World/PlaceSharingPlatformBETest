@@ -66,6 +66,11 @@ public class CustomReservationRepository implements ReservationRepository {
     }
 
     @Override
+    public Optional<Reservation> findByPlaceIdAndRoomTypeAndDate(Long placeId, String roomType, LocalDate date) {
+        return queryReservationRepository.findFirst(placeId, roomType, date);
+    }
+
+    @Override
     public Optional<Reservation> findById(Long reservationId) {
         return jpaReservationRepository.findById(reservationId);
     }

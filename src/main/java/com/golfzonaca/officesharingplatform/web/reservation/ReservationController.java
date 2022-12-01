@@ -10,15 +10,19 @@ import com.golfzonaca.officesharingplatform.service.user.UserService;
 import com.golfzonaca.officesharingplatform.web.formatter.TimeFormatter;
 import com.golfzonaca.officesharingplatform.web.reservation.dto.process.ProcessReservationData;
 import com.golfzonaca.officesharingplatform.web.reservation.dto.request.ResRequestData;
-import com.golfzonaca.officesharingplatform.web.reservation.form.SelectedTypeAndDayForm;
-import com.golfzonaca.officesharingplatform.web.reservation.form.TimeListForm;
+import com.golfzonaca.officesharingplatform.web.reservation.dto.response.ReservationResponseData;
+import com.golfzonaca.officesharingplatform.web.reservation.dto.response.ReservationResponseTypeForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import java.util.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -31,36 +35,95 @@ public class ReservationController {
     private final RoomKindRepository roomKindRepository;
 
     @GetMapping("places/{placeId}")
-    public Map<String, String> findRoom(@PathVariable long placeId) {
+    public ReservationResponseTypeForm findRoom(@PathVariable long placeId) {
         return reservationService.findRoom(placeId);
     }
 
-    @PostMapping("/places/{placeId}")
-    public TimeListForm selectedDateTime(@PathVariable long placeId, @Valid @RequestBody SelectedTypeAndDayForm selectedTypeAndDayForm) {
-        List<Integer> resultTimeList = new ArrayList<>();
+    @GetMapping("places/{placeId}/type/{typeName}/date/{inputDate}")
+    public Map selectedRoomType(@PathVariable Long placeId, @PathVariable String typeName, @PathVariable String inputDate) {
+        Map<String, Object> response = new LinkedHashMap<>();
+        Map<String, String> errorMap = new HashMap<>();
+        String selectedType = typeName.toUpperCase();
+        if (!placeService.isExistPlace(placeId)) {
+            errorMap.put("placeError", "선택하신 공간은 존재하지 않습니다.");
+            response.put("errorMap", errorMap);
+            return response;
+        } else if (!roomKindRepository.findByRoomType(selectedType)) {
+            errorMap.put("roomTypeError", "선택하신 공간유형은 존재하지 않습니다.");
+            response.put("errorMap", errorMap);
+            return response;
+        } else if (!dateValidate(inputDate)) {
+            errorMap.put("dateError", "선택하신 날짜는 존재하지 않습니다.");
+            response.put("errorMap", errorMap);
+            return response;
+        }
+        List<ReservationResponseData> result = reservationService.getReservationResponseData(placeId, selectedType, inputDate);
+        response.put("data", result);
+        response.put("errorMap", errorMap);
+        return response;
+    }
+
+    @GetMapping("places/{placeId}/type/{typeName}/date/{date}/startTime/{startTime}")
+    public Map selectedDateTime(@PathVariable Long placeId, @PathVariable String typeName, @PathVariable String date, @PathVariable String startTime) {
+        Map<String, Object> response = new LinkedHashMap<>();
         Map<String, String> errorMap = new HashMap<>();
         if (!placeService.isExistPlace(placeId)) {
             errorMap.put("placeError", "선택하신 공간은 존재하지 않습니다.");
-            return new TimeListForm(resultTimeList, errorMap);
-        } else if (!placeService.isOpenDay(placeId, selectedTypeAndDayForm.getDay())) {
+            response.put("errorMap", errorMap);
+            return response;
+        } else if (!dateValidate(date)) {
+            errorMap.put("dateError", "선택하신 날짜는 존재하지 않습니다.");
+            response.put("errorMap", errorMap);
+            return response;
+        } else if (!placeService.isOpenDay(placeId, date)) {
             errorMap.put("placeError", "선택하신 날짜는 영업 일이 아닙니다.");
-            return new TimeListForm(resultTimeList, errorMap);
-        } else if (!placeService.isOpenToday(placeId, selectedTypeAndDayForm.getStartTime())) {
+            response.put("errorMap", errorMap);
+            return response;
+        } else if (!placeService.isOpenToday(placeId, startTime)) {
             errorMap.put("placeError", "선택하신 시간은 영업 시간이 아닙니다.");
-            return new TimeListForm(resultTimeList, errorMap);
-        } else if (!roomKindRepository.findByRoomType(selectedTypeAndDayForm.getSelectedType())) {
+            response.put("errorMap", errorMap);
+            return response;
+        } else if (!roomKindRepository.findByRoomType(typeName.toUpperCase())) {
             errorMap.put("roomTypeError", "선택하신 공간유형은 존재하지 않습니다.");
-            return new TimeListForm(resultTimeList, errorMap);
+            response.put("errorMap", errorMap);
+            return response;
+        } else if (typeName.toUpperCase().contains("OFFICE")) {
+            errorMap.put("roomTypeError", "지원하지 않는 공간유형 입니다.");
+            response.put("errorMap", errorMap);
+            return response;
         }
-        resultTimeList = reservationService.getReservationTimeList(placeId, selectedTypeAndDayForm);
-
-        return new TimeListForm(resultTimeList, errorMap);
+        List<Integer> result = reservationService.getResponseTimeList(placeId, typeName.toUpperCase(), TimeFormatter.toLocalDate(date), TimeFormatter.toLocalTime(startTime));
+        response.put("timeList", result);
+        response.put("errorMap", errorMap);
+        return response;
     }
 
     @PostMapping("places/{placeId}/book")
-    public Map book(@TokenUserId Long userId, @PathVariable long placeId, @Validated @RequestBody ResRequestData resRequestData) {
-        Map<String, String> response = new LinkedHashMap<>();
+    public Map book(@TokenUserId Long userId, @PathVariable Long placeId, @Validated @RequestBody ResRequestData resRequestData) {
+        Map<String, Object> response = new LinkedHashMap<>();
+        Map<String, String> errorMap = new HashMap<>();
         ProcessReservationData processReservationData = getProcessReservationData(resRequestData);
+        if (!placeService.isExistPlace(placeId)) {
+            errorMap.put("placeError", "선택하신 공간은 존재하지 않습니다.");
+            response.put("errorMap", errorMap);
+            return response;
+        } else if (!placeService.selectedDateValidation(resRequestData.getStartDate(), resRequestData.getEndDate())) {
+            errorMap.put("placeError", "선택하신 날짜는 유효하지 않습니다.");
+            response.put("errorMap", errorMap);
+            return response;
+        } else if (!placeService.isOpenDay(placeId, resRequestData.getStartDate()) && !placeService.isOpenDay(placeId, resRequestData.getEndDate())) {
+            errorMap.put("placeError", "선택하신 날짜는 영업 일이 아닙니다.");
+            response.put("errorMap", errorMap);
+            return response;
+        } else if (!placeService.isOpenToday(placeId, resRequestData.getStartTime())) {
+            errorMap.put("placeError", "선택하신 시간은 영업 시간이 아닙니다.");
+            response.put("errorMap", errorMap);
+            return response;
+        } else if (!roomKindRepository.findByRoomType(resRequestData.getSelectedType())) {
+            errorMap.put("roomTypeError", "선택하신 공간유형은 존재하지 않습니다.");
+            response.put("errorMap", errorMap);
+            return response;
+        }
 
         User user = userService.findById(userId);
         if (user == null) {
@@ -74,17 +137,28 @@ public class ReservationController {
             return response;
         }
 
-        response = reservationService.validation(response, user, place, processReservationData);
+        errorMap = reservationService.validation(errorMap, user, place, processReservationData);
 
-        if (response.isEmpty()) {
-            response = reservationService.saveReservation(response, user, place, processReservationData);
-            return response;
+        if (errorMap.isEmpty()) {
+            return reservationService.saveReservation(user, place, processReservationData);
         }
+        response.put("errorMap", errorMap);
         return response;
     }
 
     private ProcessReservationData getProcessReservationData(ResRequestData resRequestData) {
-        return new ProcessReservationData(resRequestData.getSelectedType(), TimeFormatter.toLocalDate(resRequestData.getDate()), TimeFormatter.toLocalTime(resRequestData.getStartTime()), TimeFormatter.toLocalTime(resRequestData.getEndTime()));
+        return new ProcessReservationData(resRequestData.getSelectedType(), TimeFormatter.toLocalDate(resRequestData.getStartDate()), TimeFormatter.toLocalDate(resRequestData.getEndDate()), TimeFormatter.toLocalTime(resRequestData.getStartTime()), TimeFormatter.toLocalTime(resRequestData.getEndTime()));
+    }
+
+    private boolean dateValidate(String selectedDate) {
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            dateFormat.setLenient(false);
+            dateFormat.parse(selectedDate);
+            return true;
+        } catch (ParseException e) {
+            return false;
+        }
     }
 }
 

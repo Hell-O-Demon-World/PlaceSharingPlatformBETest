@@ -6,6 +6,7 @@ import com.golfzonaca.officesharingplatform.domain.User;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
 import com.golfzonaca.officesharingplatform.repository.room.RoomRepository;
 import com.golfzonaca.officesharingplatform.repository.roomkind.RoomKindRepository;
+import com.golfzonaca.officesharingplatform.web.formatter.TimeFormatter;
 import com.golfzonaca.officesharingplatform.web.reservation.dto.process.ProcessReservationData;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -28,14 +29,13 @@ public class ReservationRequestValidation {
 
     public Map<String, String> validation(Map<String, String> response, User user, Place place, ProcessReservationData data) {
         response = validRoomType(response, data.getSelectedType());
-        response = validBusinessDay(response, place, data.getDate());
+        response = validBusinessDay(response, place, data.getStartDate());
         response = validResTimeBetweenPlaceOpeningTime(response, place, data.getStartTime(), data.getEndTime());
         response = validStartTimeBeforeEndTime(response, data.getStartTime(), data.getEndTime());
-        response = validMinUnitOfTime(response, data.getStartTime(), data.getEndTime());
-        response = validPastnessOfDateTime(response, LocalDateTime.of(data.getDate(), data.getStartTime()), LocalDateTime.of(data.getDate(), data.getEndTime()));
+        response = validPastnessOfDateTime(response, LocalDateTime.of(data.getStartDate(), data.getStartTime()), LocalDateTime.of(data.getStartDate(), data.getEndTime()));
         response = existRoomTypeInPlace(response, place, data.getSelectedType());
-        response = validDuplicatedResForSameUser(response, user, place, data.getDate(), data.getStartTime(), data.getDate(), data.getEndTime());
-        response = validRestRoomForSelectedPlaceAndDateTime(response, place, data.getSelectedType(), data.getDate(), data.getStartTime(), data.getDate(), data.getEndTime());
+        response = validDuplicatedResForSameUser(response, user, place, data.getStartDate(), data.getStartTime(), data.getStartDate(), data.getEndTime());
+        response = validRestRoomForSelectedPlaceAndDateTime(response, place, data.getSelectedType(), data.getStartDate(), data.getStartTime(), data.getStartDate(), data.getEndTime());
         return response;
     }
 
@@ -58,8 +58,16 @@ public class ReservationRequestValidation {
     }
 
     private Map<String, String> validResTimeBetweenPlaceOpeningTime(Map<String, String> response, Place place, LocalTime resStartTime, LocalTime resEndTime) {
-        if (place.getPlaceStart().getHour() <= resStartTime.getHour() && resStartTime.getHour() < place.getPlaceEnd().getHour()) {
-            if (place.getPlaceStart().getHour() >= resEndTime.getHour() || resEndTime.getHour() + 1 > place.getPlaceEnd().getHour()) {
+        int startTime = resStartTime.getHour();
+        int endTime = resEndTime.getHour();
+        if (startTime == 0) {
+            startTime = 24;
+        }
+        if (endTime == 0) {
+            endTime = 24;
+        }
+        if (place.getPlaceStart().getHour() <= startTime && startTime < place.getPlaceEnd().getHour()) {
+            if (place.getPlaceStart().getHour() >= endTime || endTime >= place.getPlaceEnd().getHour()) {
                 response.put("InvalidResEndTimeError", "선택하신 예약 종료 시간은 영업 시간이 아닙니다.");
             }
         } else {
@@ -68,20 +76,11 @@ public class ReservationRequestValidation {
         return response;
     }
 
-
     private Map<String, String> validStartTimeBeforeEndTime(Map<String, String> response, LocalTime startTime, LocalTime endTime) {
         if (startTime.isBefore(endTime) || startTime.equals(endTime)) {
             return response;
         }
         response.put("StartTimeAfterEndTimeError", "시작 시각이 종료 시각 이후입니다.");
-        return response;
-    }
-
-    private Map<String, String> validMinUnitOfTime(Map<String, String> response, LocalTime startTime, LocalTime endTime) {
-        if (startTime.plusHours(1).isBefore(endTime) || startTime.plusHours(1).equals(endTime) || startTime.isAfter(endTime)) {
-            return response;
-        }
-        response.put("InvalidResTimeError", "최소 1시간 이상 예약 가능합니다.");
         return response;
     }
 

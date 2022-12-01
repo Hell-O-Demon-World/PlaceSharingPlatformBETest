@@ -2,8 +2,9 @@ package com.golfzonaca.officesharingplatform.service.reservation;
 
 import com.golfzonaca.officesharingplatform.domain.*;
 import com.golfzonaca.officesharingplatform.web.formatter.TimeFormatter;
+import com.golfzonaca.officesharingplatform.web.reservation.dto.request.ResRequestData;
+import com.golfzonaca.officesharingplatform.web.reservation.dto.response.ReservationResponseData;
 import com.golfzonaca.officesharingplatform.web.reservation.form.DefaultTimeOfDay;
-import com.golfzonaca.officesharingplatform.web.reservation.form.SelectedTypeAndDayForm;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -11,10 +12,8 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.Month;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -34,6 +33,105 @@ class JpaReservationServiceTest {
         private LocalTime resStartTime;
         private LocalDate resEndDate;
         private LocalTime resEndTime;
+    }
+
+    @Test
+    public void getReservationResponseData() {
+        //given
+        Place findPlace = Place.builder().id(5L)
+                .placeStart(TimeFormatter.toLocalTime("8"))
+                .placeEnd(TimeFormatter.toLocalTime("18"))
+                .company(Company.builder().id(3L).build())
+                .build();
+        ResRequestData requestData = new ResRequestData("OFFICE20"
+                , "2022-12-02", "2023-01-10"
+                , "0", "0");
+
+        List<ReservationResponseData> result = new ArrayList<>();
+        String selectedRoomType = requestData.getSelectedType();
+        String selectedStartDate = requestData.getStartDate();
+        String selectedEndDate = requestData.getEndDate();
+        int selectedStartTime = Integer.parseInt(requestData.getStartTime());
+        int selectedEndTime = Integer.parseInt(requestData.getEndTime());
+
+        //when
+        List<Integer> defaultTimeList = new ArrayList<>();
+        LocalDate startLocalDate = TimeFormatter.toLocalDate(selectedStartDate);
+        LocalDate endLocalDate = TimeFormatter.toLocalDate(selectedEndDate);
+
+        int startYear = startLocalDate.getYear();
+        int endYear = endLocalDate.getYear();
+        List<Integer> years = getTotalYears(startYear, endYear);
+        for (Integer year : years) {
+            Month startMonth = startLocalDate.getMonth();
+            Month endMonth = endLocalDate.getMonth();
+            if (startYear != endYear) {
+                if (startYear == year) {
+                    endMonth = Month.of(12);
+                } else if (endYear == year) {
+                    startMonth = Month.of(1);
+                } else {
+                    startMonth = Month.of(1);
+                    endMonth = Month.of(12);
+                }
+            }
+            List<Month> months = getTotalMonth(startMonth, endMonth);
+            for (Month month : months) {
+                int startDay = startLocalDate.getDayOfMonth();
+                int endDay = endLocalDate.getDayOfMonth();
+                Calendar cal = Calendar.getInstance();
+                if (month.equals(startMonth) && year.equals(startYear)) {
+                    cal.set(year, month.getValue() - 1, startDay);
+                    endDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+                } else if (month.equals(endMonth) && year.equals(endYear)) {
+                    startDay = 1;
+                    cal.set(year, month.getValue() - 1, startDay - 1);
+                } else {
+                    startDay = 1;
+                    cal.set(year, month.getValue() - 1, startDay - 1);
+                    endDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+                }
+                for (int day = startDay; day < endDay + 1; day++) {
+                    String date = year + "-" + month.getValue() + "-" + day;
+                    boolean state = false;
+                    result.add(ReservationResponseData.builder()
+                            .date(date)
+                            .state(state)
+                            .productType(selectedRoomType)
+                            .timeList(defaultTimeList)
+                            .build());
+                }
+            }
+        }
+        for (ReservationResponseData responseData :result) {
+            System.out.println("responseData.getDate() = " + responseData.getDate());
+            System.out.println("responseData = " + responseData.isState());
+        }
+    }
+
+//    private boolean existReservationThatDay(Long placeId, String roomType, String date) {
+//        Optional<Reservation> optFindReservation = reservationRepository.findByPlaceIdAndRoomTypeAndDate(placeId, roomType, TimeFormatter.toLocalDate(date));
+//        return optFindReservation.isPresent();
+//    }
+
+    private List<Month> getTotalMonth(Month startMonth, Month endMonth) {
+        List<Month> result = new ArrayList<>();
+        if (startMonth.equals(endMonth)) {
+            result.add(startMonth);
+        } else {
+            for (int i = startMonth.getValue(); i < endMonth.getValue() + 1; i++) {
+                result.add(Month.of(i));
+            }
+        }
+        return result;
+    }
+
+    private List<Integer> getTotalYears(int startYear, int endYear) {
+        List<Integer> result = new ArrayList<>();
+        for (int i = startYear; i < endYear + 1; i++) {
+            result.add(i);
+        }
+        return result;
     }
 
     @Test
@@ -396,10 +494,8 @@ class JpaReservationServiceTest {
 
     @Test
     void hasFullReservationTest() {
-        SelectedTypeAndDayForm selectedTypeAndDayForm = new SelectedTypeAndDayForm();
-        selectedTypeAndDayForm.setSelectedType("desk");
-        selectedTypeAndDayForm.setDay("2022-12-02");
-        selectedTypeAndDayForm.setStartTime("13");
+        ResRequestData requestData = new ResRequestData("desk", "2022-12-02", "2022-12-02", "13", "-1");
+
         //given
         List<Reservation> findReservationList = getFindReservationList();
         List<Room> reservationRoomList = getReservationRoomList();
