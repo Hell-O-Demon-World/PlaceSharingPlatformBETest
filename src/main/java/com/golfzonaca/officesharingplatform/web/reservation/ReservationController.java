@@ -92,7 +92,7 @@ public class ReservationController {
             response.put("errorMap", errorMap);
             return response;
         }
-        List<Integer> result = reservationService.getResponseTimeList(placeId, typeName.toUpperCase(), TimeFormatter.toLocalDate(date), TimeFormatter.toLocalTime(startTime));
+        List<Integer> result = reservationService.findAvailableTimes(placeId, typeName.toUpperCase(), TimeFormatter.toLocalDate(date), TimeFormatter.toLocalTime(startTime));
         response.put("timeList", result);
         response.put("errorMap", errorMap);
         return response;

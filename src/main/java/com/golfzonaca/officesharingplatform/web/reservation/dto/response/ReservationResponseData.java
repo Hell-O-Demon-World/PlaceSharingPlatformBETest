@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Builder
@@ -14,5 +15,5 @@ import java.util.List;
 public class ReservationResponseData {
     private String productType;
     private boolean state;
-    private String date;
+    private LocalDate date;
 }

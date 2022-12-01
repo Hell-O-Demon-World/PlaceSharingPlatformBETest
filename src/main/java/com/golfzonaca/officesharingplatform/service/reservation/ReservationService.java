@@ -17,7 +17,7 @@ public interface ReservationService {
 
     List<ReservationResponseData> getReservationResponseData(Long placeId, String selectedType, String inputDate);
 
-    List<Integer> getResponseTimeList(Long placeId, String selectedType, LocalDate date, LocalTime startTime);
+    List<Integer> findAvailableTimes(Long placeId, String selectedType, LocalDate date, LocalTime startTime);
 
     Map<String, String> validation(Map<String, String> response, User user, Place place, ProcessReservationData data);
 
