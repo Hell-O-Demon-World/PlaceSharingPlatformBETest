@@ -32,8 +32,8 @@ public class IamPortController {
     }
 
     @PostMapping("/cancel")
-    public IamportResponse<Payment> iamportCancel() throws IamportResponseException, IOException {
-        log.info("iamportCancel() = {}", iamportCancel());
+    public IamportResponse<Payment> iamPortCancel() throws IamportResponseException, IOException {
+        log.info("iamportCancel() = {}", iamPortCancel());
         IamportClient iamportClient = new IamportClient("3356213051155874", "c8AvU2odFqdwyfvFV7xcA880WWKm3CE8bah5mbR60DV3RN2DUpmXYjtd0mzbC5Y0ieMaRnB95EpXfvrf");
         CancelData cancelData = new CancelData("imp03070546", true, new BigDecimal(2000));
         return iamportClient.cancelPaymentByImpUid(cancelData);
