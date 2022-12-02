@@ -45,7 +45,6 @@ public class QueryReservationRepository {
 
     Optional<Reservation> findFirst(Long placeId, String roomType, LocalDate date) {
         Optional<String> optionalRoomType = Optional.ofNullable(roomType);
-        Optional<LocalDate> optionalLocalDate = Optional.ofNullable(date);
         return Optional.ofNullable(query
                 .select(reservation)
                 .from(reservation)

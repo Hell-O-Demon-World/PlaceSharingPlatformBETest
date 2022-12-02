@@ -304,7 +304,7 @@ public class JpaReservationService implements ReservationService {
             errorMap.put("ReservationError", "예약가능한 Room이 없습니다.");
             log.error("예약 가능한 Room이 없습니다.");
         } else {
-            Reservation reservation = new Reservation(user, resultRoom.get(), date, startTime, date, endTime.plusHours(1));
+            Reservation reservation = new Reservation(user, resultRoom.get(), date, startTime, date, endTime.plusHours(1), true);
             Reservation save = reservationRepository.save(reservation);
             if (save == null) {
                 errorMap.put("ReservationError", "예약 실패");
