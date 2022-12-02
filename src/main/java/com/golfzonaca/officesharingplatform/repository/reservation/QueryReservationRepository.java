@@ -43,6 +43,19 @@ public class QueryReservationRepository {
                 .fetch();
     }
 
+    Optional<Reservation> findFirst(Long placeId, String roomType, LocalDate date) {
+        Optional<String> optionalRoomType = Optional.ofNullable(roomType);
+        Optional<LocalDate> optionalLocalDate = Optional.ofNullable(date);
+        return Optional.ofNullable(query
+                .select(reservation)
+                .from(reservation)
+                .innerJoin(reservation.room.place)
+                .innerJoin(reservation.room.roomKind)
+                .where(reservation.room.place.id.eq(placeId), eqRoomType(optionalRoomType)
+                        , reservation.resStartDate.before(date).and(reservation.resEndDate.after(date)))
+                .fetchFirst());
+    }
+
     List<Reservation> findAllLimit(ReservationSearchCond cond, Integer maxNum) {
         log.info("Reservation findAllLimit cond = {}, maxNum = {}", cond, maxNum);
         Optional<Long> userId = Optional.ofNullable(cond.getUserId());

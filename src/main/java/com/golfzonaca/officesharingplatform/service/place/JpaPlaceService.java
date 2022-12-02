@@ -65,6 +65,13 @@ public class JpaPlaceService implements PlaceService {
     }
 
     @Override
+    public boolean selectedDateValidation(String startDate, String endDate) {
+        LocalDate startLocalDate = TimeFormatter.toLocalDate(startDate);
+        LocalDate endLocalDate = TimeFormatter.toLocalDate(endDate);
+
+        return startLocalDate.isBefore(endLocalDate.plusDays(1));
+    }
+    
     public Map<Integer, PlaceDto> processingMainPlaceData(List<Place> places) {
         Map<Integer, PlaceDto> mainPlaceData = new LinkedHashMap<>();
         for (int i = 0; i < places.size(); i++) {
