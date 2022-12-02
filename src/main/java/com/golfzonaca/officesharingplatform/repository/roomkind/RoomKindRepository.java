@@ -9,7 +9,7 @@ public interface RoomKindRepository {
 
     RoomKind findById(Long roomId);
 
-    boolean findByRoomType(String roomType);
+    RoomKind findByRoomType(String roomType);
 
     List<RoomKind> findAll();
 }

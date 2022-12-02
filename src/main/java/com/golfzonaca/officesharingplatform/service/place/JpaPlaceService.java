@@ -26,8 +26,7 @@ public class JpaPlaceService implements PlaceService {
 
     @Override
     public Place findById(long placeId) {
-        Optional<Place> findPlace = placeRepository.findById(placeId);
-        return findPlace.orElse(null);
+        return placeRepository.findById(placeId);
     }
 
     @Override
@@ -42,11 +41,6 @@ public class JpaPlaceService implements PlaceService {
             }
         }
         return false;
-    }
-
-    @Override
-    public boolean isExistPlace(long placeId) {
-        return placeRepository.findById(placeId).isPresent();
     }
 
     @Override

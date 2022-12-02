@@ -1,5 +1,8 @@
 package com.golfzonaca.officesharingplatform.web.reservation.dto.response;
 
+import com.golfzonaca.officesharingplatform.web.reservation.dto.response.type.Desk;
+import com.golfzonaca.officesharingplatform.web.reservation.dto.response.type.MeetingRoom;
+import com.golfzonaca.officesharingplatform.web.reservation.dto.response.type.Office;
 import lombok.Getter;
 
 import java.util.List;
@@ -7,9 +10,9 @@ import java.util.Map;
 
 @Getter
 public class ReservationResponseTypeForm {
-    private Boolean desk;
-    private List<Integer> meetingRoom;
-    private List<Integer> office;
+    private Desk desk;
+    private List<MeetingRoom> meetingRoom;
+    private List<Office> office;
 
     private Map<String, String> response;
 

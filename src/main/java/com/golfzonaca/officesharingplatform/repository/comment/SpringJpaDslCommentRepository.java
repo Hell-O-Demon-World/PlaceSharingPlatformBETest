@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Repository
@@ -25,8 +26,8 @@ public class SpringJpaDslCommentRepository implements CommentRepository {
     }
 
     @Override
-    public Optional<Comment> findById(long commentId) {
-        return jpaRepository.findById(commentId);
+    public Comment findById(long commentId) {
+        return jpaRepository.findById(commentId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 댓글입니다."));
     }
 
     @Override

@@ -4,6 +4,8 @@ import com.golfzonaca.officesharingplatform.domain.Place;
 import com.golfzonaca.officesharingplatform.domain.Reservation;
 import com.golfzonaca.officesharingplatform.domain.Room;
 import com.golfzonaca.officesharingplatform.domain.User;
+import com.golfzonaca.officesharingplatform.exception.DuplicatedReservationException;
+import com.golfzonaca.officesharingplatform.exception.NonExistedRoomException;
 import com.golfzonaca.officesharingplatform.repository.place.PlaceRepository;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
 import com.golfzonaca.officesharingplatform.repository.room.RoomRepository;
@@ -13,6 +15,9 @@ import com.golfzonaca.officesharingplatform.web.formatter.TimeFormatter;
 import com.golfzonaca.officesharingplatform.web.reservation.dto.process.ProcessReservationData;
 import com.golfzonaca.officesharingplatform.web.reservation.dto.response.ReservationResponseData;
 import com.golfzonaca.officesharingplatform.web.reservation.dto.response.ReservationResponseTypeForm;
+import com.golfzonaca.officesharingplatform.web.reservation.dto.response.type.Desk;
+import com.golfzonaca.officesharingplatform.web.reservation.dto.response.type.MeetingRoom;
+import com.golfzonaca.officesharingplatform.web.reservation.dto.response.type.Office;
 import com.golfzonaca.officesharingplatform.web.reservation.form.DefaultTimeOfDay;
 import com.golfzonaca.officesharingplatform.web.reservation.form.StringDateForm;
 import lombok.RequiredArgsConstructor;
@@ -39,10 +44,7 @@ public class JpaReservationService implements ReservationService {
     public ReservationResponseTypeForm findRoom(long placeId) {
         Map<String, String> response = new LinkedHashMap<>();
 
-        Place findPlace = placeRepository.findById(placeId).orElseThrow(() -> new NullPointerException("NonExistPlaceError::: 존재하지 않는 공간입니다."));
-        if (findPlace.getRooms().isEmpty()) {
-            response.put("NonExistRoomsError", "해당 공간에 등록된 대여공간이 없습니다.");
-        }
+        Place findPlace = placeRepository.findById(placeId);
 
         List<Room> roomList = findPlace.getRooms();
         Set<String> nonDuplicatedRoomSet = new HashSet<>();
@@ -54,6 +56,9 @@ public class JpaReservationService implements ReservationService {
 
     private static ReservationResponseTypeForm getReservationResponseForm(Map<String, String> response, Set<String> nonDuplicatedRoomSet) {
         ReservationResponseTypeForm responseForm = new ReservationResponseTypeForm();
+        Desk resultDesk = new Desk();
+        MeetingRoom meetingRoom = new MeetingRoom();
+        Office office = new Office();
         boolean responseDesk = false;
         List<Integer> responseMeetingRoom = new ArrayList<>();
         List<Integer> responseOffice = new ArrayList<>();
@@ -76,15 +81,7 @@ public class JpaReservationService implements ReservationService {
     }
 
     @Override
-    public List<ReservationResponseData> getReservationResponseData(Long placeId, String selectedType, String inputDate) {
-        List<ReservationResponseData> result = new ArrayList<>();
-        Optional<Place> optFindPlace = placeRepository.findById(placeId);
-        if (optFindPlace.isEmpty()) {
-            log.error("placeId 에 맞는 place 가 없습니다.");
-            result.add(new ReservationResponseData());
-            return result;
-        }
-        Place findPlace = optFindPlace.get();
+    public List<ReservationResponseData> getReservationResponseData(Place findPlace, String selectedType, String inputDate) {
         String selectedRoomType = selectedType.toUpperCase();
         LocalDate selectedStartDate = TimeFormatter.toLocalDate(inputDate);
         LocalDate selectedEndDate = TimeFormatter.toLocalDate(inputDate).plusMonths(1);
@@ -93,7 +90,7 @@ public class JpaReservationService implements ReservationService {
     }
 
     private List<ReservationResponseData> getTotalDayData(Place findPlace, String roomType, LocalDate selectedStartDate, LocalDate selectedEndDate) {
-        List<ReservationResponseData> result = new ArrayList<>();
+        List<ReservationResponseData> resultList = new ArrayList<>();
         String[] openDays = findPlace.getOpenDays().split(", ");
 
         int startYear = selectedStartDate.getYear();
@@ -131,7 +128,7 @@ public class JpaReservationService implements ReservationService {
                 for (int day = startDay; day < endDay + 1; day++) {
                     LocalDate date = StringDateForm.toLocalDate(String.valueOf(year), String.valueOf(month.getValue()), String.valueOf(day));
                     boolean state;
-                    if (isOpenDaysByDate(openDays, date)) {
+                    if (reservationRequestValidation.isOpenDaysByDate(openDays, date)) {
                         state = false;
                     } else if (roomType.contains("OFFICE")) {
                         state = getOfficeStateThatDate(findPlace.getId(), roomType, date);
@@ -141,7 +138,7 @@ public class JpaReservationService implements ReservationService {
                         Map<Integer, ReservedRoom> reservedRoomMap = getReservedRoomMap(findPlace, findReservationList, roomByPlaceIdAndRoomType);
                         state = !isFullReservation(findPlace, reservedRoomMap);
                     }
-                    result.add(ReservationResponseData.builder()
+                    resultList.add(ReservationResponseData.builder()
                             .state(state)
                             .productType(roomType)
                             .date(date)
@@ -149,18 +146,7 @@ public class JpaReservationService implements ReservationService {
                 }
             }
         }
-        return result;
-    }
-
-    private boolean isOpenDaysByDate(String[] openDays, LocalDate date) {
-        boolean state = true;
-        for (String d : openDays) {
-            if (TimeFormatter.toDayOfTheWeek(date).equals(d)) {
-                state = false;
-                break;
-            }
-        }
-        return state;
+        return resultList;
     }
 
     private boolean getOfficeStateThatDate(Long placeId, String roomType, LocalDate date) {
@@ -187,20 +173,14 @@ public class JpaReservationService implements ReservationService {
         return result;
     }
 
-    private boolean existReservationThatDay(Long placeId, String roomType, LocalDate date) {
-        Optional<Reservation> optFindReservation = reservationRepository.findByPlaceIdAndRoomTypeAndDate(placeId, roomType, date);
-        return optFindReservation.isPresent();
+    @Override
+    public Boolean existReservationThatDay(Long placeId, String roomType, LocalDate date) {
+        return reservationRepository.findByPlaceIdAndRoomTypeAndDate(placeId, roomType, date).isPresent();
     }
 
     @Override
     public List<Integer> findAvailableTimes(Long placeId, String selectedType, LocalDate date, LocalTime startTime) {
-        List<Integer> result = new ArrayList<>();
-        Optional<Place> optFindPlace = placeRepository.findById(placeId);
-        if (optFindPlace.isEmpty()) {
-            log.error("placeId 에 맞는 place 가 없습니다.");
-            return result;
-        }
-        Place findPlace = optFindPlace.get();
+        Place findPlace = placeRepository.findById(placeId);
 
         return getTimeList(findPlace, selectedType, date, startTime);
     }
@@ -212,15 +192,13 @@ public class JpaReservationService implements ReservationService {
         int totalReservationCount = reservedRoomList.size();
         int beforeReservationCount = countBeforeReservationList(findReservationList);
 
-        int startTime = findPlace.getPlaceStart().getHour();
-        int endTime = findPlace.getPlaceEnd().getHour();
-        Map<Integer, Boolean> inputTimeMap = setStartTimeAndEndTime(getDefaultTimeMap(), startTime, endTime);
-
+        LocalTime startTime = findPlace.getPlaceStart();
+        LocalTime endTime = findPlace.getPlaceEnd();
         if (!hasFullReservation(totalReservationCount, beforeReservationCount)) {
             Map<Integer, ReservedRoom> reservedRoomMap = getReservedRoomMap(findPlace, findReservationList, reservedRoomList);
             return getResultList(findPlace, selectedStartTime.getHour(), reservedRoomMap);
         }
-        return parsingMapToList(inputTimeMap);
+        return parsingMapToList(new ReservedRoom(0L, startTime, endTime).getTimeStates());
     }
 
     private boolean isFullReservation(Place findPlace, Map<Integer, ReservedRoom> reservedRoomMap) {
@@ -284,37 +262,19 @@ public class JpaReservationService implements ReservationService {
     }
 
     @Override
-    public Map<String, String> validation(Map<String, String> response, User user, Place place, ProcessReservationData data) {
-        response = reservationRequestValidation.validation(response, user, place, data);
-        return response;
-    }
-
-    @Override
     public Map<String, Object> saveReservation(User user, Place place, ProcessReservationData data) {
         Map<String, Object> result = new LinkedHashMap<>();
-        Map<String, String> errorMap = new HashMap<>();
 
         LocalTime startTime = data.getStartTime();
         LocalTime endTime = data.getEndTime();
         LocalDate date = data.getStartDate();
         String selectedType = data.getSelectedType();
 
-        Optional<Room> resultRoom = Optional.ofNullable(getResultRoom(place, startTime, endTime, date, selectedType));
-        if (resultRoom.isEmpty()) {
-            errorMap.put("ReservationError", "예약가능한 Room이 없습니다.");
-            log.error("예약 가능한 Room이 없습니다.");
-        } else {
-            Reservation reservation = new Reservation(user, resultRoom.get(), date, startTime, date, endTime.plusHours(1));
-            Reservation save = reservationRepository.save(reservation);
-            if (save == null) {
-                errorMap.put("ReservationError", "예약 실패");
-                result.put("errorMap", errorMap);
-                log.error("예약에 실패하였습니다.");
-                return result;
-            }
-            result.put("reservationId", save.getId().toString());
-        }
-        result.put("errorMap", errorMap);
+        Room resultRoom = getResultRoom(place, startTime, endTime, date, selectedType);
+        Reservation reservation = new Reservation(user, resultRoom, date, startTime, date, endTime.plusHours(1), true);
+        Reservation save = Optional.ofNullable(reservationRepository.save(reservation)).orElseThrow(() -> new DuplicatedReservationException("ReservationError::: 예약 실패"));
+
+        result.put("reservationId", save.getId().toString());
         return result;
     }
 
@@ -336,6 +296,8 @@ public class JpaReservationService implements ReservationService {
         int maxWindowSize = maxTime - startTime;
         int window = endTime - startTime + 1;
         Map<Integer, ReservedRoom> reservedRoomMap = getReservedRoomMap(place, findReservationList, reservedRoomList);
+        Room resultRoom = new Room();
+        resultRoom.getId();
         Long resultRoomId = -1L;
         boolean endFlag = true;
 
@@ -372,8 +334,7 @@ public class JpaReservationService implements ReservationService {
         }
 
         if (resultRoomId == -1L) {
-            log.info("예약가능한 시간이 없습니다. time range = {} - {}", startTime, endTime);
-            return null;
+            throw new NonExistedRoomException("예약가능한 Room이 없습니다. time range = " + startTime + endTime);
         }
         return roomRepository.findById(resultRoomId);
     }
@@ -384,8 +345,7 @@ public class JpaReservationService implements ReservationService {
     private Map<Integer, ReservedRoom> getReservedRoomMap(Place findPlace, List<Reservation> findReservationList, List<Room> reservedRoomList) {
         Map<Integer, ReservedRoom> reservedRoomMap = new HashMap<>();
         for (int i = 0; i < reservedRoomList.size(); i++) {
-            ReservedRoom reservedRoom = new ReservedRoom(reservedRoomList.get(i).getId());
-            reservedRoom.setStartAndEndTimeMap(findPlace.getPlaceStart(), findPlace.getPlaceEnd());
+            ReservedRoom reservedRoom = new ReservedRoom(reservedRoomList.get(i).getId(), findPlace.getPlaceStart(), findPlace.getPlaceEnd());
             reservedRoomMap.put(i, reservedRoom);
         }
 
@@ -394,23 +354,15 @@ public class JpaReservationService implements ReservationService {
             for (Reservation reservation : findReservationList) {
                 if (reservedRoom.getRoomId().equals(reservation.getRoom().getId())) {
                     for (int time = reservation.getResStartTime().getHour(); time < reservation.getResEndTime().getHour(); time++) {
-                        if (reservedRoom.getTimeState(time) && isOpenToday(findPlace, TimeFormatter.toLocalTime(String.valueOf(time)))) {
+                        if (reservedRoom.getTimeState(time) && reservationRequestValidation.isOpenToday(findPlace, TimeFormatter.toLocalTime(String.valueOf(time)))) {
                             reservedRoom.getTimeStates().replace(time, false);
                         }
                     }
-                    reservedRoom.setStartAndEndTimeMap(findPlace.getPlaceStart(), findPlace.getPlaceEnd());
                     reservedRoomMap.replace(i, reservedRoom);
                 }
             }
         }
         return reservedRoomMap;
-    }
-
-    /**
-     * 입력 받은 시간(time)이 place의 영업 시간 내에 존재하는지 여부 확인
-     */
-    private boolean isOpenToday(Place findPlace, LocalTime now) {
-        return (findPlace.getPlaceStart().equals(now) || findPlace.getPlaceStart().isBefore(now)) && findPlace.getPlaceEnd().isAfter(now);
     }
 
     private List<Integer> parsingMapToList(Map<Integer, Boolean> inputTimeMap) {
@@ -428,16 +380,6 @@ public class JpaReservationService implements ReservationService {
         return totalReservationCount - beforeReservationCount > 0;
     }
 
-    private Map<Integer, Boolean> setStartTimeAndEndTime(Map<Integer, Boolean> inputTimeMap, int startTime, int endTime) {
-        if (endTime == 0) {
-            endTime = 24;
-        }
-        for (int i = startTime; i < endTime; i++) {
-            inputTimeMap.replace(i, false, true);
-        }
-        return inputTimeMap;
-    }
-
     private int countBeforeReservationList(List<Reservation> findReservationList) {
         Set<Long> countRoomIdSet = new HashSet<>();
         for (Reservation reservation : findReservationList) {
@@ -445,13 +387,4 @@ public class JpaReservationService implements ReservationService {
         }
         return countRoomIdSet.size();
     }
-
-    private Map<Integer, Boolean> getDefaultTimeMap() {
-        Map<Integer, Boolean> timeMap = new HashMap<>();
-        for (int time : DefaultTimeOfDay.getTimes()) {
-            timeMap.put(time, false);
-        }
-        return timeMap;
-    }
-
 }

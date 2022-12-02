@@ -1,6 +1,7 @@
 package com.golfzonaca.officesharingplatform.repository.roomkind;
 
 import com.golfzonaca.officesharingplatform.domain.RoomKind;
+import com.golfzonaca.officesharingplatform.exception.NonExistedRoomKindException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,8 +27,8 @@ public class CustomRoomKindRepository implements RoomKindRepository {
     }
 
     @Override
-    public boolean findByRoomType(String roomType) {
-        return queryRoomKindRepository.findByRoomType(roomType).isPresent();
+    public RoomKind findByRoomType(String roomType) {
+        return queryRoomKindRepository.findByRoomType(roomType).orElseThrow(NonExistedRoomKindException::new);
     }
 
     @Override

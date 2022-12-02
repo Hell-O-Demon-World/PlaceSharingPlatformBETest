@@ -1,6 +1,7 @@
 package com.golfzonaca.officesharingplatform.repository.place;
 
 import com.golfzonaca.officesharingplatform.domain.Place;
+import com.golfzonaca.officesharingplatform.exception.NonExistedPlaceException;
 import com.golfzonaca.officesharingplatform.web.main.dto.request.RequestFilterData;
 import com.golfzonaca.officesharingplatform.web.main.dto.request.RequestSearchData;
 import com.querydsl.core.Tuple;
@@ -25,8 +26,8 @@ public class CustomPlaceRepository implements PlaceRepository {
     }
 
     @Override
-    public Optional<Place> findById(long id) {
-        return jpaRepository.findById(id);
+    public Place findById(long id) {
+        return jpaRepository.findById(id).orElseThrow(NonExistedPlaceException::new);
     }
 
     @Override
@@ -41,7 +42,7 @@ public class CustomPlaceRepository implements PlaceRepository {
 
     @Override
     public String findOpenDayById(Long id) {
-        return queryPlaceRepository.findOpenDayById(id);
+        return queryPlaceRepository.findOpenDayById(id).orElseThrow(NonExistedPlaceException::new);
     }
 
     @Override

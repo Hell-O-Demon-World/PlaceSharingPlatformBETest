@@ -14,6 +14,7 @@ import org.springframework.util.StringUtils;
 import javax.persistence.EntityManager;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 import static com.golfzonaca.officesharingplatform.domain.QPlace.place;
 import static com.golfzonaca.officesharingplatform.domain.QRoom.room;
@@ -68,12 +69,12 @@ public class QueryPlaceRepository {
                 .fetch();
     }
 
-    public String findOpenDayById(Long id) {
-        return query
+    public Optional<String> findOpenDayById(Long id) {
+        return Optional.ofNullable(query
                 .select(place.openDays)
                 .from(place)
                 .where(place.id.eq(id))
-                .fetchFirst();
+                .fetchFirst());
     }
 
     public Tuple findStartAndEndTimeById(Long id) {

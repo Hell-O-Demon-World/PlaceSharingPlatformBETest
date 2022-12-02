@@ -16,6 +16,34 @@ import java.util.NoSuchElementException;
 public class ExceptionControllerAdvice {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(InvalidTimeException.class)
+    public ErrorResult illegalExHandler(InvalidTimeException e) {
+        log.error("[exceptionHandle] ex", e);
+        return new ErrorResult("BAD", e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(InvalidDateException.class)
+    public ErrorResult illegalExHandler(InvalidDateException e) {
+        log.error("[exceptionHandle] ex", e);
+        return new ErrorResult("BAD", e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(NotBusinessDayException.class)
+    public ErrorResult illegalExHandler(NotBusinessDayException e) {
+        log.error("[exceptionHandle] ex", e);
+        return new ErrorResult("BAD", e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(NotBusinessTimeException.class)
+    public ErrorResult illegalExHandler(NotBusinessTimeException e) {
+        log.error("[exceptionHandle] ex", e);
+        return new ErrorResult("BAD", e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(NoSuchElementException.class)
     public ErrorResult illegalExHandler(NoSuchElementException e) {
         log.error("[exceptionHandle] ex", e);
@@ -44,8 +72,22 @@ public class ExceptionControllerAdvice {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(NonExistedRoomKindException.class)
+    public ErrorResult illegalExHandler(NonExistedRoomKindException e) {
+        log.error("[exceptionHandle] ex", e);
+        return new ErrorResult("BAD", e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(NonExistedRatingException.class)
     public ErrorResult illegalExHandler(NonExistedRatingException e) {
+        log.error("[exceptionHandle] ex", e);
+        return new ErrorResult("BAD", e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(NonexistentRestRoomForSelectedPlaceAndDateTime.class)
+    public ErrorResult illegalExHandler(NonexistentRestRoomForSelectedPlaceAndDateTime e) {
         log.error("[exceptionHandle] ex", e);
         return new ErrorResult("BAD", e.getMessage());
     }
@@ -58,9 +100,17 @@ public class ExceptionControllerAdvice {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(DuplicatedReservationException.class)
+    public ErrorResult invalidUser(DuplicatedReservationException e) {
+        log.error("[exceptionHandle] ex", e);
+        return new ErrorResult("BAD", e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(UsernameNotFoundException.class)
     public ErrorResult invalidUser(UsernameNotFoundException e) {
         log.error("[exceptionHandle] ex", e);
         return new ErrorResult("BAD", e.getMessage());
     }
+
 }

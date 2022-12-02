@@ -51,7 +51,7 @@ public class JpaMyPageService implements MyPageService {
             Reservation findReservation = findReservationList.get(i);
             MyPageReservationForm myPageReservationForm = MyPageReservationForm.builder()
                     .resDate(findReservation.getResStartDate().toString() + "~" + findReservationList.get(i).getResEndDate().toString())
-                    .placeName(placeRepository.findById(findReservation.getRoom().getPlace().getId()).get().getPlaceName())
+                    .placeName(placeRepository.findById(findReservation.getRoom().getPlace().getId()).getPlaceName())
                     .roomKind(roomKindRepository.findById(findReservation.getRoom().getRoomKind().getId()).getRoomType())
                     .resTime(findReservation.getResStartTime().toString() + "~" + findReservation.getResEndTime().toString())
                     .build();
