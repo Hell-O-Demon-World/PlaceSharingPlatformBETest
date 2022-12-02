@@ -2,11 +2,14 @@ package com.golfzonaca.officesharingplatform.web.payment;
 
 import com.siot.IamportRestClient.IamportClient;
 import com.siot.IamportRestClient.exception.IamportResponseException;
+import com.siot.IamportRestClient.request.CancelData;
 import com.siot.IamportRestClient.request.CardInfo;
 import com.siot.IamportRestClient.request.OnetimePaymentData;
 import com.siot.IamportRestClient.response.IamportResponse;
 import com.siot.IamportRestClient.response.Payment;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,6 +18,7 @@ import java.math.BigDecimal;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class IamPortController {
 
 
@@ -25,5 +29,13 @@ public class IamPortController {
 //        onetimeData.setPg("jtnet");
         onetimeData.setPg("nice");
         return iamportClient.onetimePayment(onetimeData);
+    }
+
+    @PostMapping("/cancel")
+    public IamportResponse<Payment> iamportCancel() throws IamportResponseException, IOException {
+        log.info("iamportCancel() = {}", iamportCancel());
+        IamportClient iamportClient = new IamportClient("3356213051155874", "c8AvU2odFqdwyfvFV7xcA880WWKm3CE8bah5mbR60DV3RN2DUpmXYjtd0mzbC5Y0ieMaRnB95EpXfvrf");
+        CancelData cancelData = new CancelData("imp03070546", true, new BigDecimal(2000));
+        return iamportClient.cancelPaymentByImpUid(cancelData);
     }
 }

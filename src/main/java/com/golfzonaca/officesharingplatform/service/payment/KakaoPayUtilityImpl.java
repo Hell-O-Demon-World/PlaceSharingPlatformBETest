@@ -2,15 +2,16 @@ package com.golfzonaca.officesharingplatform.service.payment;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.golfzonaca.officesharingplatform.domain.*;
+import com.golfzonaca.officesharingplatform.domain.Payment;
+import com.golfzonaca.officesharingplatform.domain.Reservation;
+import com.golfzonaca.officesharingplatform.domain.Room;
+import com.golfzonaca.officesharingplatform.domain.User;
 import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayApprovalResponse;
 import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayReadyRequest;
 import com.golfzonaca.officesharingplatform.domain.type.PG;
 import com.golfzonaca.officesharingplatform.domain.type.PayType;
 import com.golfzonaca.officesharingplatform.domain.type.PayWay;
-import com.golfzonaca.officesharingplatform.domain.type.RoomType;
 import com.golfzonaca.officesharingplatform.repository.payment.PaymentRepository;
-import jdk.jfr.Registered;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
@@ -34,7 +35,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class KakaoPayUtilityImpl implements KakaoPayUtility {
 
-    private final PaymentUtility paymentUtility;
 
     @Override
     public LocalDate toLocalDate(LocalDateTime localDateTime) {
