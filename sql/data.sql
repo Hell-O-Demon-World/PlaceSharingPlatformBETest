@@ -1440,3 +1440,56 @@ INSERT INTO comment (ID, RATING_ID, USER_ID, CONTEXT, WRITEDATETIME)
 VALUES (4, 1, 4, '네이버 좋아요4', '2022-11-29 04:00:00');
 INSERT INTO comment (ID, RATING_ID, USER_ID, CONTEXT, WRITEDATETIME)
 VALUES (5, 2, 5, '코스타...', '2022-11-29 04:00:00');
+
+INSERT INTO placeimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID)
+VALUES (1, '골프존.png', '골프존.png',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/1/PLACE/%EA%B3%A8%ED%94%84%EC%A1%B4.png',
+        1);
+INSERT INTO placeimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID)
+VALUES (2, '골프존 서울 (1).jpeg', '골프존 서울 (1).jpeg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/1/PLACE/%EA%B3%A8%ED%94%84%EC%A1%B4+%EC%84%9C%EC%9A%B8+(1).jpeg',
+        1);
+INSERT INTO placeimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID)
+VALUES (3, '골프존 서울 (2).jpeg', '골프존 서울 (2).jpeg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/1/PLACE/%EA%B3%A8%ED%94%84%EC%A1%B4+%EC%84%9C%EC%9A%B8+(2).jpeg',
+        1);
+
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (1, 'DESK.jpeg', 'DESK.jpeg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/1/DESK/DESK.jpeg', 1, 1);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (2, 'MEETINGROOM4.jpeg', 'MEETINGROOM4.jpeg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/1/MEETINGROOM4/MEETINGROOM4.jpeg',
+        1, 2);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (3, 'MEETINGROOM6.jpg', 'MEETINGROOM6.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/1/MEETINGROOM6/MEETINGROOM6.jpg', 1,
+        3);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (4, 'MEETINGROOM10 (1).jpg', 'MEETINGROOM10 (1).jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/1/MEETINGROOM10/MEETINGROOM10+(1).jpg',
+        1, 4);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (5, 'MEETINGROOM10 (2).jpg', 'MEETINGROOM10 (2).jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/1/MEETINGROOM10/MEETINGROOM10+(2).jpg',
+        1, 4);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (6, 'MEETINGROOM20 (1).jpg', 'MEETINGROOM20 (1).jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/1/MEETINGROOM20/MEETINGROOM20+(1).jpg',
+        1, 5);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (7, 'MEETINGROOM20 (2).jpg', 'MEETINGROOM20 (2).jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/1/MEETINGROOM20/MEETINGROOM20+(2).jpg',
+        1, 5);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (8, 'OFFICE20.jpg', 'OFFICE20.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/1/OFFICE20/OFFICE20.jpg', 1, 6);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (9, 'OFFICE40.jpg', 'OFFICE40.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/1/OFFICE40/OFFICE40.jpg', 1, 7);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (10, 'OFFICE70.jpg', 'OFFICE70.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/1/OFFICE70/OFFICE70.jpg', 1, 8);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (11, 'OFFICE100.jpeg', 'OFFICE100.jpeg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/1/OFFICE100/OFFICE100.jpeg', 1, 9);

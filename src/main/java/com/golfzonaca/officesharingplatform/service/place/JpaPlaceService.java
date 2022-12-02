@@ -1,7 +1,9 @@
 package com.golfzonaca.officesharingplatform.service.place;
 
 import com.golfzonaca.officesharingplatform.domain.Place;
+import com.golfzonaca.officesharingplatform.domain.PlaceImage;
 import com.golfzonaca.officesharingplatform.domain.Room;
+import com.golfzonaca.officesharingplatform.domain.RoomImage;
 import com.golfzonaca.officesharingplatform.repository.place.PlaceRepository;
 import com.golfzonaca.officesharingplatform.service.place.dto.response.PlaceDto;
 import com.golfzonaca.officesharingplatform.web.formatter.TimeFormatter;
@@ -74,7 +76,14 @@ public class JpaPlaceService implements PlaceService {
         Map<Integer, PlaceDto> mainPlaceData = new LinkedHashMap<>();
         for (int i = 0; i < places.size(); i++) {
             Place place = places.get(i);
-            mainPlaceData.put(i, new PlaceDto(place.getId().toString(), place.getPlaceName(), String.valueOf(place.getRatePoint().getRatingPoint()), place.getAddress().getAddress(), stringToList(place.getPlaceAddInfo()), place.getDescription(), excludeOpenDays(stringToList(place.getOpenDays())), place.getPlaceStart().toString(), place.getPlaceEnd().toString(), processingRoomInfo(place.getRooms())));
+            List<String> imagesPath = new LinkedList<>();
+            for (PlaceImage placeImage : place.getPlaceImages()) {
+                imagesPath.add(placeImage.getSavedPath());
+            }
+            for (RoomImage roomImage : place.getRoomImages()) {
+                imagesPath.add(roomImage.getSavedPath());
+            }
+            mainPlaceData.put(i, new PlaceDto(imagesPath, place.getId().toString(), place.getPlaceName(), String.valueOf(place.getRatePoint().getRatingPoint()), place.getAddress().getAddress(), stringToList(place.getPlaceAddInfo()), place.getDescription(), excludeOpenDays(stringToList(place.getOpenDays())), place.getPlaceStart().toString(), place.getPlaceEnd().toString(), processingRoomInfo(place.getRooms())));
         }
         return mainPlaceData;
     }

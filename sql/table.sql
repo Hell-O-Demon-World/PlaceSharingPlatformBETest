@@ -263,3 +263,31 @@ create table comment
         foreign key (USER_ID) references user (ID)
             on update cascade on delete cascade
 );
+
+create table placeimage
+(
+    ID              bigint unsigned auto_increment primary key,
+    UPLOAD_FILENAME varchar(100) not null,
+    STORE_FILENAME  varchar(100) not null,
+    SAVED_PATH      mediumtext   not null,
+    PLACE_ID        bigint unsigned not null,
+    constraint FK_PLACE_TO_PLACEIMAGE_1
+        foreign key (PLACE_ID) references place (ID)
+            on update cascade on delete cascade
+);
+
+create table roomimage
+(
+    ID              bigint unsigned auto_increment primary key,
+    UPLOAD_FILENAME varchar(100) not null,
+    STORE_FILENAME  varchar(100) not null,
+    SAVED_PATH      mediumtext   not null,
+    PLACE_ID        bigint unsigned not null,
+    ROOMKIND_ID     bigint unsigned not null,
+    constraint FK_PLACE_TO_ROOMIMAGE_1
+        foreign key (PLACE_ID) references place (ID)
+            on update cascade on delete cascade,
+    constraint FK_ROOMKIND_TO_ROOMIMAGE_1
+        foreign key (ROOMKIND_ID) references room_kind (ID)
+            on update cascade on delete cascade
+);
