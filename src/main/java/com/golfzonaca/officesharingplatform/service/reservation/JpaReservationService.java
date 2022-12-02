@@ -9,6 +9,7 @@ import com.golfzonaca.officesharingplatform.exception.NonExistedRoomException;
 import com.golfzonaca.officesharingplatform.repository.place.PlaceRepository;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
 import com.golfzonaca.officesharingplatform.repository.room.RoomRepository;
+import com.golfzonaca.officesharingplatform.repository.roomkind.RoomKindRepository;
 import com.golfzonaca.officesharingplatform.service.reservation.dto.ReservedRoom;
 import com.golfzonaca.officesharingplatform.service.reservation.validation.ReservationRequestValidation;
 import com.golfzonaca.officesharingplatform.web.formatter.TimeFormatter;
@@ -18,7 +19,6 @@ import com.golfzonaca.officesharingplatform.web.reservation.dto.response.Reserva
 import com.golfzonaca.officesharingplatform.web.reservation.dto.response.type.Desk;
 import com.golfzonaca.officesharingplatform.web.reservation.dto.response.type.MeetingRoom;
 import com.golfzonaca.officesharingplatform.web.reservation.dto.response.type.Office;
-import com.golfzonaca.officesharingplatform.web.reservation.form.DefaultTimeOfDay;
 import com.golfzonaca.officesharingplatform.web.reservation.form.StringDateForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,46 +38,51 @@ public class JpaReservationService implements ReservationService {
     private final ReservationRepository reservationRepository;
     private final RoomRepository roomRepository;
     private final PlaceRepository placeRepository;
+    private final RoomKindRepository roomKindRepository;
     private final ReservationRequestValidation reservationRequestValidation;
 
     @Override
     public ReservationResponseTypeForm findRoom(long placeId) {
-        Map<String, String> response = new LinkedHashMap<>();
-
         Place findPlace = placeRepository.findById(placeId);
-
-        List<Room> roomList = findPlace.getRooms();
-        Set<String> nonDuplicatedRoomSet = new HashSet<>();
-        for (Room room : roomList) {
-            nonDuplicatedRoomSet.add(room.getRoomKind().getRoomType());
-        }
-        return getReservationResponseForm(response, nonDuplicatedRoomSet);
+        return getReservationResponseForm(findPlace);
     }
 
-    private static ReservationResponseTypeForm getReservationResponseForm(Map<String, String> response, Set<String> nonDuplicatedRoomSet) {
+    private ReservationResponseTypeForm getReservationResponseForm(Place findPlace) {
         ReservationResponseTypeForm responseForm = new ReservationResponseTypeForm();
-        Desk resultDesk = new Desk();
-        MeetingRoom meetingRoom = new MeetingRoom();
-        Office office = new Office();
+        Set<String> nonDuplicatedRoomSet = getNonDuplicatedRoomSet(findPlace.getRooms());
+
         boolean responseDesk = false;
-        List<Integer> responseMeetingRoom = new ArrayList<>();
-        List<Integer> responseOffice = new ArrayList<>();
+        List<MeetingRoom> responseMeetingRoom = new ArrayList<>();
+        List<Office> responseOffice = new ArrayList<>();
+        int price = 0;
         for (String room : nonDuplicatedRoomSet) {
+            price = roomKindRepository.findByRoomType(room).getPrice();
             if (room.equals("DESK")) {
                 responseDesk = true;
             } else {
                 String roomKindTag = room.replaceAll("[^0-9]", "");
                 if (room.contains("MEETINGROOM")) {
-                    responseMeetingRoom.add(Integer.parseInt(roomKindTag));
+                    responseMeetingRoom.add(new MeetingRoom(roomKindTag, price));
                 } else {
-                    responseOffice.add(Integer.parseInt(roomKindTag));
+                    responseOffice.add(new Office(roomKindTag, price));
                 }
             }
         }
+        Desk resultDesk = new Desk(responseDesk, price);
+
         Collections.sort(responseMeetingRoom);
         Collections.sort(responseOffice);
-        responseForm.toEntity(responseDesk, responseMeetingRoom, responseOffice, response);
+
+        responseForm.toEntity(resultDesk, responseMeetingRoom, responseOffice);
         return responseForm;
+    }
+
+    private Set<String> getNonDuplicatedRoomSet(List<Room> roomList) {
+        Set<String> nonDuplicatedRoomSet = new HashSet<>();
+        for (Room room : roomList) {
+            nonDuplicatedRoomSet.add(room.getRoomKind().getRoomType());
+        }
+        return nonDuplicatedRoomSet;
     }
 
     @Override

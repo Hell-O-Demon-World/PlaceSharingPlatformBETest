@@ -14,12 +14,9 @@ public class ReservationResponseTypeForm {
     private List<MeetingRoom> meetingRoom;
     private List<Office> office;
 
-    private Map<String, String> response;
-
-    public void toEntity(Boolean desk, List<Integer> meetingRoom, List<Integer> office, Map<String, String> response) {
+    public void toEntity(Desk desk, List<MeetingRoom> meetingRoom, List<Office> office) {
         this.desk = desk;
         this.meetingRoom = meetingRoom;
         this.office = office;
-        this.response = response;
     }
 }
