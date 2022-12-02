@@ -15,7 +15,7 @@ title OfficeSharingPlatform
 
     section 공통
     환경 설정(Git)             :chap1, 11-16, 1d
-    리팩토링 - 프로젝트 전체 대상   :chap2, 11-16, 11-30
+    개발 및 리팩토링             :chap2, 11-16, 12-16
 
     section 오령기
     Spring Jpa, QueryDsl 적용 (Main Platform)                     : chap1, 11-16, 3d
@@ -46,6 +46,8 @@ title OfficeSharingPlatform
     수익금 조회 추가 (Back Office)                       : chap9, 11-28, 1d
     공간 상세 정보 조회 (Main Platform)                   : chap10, 11-29, 1d
     Filter 수정 (Main Platform)                       : chap11, 11-30, 1d
+    Exception 처리 (Main Platform)                    : chap12, 11-30, 1d
+    이미지 업로드 추가 (Back Office)                      : chap13, 12-01, 2d
 
 
 ```

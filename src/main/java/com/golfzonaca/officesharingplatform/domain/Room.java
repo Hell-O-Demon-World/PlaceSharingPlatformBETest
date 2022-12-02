@@ -35,6 +35,9 @@ public class Room {
     @OneToOne(mappedBy = "room")
     private RoomStatus roomStatus;
 
+    @OneToMany(mappedBy = "room")
+    private List<RoomImage> roomImages = new LinkedList<>();
+
     @Builder
     public Room(RoomKind roomKind, Place place) {
         this.roomKind = roomKind;
