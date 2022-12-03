@@ -118,8 +118,10 @@ public class JpaPlaceService implements PlaceService {
         List<RatingDto> ratingList = new LinkedList<>();
         for (Room room : place.getRooms()) {
             for (Reservation reservation : room.getReservationList()) {
-                List<String> comment = getComment(reservation.getRating());
-                ratingList.add(new RatingDto(String.valueOf(reservation.getRating().getRatingScore()), reservation.getUser().getUsername(), reservation.getRating().getRatingTime().toString(), reservation.getRoom().getRoomKind().getRoomType(), reservation.getRating().getRatingReview(), comment));
+                if (reservation.getRating() != null) {
+                    List<String> comment = getComment(reservation.getRating());
+                    ratingList.add(new RatingDto(String.valueOf(reservation.getRating().getId()), String.valueOf(reservation.getRating().getRatingScore()), reservation.getUser().getUsername(), reservation.getRating().getRatingTime().toString(), reservation.getRoom().getRoomKind().getRoomType(), reservation.getRating().getRatingReview(), comment));
+                }
             }
         }
         return ratingList;

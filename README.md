@@ -48,6 +48,7 @@ title OfficeSharingPlatform
     Filter 수정 (Main Platform)                       : chap11, 11-30, 1d
     Exception 처리 (Main Platform)                    : chap12, 11-30, 1d
     이미지 업로드 추가 (Back Office)                      : chap13, 12-01, 2d
+    공간 상세 정보와 Reservation Part.1 통합               : chap14, 12-03, 2d
 
 
 ```

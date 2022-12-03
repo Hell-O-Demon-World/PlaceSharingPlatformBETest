@@ -6,6 +6,7 @@ import java.util.List;
 
 @AllArgsConstructor
 public class RatingDto {
+    private String ratingId;
     private String ratingScore;
     private String ratingWriter;
     private String writeDateTime;
