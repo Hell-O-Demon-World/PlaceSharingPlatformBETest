@@ -9,11 +9,11 @@ import java.util.Map;
 @Getter
 public class ReservedRoom {
     private Long roomId;
-    private Map<Integer, Boolean> timeStates;
+    private Map<Integer, Boolean> timeStates = getTimeMap();
 
-    public ReservedRoom(Long roomId) {
+    public ReservedRoom(Long roomId, LocalTime startLocalTime, LocalTime endLocalTime) {
         this.roomId = roomId;
-        this.timeStates = getTimeMap();
+        setStartAndEndTimeMap(startLocalTime, endLocalTime);
     }
 
     private Map<Integer, Boolean> getTimeMap() {

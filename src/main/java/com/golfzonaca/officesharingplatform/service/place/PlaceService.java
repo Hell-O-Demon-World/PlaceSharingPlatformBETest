@@ -13,8 +13,6 @@ public interface PlaceService {
 
     boolean isOpenDay(Long id, String day);
 
-    boolean isExistPlace(long placeId);
-
     boolean isOpenToday(Long id, String startTime);
 
     boolean selectedDateValidation(String startDate, String startDate1);

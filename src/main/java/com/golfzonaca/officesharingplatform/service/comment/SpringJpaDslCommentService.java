@@ -26,25 +26,25 @@ public class SpringJpaDslCommentService implements CommentService {
     @Override
     public void save(Long userId, Long placeId, CommentData data) {
         User user = userRepository.findById(userId);
-        Place place = placeRepository.findById(placeId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 공간입니다."));
+        Place place = placeRepository.findById(placeId);
         commentRepository.save(new Comment(place, data.getContext(), user, LocalDateTime.now()));
     }
 
     @Override
     public List<Comment> findAllByPlaceId(long placeId) {
-        Place place = placeRepository.findById(placeId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 공간입니다."));
+        Place place = placeRepository.findById(placeId);
         return commentRepository.findAllByPlace(place);
     }
 
     @Override
     public void update(long commentId, CommentData data) {
-        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 댓글입니다."));
+        Comment comment = commentRepository.findById(commentId);
         commentRepository.update(comment, data);
     }
 
     @Override
     public void delete(long commentId) {
-        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 댓글입니다."));
+        Comment comment = commentRepository.findById(commentId);
         commentRepository.delete(comment);
     }
 }

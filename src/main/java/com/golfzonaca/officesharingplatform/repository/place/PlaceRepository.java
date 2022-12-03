@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface PlaceRepository {
     List<Place> findAllPlaces();
 
-    Optional<Place> findById(long id);
+    Place findById(long id);
 
     List<Place> findPlaces(RequestSearchData requestSearchData);
 
