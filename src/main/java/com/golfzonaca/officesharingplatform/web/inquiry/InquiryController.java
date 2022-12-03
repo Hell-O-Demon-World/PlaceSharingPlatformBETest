@@ -6,10 +6,15 @@ import com.golfzonaca.officesharingplatform.service.answer.AnswerService;
 import com.golfzonaca.officesharingplatform.service.inquiry.InquiryService;
 import com.golfzonaca.officesharingplatform.web.inquiry.dto.AnswerData;
 import com.golfzonaca.officesharingplatform.web.inquiry.dto.InquiryData;
+import com.golfzonaca.officesharingplatform.web.inquiry.dto.InquiryDetailDto;
+import com.golfzonaca.officesharingplatform.web.inquiry.dto.InquiryPageInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.LinkedList;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,10 +29,14 @@ public class InquiryController {
         return "ok";
     }
 
-    @GetMapping("/inquiry/{inquiryId}")
-    public String inquiryDetail(@PathVariable long inquiryId) {
-        Inquiry inquiry = inquiryService.findById(inquiryId);
-        return "ok";
+    @PostMapping("/inquiry")
+    public List<InquiryDetailDto> allInquiry(@TokenUserId Long userId, @RequestBody InquiryPageInfo pageInfo) {
+        List<Inquiry> inquiryList = inquiryService.findByUserIdWithPagination(userId, pageInfo.getPage(), pageInfo.getQuantity());
+        List<InquiryDetailDto> inquiryDtoList = new LinkedList<>();
+        for (Inquiry inquiry : inquiryList) {
+            inquiryDtoList.add(new InquiryDetailDto(inquiry.getId().toString(), inquiry.getUser().getUsername(), inquiry.getTitle(), inquiry.getContent(), inquiry.getDateTime().toString(), inquiry.getInquiryStatus().getStatus().toString(), inquiry.getAnwer().getId().toString(), inquiry.getAnwer().getAnswer()));
+        }
+        return inquiryDtoList;
     }
 
     @PostMapping("/inquiry/{inquiryId}/edit")

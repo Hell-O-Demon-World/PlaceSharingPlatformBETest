@@ -1,6 +1,7 @@
 package com.golfzonaca.officesharingplatform.service.place;
 
 import com.golfzonaca.officesharingplatform.domain.Place;
+import com.golfzonaca.officesharingplatform.service.place.dto.PlaceDetailsInfo;
 import com.golfzonaca.officesharingplatform.service.place.dto.response.PlaceDto;
 
 import java.util.List;
@@ -19,4 +20,5 @@ public interface PlaceService {
 
     Map<Integer, PlaceDto> processingMainPlaceData(List<Place> places);
 
+    PlaceDetailsInfo getPlaceDetailsInfo(long placeId);
 }

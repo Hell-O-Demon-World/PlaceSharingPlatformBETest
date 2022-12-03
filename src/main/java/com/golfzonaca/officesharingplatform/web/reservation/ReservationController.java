@@ -12,7 +12,6 @@ import com.golfzonaca.officesharingplatform.web.formatter.TimeFormatter;
 import com.golfzonaca.officesharingplatform.web.reservation.dto.process.ProcessReservationData;
 import com.golfzonaca.officesharingplatform.web.reservation.dto.request.ResRequestData;
 import com.golfzonaca.officesharingplatform.web.reservation.dto.response.ReservationResponseData;
-import com.golfzonaca.officesharingplatform.web.reservation.dto.response.ReservationResponseTypeForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -29,11 +28,6 @@ public class ReservationController {
     private final PlaceService placeService;
     private final UserService userService;
     private final ReservationRequestValidation reservationRequestValidation;
-
-    @GetMapping("places/{placeId}")
-    public ReservationResponseTypeForm findRoom(@PathVariable long placeId) {
-        return reservationService.findRoom(placeId);
-    }
 
     @GetMapping("places/{placeId}/type/{typeName}/date/{inputDate}")
     public List<ReservationResponseData> selectedRoomType(@PathVariable Long placeId, @PathVariable String typeName, @PathVariable String inputDate) {

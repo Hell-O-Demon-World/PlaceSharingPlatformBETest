@@ -6,22 +6,24 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Repository
 @Transactional
 @RequiredArgsConstructor
-public class SpringJpaDslInquiryRepository implements InquiryRepository {
-    private final SpringJpaInquiryRepository jpaRepository;
-    
+public class CustomInquiryRepository implements InquiryRepository {
+    private final SpringJpaInquiryRepository jpaInquiryRepository;
+    private final QueryInquiryRepository queryInquiryRepository;
+
     @Override
     public void save(Inquiry inquiry) {
-        jpaRepository.save(inquiry);
+        jpaInquiryRepository.save(inquiry);
     }
 
     @Override
     public Inquiry findById(long inquiryId) {
-        return jpaRepository.findById(inquiryId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 문의입니다."));
+        return jpaInquiryRepository.findById(inquiryId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 문의입니다."));
     }
 
     @Override
@@ -31,6 +33,12 @@ public class SpringJpaDslInquiryRepository implements InquiryRepository {
 
     @Override
     public void delete(Inquiry inquiry) {
-        jpaRepository.delete(inquiry);
+        jpaInquiryRepository.delete(inquiry);
     }
+
+    @Override
+    public List<Inquiry> findByUserIdWithPagination(Long userId, long page, long quantity) {
+        return queryInquiryRepository.findByUserIdWithPagination(userId, page, quantity);
+    }
+
 }

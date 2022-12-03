@@ -32,6 +32,9 @@ public class Inquiry {
     private LocalDateTime dateTime;
 
     @OneToOne(mappedBy = "inquiry")
+    private Answer anwer;
+
+    @OneToOne(mappedBy = "inquiry")
     private InquiryStatus inquiryStatus;
 
     @Builder

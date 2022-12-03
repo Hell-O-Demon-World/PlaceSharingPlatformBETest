@@ -1,14 +1,15 @@
 package com.golfzonaca.officesharingplatform.service.place;
 
-import com.golfzonaca.officesharingplatform.domain.Place;
-import com.golfzonaca.officesharingplatform.domain.PlaceImage;
-import com.golfzonaca.officesharingplatform.domain.Room;
-import com.golfzonaca.officesharingplatform.domain.RoomImage;
+import com.golfzonaca.officesharingplatform.domain.*;
 import com.golfzonaca.officesharingplatform.repository.place.PlaceRepository;
+import com.golfzonaca.officesharingplatform.service.place.dto.PlaceDetailsInfo;
+import com.golfzonaca.officesharingplatform.service.place.dto.RatingDto;
 import com.golfzonaca.officesharingplatform.service.place.dto.response.PlaceDto;
+import com.golfzonaca.officesharingplatform.service.reservation.ReservationService;
 import com.golfzonaca.officesharingplatform.web.formatter.TimeFormatter;
 import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -18,7 +19,7 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 public class JpaPlaceService implements PlaceService {
-
+    private final ReservationService reservationService;
     private final PlaceRepository placeRepository;
 
     @Override
@@ -65,21 +66,71 @@ public class JpaPlaceService implements PlaceService {
 
         return startLocalDate.isBefore(endLocalDate.plusDays(1));
     }
-    
+
+    @Override
+    public PlaceDetailsInfo getPlaceDetailsInfo(long placeId) {
+        Place place = placeRepository.findById(placeId);
+        List<String> imagesPath = getImagesPath(place);
+        List<RatingDto> ratingList = getPlaceRating(place);
+
+        return new PlaceDetailsInfo(
+                place.getId().toString(),
+                place.getPlaceName(),
+                place.getAddress().getPostalCode(),
+                place.getAddress().getAddress(),
+                imagesPath,
+                String.valueOf(place.getRatePoint().getRatingPoint()),
+                String.valueOf(ratingList.size()),
+                getQuantityByRoomType(place, "DESK"),
+                getQuantityByRoomType(place, "MeetingRoom"),
+                getQuantityByRoomType(place, "Office"),
+                place.getDescription(),
+                excludeOpenDays(stringToList(place.getOpenDays())),
+                reservationService.findRoom(placeId),
+                ratingList
+        );
+    }
+
+    private String getQuantityByRoomType(Place place, String roomType) {
+        int quantity = 0;
+        for (Room room : place.getRooms()) {
+            if (room.getRoomKind().getRoomType().equals(roomType)) {
+                quantity++;
+            }
+        }
+        return String.valueOf(quantity);
+    }
+
     public Map<Integer, PlaceDto> processingMainPlaceData(List<Place> places) {
         Map<Integer, PlaceDto> mainPlaceData = new LinkedHashMap<>();
         for (int i = 0; i < places.size(); i++) {
             Place place = places.get(i);
-            List<String> imagesPath = new LinkedList<>();
-            for (PlaceImage placeImage : place.getPlaceImages()) {
-                imagesPath.add(placeImage.getSavedPath());
-            }
-            for (RoomImage roomImage : place.getRoomImages()) {
-                imagesPath.add(roomImage.getSavedPath());
-            }
+            List<String> imagesPath = getImagesPath(place);
             mainPlaceData.put(i, new PlaceDto(imagesPath, place.getId().toString(), place.getPlaceName(), String.valueOf(place.getRatePoint().getRatingPoint()), place.getAddress().getAddress(), stringToList(place.getPlaceAddInfo()), place.getDescription(), excludeOpenDays(stringToList(place.getOpenDays())), place.getPlaceStart().toString(), place.getPlaceEnd().toString(), processingRoomInfo(place.getRooms())));
         }
         return mainPlaceData;
+    }
+
+    private List<RatingDto> getPlaceRating(Place place) {
+        List<RatingDto> ratingList = new LinkedList<>();
+        for (Room room : place.getRooms()) {
+            for (Reservation reservation : room.getReservationList()) {
+                ratingList.add(new RatingDto(String.valueOf(reservation.getRating().getRatingScore()), reservation.getUser().getUsername(), reservation.getRating().getRatingTime().toString(), reservation.getRoom().getRoomKind().getRoomType(), reservation.getRating().getRatingReview()));
+            }
+        }
+        return ratingList;
+    }
+
+    @NotNull
+    private List<String> getImagesPath(Place place) {
+        List<String> imagesPath = new LinkedList<>();
+        for (PlaceImage placeImage : place.getPlaceImages()) {
+            imagesPath.add(placeImage.getSavedPath());
+        }
+        for (RoomImage roomImage : place.getRoomImages()) {
+            imagesPath.add(roomImage.getSavedPath());
+        }
+        return imagesPath;
     }
 
     private List<String> stringToList(String string) {

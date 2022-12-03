@@ -6,7 +6,6 @@ import com.golfzonaca.officesharingplatform.web.reservation.dto.response.type.Of
 import lombok.Getter;
 
 import java.util.List;
-import java.util.Map;
 
 @Getter
 public class ReservationResponseTypeForm {

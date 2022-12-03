@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -50,5 +51,10 @@ public class SpringJpaDslInquiryService implements InquiryService {
             inquiryStatusRepository.delete(inquiry.getInquiryStatus());
             inquiryRepository.delete(inquiry);
         }
+    }
+
+    @Override
+    public List<Inquiry> findByUserIdWithPagination(Long userId, long page, long quantity) {
+        return inquiryRepository.findByUserIdWithPagination(userId, page, quantity);
     }
 }

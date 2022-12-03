@@ -3,6 +3,8 @@ package com.golfzonaca.officesharingplatform.repository.inquiry;
 import com.golfzonaca.officesharingplatform.domain.Inquiry;
 import com.golfzonaca.officesharingplatform.web.inquiry.dto.InquiryData;
 
+import java.util.List;
+
 public interface InquiryRepository {
     void save(Inquiry inquiry);
 
@@ -12,4 +14,5 @@ public interface InquiryRepository {
 
     void delete(Inquiry inquiry);
 
+    List<Inquiry> findByUserIdWithPagination(Long userId, long page, long quantity);
 }
