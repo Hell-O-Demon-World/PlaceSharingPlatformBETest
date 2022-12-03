@@ -50,7 +50,7 @@ public class ReservationRequestValidation {
     }
 
     private void validBusinessTime(Place place, LocalTime time) {
-        if (place.getPlaceStart().isBefore(time) || place.getPlaceEnd().isAfter(time)) {
+        if (place.getPlaceStart().isAfter(time) || place.getPlaceEnd().isBefore(time)) {
             throw new InvalidTimeException("InvalidTimeException::: 해당 시간은 영업시간에 포함되지 않습니다.");
         }
     }
@@ -69,7 +69,7 @@ public class ReservationRequestValidation {
     private void validBusinessDay(Place place, LocalDate date) {
         boolean businessDay = place.getOpenDays().contains(date.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.US));
         if (!businessDay) {
-            throw new NotBusinessDayException();
+            throw new NotBusinessDayException("NotBusinessDayException::: 입력한 날짜는 영업일이 아닙니다.");
         }
     }
 
