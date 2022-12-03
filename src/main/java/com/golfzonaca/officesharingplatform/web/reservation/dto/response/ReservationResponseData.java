@@ -1,5 +1,6 @@
 package com.golfzonaca.officesharingplatform.web.reservation.dto.response;
 
+import com.golfzonaca.officesharingplatform.domain.type.dateformat.DateFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,5 +16,5 @@ import java.util.List;
 public class ReservationResponseData {
     private String productType;
     private boolean state;
-    private LocalDate date;
+    private DateFormat date;
 }

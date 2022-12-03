@@ -4,6 +4,7 @@ import com.golfzonaca.officesharingplatform.domain.Place;
 import com.golfzonaca.officesharingplatform.domain.Reservation;
 import com.golfzonaca.officesharingplatform.domain.Room;
 import com.golfzonaca.officesharingplatform.domain.User;
+import com.golfzonaca.officesharingplatform.domain.type.dateformat.DateFormat;
 import com.golfzonaca.officesharingplatform.exception.DuplicatedReservationException;
 import com.golfzonaca.officesharingplatform.exception.NonExistedRoomException;
 import com.golfzonaca.officesharingplatform.repository.place.PlaceRepository;
@@ -97,7 +98,6 @@ public class JpaReservationService implements ReservationService {
     private List<ReservationResponseData> getTotalDayData(Place findPlace, String roomType, LocalDate selectedStartDate, LocalDate selectedEndDate) {
         List<ReservationResponseData> resultList = new ArrayList<>();
         String[] openDays = findPlace.getOpenDays().split(", ");
-
         int startYear = selectedStartDate.getYear();
         int endYear = selectedEndDate.getYear();
         List<Integer> years = getTotalYears(startYear, endYear);
@@ -131,6 +131,7 @@ public class JpaReservationService implements ReservationService {
                     endDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
                 }
                 for (int day = startDay; day < endDay + 1; day++) {
+                    DateFormat formDate = new DateFormat(year, month.getValue(), day);
                     LocalDate date = StringDateForm.toLocalDate(String.valueOf(year), String.valueOf(month.getValue()), String.valueOf(day));
                     boolean state;
                     if (reservationRequestValidation.isOpenDaysByDate(openDays, date)) {
@@ -146,7 +147,7 @@ public class JpaReservationService implements ReservationService {
                     resultList.add(ReservationResponseData.builder()
                             .state(state)
                             .productType(roomType)
-                            .date(date)
+                            .date(formDate)
                             .build());
                 }
             }
@@ -301,8 +302,6 @@ public class JpaReservationService implements ReservationService {
         int maxWindowSize = maxTime - startTime;
         int window = endTime - startTime + 1;
         Map<Integer, ReservedRoom> reservedRoomMap = getReservedRoomMap(place, findReservationList, reservedRoomList);
-        Room resultRoom = new Room();
-        resultRoom.getId();
         Long resultRoomId = -1L;
         boolean endFlag = true;
 
