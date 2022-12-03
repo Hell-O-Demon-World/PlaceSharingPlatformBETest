@@ -97,7 +97,7 @@ public class JpaPlaceService implements PlaceService {
     private String getQuantityByRoomType(Place place, String roomType) {
         int quantity = 0;
         for (Room room : place.getRooms()) {
-            if (room.getRoomKind().getRoomType().equals(roomType)) {
+            if (room.getRoomKind().getRoomType().contains(roomType)) {
                 quantity++;
             }
         }
