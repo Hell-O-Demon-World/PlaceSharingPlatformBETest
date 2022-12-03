@@ -27,7 +27,7 @@ public class CustomPlaceRepository implements PlaceRepository {
 
     @Override
     public Place findById(long id) {
-        return jpaRepository.findById(id).orElseThrow(NonExistedPlaceException::new);
+        return jpaRepository.findById(id).orElseThrow(()->new NonExistedPlaceException("NonExistedPlaceException::: 공간이 존재하지 않습니다."));
     }
 
     @Override
@@ -42,7 +42,7 @@ public class CustomPlaceRepository implements PlaceRepository {
 
     @Override
     public String findOpenDayById(Long id) {
-        return queryPlaceRepository.findOpenDayById(id).orElseThrow(NonExistedPlaceException::new);
+        return queryPlaceRepository.findOpenDayById(id).orElseThrow(()->new NonExistedPlaceException("NonExistedPlaceException::: 공간이 존재하지 않습니다."));
     }
 
     @Override

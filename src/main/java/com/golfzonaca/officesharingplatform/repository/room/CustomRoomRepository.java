@@ -2,6 +2,7 @@ package com.golfzonaca.officesharingplatform.repository.room;
 
 import com.golfzonaca.officesharingplatform.domain.Place;
 import com.golfzonaca.officesharingplatform.domain.Room;
+import com.golfzonaca.officesharingplatform.exception.NonExistedRoomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,6 +59,6 @@ public class CustomRoomRepository implements RoomRepository {
 
     @Override
     public Room findById(Long resultRoomId) {
-        return jpaRoomRepository.findById(resultRoomId).get();
+        return jpaRoomRepository.findById(resultRoomId).orElseThrow(() -> new NonExistedRoomException("NotExistRoomException::: 예약가능한 Room이 없습니다."));
     }
 }

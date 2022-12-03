@@ -83,11 +83,11 @@ public class ReservationRequestValidation {
             endTime = 24;
         }
         if (place.getPlaceStart().getHour() <= startTime && startTime < place.getPlaceEnd().getHour()) {
-            if (place.getPlaceStart().getHour() >= endTime || endTime >= place.getPlaceEnd().getHour()) {
-                throw new NotBusinessTimeException();
+            if (place.getPlaceStart().getHour() >= endTime || endTime > place.getPlaceEnd().getHour()) {
+                throw new NotBusinessTimeException("NotBusinessTimeException::: 입력된 시간은 영업 시간이 아닙니다.");
             }
         } else {
-            throw new NotBusinessTimeException();
+            throw new NotBusinessTimeException("NotBusinessTimeException::: 입력된 시간은 영업 시간이 아닙니다.");
         }
     }
 
@@ -119,9 +119,8 @@ public class ReservationRequestValidation {
             } else if (selectedType.contains("OFFICE")) {
                 message = selectedType.replace("OFFICE", "") + "평 사무실";
             }
+            throw new NonexistentRestRoomForSelectedPlaceAndDateTime("NonexistentRestRoomForSelectedPlaceAndDateTime::: 선택하신 시간과 공간에 대해 빈 " + message + "이(가) 없습니다.");
         }
-
-        throw new NonexistentRestRoomForSelectedPlaceAndDateTime("NonexistentRestRoomForSelectedPlaceAndDateTime::: 선택하신 시간과 공간에 대해 빈 " + message + "이(가) 없습니다.");
     }
 
     private void validRealDate(String selectedDate) {
