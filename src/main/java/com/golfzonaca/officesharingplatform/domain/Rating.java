@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.LinkedList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -28,6 +30,9 @@ public class Rating {
 
     @Column(name = "RATING_TIME", nullable = false)
     private LocalDateTime ratingTime;
+    
+    @OneToMany(mappedBy = "rating")
+    private List<Comment> commentList = new LinkedList<>();
 
     @Builder
     public Rating(Reservation reservation, float ratingScore, String ratingReview, LocalDateTime ratingTime) {
@@ -36,7 +41,7 @@ public class Rating {
         this.ratingReview = ratingReview;
         this.ratingTime = ratingTime;
     }
-    
+
     public void UpdateRating(float ratingScore, String ratingReview) {
         this.ratingScore = ratingScore;
         this.ratingReview = ratingReview;

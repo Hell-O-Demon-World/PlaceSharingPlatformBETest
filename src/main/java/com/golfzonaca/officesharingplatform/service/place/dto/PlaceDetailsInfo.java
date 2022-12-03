@@ -13,6 +13,7 @@ public class PlaceDetailsInfo {
     private String placeName;
     private String placePostalCode;
     private String placeAddress;
+    private List<String> placeMainInfo;
     private List<String> placeImage; //모든 이미지
     private String ratePoint;
     private String reviewQuantity;

@@ -17,8 +17,8 @@ public class Comment {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "PLACE_ID")
-    private Place place;
+    @JoinColumn(name = "RATING_ID")
+    private Rating rating;
 
     @Column(name = "COMMENT_TEXT", nullable = false, length = 40)
     private String text;
@@ -31,8 +31,8 @@ public class Comment {
     private LocalDateTime dateTime;
 
     @Builder
-    public Comment(Place place, String text, User writer, LocalDateTime dateTime) {
-        this.place = place;
+    public Comment(Rating rating, String text, User writer, LocalDateTime dateTime) {
+        this.rating = rating;
         this.text = text;
         this.writer = writer;
         this.dateTime = dateTime;

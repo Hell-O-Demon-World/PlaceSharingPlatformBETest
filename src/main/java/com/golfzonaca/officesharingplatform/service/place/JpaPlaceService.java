@@ -78,6 +78,7 @@ public class JpaPlaceService implements PlaceService {
                 place.getPlaceName(),
                 place.getAddress().getPostalCode(),
                 place.getAddress().getAddress(),
+                stringToList(place.getPlaceAddInfo()),
                 imagesPath,
                 String.valueOf(place.getRatePoint().getRatingPoint()),
                 String.valueOf(ratingList.size()),
@@ -115,11 +116,21 @@ public class JpaPlaceService implements PlaceService {
         List<RatingDto> ratingList = new LinkedList<>();
         for (Room room : place.getRooms()) {
             for (Reservation reservation : room.getReservationList()) {
-                ratingList.add(new RatingDto(String.valueOf(reservation.getRating().getRatingScore()), reservation.getUser().getUsername(), reservation.getRating().getRatingTime().toString(), reservation.getRoom().getRoomKind().getRoomType(), reservation.getRating().getRatingReview()));
+                List<String> comment = getComment(reservation.getRating());
+                ratingList.add(new RatingDto(String.valueOf(reservation.getRating().getRatingScore()), reservation.getUser().getUsername(), reservation.getRating().getRatingTime().toString(), reservation.getRoom().getRoomKind().getRoomType(), reservation.getRating().getRatingReview(), comment));
             }
         }
         return ratingList;
     }
+
+    private List<String> getComment(Rating rating) {
+        List<String> commentList = new LinkedList<>();
+        for (Comment comment : rating.getCommentList()) {
+            commentList.add(comment.getText());
+        }
+        return commentList;
+    }
+
 
     @NotNull
     private List<String> getImagesPath(Place place) {
