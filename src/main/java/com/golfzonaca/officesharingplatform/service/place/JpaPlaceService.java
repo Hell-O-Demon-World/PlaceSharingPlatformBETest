@@ -83,10 +83,12 @@ public class JpaPlaceService implements PlaceService {
                 String.valueOf(place.getRatePoint().getRatingPoint()),
                 String.valueOf(ratingList.size()),
                 getQuantityByRoomType(place, "DESK"),
-                getQuantityByRoomType(place, "MeetingRoom"),
-                getQuantityByRoomType(place, "Office"),
+                getQuantityByRoomType(place, "MEETINGROOM"),
+                getQuantityByRoomType(place, "OFFICE"),
                 place.getDescription(),
                 excludeOpenDays(stringToList(place.getOpenDays())),
+                place.getPlaceStart().toString(),
+                place.getPlaceEnd().toString(),
                 reservationService.findRoom(placeId),
                 ratingList
         );

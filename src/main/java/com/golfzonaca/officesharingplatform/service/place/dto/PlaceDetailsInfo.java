@@ -22,6 +22,8 @@ public class PlaceDetailsInfo {
     private String officeQuantity;
     private String placeDescription;
     private List<String> placeCloseDays;
+    private String placeOpenTime;
+    private String placeCloseTime;
     ReservationResponseTypeForm responseTypeForm;
     private List<RatingDto> ratingList;
 }
