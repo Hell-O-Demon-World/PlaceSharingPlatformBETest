@@ -1,8 +1,7 @@
 package com.golfzonaca.officesharingplatform.repository.comment;
 
 import com.golfzonaca.officesharingplatform.domain.Comment;
-import com.golfzonaca.officesharingplatform.domain.Place;
-import com.querydsl.core.types.dsl.BooleanExpression;
+import com.golfzonaca.officesharingplatform.domain.Rating;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,18 +20,11 @@ public class QueryCommentRepository {
         this.query = new JPAQueryFactory(em);
     }
 
-    public List<Comment> findAllByPlace(Place place) {
+    public List<Comment> findAllByRating(Rating rating) {
 
         return query
                 .selectFrom(comment)
-                .where(likePlace(place))
+                .where(comment.rating.eq(rating))
                 .fetch();
-    }
-
-    private BooleanExpression likePlace(Place place) {
-        if (place != null) {
-            return comment.rating.reservation.room.place.id.eq(place.getId());
-        }
-        return null;
     }
 }

@@ -1,10 +1,11 @@
 package com.golfzonaca.officesharingplatform.service.comment;
 
 import com.golfzonaca.officesharingplatform.domain.Comment;
-import com.golfzonaca.officesharingplatform.domain.Place;
+import com.golfzonaca.officesharingplatform.domain.Rating;
 import com.golfzonaca.officesharingplatform.domain.User;
 import com.golfzonaca.officesharingplatform.repository.comment.CommentRepository;
 import com.golfzonaca.officesharingplatform.repository.place.PlaceRepository;
+import com.golfzonaca.officesharingplatform.repository.rating.RatingRepository;
 import com.golfzonaca.officesharingplatform.repository.user.UserRepository;
 import com.golfzonaca.officesharingplatform.web.comment.dto.CommentData;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 @Transactional
@@ -22,18 +22,18 @@ public class SpringJpaDslCommentService implements CommentService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final PlaceRepository placeRepository;
+    private final RatingRepository ratingRepository;
 
     @Override
-    public void save(Long userId, Long placeId, CommentData data) {
+    public void save(Long userId, Long ratingId, CommentData data) {
         User user = userRepository.findById(userId);
-        Place place = placeRepository.findById(placeId);
-        commentRepository.save(new Comment(place, data.getContext(), user, LocalDateTime.now()));
+        Rating rating = ratingRepository.findById(ratingId);
+        commentRepository.save(new Comment(rating, data.getContext(), user, LocalDateTime.now()));
     }
 
     @Override
-    public List<Comment> findAllByPlaceId(long placeId) {
-        Place place = placeRepository.findById(placeId);
-        return commentRepository.findAllByPlace(place);
+    public List<Comment> findAllByRatingId(long ratingId) {
+        return commentRepository.findAllByRating(ratingRepository.findById(ratingId));
     }
 
     @Override

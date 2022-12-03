@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface CommentService {
 
-    void save(Long userId, Long placeId, CommentData data);
+    void save(Long userId, Long ratingId, CommentData data);
 
-    List<Comment> findAllByPlaceId(long placeId);
+    List<Comment> findAllByRatingId(long ratingId);
 
     void update(long commentId, CommentData data);
 

@@ -14,15 +14,15 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    @PostMapping("/{placeId}/comment/add")
-    public String saveComment(@TokenUserId Long userId, @PathVariable Long placeId, @Validated @RequestBody CommentData data, BindingResult bindingResult) {
-        commentService.save(userId, placeId, data);
+    @PostMapping("/{ratingId}/comment/add")
+    public String saveComment(@TokenUserId Long userId, @PathVariable Long ratingId, @Validated @RequestBody CommentData data, BindingResult bindingResult) {
+        commentService.save(userId, ratingId, data);
         return "ok";
     }
 
-    @GetMapping("/{placeId}/comment")
-    public String findComment(@PathVariable long placeId) {
-        commentService.findAllByPlaceId(placeId);
+    @GetMapping("/{ratingId}/comment")
+    public String findComment(@PathVariable long ratingId) {
+        commentService.findAllByRatingId(ratingId);
         return "ok";
     }
 

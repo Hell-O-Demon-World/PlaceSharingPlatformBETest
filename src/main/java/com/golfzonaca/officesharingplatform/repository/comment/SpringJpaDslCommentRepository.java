@@ -1,7 +1,7 @@
 package com.golfzonaca.officesharingplatform.repository.comment;
 
 import com.golfzonaca.officesharingplatform.domain.Comment;
-import com.golfzonaca.officesharingplatform.domain.Place;
+import com.golfzonaca.officesharingplatform.domain.Rating;
 import com.golfzonaca.officesharingplatform.web.comment.dto.CommentData;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Repository
 @Transactional
@@ -17,7 +16,7 @@ import java.util.Optional;
 public class SpringJpaDslCommentRepository implements CommentRepository {
 
     private final SpringJpaCommentRepository jpaRepository;
-    private final QueryCommentRepository query;
+    private final QueryCommentRepository queryRepository;
 
 
     @Override
@@ -31,8 +30,8 @@ public class SpringJpaDslCommentRepository implements CommentRepository {
     }
 
     @Override
-    public List<Comment> findAllByPlace(Place place) {
-        return query.findAllByPlace(place);
+    public List<Comment> findAllByRating(Rating rating) {
+        return queryRepository.findAllByRating(rating);
     }
 
     @Override
