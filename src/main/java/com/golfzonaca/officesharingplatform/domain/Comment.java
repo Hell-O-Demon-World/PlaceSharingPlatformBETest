@@ -24,7 +24,7 @@ public class Comment {
     private String text;
 
     @ManyToOne
-    @JoinColumn(name = "COMMENT_WRITER")
+    @JoinColumn(name = "USER_ID")
     private User writer;
 
     @Column(name = "COMMENT_DATETIME", nullable = false)
