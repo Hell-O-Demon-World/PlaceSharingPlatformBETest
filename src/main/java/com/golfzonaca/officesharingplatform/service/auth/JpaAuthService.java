@@ -26,7 +26,7 @@ public class JpaAuthService implements AuthService {
 
     @Override
     public boolean isAvailableEmail(String email) {
-        return userRepository.countContainByEmail(email) == 0;
+        return userRepository.isUniqueEmail(email);
     }
 
     @Override

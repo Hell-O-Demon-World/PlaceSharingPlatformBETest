@@ -30,6 +30,20 @@ public class ExceptionControllerAdvice {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(InvalidEmailException.class)
+    public ErrorResult illegalExHandler(InvalidEmailException e) {
+        log.error("[exceptionHandle] ex", e);
+        return new ErrorResult("BAD", e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(InvalidPhoneNumException.class)
+    public ErrorResult illegalExHandler(InvalidPhoneNumException e) {
+        log.error("[exceptionHandle] ex", e);
+        return new ErrorResult("BAD", e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(NotBusinessDayException.class)
     public ErrorResult illegalExHandler(NotBusinessDayException e) {
         log.error("[exceptionHandle] ex", e);
@@ -60,6 +74,13 @@ public class ExceptionControllerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(NonExistedPlaceException.class)
     public ErrorResult illegalExHandler(NonExistedPlaceException e) {
+        log.error("[exceptionHandle] ex", e);
+        return new ErrorResult("BAD", e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(NonExistedRoleTypeException.class)
+    public ErrorResult illegalExHandler(NonExistedRoleTypeException e) {
         log.error("[exceptionHandle] ex", e);
         return new ErrorResult("BAD", e.getMessage());
     }

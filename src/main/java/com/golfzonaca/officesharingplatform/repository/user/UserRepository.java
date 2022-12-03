@@ -15,7 +15,7 @@ public interface UserRepository {
 
     Boolean isUniqueTel(String tel);
 
-    Boolean isContainByEmail(String email);
+    Boolean isUniqueEmail(String email);
 
     Integer countContainByEmail(String email);
 
