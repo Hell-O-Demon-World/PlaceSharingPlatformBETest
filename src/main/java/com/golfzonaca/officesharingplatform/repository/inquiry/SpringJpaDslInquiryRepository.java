@@ -13,8 +13,7 @@ import java.util.NoSuchElementException;
 @RequiredArgsConstructor
 public class SpringJpaDslInquiryRepository implements InquiryRepository {
     private final SpringJpaInquiryRepository jpaRepository;
-
-
+    
     @Override
     public void save(Inquiry inquiry) {
         jpaRepository.save(inquiry);

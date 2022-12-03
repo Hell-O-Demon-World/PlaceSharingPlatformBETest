@@ -9,6 +9,7 @@ import java.util.Map;
 @Getter
 @AllArgsConstructor
 public class PlaceDto {
+    List<String> placeImages;
     String placeId;
     String placeName;
     String ratingPoint;
