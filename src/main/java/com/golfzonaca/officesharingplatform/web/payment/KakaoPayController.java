@@ -1,8 +1,8 @@
 package com.golfzonaca.officesharingplatform.web.payment;
 
-import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayApprovalResponse;
-import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayCancelResponse;
-import com.golfzonaca.officesharingplatform.service.payment.KakaoPayService;
+import com.golfzonaca.officesharingplatform.domain.paymentversion1.KakaoPayApprovalResponse1;
+import com.golfzonaca.officesharingplatform.domain.paymentversion1.KakaoPayCancelResponse1;
+import com.golfzonaca.officesharingplatform.service.paymentversion1.KakaoPayService;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +16,9 @@ import java.util.Map;
 public class KakaoPayController {
 
     @Setter
-    @Autowired
     private KakaoPayService kakaoPayService;
 
+    @Autowired
     public KakaoPayController(KakaoPayService kakaoPayService) {
         this.kakaoPayService = kakaoPayService;
     }
@@ -34,15 +34,15 @@ public class KakaoPayController {
         return "redirect:" + kakaoPayService.kakaoPayReady(reservationId, payWay);
     }
 
-    @GetMapping("/{reservationId}/kakaoPaySuccess")
-    public KakaoPayApprovalResponse kakaoPaySuccess(@PathVariable long reservationId, @RequestParam("pg_token") String pg_token, RedirectAttributes redirectAttributes) {
+    @GetMapping("/{reservationId}/kakaoPayApprove")
+    public KakaoPayApprovalResponse1 kakaoPaySuccess(@PathVariable long reservationId, @RequestParam("pg_token") String pg_token, RedirectAttributes redirectAttributes) {
         redirectAttributes.addAttribute("pg_token", pg_token);
         redirectAttributes.addAttribute("reservationId", reservationId);
         return kakaoPayService.kakaoPayInfo(reservationId, pg_token);
     }
 
     @PostMapping("/kakaoPayCancel")
-    public KakaoPayCancelResponse kakaoPayCancel(@RequestBody Map<String, Long> reservationInfo) {
+    public KakaoPayCancelResponse1 kakaoPayCancel(@RequestBody Map<String, Long> reservationInfo) {
         Long reservationId = reservationInfo.get("reservationId");
         return kakaoPayService.cancel(reservationId);
     }

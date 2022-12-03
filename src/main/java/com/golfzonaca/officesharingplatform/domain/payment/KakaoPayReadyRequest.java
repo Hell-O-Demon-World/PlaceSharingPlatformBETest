@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.time.LocalDateTime;
 
 @Builder
 @NoArgsConstructor
@@ -15,8 +14,15 @@ import java.time.LocalDateTime;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class KakaoPayReadyRequest {
 
-    //response
-    private String tid, next_redirect_pc_url;
-    private LocalDateTime created_at;
-
+    private String cid;
+    private String partnerOrderId;
+    private String partnerUserId;
+    private String itemName;
+    private Integer quantity;
+    private Integer totalAmount;
+    private Integer taxFreeAmount;
+    private Integer vatAmount;
+    private String approvalUrl;
+    private String cancelUrl;
+    private String failUrl;
 }

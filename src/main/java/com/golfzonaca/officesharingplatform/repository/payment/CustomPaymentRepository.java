@@ -25,4 +25,5 @@ public class CustomPaymentRepository implements PaymentRepository {
     public List<Payment> findByReservationId(long reservationId) {
         return queryPaymentRepository.findByReservationId(reservationId);
     }
+
 }

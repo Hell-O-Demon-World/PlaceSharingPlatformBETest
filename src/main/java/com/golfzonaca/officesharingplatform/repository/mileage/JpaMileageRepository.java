@@ -21,4 +21,5 @@ public class JpaMileageRepository implements MileageRepository {
     public Mileage findByID(Long id) {
         return jpaRepository.findById(id).get();
     }
+
 }

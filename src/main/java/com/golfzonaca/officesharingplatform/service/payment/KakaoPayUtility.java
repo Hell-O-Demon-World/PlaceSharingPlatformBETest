@@ -1,42 +1,20 @@
 package com.golfzonaca.officesharingplatform.service.payment;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.golfzonaca.officesharingplatform.domain.Mileage;
 import com.golfzonaca.officesharingplatform.domain.Reservation;
-import com.golfzonaca.officesharingplatform.domain.Room;
-import com.golfzonaca.officesharingplatform.domain.RoomKind;
-import com.golfzonaca.officesharingplatform.domain.User;
-import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayApprovalResponse;
-import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayReadyRequest;
-import com.golfzonaca.officesharingplatform.domain.type.PayWay;
-import com.golfzonaca.officesharingplatform.repository.payment.PaymentRepository;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.util.MultiValueMap;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+public interface KakaoPayUtility {
 
-interface KakaoPayUtility {
+    /*
+     *   1. totalAmount 계산
+     *   2. taxFreeAmount 계산
+     * */
 
-    LocalDate toLocalDate(LocalDateTime localDateTime);
+    Integer calculateTotalAmount(Reservation reservation, String payWay, String payType);
 
-    LocalTime toLocalTime(LocalDateTime localDateTime);
+    Integer calculateTaxFreeAmount(Integer totalAmount);
 
-    String taxFreeAmount(String calculatePayPrice);
+    Integer calculateVatAmount(Integer totalAmount);
 
-    String vatAmount(String calculatePayPrice);
-
-    void savePaymentInfo(PaymentRepository paymentRepository, Reservation reservation, User user, Room room, KakaoPayApprovalResponse kakaoPayApprovalResponse);
-
-    MultiValueMap<String, String> multiValueMapConverter(ObjectMapper objectMapper, Object dto);
-
-    HttpHeaders makeHttpHeader(HttpHeaders httpHeaders);
-
-    KakaoPayApprovalResponse toEntity(String host, HttpEntity<MultiValueMap<String, String>> body);
-
-    String kakaoPayReadyToEntity(String host, HttpEntity<MultiValueMap<String, String>> body);
-
-    KakaoPayReadyRequest kakaoPayReadyRequestApprove(String host, HttpEntity<MultiValueMap<String, String>> body);
-
+    long calculateMileage(Integer totalAmount);
 }
