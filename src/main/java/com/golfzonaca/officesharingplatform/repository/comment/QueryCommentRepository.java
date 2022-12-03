@@ -31,7 +31,7 @@ public class QueryCommentRepository {
 
     private BooleanExpression likePlace(Place place) {
         if (place != null) {
-            return comment.place.id.eq(place.getId());
+            return comment.rating.reservation.room.place.id.eq(place.getId());
         }
         return null;
     }
