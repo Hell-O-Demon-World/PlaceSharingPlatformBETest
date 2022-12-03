@@ -43,3 +43,6 @@ out/
 
 ### Node ###
 **/FE/node_modules
+
+### Server Connection ###
+src/main/resources/application.yml
