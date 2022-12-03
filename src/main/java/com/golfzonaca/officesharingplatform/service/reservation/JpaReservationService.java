@@ -6,7 +6,6 @@ import com.golfzonaca.officesharingplatform.domain.Room;
 import com.golfzonaca.officesharingplatform.domain.User;
 import com.golfzonaca.officesharingplatform.domain.type.dateformat.DateFormat;
 import com.golfzonaca.officesharingplatform.exception.DuplicatedReservationException;
-import com.golfzonaca.officesharingplatform.exception.NonExistedRoomException;
 import com.golfzonaca.officesharingplatform.repository.place.PlaceRepository;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
 import com.golfzonaca.officesharingplatform.repository.room.RoomRepository;
@@ -277,7 +276,7 @@ public class JpaReservationService implements ReservationService {
         String selectedType = data.getSelectedType();
 
         Room resultRoom = getResultRoom(place, startTime, endTime, date, selectedType);
-        Reservation reservation = new Reservation(user, resultRoom, date, startTime, date, endTime.plusHours(1), true);
+        Reservation reservation = new Reservation(user, resultRoom, date, startTime, date, endTime, true);
         Reservation save = Optional.ofNullable(reservationRepository.save(reservation)).orElseThrow(() -> new DuplicatedReservationException("ReservationError::: 예약 실패"));
 
         result.put("reservationId", save.getId().toString());
@@ -286,13 +285,8 @@ public class JpaReservationService implements ReservationService {
 
     private Room getResultRoom(Place place, LocalTime startLocalTime, LocalTime endLocalTime, LocalDate date, String selectedType) {
         int startTime = startLocalTime.getHour();
-        if (startTime == 0) {
-            startTime = 24;
-        }
         int endTime = endLocalTime.getHour();
-        if (endTime == 0) {
-            endTime = 24;
-        }
+
         List<Room> reservedRoomList = roomRepository.findRoomByPlaceIdAndRoomType(place.getId(), selectedType);
         List<Reservation> findReservationList = reservationRepository.findAllByPlaceIdAndRoomTypeAndDate(place.getId(), selectedType, date);
         int maxTime = 24;
@@ -300,21 +294,15 @@ public class JpaReservationService implements ReservationService {
             maxTime = place.getPlaceEnd().getHour();
         }
         int maxWindowSize = maxTime - startTime;
-        int window = endTime - startTime + 1;
+        int window = endTime - startTime;
         Map<Integer, ReservedRoom> reservedRoomMap = getReservedRoomMap(place, findReservationList, reservedRoomList);
         Long resultRoomId = -1L;
-        boolean endFlag = true;
-
-        while (window <= maxWindowSize && endFlag) {
+        while (window <= maxWindowSize) {
             for (int i = 0; i < reservedRoomMap.size(); i++) {
                 ReservedRoom findReservedRoom = reservedRoomMap.get(i);
-                if (startTime == 24) {
-                    findReservedRoom.getTimeStates().put(25, false);
-                }
                 if (startTime == endTime && window == 1) {
                     if (findReservedRoom.getTimeStates().get(startTime) && !findReservedRoom.getTimeStates().get(startTime + 1)) {
-                        resultRoomId = findReservedRoom.getRoomId();
-                        endFlag = false;
+                        return roomRepository.findById(findReservedRoom.getRoomId());
                     }
                 } else {
                     int pCnt = 0;
@@ -324,21 +312,13 @@ public class JpaReservationService implements ReservationService {
                         } else {
                             pCnt++;
                             if (pCnt == window && findReservedRoom.getTimeStates().get(j) && !findReservedRoom.getTimeStates().get(j + 1)) {
-                                resultRoomId = findReservedRoom.getRoomId();
-                                endFlag = false;
+                                return roomRepository.findById(findReservedRoom.getRoomId());
                             }
                         }
                     }
                 }
-                if (!endFlag) {
-                    break;
-                }
             }
             window++;
-        }
-
-        if (resultRoomId == -1L) {
-            throw new NonExistedRoomException("예약가능한 Room이 없습니다. time range = " + startTime + endTime);
         }
         return roomRepository.findById(resultRoomId);
     }
