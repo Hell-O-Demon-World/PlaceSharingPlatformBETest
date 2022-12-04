@@ -89,7 +89,7 @@ public class JpaReservationService implements ReservationService {
     public List<ReservationResponseData> getReservationResponseData(Place findPlace, String selectedType, String inputDate) {
         String selectedRoomType = selectedType.toUpperCase();
         LocalDate selectedStartDate = TimeFormatter.toLocalDate(inputDate);
-        LocalDate selectedEndDate = TimeFormatter.toLocalDate(inputDate).plusYears(1);
+        LocalDate selectedEndDate = TimeFormatter.toLocalDate(inputDate).plusMonths(1);
 
         return getTotalDayData(findPlace, selectedRoomType, selectedStartDate, selectedEndDate);
     }

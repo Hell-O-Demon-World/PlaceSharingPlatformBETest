@@ -37,6 +37,7 @@ public class ReservationRequestValidation {
         validRealDate(date);
         validRealTime(Integer.parseInt(startTime));
         validRoomType(roomType);
+        validTimeOfRoomType(roomType);
         validBusinessTime(place, TimeFormatter.toLocalTime(startTime));
         validBusinessDay(place, TimeFormatter.toLocalDate(date));
     }
@@ -63,10 +64,13 @@ public class ReservationRequestValidation {
         }
     }
     private void validRoomType(String roomType) {
+        roomKindRepository.findByRoomType(roomType);
+    }
+
+    private void validTimeOfRoomType(String roomType) {
         if (roomType.toUpperCase().contains("OFFICE")) {
             throw new NonExistedRoomKindException("NonExistedRoomKindException::: 지원하지 않는 공간유형 입니다.");
         }
-        roomKindRepository.findByRoomType(roomType);
     }
 
     private void validBusinessDay(Place place, LocalDate date) {
