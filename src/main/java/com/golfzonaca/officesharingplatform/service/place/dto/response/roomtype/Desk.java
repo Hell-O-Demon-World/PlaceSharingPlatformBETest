@@ -1,4 +1,4 @@
-package com.golfzonaca.officesharingplatform.web.reservation.dto.response.type;
+package com.golfzonaca.officesharingplatform.service.place.dto.response.roomtype;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

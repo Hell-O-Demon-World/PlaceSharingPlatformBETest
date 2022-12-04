@@ -2,10 +2,14 @@ package com.golfzonaca.officesharingplatform.service.place;
 
 import com.golfzonaca.officesharingplatform.domain.*;
 import com.golfzonaca.officesharingplatform.repository.place.PlaceRepository;
+import com.golfzonaca.officesharingplatform.repository.roomkind.RoomKindRepository;
 import com.golfzonaca.officesharingplatform.service.place.dto.PlaceDetailsInfo;
-import com.golfzonaca.officesharingplatform.service.place.dto.RatingDto;
-import com.golfzonaca.officesharingplatform.service.place.dto.response.PlaceDto;
-import com.golfzonaca.officesharingplatform.service.reservation.ReservationService;
+import com.golfzonaca.officesharingplatform.service.place.dto.PlaceListDto;
+import com.golfzonaca.officesharingplatform.service.place.dto.response.RatingDto;
+import com.golfzonaca.officesharingplatform.service.place.dto.response.RoomTypeResponse;
+import com.golfzonaca.officesharingplatform.service.place.dto.response.roomtype.Desk;
+import com.golfzonaca.officesharingplatform.service.place.dto.response.roomtype.MeetingRoom;
+import com.golfzonaca.officesharingplatform.service.place.dto.response.roomtype.Office;
 import com.golfzonaca.officesharingplatform.web.formatter.TimeFormatter;
 import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +23,8 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 public class JpaPlaceService implements PlaceService {
-    private final ReservationService reservationService;
     private final PlaceRepository placeRepository;
+    private final RoomKindRepository roomKindRepository;
 
     @Override
     public List<Place> findAllPlaces() {
@@ -89,9 +93,52 @@ public class JpaPlaceService implements PlaceService {
                 excludeOpenDays(stringToList(place.getOpenDays())),
                 place.getPlaceStart().toString(),
                 place.getPlaceEnd().toString(),
-                reservationService.findRoom(placeId),
+                findRoom(placeId),
                 ratingList
         );
+    }
+
+    private RoomTypeResponse findRoom(long placeId) {
+        Place findPlace = placeRepository.findById(placeId);
+        return getReservationResponseForm(findPlace);
+    }
+
+    private RoomTypeResponse getReservationResponseForm(Place findPlace) {
+        RoomTypeResponse responseForm = new RoomTypeResponse();
+        Set<String> nonDuplicatedRoomSet = getNonDuplicatedRoomSet(findPlace.getRooms());
+
+        boolean responseDesk = false;
+        List<MeetingRoom> responseMeetingRoom = new ArrayList<>();
+        List<Office> responseOffice = new ArrayList<>();
+        int price = 0;
+        for (String room : nonDuplicatedRoomSet) {
+            price = roomKindRepository.findByRoomType(room).getPrice();
+            if (room.equals("DESK")) {
+                responseDesk = true;
+            } else {
+                String roomKindTag = room.replaceAll("[^0-9]", "");
+                if (room.contains("MEETINGROOM")) {
+                    responseMeetingRoom.add(new MeetingRoom(roomKindTag, price));
+                } else {
+                    responseOffice.add(new Office(roomKindTag, price));
+                }
+            }
+        }
+        Desk resultDesk = new Desk(responseDesk, price);
+
+        Collections.sort(responseMeetingRoom);
+        Collections.sort(responseOffice);
+
+        responseForm.toEntity(resultDesk, responseMeetingRoom, responseOffice);
+        return responseForm;
+    }
+
+    private Set<String> getNonDuplicatedRoomSet(List<Room> roomList) {
+        Set<String> nonDuplicatedRoomSet = new HashSet<>();
+        for (Room room : roomList) {
+            nonDuplicatedRoomSet.add(room.getRoomKind().getRoomType());
+        }
+        return nonDuplicatedRoomSet;
     }
 
     private String getQuantityByRoomType(Place place, String roomType) {
@@ -104,12 +151,12 @@ public class JpaPlaceService implements PlaceService {
         return String.valueOf(quantity);
     }
 
-    public Map<Integer, PlaceDto> processingMainPlaceData(List<Place> places) {
-        Map<Integer, PlaceDto> mainPlaceData = new LinkedHashMap<>();
+    public Map<Integer, PlaceListDto> processingMainPlaceData(List<Place> places) {
+        Map<Integer, PlaceListDto> mainPlaceData = new LinkedHashMap<>();
         for (int i = 0; i < places.size(); i++) {
             Place place = places.get(i);
             List<String> imagesPath = getImagesPath(place);
-            mainPlaceData.put(i, new PlaceDto(imagesPath, place.getId().toString(), place.getPlaceName(), String.valueOf(place.getRatePoint().getRatingPoint()), place.getAddress().getAddress(), stringToList(place.getPlaceAddInfo()), place.getDescription(), excludeOpenDays(stringToList(place.getOpenDays())), place.getPlaceStart().toString(), place.getPlaceEnd().toString(), processingRoomInfo(place.getRooms())));
+            mainPlaceData.put(i, new PlaceListDto(imagesPath, place.getId().toString(), place.getPlaceName(), String.valueOf(place.getRatePoint().getRatingPoint()), place.getAddress().getAddress(), stringToList(place.getPlaceAddInfo()), place.getDescription(), excludeOpenDays(stringToList(place.getOpenDays())), place.getPlaceStart().toString(), place.getPlaceEnd().toString(), processingRoomInfo(place.getRooms())));
         }
         return mainPlaceData;
     }

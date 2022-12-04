@@ -1,4 +1,4 @@
-package com.golfzonaca.officesharingplatform.service.place.dto;
+package com.golfzonaca.officesharingplatform.service.place.dto.response;
 
 import lombok.AllArgsConstructor;
 

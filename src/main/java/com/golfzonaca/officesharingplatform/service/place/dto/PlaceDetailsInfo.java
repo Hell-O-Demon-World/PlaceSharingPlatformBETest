@@ -1,6 +1,7 @@
 package com.golfzonaca.officesharingplatform.service.place.dto;
 
-import com.golfzonaca.officesharingplatform.web.reservation.dto.response.ReservationResponseTypeForm;
+import com.golfzonaca.officesharingplatform.service.place.dto.response.RatingDto;
+import com.golfzonaca.officesharingplatform.service.place.dto.response.RoomTypeResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -14,7 +15,7 @@ public class PlaceDetailsInfo {
     private String placePostalCode;
     private String placeAddress;
     private List<String> placeMainInfo;
-    private List<String> placeImage; //모든 이미지
+    private List<String> placeImage;
     private String ratePoint;
     private String reviewQuantity;
     private String deskQuantity;
@@ -24,6 +25,6 @@ public class PlaceDetailsInfo {
     private List<String> placeCloseDays;
     private String placeOpenTime;
     private String placeCloseTime;
-    ReservationResponseTypeForm responseTypeForm;
+    RoomTypeResponse roomTypeResponse;
     private List<RatingDto> ratingList;
 }
