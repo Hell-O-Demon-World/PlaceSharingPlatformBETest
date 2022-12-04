@@ -11,5 +11,6 @@ public class NonExistedRoomKindException extends NoSuchElementException {
     }
 
     public NonExistedRoomKindException(String msg) {
+        super(msg);
     }
 }

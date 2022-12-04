@@ -28,7 +28,7 @@ public class CustomRoomKindRepository implements RoomKindRepository {
 
     @Override
     public RoomKind findByRoomType(String roomType) {
-        return queryRoomKindRepository.findByRoomType(roomType).orElseThrow(NonExistedRoomKindException::new);
+        return queryRoomKindRepository.findByRoomType(roomType).orElseThrow(()->new NonExistedRoomKindException("NonExistedRoomKindException::: 존재하지 않는 공간유형입니다."));
     }
 
     @Override

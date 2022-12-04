@@ -5,6 +5,7 @@ import com.golfzonaca.officesharingplatform.domain.User;
 import com.golfzonaca.officesharingplatform.exception.*;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
 import com.golfzonaca.officesharingplatform.repository.room.RoomRepository;
+import com.golfzonaca.officesharingplatform.repository.roomkind.RoomKindRepository;
 import com.golfzonaca.officesharingplatform.web.formatter.TimeFormatter;
 import com.golfzonaca.officesharingplatform.web.reservation.dto.process.ProcessReservationData;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ import java.util.Locale;
 public class ReservationRequestValidation {
 
     private final RoomRepository roomRepository;
+    private final RoomKindRepository roomKindRepository;
     private final ReservationRepository reservationRepository;
 
     public void validation(Place place, String roomType, String date) {
@@ -62,8 +64,9 @@ public class ReservationRequestValidation {
     }
     private void validRoomType(String roomType) {
         if (roomType.toUpperCase().contains("OFFICE")) {
-            throw new NonExistedRoomKindException("roomTypeError::: 지원하지 않는 공간유형 입니다.");
+            throw new NonExistedRoomKindException("NonExistedRoomKindException::: 지원하지 않는 공간유형 입니다.");
         }
+        roomKindRepository.findByRoomType(roomType);
     }
 
     private void validBusinessDay(Place place, LocalDate date) {
