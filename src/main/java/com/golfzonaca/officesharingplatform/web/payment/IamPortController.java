@@ -22,7 +22,7 @@ import java.math.BigDecimal;
 public class IamPortController {
 
 
-    @RequestMapping("/payment")
+    @PostMapping("/iamportPay")
     public IamportResponse<Payment> iamPort() throws IamportResponseException, IOException {
         IamportClient iamportClient = new IamportClient("3356213051155874", "c8AvU2odFqdwyfvFV7xcA880WWKm3CE8bah5mbR60DV3RN2DUpmXYjtd0mzbC5Y0ieMaRnB95EpXfvrf");
         OnetimePaymentData onetimeData = new OnetimePaymentData("1q2w3e4r", new BigDecimal(1), new CardInfo("1111-2222-3333-4444", "2022-01", "990101", "00"));
@@ -31,7 +31,7 @@ public class IamPortController {
         return iamportClient.onetimePayment(onetimeData);
     }
 
-    @PostMapping("/cancel")
+    @PostMapping("/iamportCancel")
     public IamportResponse<Payment> iamPortCancel() throws IamportResponseException, IOException {
         log.info("iamportCancel() = {}", iamPortCancel());
         IamportClient iamportClient = new IamportClient("3356213051155874", "c8AvU2odFqdwyfvFV7xcA880WWKm3CE8bah5mbR60DV3RN2DUpmXYjtd0mzbC5Y0ieMaRnB95EpXfvrf");
