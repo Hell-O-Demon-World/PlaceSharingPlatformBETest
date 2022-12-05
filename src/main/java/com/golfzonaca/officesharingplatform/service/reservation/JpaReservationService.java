@@ -160,7 +160,7 @@ public class JpaReservationService implements ReservationService {
     private boolean isFullReservation(Place findPlace, Map<Integer, ReservedRoom> reservedRoomMap) {
         boolean result = true;
 
-        int startTime = findPlace.getPlaceStart().getHour();
+        int startTime = findPlace.getPlaceStart().plusHours(1).getHour();
         int endTime = findPlace.getPlaceEnd().getHour();
         for (int i = 0; i < reservedRoomMap.size(); i++) {
             ReservedRoom reservedRoom = reservedRoomMap.get(i);

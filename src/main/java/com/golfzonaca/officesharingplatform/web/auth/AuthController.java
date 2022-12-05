@@ -25,18 +25,12 @@ public class AuthController {
 
     @ResponseBody
     @PostMapping("/signup")
-    public ConcurrentHashMap<String, Object> signup(@Validated @RequestBody SignUpSaveForm signUpSaveForm, BindingResult bindingResult) {
-        ConcurrentHashMap<String, Object> errorMap = new ConcurrentHashMap<>();
+    public void signup(@Validated @RequestBody SignUpSaveForm signUpSaveForm, BindingResult bindingResult) {
         User user = signUpSaveForm.toEntity();
-
         authRequestValidation.validation(user, bindingResult);
         customAuthService.join(user);
-
-        return errorMap;
     }
 
     @GetMapping("/refresh")
-    public void refreshToken() {
-
-    }
+    public void refreshToken() {}
 }

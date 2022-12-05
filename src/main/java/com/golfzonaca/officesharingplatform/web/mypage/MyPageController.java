@@ -3,10 +3,11 @@ package com.golfzonaca.officesharingplatform.web.mypage;
 import com.golfzonaca.officesharingplatform.annotation.TokenUserId;
 import com.golfzonaca.officesharingplatform.domain.MyPage;
 import com.golfzonaca.officesharingplatform.service.mypage.MyPageService;
-import com.golfzonaca.officesharingplatform.web.mypage.form.MyPageReservationForm;
+import com.golfzonaca.officesharingplatform.web.mypage.form.MyPageUsageForm;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,11 +20,10 @@ public class MyPageController {
         return myPageService.createMyPageForm(userId);
     }
 
-//    @GetMapping("/usage")
-//    public MyPageReservationForm usageHistory(@TokenUserId Long userID) {
-////                        .myPageReservationList(getMyPageReservationListByUserId(userId))
-//
-//    }
+    @GetMapping("/usage")
+    public Map<Integer, MyPageUsageForm> usageHistory(@TokenUserId Long userId) {
+        return myPageService.getMyPageUsageForm(userId);
+    }
 
     @PostMapping("/cancel")
     public void cancelReservation(@TokenUserId Long userId, @RequestParam Integer order){
