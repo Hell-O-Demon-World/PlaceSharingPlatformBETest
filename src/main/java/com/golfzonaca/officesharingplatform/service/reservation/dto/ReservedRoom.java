@@ -29,6 +29,7 @@ public class ReservedRoom {
     }
     public void setStartAndEndTimeMap(LocalTime startLocalTime, LocalTime endLocalTime) {
         Map<Integer, Boolean> resultMap = this.timeStates;
+        int realTime = LocalTime.now().getHour();
         int startTime = startLocalTime.getHour();
         int endTime = endLocalTime.getHour();
         if (endTime - startTime == 0) {
@@ -45,11 +46,14 @@ public class ReservedRoom {
                 resultMap.replace(i, false);
             }
         } else {
-
+            if (realTime > startTime) {
+                startTime = realTime;
+            }
             for (int i = DefaultTimeOfDay.getStartTime(); i < startTime; i++) {
                 if (i == 0) {
                     i = 24;
                 }
+
                 resultMap.replace(i, false);
             }
             for (int j = endTime; j <= DefaultTimeOfDay.getEndTime(); j++) {

@@ -38,6 +38,7 @@ public class ReservationRequestValidation {
         validRealTime(Integer.parseInt(startTime));
         validRoomType(roomType);
         validTimeOfRoomType(roomType);
+        validStartTime(TimeFormatter.toLocalTime(startTime), place.getPlaceStart(), place.getPlaceEnd());
         validBusinessTime(place, TimeFormatter.toLocalTime(startTime));
         validBusinessDay(place, TimeFormatter.toLocalDate(date));
     }
@@ -63,6 +64,7 @@ public class ReservationRequestValidation {
             throw new InvalidTimeException("InvalidTimeException::: 유효하지 않은 시간입니다. range = 0 ~ 23");
         }
     }
+
     private void validRoomType(String roomType) {
         roomKindRepository.findByRoomType(roomType);
     }
@@ -104,6 +106,19 @@ public class ReservationRequestValidation {
         }
     }
 
+    private void validStartTime(LocalTime startTime, LocalTime placeStartTime, LocalTime placeEndTime) {
+        LocalTime now = LocalTime.now();
+        if (placeStartTime.isBefore(now)) {
+            placeStartTime = now;
+        }
+
+        if (!startTime.isBefore(placeEndTime)) {
+            throw new NotBusinessTimeException("StartTimeAfterEndTimeError::: 선택된 시작 시각이 영업 종료 시각 이후입니다.");
+        } else if (!startTime.isAfter(placeStartTime)) {
+            throw new NotBusinessTimeException("StartTimeAfterEndTimeError::: 선택된 시작 시각이 장소의 영업 시작 시각 이전입니다.");
+        }
+    }
+
     private void validPastOfDateTime(LocalDateTime startDateTime, LocalDateTime endDateTime) {
         if (!(startDateTime.isAfter(LocalDateTime.now()) && endDateTime.isAfter(LocalDateTime.now()))) {
             throw new NotBusinessDayException("PastDateTimeError::: 예약일시가 현재보다 과거입니다.");
@@ -139,6 +154,7 @@ public class ReservationRequestValidation {
             throw new InvalidDateException("InvalidDateError::: 선택하신 날짜는 존재하지 않습니다.");
         }
     }
+
     public void validSelectedDate(LocalDate startDate, LocalDate endDate) {
         if (startDate.isBefore(endDate)) {
             throw new InvalidDateException();
