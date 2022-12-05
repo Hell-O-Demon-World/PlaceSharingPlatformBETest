@@ -1,10 +1,8 @@
 package com.golfzonaca.officesharingplatform.service.mypage;
 
 import com.golfzonaca.officesharingplatform.domain.MyPage;
-import com.golfzonaca.officesharingplatform.web.mypage.form.MyPageReservationForm;
 import com.golfzonaca.officesharingplatform.web.mypage.form.MyPageUsageForm;
 
-import java.util.List;
 import java.util.Map;
 
 public interface MyPageService {
