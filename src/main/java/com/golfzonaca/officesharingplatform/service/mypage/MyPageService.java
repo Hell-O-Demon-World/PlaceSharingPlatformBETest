@@ -10,8 +10,5 @@ import java.util.Map;
 public interface MyPageService {
     MyPage createMyPageForm(Long userId);
     void cancelByOrderAndUserId(Integer order, Long userId);
-
     Map<Integer, MyPageUsageForm> getMyPageUsageForm(long userId);
-
-    List<MyPageReservationForm> getMyPageReservationListByUserId(long userId);
 }
