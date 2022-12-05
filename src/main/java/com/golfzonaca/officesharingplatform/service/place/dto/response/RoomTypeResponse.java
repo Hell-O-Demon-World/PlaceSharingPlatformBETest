@@ -6,14 +6,15 @@ import com.golfzonaca.officesharingplatform.service.place.dto.response.roomtype.
 import lombok.Getter;
 
 import java.util.List;
+import java.util.SortedSet;
 
 @Getter
 public class RoomTypeResponse {
     private Desk desk;
-    private List<MeetingRoom> meetingRoom;
-    private List<Office> office;
+    private SortedSet<MeetingRoom> meetingRoom;
+    private SortedSet<Office> office;
 
-    public void toEntity(Desk desk, List<MeetingRoom> meetingRoom, List<Office> office) {
+    public void toEntity(Desk desk, SortedSet<MeetingRoom> meetingRoom, SortedSet<Office> office) {
         this.desk = desk;
         this.meetingRoom = meetingRoom;
         this.office = office;

@@ -107,9 +107,10 @@ public class JpaPlaceService implements PlaceService {
         RoomTypeResponse roomTypeResponse = new RoomTypeResponse();
         Set<String> nonDuplicatedRoomSet = getNonDuplicatedRoomSet(place.getRooms());
 
+        Desk resultDesk = new Desk();
         boolean deskExist = false;
-        List<MeetingRoom> responseMeetingRoom = new ArrayList<>();
-        List<Office> responseOffice = new ArrayList<>();
+        SortedSet<MeetingRoom> responseMeetingRoom = new TreeSet<>();
+        SortedSet<Office> responseOffice = new TreeSet<>();
         List<String> images = new LinkedList<>();
         int price = 0;
         for (String roomType : nonDuplicatedRoomSet) {
@@ -122,6 +123,7 @@ public class JpaPlaceService implements PlaceService {
             }
             if (roomType.equals("DESK")) {
                 deskExist = true;
+                resultDesk = new Desk(deskExist, price, images);
             } else {
                 String roomKindTag = roomType.replaceAll("[^0-9]", "");
                 if (roomType.contains("MEETINGROOM")) {
@@ -131,17 +133,13 @@ public class JpaPlaceService implements PlaceService {
                 }
             }
         }
-        Desk resultDesk = new Desk(deskExist, price, images);
-
-        Collections.sort(responseMeetingRoom);
-        Collections.sort(responseOffice);
 
         roomTypeResponse.toEntity(resultDesk, responseMeetingRoom, responseOffice);
         return roomTypeResponse;
     }
 
     private Set<String> getNonDuplicatedRoomSet(List<Room> roomList) {
-        Set<String> nonDuplicatedRoomSet = new HashSet<>();
+        SortedSet<String> nonDuplicatedRoomSet = new TreeSet<>();
         for (Room room : roomList) {
             nonDuplicatedRoomSet.add(room.getRoomKind().getRoomType());
         }
