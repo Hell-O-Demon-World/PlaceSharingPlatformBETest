@@ -4,6 +4,7 @@ import com.golfzonaca.officesharingplatform.domain.Place;
 import com.golfzonaca.officesharingplatform.domain.Reservation;
 import com.golfzonaca.officesharingplatform.domain.Room;
 import com.golfzonaca.officesharingplatform.domain.User;
+import com.golfzonaca.officesharingplatform.domain.type.ReservationStatus;
 import com.golfzonaca.officesharingplatform.domain.type.dateformat.DateFormat;
 import com.golfzonaca.officesharingplatform.exception.DuplicatedReservationException;
 import com.golfzonaca.officesharingplatform.repository.place.PlaceRepository;
@@ -226,7 +227,8 @@ public class JpaReservationService implements ReservationService {
         String selectedType = data.getSelectedType();
 
         Room resultRoom = getResultRoom(place, startTime, endTime, date, selectedType);
-        Reservation reservation = new Reservation(user, resultRoom, date, startTime, date, endTime, true);
+        // TODO: Need to change status of reservation when user choose pay method
+        Reservation reservation = new Reservation(user, resultRoom, date, startTime, date, endTime, ReservationStatus.COMPLETED);
         Reservation save = Optional.ofNullable(reservationRepository.save(reservation)).orElseThrow(() -> new DuplicatedReservationException("ReservationError::: 예약 실패"));
 
         result.put("reservationId", save.getId().toString());

@@ -1,6 +1,7 @@
 package com.golfzonaca.officesharingplatform.domain;
 
 
+import com.golfzonaca.officesharingplatform.domain.type.ReservationStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -42,12 +43,12 @@ public class Reservation {
     private LocalTime resEndTime;
 
     @Column(name = "RES_STATUS", nullable = false)
-    private Boolean status;
+    private ReservationStatus status;
 
     @OneToOne(mappedBy = "reservation")
     private Rating rating;
 
-    public Reservation(User user, Room room, LocalDate resStartDate, LocalTime resStartTime, LocalDate resEndDate, LocalTime resEndTime, Boolean status) {
+    public Reservation(User user, Room room, LocalDate resStartDate, LocalTime resStartTime, LocalDate resEndDate, LocalTime resEndTime, ReservationStatus status) {
         this.user = user;
         this.room = room;
         this.resStartDate = resStartDate;
@@ -68,7 +69,7 @@ public class Reservation {
         this.resEndTime = resEndTime;
     }
 
-    public void updateStatus(Boolean status) {
+    public void updateStatus(ReservationStatus status) {
         this.status = status;
     }
 }
