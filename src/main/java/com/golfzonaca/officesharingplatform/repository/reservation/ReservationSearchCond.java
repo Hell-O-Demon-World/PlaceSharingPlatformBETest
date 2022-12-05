@@ -1,5 +1,6 @@
 package com.golfzonaca.officesharingplatform.repository.reservation;
 
+import com.golfzonaca.officesharingplatform.domain.type.ReservationStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,7 +15,6 @@ import java.util.Optional;
 @AllArgsConstructor
 @Builder
 public class ReservationSearchCond {
-
     private Long roomKindId;
     private Long userId;
     private Long roomId;
@@ -22,4 +22,5 @@ public class ReservationSearchCond {
     private LocalTime resStartTime;
     private LocalDate resEndDate;
     private LocalTime resEndTime;
+    private ReservationStatus reservationStatus;
 }

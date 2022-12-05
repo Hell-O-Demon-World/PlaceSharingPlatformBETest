@@ -43,6 +43,7 @@ public class Reservation {
     private LocalTime resEndTime;
 
     @Column(name = "RES_STATUS", nullable = false)
+    @Enumerated(EnumType.STRING)
     private ReservationStatus status;
 
     @OneToOne(mappedBy = "reservation")
