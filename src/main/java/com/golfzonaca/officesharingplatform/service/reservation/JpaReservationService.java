@@ -84,10 +84,11 @@ public class JpaReservationService implements ReservationService {
                     DateFormat formDate = new DateFormat(year, month.getValue(), day);
                     LocalDate date = StringDateForm.toLocalDate(String.valueOf(year), String.valueOf(month.getValue()), String.valueOf(day));
                     boolean state;
-                    if (reservationRequestValidation.isOpenDaysByDate(openDays, date)) {
-                        state = false;
-                    } else if (roomType.contains("OFFICE")) {
+
+                    if (roomType.contains("OFFICE")) {
                         state = getOfficeStateThatDate(findPlace.getId(), roomType, date);
+                    } else if (reservationRequestValidation.isOpenDaysByDate(openDays, date)) {
+                        state = false;
                     } else {
                         List<Room> roomByPlaceIdAndRoomType = roomRepository.findRoomByPlaceIdAndRoomType(findPlace.getId(), roomType);
                         List<Reservation> findReservationList = reservationRepository.findAllByPlaceIdAndRoomTypeAndDate(findPlace.getId(), roomType, date);
