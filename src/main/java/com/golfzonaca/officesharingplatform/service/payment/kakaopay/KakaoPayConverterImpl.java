@@ -1,4 +1,4 @@
-package com.golfzonaca.officesharingplatform.service.payment;
+package com.golfzonaca.officesharingplatform.service.payment.kakaopay;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,8 +8,7 @@ import com.golfzonaca.officesharingplatform.domain.Reservation;
 import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayApprovalRequest;
 import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayCancelRequest;
 import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayReadyRequest;
-import com.golfzonaca.officesharingplatform.domain.type.PayType;
-import com.golfzonaca.officesharingplatform.domain.type.PayWay;
+import com.golfzonaca.officesharingplatform.service.payment.PaymentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -26,8 +25,8 @@ import java.util.Map;
 public class KakaoPayConverterImpl implements KakaoPayConverter {
 
     private final KakaoPayUtility kakaoPayUtility;
-    protected static String payWay;
-    protected static String payType;
+    public static String payWay;
+    public static String payType;
 
 
     @Override

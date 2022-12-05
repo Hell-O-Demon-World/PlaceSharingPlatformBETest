@@ -1,4 +1,4 @@
-package com.golfzonaca.officesharingplatform.service.payment;
+package com.golfzonaca.officesharingplatform.service.payment.kakaopay;
 
 import com.golfzonaca.officesharingplatform.domain.Reservation;
 import com.golfzonaca.officesharingplatform.domain.User;

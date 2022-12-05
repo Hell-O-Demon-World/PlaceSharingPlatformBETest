@@ -1,4 +1,4 @@
-package com.golfzonaca.officesharingplatform.service.payment;
+package com.golfzonaca.officesharingplatform.service.payment.iamport;
 
 import com.siot.IamportRestClient.exception.IamportResponseException;
 import com.siot.IamportRestClient.request.CardInfo;

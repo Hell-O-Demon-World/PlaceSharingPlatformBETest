@@ -1,74 +1,51 @@
 package com.golfzonaca.officesharingplatform.web.payment;
 
-import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayApprovalResponse;
-import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayCancelResponse;
-import com.golfzonaca.officesharingplatform.service.payment.PaymentService;
-import com.siot.IamportRestClient.exception.IamportResponseException;
-import com.siot.IamportRestClient.request.CardInfo;
-import com.siot.IamportRestClient.response.IamportResponse;
-import com.siot.IamportRestClient.response.Payment;
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import com.golfzonaca.officesharingplatform.web.payment.dto.PaymentInfo;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
-import java.util.Map;
-
-@Slf4j
 @RestController
-@RequestMapping("/payment")
 public class PaymentController {
 
-    @Setter
-    private PaymentService paymentService;
+    @PostMapping("/payment")
+//    ResponseEntity<?> paymentRequest(@RequestBody PaymentInfo paymentInfo) {
+    RestTemplate paymentRequest(@RequestBody PaymentInfo paymentInfo) {
 
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
 
-    @Autowired
-    public PaymentController(PaymentService paymentService) {
-        this.paymentService = paymentService;
+        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+        body.add("reservationId", String.valueOf(paymentInfo.getReservationId()));
+        body.add("payWay", paymentInfo.getPayWay());
+        body.add("payType", paymentInfo.getPayType());
+
+        HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(body, httpHeaders);
+
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.exchange(
+                "http://localhost:8080/kakaoPay",
+                HttpMethod.POST,
+                entity,
+                String.class
+        );
+        return restTemplate;
+
+      /*  if (paymentInfo.getPaymentMethod().equals("KAKAO")) {
+            httpHeaders.setLocation(URI.create("/kakaoPay"));
+            httpHeaders.setAccessControlRequestMethod(HttpMethod.POST);
+        } else if (paymentInfo.getPaymentMethod().equals("NICEPAY")) {
+            httpHeaders.setLocation(URI.create("/nicepay"));
+        } else {
+            throw new NoSuchElementException("지원하지 않는 결제 수단입니다.");
+        }
+        return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY).headers(httpHeaders).body(paymentInfo);*/
     }
-
-    @GetMapping("/kakaoPay")
-    public void kakaoPayGet() {
-    }
-
-    @PostMapping("/kakaoPay")
-    public String kakaoPayReady(@RequestBody Map<String, String> reservationInfo) {
-        Long reservationId = Long.valueOf(reservationInfo.get("reservationId"));
-        String payWay = reservationInfo.get("payWay");
-        String payType = reservationInfo.get("payType");
-        return "redirect:" + paymentService.kakaoPayReadyRequest(reservationId, payWay, payType);
-    }
-
-    @GetMapping("/{reservationId}/kakaoPayApprove")
-    public KakaoPayApprovalResponse kakaoPayApprove(@PathVariable long reservationId, @RequestParam("pg_token") String pg_token, RedirectAttributes redirectAttributes) {
-        redirectAttributes.addAttribute("pg_token", pg_token);
-        redirectAttributes.addAttribute("reservationId", reservationId);
-        return paymentService.kakaoPayApprovalRequest(reservationId, pg_token);
-    }
-
-    @PostMapping("/kakaoPayCancel")
-    public KakaoPayCancelResponse kakaoPayCancel(@RequestBody Map<String, Long> reservationInfo) {
-        Long reservationId = reservationInfo.get("reservationId");
-        return paymentService.kakaoPayCancelRequest(reservationId);
-    }
-
-    @PostMapping("/nicepay")
-    public IamportResponse<Payment> nicePay(@RequestBody Map<String, String> nicePayInfo) throws IamportResponseException, IOException {
-        String cardNumber = nicePayInfo.get("card_number");
-        String expiry = nicePayInfo.get("expiry");
-        String birth = nicePayInfo.get("birth");
-        String pwd2digit = nicePayInfo.get("pwd_2digit");
-
-        CardInfo cardInfo = new CardInfo(cardNumber, expiry, birth, pwd2digit);
-        return paymentService.nicePay(cardInfo);
-    }
-
-    @PostMapping("/nicePaycancel")
-    public IamportResponse<Payment> nicePayCancel(@RequestBody Map<String, String> nicePayInfo) throws IamportResponseException, IOException {
-        return paymentService.nicePayCancel();
-    }
-
 }

@@ -11,6 +11,11 @@ import com.golfzonaca.officesharingplatform.domain.type.PayWay;
 import com.golfzonaca.officesharingplatform.repository.mileage.MileageRepository;
 import com.golfzonaca.officesharingplatform.repository.payment.PaymentRepository;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
+import com.golfzonaca.officesharingplatform.service.payment.iamport.IamPortService;
+import com.golfzonaca.officesharingplatform.service.payment.kakaopay.KakaoPayConverter;
+import com.golfzonaca.officesharingplatform.service.payment.kakaopay.KakaoPayConverterImpl;
+import com.golfzonaca.officesharingplatform.service.payment.kakaopay.KakaoPayService;
+import com.golfzonaca.officesharingplatform.service.payment.kakaopay.KakaoPayUtility;
 import com.siot.IamportRestClient.IamportClient;
 import com.siot.IamportRestClient.exception.IamportResponseException;
 import com.siot.IamportRestClient.request.CancelData;
@@ -23,7 +28,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
@@ -44,7 +48,7 @@ public class PaymentService implements KakaoPayService, IamPortService {
     private static final String HOST = "https://kapi.kakao.com/";
     private static final HttpHeaders httpheaders = new HttpHeaders();
 
-    protected static KakaoPayReadyResponse kakaoPayReadyResponse;
+    public static KakaoPayReadyResponse kakaoPayReadyResponse;
 
     private final KakaoPayConverter kakaoPayConverter;
     private final KakaoPayUtility kakaoPayUtility;
