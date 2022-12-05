@@ -25,6 +25,12 @@ public class MyPageController {
         return myPageService.getMyPageUsageForm(userId);
     }
 
+//    @GetMapping("/edit")
+//    public EditUserForm editUser(@TokenUserId Long userId) {
+//
+//        return
+//    }
+
     @PostMapping("/cancel")
     public void cancelReservation(@TokenUserId Long userId, @RequestParam Integer order){
         myPageService.cancelByOrderAndUserId(order, userId);
