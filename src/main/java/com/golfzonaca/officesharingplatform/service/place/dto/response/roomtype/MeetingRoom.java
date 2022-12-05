@@ -4,11 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 public class MeetingRoom implements Comparable<MeetingRoom> {
     private String typeCode;
     private Integer price;
+    private List<String> images;
 
     @Override
     public int compareTo(@NotNull MeetingRoom o) {

@@ -100,37 +100,44 @@ public class JpaPlaceService implements PlaceService {
 
     private RoomTypeResponse findRoom(long placeId) {
         Place findPlace = placeRepository.findById(placeId);
-        return getReservationResponseForm(findPlace);
+        return getRoomTypeResponse(findPlace);
     }
 
-    private RoomTypeResponse getReservationResponseForm(Place findPlace) {
-        RoomTypeResponse responseForm = new RoomTypeResponse();
-        Set<String> nonDuplicatedRoomSet = getNonDuplicatedRoomSet(findPlace.getRooms());
+    private RoomTypeResponse getRoomTypeResponse(Place place) {
+        RoomTypeResponse roomTypeResponse = new RoomTypeResponse();
+        Set<String> nonDuplicatedRoomSet = getNonDuplicatedRoomSet(place.getRooms());
 
-        boolean responseDesk = false;
+        boolean deskExist = false;
         List<MeetingRoom> responseMeetingRoom = new ArrayList<>();
         List<Office> responseOffice = new ArrayList<>();
+        List<String> images = new LinkedList<>();
         int price = 0;
-        for (String room : nonDuplicatedRoomSet) {
-            price = roomKindRepository.findByRoomType(room).getPrice();
-            if (room.equals("DESK")) {
-                responseDesk = true;
+        for (String roomType : nonDuplicatedRoomSet) {
+            price = roomKindRepository.findByRoomType(roomType).getPrice();
+            for (RoomImage roomImage : place.getRoomImages()) {
+                if (roomImage.getRoomKind().getRoomType().equals(roomType)) {
+                    images.add(roomImage.getSavedPath());
+                }
+
+            }
+            if (roomType.equals("DESK")) {
+                deskExist = true;
             } else {
-                String roomKindTag = room.replaceAll("[^0-9]", "");
-                if (room.contains("MEETINGROOM")) {
-                    responseMeetingRoom.add(new MeetingRoom(roomKindTag, price));
+                String roomKindTag = roomType.replaceAll("[^0-9]", "");
+                if (roomType.contains("MEETINGROOM")) {
+                    responseMeetingRoom.add(new MeetingRoom(roomKindTag, price, images));
                 } else {
-                    responseOffice.add(new Office(roomKindTag, price));
+                    responseOffice.add(new Office(roomKindTag, price, images));
                 }
             }
         }
-        Desk resultDesk = new Desk(responseDesk, price);
+        Desk resultDesk = new Desk(deskExist, price, images);
 
         Collections.sort(responseMeetingRoom);
         Collections.sort(responseOffice);
 
-        responseForm.toEntity(resultDesk, responseMeetingRoom, responseOffice);
-        return responseForm;
+        roomTypeResponse.toEntity(resultDesk, responseMeetingRoom, responseOffice);
+        return roomTypeResponse;
     }
 
     private Set<String> getNonDuplicatedRoomSet(List<Room> roomList) {
