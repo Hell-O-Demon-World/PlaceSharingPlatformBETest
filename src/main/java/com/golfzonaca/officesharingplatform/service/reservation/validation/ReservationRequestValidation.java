@@ -38,7 +38,7 @@ public class ReservationRequestValidation {
         validRealTime(Integer.parseInt(startTime));
         validRoomType(roomType);
         validTimeOfRoomType(roomType);
-        validStartTime(TimeFormatter.toLocalTime(startTime), place.getPlaceStart(), place.getPlaceEnd());
+        validStartTime(TimeFormatter.toLocalTime(startTime), place.getPlaceStart(), place.getPlaceEnd(), TimeFormatter.toLocalDate(date));
         validBusinessTime(place, TimeFormatter.toLocalTime(startTime));
         validBusinessDay(place, TimeFormatter.toLocalDate(date));
     }
@@ -106,10 +106,11 @@ public class ReservationRequestValidation {
         }
     }
 
-    private void validStartTime(LocalTime startTime, LocalTime placeStartTime, LocalTime placeEndTime) {
-        LocalTime now = LocalTime.now();
-        if (placeStartTime.isBefore(now)) {
-            placeStartTime = now;
+    private void validStartTime(LocalTime startTime, LocalTime placeStartTime, LocalTime placeEndTime, LocalDate date) {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime localDateTime = LocalDateTime.of(date, placeStartTime);
+        if (localDateTime.isBefore(now)) {
+            placeStartTime = now.toLocalTime();
         }
 
         if (!startTime.isBefore(placeEndTime)) {
