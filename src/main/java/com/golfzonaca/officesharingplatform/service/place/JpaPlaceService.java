@@ -107,12 +107,13 @@ public class JpaPlaceService implements PlaceService {
         RoomTypeResponse roomTypeResponse = new RoomTypeResponse();
         Set<String> nonDuplicatedRoomSet = getNonDuplicatedRoomSet(place.getRooms());
 
-        Desk resultDesk = new Desk();
-        boolean deskExist = false;
+
         SortedSet<MeetingRoom> responseMeetingRoom = new TreeSet<>();
         SortedSet<Office> responseOffice = new TreeSet<>();
         List<String> images = new LinkedList<>();
         int price = 0;
+        boolean deskExist = false;
+        Desk resultDesk = new Desk(deskExist, price, images);
         for (String roomType : nonDuplicatedRoomSet) {
             price = roomKindRepository.findByRoomType(roomType).getPrice();
             for (RoomImage roomImage : place.getRoomImages()) {
