@@ -26,7 +26,6 @@ public class JpaMyPageService implements MyPageService {
     public MyPage createMyPageForm(Long userId) {
         return MyPage.builder()
                 .userName(userRepository.findById(userId).getUsername())
-                .myPageReservationList(getMyPageReservationListByUserId(userId))
                 .build();
     }
 

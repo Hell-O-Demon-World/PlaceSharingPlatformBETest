@@ -118,6 +118,7 @@ create table user
     USER_TEL    varchar(22)  not null,
     USER_JOB    varchar(20)  not null,
     prefer_type varchar(50)  not null,
+    JOIN_DATE   datetime     not null,
     constraint USER_MAIL
         unique (USER_MAIL),
     constraint USER_TEL

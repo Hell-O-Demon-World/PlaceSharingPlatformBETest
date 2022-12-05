@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Getter
 @Entity
@@ -36,6 +37,9 @@ public class User {
 
     @Column(name = "PREFER_TYPE", nullable = false)
     private String userPlace;
+
+    @Column(name = "JOIN_DATE", nullable = false)
+    private LocalDateTime joinDate;
 
     @OneToOne
     @JoinColumn(name = "MILEAGE_ID")
@@ -70,5 +74,9 @@ public class User {
 
     public void updateRole(Role role) {
         this.role = role;
+    }
+
+    public void updateDate(LocalDateTime joinDate) {
+        this.joinDate = joinDate;
     }
 }

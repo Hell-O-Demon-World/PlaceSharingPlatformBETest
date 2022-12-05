@@ -5,6 +5,7 @@ import com.golfzonaca.officesharingplatform.domain.*;
 import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayApprovalResponse;
 import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayCancelResponse;
 import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayReadyRequest;
+import com.golfzonaca.officesharingplatform.domain.type.ReservationStatus;
 import com.golfzonaca.officesharingplatform.repository.payment.PaymentRepository;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
 import com.golfzonaca.officesharingplatform.service.payment.requestform.RequestBodyApproveConverter;
@@ -157,7 +158,8 @@ public class SpringJpaKakaoPayService implements KakaoPayService {
             for (Payment payment : paymentRepository.findByReservationId(reservationId)) {
                 payment.updatePayStatus(false);
             }
-            reservationRepository.findById(reservationId).updateStatus(false);
+            // TODO: 결제 방식에 따라 수정 필요~
+            reservationRepository.findById(reservationId).updateStatus(ReservationStatus.PROGRESSING);
 
             return kakaoPayCancelResponse;
         } catch (RestClientException | URISyntaxException e) {

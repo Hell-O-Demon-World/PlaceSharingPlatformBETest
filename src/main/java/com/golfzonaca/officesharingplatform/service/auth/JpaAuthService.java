@@ -14,6 +14,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 @Transactional
 @Service
 @Slf4j
@@ -36,9 +38,12 @@ public class JpaAuthService implements AuthService {
         String encPassword = bCryptPasswordEncoder.encode(rawPassword);
         Mileage mileage = mileageService.join();
         Role role = roleRepository.findByRoleType(RoleType.ROLE_USER);
+        LocalDateTime joinDate = LocalDateTime.now();
         user.updatePassword(encPassword);
         user.updateMileage(mileage);
         user.updateRole(role);
+        user.updateDate(joinDate);
+
         userRepository.save(user);
     }
 
