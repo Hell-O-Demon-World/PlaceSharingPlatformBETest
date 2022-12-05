@@ -1,11 +1,14 @@
-package com.golfzonaca.officesharingplatform.web.reservation.dto.response.type;
+package com.golfzonaca.officesharingplatform.service.place.dto.response.roomtype;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+
+import java.util.List;
 
 @Getter
 @AllArgsConstructor
 public class Desk {
     private boolean exist;
     private Integer price;
+    private List<String> images;
 }

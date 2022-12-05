@@ -1,4 +1,4 @@
-package com.golfzonaca.officesharingplatform.service.place.dto.response;
+package com.golfzonaca.officesharingplatform.service.place.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,7 +8,7 @@ import java.util.Map;
 
 @Getter
 @AllArgsConstructor
-public class PlaceDto {
+public class PlaceListDto {
     List<String> placeImages;
     String placeId;
     String placeName;

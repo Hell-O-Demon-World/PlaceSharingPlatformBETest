@@ -2,10 +2,14 @@ package com.golfzonaca.officesharingplatform.service.place;
 
 import com.golfzonaca.officesharingplatform.domain.*;
 import com.golfzonaca.officesharingplatform.repository.place.PlaceRepository;
+import com.golfzonaca.officesharingplatform.repository.roomkind.RoomKindRepository;
 import com.golfzonaca.officesharingplatform.service.place.dto.PlaceDetailsInfo;
-import com.golfzonaca.officesharingplatform.service.place.dto.RatingDto;
-import com.golfzonaca.officesharingplatform.service.place.dto.response.PlaceDto;
-import com.golfzonaca.officesharingplatform.service.reservation.ReservationService;
+import com.golfzonaca.officesharingplatform.service.place.dto.PlaceListDto;
+import com.golfzonaca.officesharingplatform.service.place.dto.response.RatingDto;
+import com.golfzonaca.officesharingplatform.service.place.dto.response.RoomTypeResponse;
+import com.golfzonaca.officesharingplatform.service.place.dto.response.roomtype.Desk;
+import com.golfzonaca.officesharingplatform.service.place.dto.response.roomtype.MeetingRoom;
+import com.golfzonaca.officesharingplatform.service.place.dto.response.roomtype.Office;
 import com.golfzonaca.officesharingplatform.web.formatter.TimeFormatter;
 import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +23,8 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 public class JpaPlaceService implements PlaceService {
-    private final ReservationService reservationService;
     private final PlaceRepository placeRepository;
+    private final RoomKindRepository roomKindRepository;
 
     @Override
     public List<Place> findAllPlaces() {
@@ -89,9 +93,57 @@ public class JpaPlaceService implements PlaceService {
                 excludeOpenDays(stringToList(place.getOpenDays())),
                 place.getPlaceStart().toString(),
                 place.getPlaceEnd().toString(),
-                reservationService.findRoom(placeId),
+                findRoom(placeId),
                 ratingList
         );
+    }
+
+    private RoomTypeResponse findRoom(long placeId) {
+        Place findPlace = placeRepository.findById(placeId);
+        return getRoomTypeResponse(findPlace);
+    }
+
+    private RoomTypeResponse getRoomTypeResponse(Place place) {
+        int price = 0;
+
+        RoomTypeResponse roomTypeResponse = new RoomTypeResponse();
+        Set<String> nonDuplicatedRoomSet = getNonDuplicatedRoomSet(place.getRooms());
+
+        Desk resultDesk = new Desk(false, price, new LinkedList<>());
+        SortedSet<MeetingRoom> responseMeetingRoom = new TreeSet<>();
+        SortedSet<Office> responseOffice = new TreeSet<>();
+
+        for (String roomType : nonDuplicatedRoomSet) {
+            price = roomKindRepository.findByRoomType(roomType).getPrice();
+
+            List<String> images = new LinkedList<>();
+            for (RoomImage roomImage : place.getRoomImages()) {
+                if (roomImage.getRoomKind().getRoomType().equals(roomType)) {
+                    images.add(roomImage.getSavedPath());
+                }
+            }
+            if (roomType.equals("DESK")) {
+                resultDesk = new Desk(true, price, images);
+            } else {
+                String roomKindTag = roomType.replaceAll("[^0-9]", "");
+                if (roomType.contains("MEETINGROOM")) {
+                    responseMeetingRoom.add(new MeetingRoom(roomKindTag, price, images));
+                } else {
+                    responseOffice.add(new Office(roomKindTag, price, images));
+                }
+            }
+        }
+
+        roomTypeResponse.toEntity(resultDesk, responseMeetingRoom, responseOffice);
+        return roomTypeResponse;
+    }
+
+    private Set<String> getNonDuplicatedRoomSet(List<Room> roomList) {
+        SortedSet<String> nonDuplicatedRoomSet = new TreeSet<>();
+        for (Room room : roomList) {
+            nonDuplicatedRoomSet.add(room.getRoomKind().getRoomType());
+        }
+        return nonDuplicatedRoomSet;
     }
 
     private String getQuantityByRoomType(Place place, String roomType) {
@@ -104,12 +156,12 @@ public class JpaPlaceService implements PlaceService {
         return String.valueOf(quantity);
     }
 
-    public Map<Integer, PlaceDto> processingMainPlaceData(List<Place> places) {
-        Map<Integer, PlaceDto> mainPlaceData = new LinkedHashMap<>();
+    public Map<Integer, PlaceListDto> processingMainPlaceData(List<Place> places) {
+        Map<Integer, PlaceListDto> mainPlaceData = new LinkedHashMap<>();
         for (int i = 0; i < places.size(); i++) {
             Place place = places.get(i);
             List<String> imagesPath = getImagesPath(place);
-            mainPlaceData.put(i, new PlaceDto(imagesPath, place.getId().toString(), place.getPlaceName(), String.valueOf(place.getRatePoint().getRatingPoint()), place.getAddress().getAddress(), stringToList(place.getPlaceAddInfo()), place.getDescription(), excludeOpenDays(stringToList(place.getOpenDays())), place.getPlaceStart().toString(), place.getPlaceEnd().toString(), processingRoomInfo(place.getRooms())));
+            mainPlaceData.put(i, new PlaceListDto(imagesPath, place.getId().toString(), place.getPlaceName(), String.valueOf(place.getRatePoint().getRatingPoint()), place.getAddress().getAddress(), stringToList(place.getPlaceAddInfo()), place.getDescription(), excludeOpenDays(stringToList(place.getOpenDays())), place.getPlaceStart().toString(), place.getPlaceEnd().toString(), processingRoomInfo(place.getRooms())));
         }
         return mainPlaceData;
     }
