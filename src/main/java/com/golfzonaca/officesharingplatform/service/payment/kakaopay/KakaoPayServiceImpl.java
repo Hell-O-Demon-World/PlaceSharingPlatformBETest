@@ -1,4 +1,4 @@
-package com.golfzonaca.officesharingplatform.service.payment;
+package com.golfzonaca.officesharingplatform.service.payment.kakaopay;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.golfzonaca.officesharingplatform.domain.Payment;
@@ -12,10 +12,6 @@ import com.golfzonaca.officesharingplatform.repository.mileage.MileageRepository
 import com.golfzonaca.officesharingplatform.repository.payment.PaymentRepository;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
 import com.golfzonaca.officesharingplatform.service.payment.iamport.IamPortService;
-import com.golfzonaca.officesharingplatform.service.payment.kakaopay.KakaoPayConverter;
-import com.golfzonaca.officesharingplatform.service.payment.kakaopay.KakaoPayConverterImpl;
-import com.golfzonaca.officesharingplatform.service.payment.kakaopay.KakaoPayService;
-import com.golfzonaca.officesharingplatform.service.payment.kakaopay.KakaoPayUtility;
 import com.siot.IamportRestClient.IamportClient;
 import com.siot.IamportRestClient.exception.IamportResponseException;
 import com.siot.IamportRestClient.request.CancelData;
@@ -27,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -42,8 +39,9 @@ import java.util.List;
 
 @Slf4j
 @Service
+@Transactional
 @RequiredArgsConstructor
-public class PaymentService implements KakaoPayService, IamPortService {
+public class KakaoPayServiceImpl implements KakaoPayService {
 
     private static final String HOST = "https://kapi.kakao.com/";
     private static final HttpHeaders httpheaders = new HttpHeaders();
@@ -57,29 +55,59 @@ public class PaymentService implements KakaoPayService, IamPortService {
     private final MileageRepository mileageRepository;
 
     @Override
-    public String kakaoPayReadyRequest(long reservationId, String payWay, String payType) {
+    public String kakaoPayReadyRequest(long reservationId, String payWay, String payType, long payMileage) {
 
         Reservation reservation = reservationRepository.findById(reservationId);
+        Payment payment = getPayment(reservation, payWay, payType, payMileage, "");
+        paymentRepository.save(payment);
 
         kakaoPayConverter.makeHttpHeader(httpheaders);
-        KakaoPayReadyRequest kakaoPayReadyRequest = kakaoPayConverter.makeRequestBodyForReady(reservation, payWay, payType);
+
+        KakaoPayReadyRequest kakaoPayReadyRequest = kakaoPayConverter.makeRequestBodyForReady(payment);
+//        KakaoPayReadyRequest kakaoPayReadyRequest = kakaoPayConverter.makeRequestBodyForReady(reservation, payWay, payType);
+
 
         HttpEntity<MultiValueMap<String, String>> requestReadyEntity = new HttpEntity<>(kakaoPayConverter.multiValueMapConverter(new ObjectMapper(), kakaoPayReadyRequest), httpheaders);
         kakaoPayReadyResponse = sendKakaoPayReadyRequest(HOST, requestReadyEntity);
+        payment.updateApiCode(kakaoPayReadyResponse.getTid());
+
 
         return kakaoPayReadyResponse.getNextRedirectPcUrl();
     }
 
-    @Override
-    public KakaoPayApprovalResponse kakaoPayApprovalRequest(long reservationId, String pgToken) {
+    private Payment getPayment(Reservation reservation, String payWay, String payType, long payMileage, String apiCode) {
 
-        Reservation reservation = reservationRepository.findById(reservationId);
-        KakaoPayApprovalRequest kakaoPayApprovalRequest = kakaoPayConverter.makeRequestBodyForApprove(reservation, pgToken);
+        Integer totalAmount = kakaoPayUtility.calculateTotalAmount(reservation, payWay, payType);
+
+        return Payment.builder()
+                .reservation(reservation)
+                .payDate(LocalDate.now())
+                .payTime(LocalTime.now())
+                .price(totalAmount)
+                .payMileage(payMileage)
+                .payWay(PayWay.valueOf(payWay))
+                .savedMileage(kakaoPayUtility.calculateMileage(totalAmount))
+                .type(PayType.valueOf(payType))
+                .apiCode(apiCode)
+                .pg(PG.KAKAOPAY)
+                .payStatus(false) //TODO : DB 바뀜에 따라 바뀌어 질 예정
+                .build();
+    }
+
+    @Override
+    public KakaoPayApprovalResponse kakaoPayApprovalRequest(long paymentId, String pgToken) {
+
+        Payment findPayment = paymentRepository.findById(paymentId);
+
+        Reservation reservation = findPayment.getReservation();
+
+
+        KakaoPayApprovalRequest kakaoPayApprovalRequest = kakaoPayConverter.makeRequestBodyForApprove(findPayment, pgToken);
 
         HttpEntity<MultiValueMap<String, String>> requestApprovalEntity = new HttpEntity<>(kakaoPayConverter.multiValueMapConverter(new ObjectMapper(), kakaoPayApprovalRequest), httpheaders);
         KakaoPayApprovalResponse kakaoPayApprovalResponse = sendKakaoPayApprovalRequest(HOST, requestApprovalEntity);
 
-        savePayment(reservation);
+        findPayment.updatePayStatus(true);
 
         return kakaoPayApprovalResponse;
     }
@@ -147,20 +175,6 @@ public class PaymentService implements KakaoPayService, IamPortService {
     }
 
     @Override
-    public void savePayment(Reservation reservation) {
-        LocalDate currentDate = LocalDate.now();
-        LocalTime currentTime = LocalTime.now();
-
-        Integer totalAmount = kakaoPayUtility.calculateTotalAmount(reservation, KakaoPayConverterImpl.payWay, KakaoPayConverterImpl.payType);
-
-        long point = kakaoPayUtility.calculateMileage(totalAmount);
-        Payment payment = new Payment(reservation, currentDate, currentTime, totalAmount, 0, PayWay.valueOf(KakaoPayConverterImpl.payWay), point, PayType.valueOf(KakaoPayConverterImpl.payType), kakaoPayReadyResponse.getTid(), PG.KAKAOPAY, true);
-
-        paymentRepository.save(payment);
-        saveMileage(reservation.getUser(), point);
-    }
-
-    @Override
     //todo : 마일리지 업데이트 필요
     public void saveMileage(User user, long point) {
         // mileageRepository 에서 userId로 Mileage 찾음
@@ -207,26 +221,5 @@ public class PaymentService implements KakaoPayService, IamPortService {
             payment.updatePayStatus(false);
         }
         reservationRepository.findById(reservationId).updateStatus(false);
-    }
-
-
-    @Override
-    public IamportResponse<com.siot.IamportRestClient.response.Payment> nicePay(CardInfo cardInfo) throws IamportResponseException, IOException {
-        IamportClient iamportClient = new IamportClient("3356213051155874", "c8AvU2odFqdwyfvFV7xcA880WWKm3CE8bah5mbR60DV3RN2DUpmXYjtd0mzbC5Y0ieMaRnB95EpXfvrf");
-        OnetimePaymentData onetimeData = new OnetimePaymentData("1q2w3e4r", new BigDecimal(1000), cardInfo);
-//        onetimeData.setPg("jtnet");
-        onetimeData.setPg("nice");
-        return iamportClient.onetimePayment(onetimeData);
-    }
-
-    @Override
-    public IamportResponse<com.siot.IamportRestClient.response.Payment> nicePayCancel() throws IamportResponseException, IOException {
-        IamportClient iamportClient = new IamportClient("3356213051155874", "c8AvU2odFqdwyfvFV7xcA880WWKm3CE8bah5mbR60DV3RN2DUpmXYjtd0mzbC5Y0ieMaRnB95EpXfvrf");
-        CancelData cancelData = new CancelData("1q2w3e4r", false, new BigDecimal(1000));
-        cancelData.setTax_free(new BigDecimal(0));
-        cancelData.setChecksum(null);
-        cancelData.setReason("test");
-
-        return iamportClient.cancelPaymentByImpUid(cancelData);
     }
 }

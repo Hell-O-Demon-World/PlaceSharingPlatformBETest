@@ -1,6 +1,6 @@
 package com.golfzonaca.officesharingplatform.web.payment;
 
-import com.golfzonaca.officesharingplatform.service.payment.PaymentService;
+import com.golfzonaca.officesharingplatform.service.payment.iamport.IamPortService;
 import com.siot.IamportRestClient.IamportClient;
 import com.siot.IamportRestClient.exception.IamportResponseException;
 import com.siot.IamportRestClient.request.CancelData;
@@ -25,7 +25,7 @@ import java.util.Map;
 @RequestMapping("/payment")
 public class IamPortController {
 
-    PaymentService paymentService;
+    private final IamPortService iamPortService;
 
 
     @PostMapping("/iamportPay")
@@ -53,11 +53,11 @@ public class IamPortController {
         String pwd2digit = nicePayInfo.get("pwd_2digit");
 
         CardInfo cardInfo = new CardInfo(cardNumber, expiry, birth, pwd2digit);
-        return paymentService.nicePay(cardInfo);
+        return iamPortService.nicePay(cardInfo);
     }
 
     @PostMapping("/nicePaycancel")
     public IamportResponse<Payment> nicePayCancel(@RequestBody Map<String, String> nicePayInfo) throws IamportResponseException, IOException {
-        return paymentService.nicePayCancel();
+        return iamPortService.nicePayCancel();
     }
 }

@@ -13,9 +13,10 @@ public interface KakaoPayConverter {
 
     HttpHeaders makeHttpHeader(HttpHeaders httpHeaders);
 
-    KakaoPayReadyRequest makeRequestBodyForReady(Reservation reservation, String payWay, String payType);
+//    KakaoPayReadyRequest makeRequestBodyForReady(Reservation reservation, String payWay, String payType);
+    KakaoPayReadyRequest makeRequestBodyForReady(Payment payment);
 
-    KakaoPayApprovalRequest makeRequestBodyForApprove(Reservation reservation, String pgToken);
+    KakaoPayApprovalRequest makeRequestBodyForApprove(Payment payment, String pgToken);
 
     KakaoPayCancelRequest makeRequestBodyForCancel(Reservation reservation, Payment paymnet);
 

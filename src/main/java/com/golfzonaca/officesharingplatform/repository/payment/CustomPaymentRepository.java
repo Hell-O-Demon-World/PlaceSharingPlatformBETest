@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Repository
 @Transactional
@@ -24,6 +25,11 @@ public class CustomPaymentRepository implements PaymentRepository {
     @Override
     public List<Payment> findByReservationId(long reservationId) {
         return queryPaymentRepository.findByReservationId(reservationId);
+    }
+
+    @Override
+    public Payment findById(long paymentId) {
+        return jpaRepository.findById(paymentId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 결제정보입니다."));
     }
 
 }

@@ -1,5 +1,6 @@
 package com.golfzonaca.officesharingplatform.service.payment.kakaopay;
 
+import com.golfzonaca.officesharingplatform.domain.Payment;
 import com.golfzonaca.officesharingplatform.domain.Reservation;
 import com.golfzonaca.officesharingplatform.domain.type.PayType;
 import com.golfzonaca.officesharingplatform.domain.type.PayWay;
@@ -30,6 +31,29 @@ public class KakaoPayUtilityImpl implements KakaoPayUtility {
         }
         return totalAmount;
     }
+
+//    @Override
+//    public Integer calculateTotalAmount(Payment payment) {
+//
+//        Reservation reservation = payment.getReservation();
+//
+//
+//        Integer totalAmount = ((payment.getReservation().getResEndTime().getHour()) - (payment.getReservation().getResStartTime().getHour())) * (payment.getReservation()
+//                .getRoom().getRoomKind().getPrice());
+//
+//        if (reservation.getRoom().getRoomKind().getRoomType().contains("OFFICE")) {
+//            return Math.toIntExact((ChronoUnit.DAYS.between(reservation.getResEndDate(), reservation.getResStartDate()) * reservation.getRoom().getRoomKind().getPrice()));
+//        } else {
+//            if (payment.getPayWay().equals(PayWay.PREPAYMENT)) {
+//                if (payment.getType().equals(PayType.DEPOSIT)) {
+//                    totalAmount = (int) (totalAmount * 0.2);
+//                }
+//            } else {
+//                totalAmount = (int) (totalAmount * 0.8);
+//            }
+//        }
+//        return totalAmount;
+//    }
 
     @Override
     public Integer calculateTaxFreeAmount(Integer totalAmount) {

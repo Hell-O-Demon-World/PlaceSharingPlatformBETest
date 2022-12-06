@@ -12,9 +12,10 @@ public class PaymentInfo {
     private long reservationId;
     private String payWay;
     private String payType;
-//    private String cardNumber;
-//    private String expiry;
-//    private String birth;
-//    private String pwd_2digit;
-//    private String paymentMethod;
+    private long payMileage;
+    private String cardNumber;
+    private String expiry;
+    private String birth;
+    private String pwd_2digit;
+    private String paymentMethod;
 }

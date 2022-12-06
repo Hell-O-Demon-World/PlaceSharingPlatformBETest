@@ -2,7 +2,9 @@ package com.golfzonaca.officesharingplatform.web.payment;
 
 import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayApprovalResponse;
 import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayCancelResponse;
-import com.golfzonaca.officesharingplatform.service.payment.PaymentService;
+import com.golfzonaca.officesharingplatform.service.payment.kakaopay.KakaoPayService;
+import com.golfzonaca.officesharingplatform.web.payment.dto.PaymentInfo;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,16 +16,11 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequestMapping("/payment")
+@RequiredArgsConstructor
 public class KakaoPayController {
 
-    @Setter
-    private PaymentService paymentService;
+    private final KakaoPayService kakaoPayService;
 
-
-    @Autowired
-    public KakaoPayController(PaymentService paymentService) {
-        this.paymentService = paymentService;
-    }
 
 //    @GetMapping("/kakaoPay")
 //    public void kakaoPayGet() {
@@ -31,26 +28,25 @@ public class KakaoPayController {
 //    }
 
     @PostMapping("/kakaoPay")
-    public String kakaoPayReady(@RequestBody Map<String, String> reservationInfo) {
+    public String kakaoPayReady(@RequestBody PaymentInfo paymentInfo) {
         log.info("kakaoPayReady");
-        Long reservationId = Long.valueOf(reservationInfo.get("reservationId"));
-        String payWay = reservationInfo.get("payWay");
-        String payType = reservationInfo.get("payType");
-        return "redirect:" + paymentService.kakaoPayReadyRequest(reservationId, payWay, payType);
+        Long reservationId = paymentInfo.getReservationId();
+        long payMileage = paymentInfo.getPayMileage();
+        String payWay = paymentInfo.getPayWay();
+        String payType = paymentInfo.getPayType();
+        return "redirect:" + kakaoPayService.kakaoPayReadyRequest(reservationId, payWay, payType, payMileage);
     }
 
-    @GetMapping("/{reservationId}/kakaoPayApprove")
-    public KakaoPayApprovalResponse kakaoPayApprove(@PathVariable long reservationId, @RequestParam("pg_token") String pg_token, RedirectAttributes redirectAttributes) {
+    @GetMapping("/{paymentId}/kakaoPayApprove")
+    public KakaoPayApprovalResponse kakaoPayApprove(@PathVariable long paymentId, @RequestParam("pg_token") String pg_token, RedirectAttributes redirectAttributes) {
         redirectAttributes.addAttribute("pg_token", pg_token);
-        redirectAttributes.addAttribute("reservationId", reservationId);
-        return paymentService.kakaoPayApprovalRequest(reservationId, pg_token);
+        redirectAttributes.addAttribute("paymentId", paymentId);
+        return kakaoPayService.kakaoPayApprovalRequest(paymentId, pg_token);
     }
 
     @PostMapping("/kakaoPayCancel")
     public KakaoPayCancelResponse kakaoPayCancel(@RequestBody Map<String, Long> reservationInfo) {
         Long reservationId = reservationInfo.get("reservationId");
-        return paymentService.kakaoPayCancelRequest(reservationId);
+        return kakaoPayService.kakaoPayCancelRequest(reservationId);
     }
-
-
 }

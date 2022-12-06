@@ -8,7 +8,6 @@ import com.golfzonaca.officesharingplatform.domain.Reservation;
 import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayApprovalRequest;
 import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayCancelRequest;
 import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayReadyRequest;
-import com.golfzonaca.officesharingplatform.service.payment.PaymentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -37,7 +36,7 @@ public class KakaoPayConverterImpl implements KakaoPayConverter {
         return httpHeaders;
     }
 
-    @Override
+    /*@Override
     public KakaoPayReadyRequest makeRequestBodyForReady(Reservation reservation, String payWay, String payType) {
         this.payWay = payWay;
         this.payType = payType;
@@ -57,18 +56,40 @@ public class KakaoPayConverterImpl implements KakaoPayConverter {
                 .cancelUrl("http://localhost:8080/payment/kakaoPayCancel")
                 .failUrl("http://localhost:8080/kakaoPaySuccessFail")
                 .build();
+    }*/
+
+    @Override
+    public KakaoPayReadyRequest makeRequestBodyForReady(Payment payment) {
+
+        Integer totalAmount = (int) payment.getPrice();
+
+        Reservation reservation = payment.getReservation();
+
+        return KakaoPayReadyRequest.builder()
+                .cid(CompanyId.KAKAOPAYCID)
+                .partnerOrderId(String.valueOf(reservation.getId()))
+                .partnerUserId(String.valueOf(reservation.getUser().getId()))
+                .itemName(String.valueOf(reservation.getRoom().getRoomKind().getRoomType()))
+                .quantity(1)
+                .totalAmount(totalAmount)
+                .taxFreeAmount(kakaoPayUtility.calculateTaxFreeAmount(totalAmount))
+                .vatAmount(kakaoPayUtility.calculateVatAmount(totalAmount))
+                .approvalUrl("http://localhost:8080/payment/" + payment.getId() + "/kakaoPayApprove")
+                .cancelUrl("http://localhost:8080/payment/kakaoPayCancel")
+                .failUrl("http://localhost:8080/kakaoPaySuccessFail")
+                .build();
     }
 
     @Override
-    public KakaoPayApprovalRequest makeRequestBodyForApprove(Reservation reservation, String pgToken) {
+    public KakaoPayApprovalRequest makeRequestBodyForApprove(Payment payment, String pgToken) {
 
 //        Integer totalAmount = kakaoPayUtility.calculateTotalAmount(reservation, this.payWay, this.payType);
 
         return KakaoPayApprovalRequest.builder()
                 .cid(CompanyId.KAKAOPAYCID)
-                .tid(PaymentService.kakaoPayReadyResponse.getTid())
-                .partnerOrderId(String.valueOf(reservation.getId()))
-                .partnerUserId(String.valueOf(reservation.getUser().getId()))
+                .tid(payment.getApiCode())
+                .partnerOrderId(String.valueOf(payment.getReservation().getId()))
+                .partnerUserId(String.valueOf(payment.getReservation().getUser().getId()))
                 .pgToken(pgToken)
                 .build();
     }

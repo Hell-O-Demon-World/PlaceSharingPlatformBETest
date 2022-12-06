@@ -16,7 +16,7 @@ public interface KakaoPayService {
      * @param reservationId, payWay
      * @return KakaoPayReadyResponse
      */
-    String kakaoPayReadyRequest(long reservationId, String payWay, String payType);
+    String kakaoPayReadyRequest(long reservationId, String payWay, String payType, long payMileage);
 
     /**
      * 카카오페이 API로 결제 승인요청
@@ -24,7 +24,7 @@ public interface KakaoPayService {
      * @param reservationId, pgToken
      * @return KakaoPayApprovalResponse
      */
-    KakaoPayApprovalResponse kakaoPayApprovalRequest(long reservationId, String pgToken);
+    KakaoPayApprovalResponse kakaoPayApprovalRequest(long paymentId, String pgToken);
 
     /**
      * 카카오페이 API로 결제 취소 요청
@@ -40,7 +40,7 @@ public interface KakaoPayService {
 
     KakaoPayCancelResponse sendKakaoPayCancelRequest(String host, HttpEntity<MultiValueMap<String, String>> body);
 
-    void savePayment(Reservation reservation);
+//    void savePayment(Reservation reservation);
 
     void saveMileage(User user, long point);
 }

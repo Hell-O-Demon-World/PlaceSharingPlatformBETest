@@ -76,4 +76,8 @@ public class Payment {
     public void updatePayStatus(Boolean payStatus) {
         this.payStatus = payStatus;
     }
+
+    public void updateApiCode(String apiCode) {
+        this.apiCode = apiCode;
+    }
 }
