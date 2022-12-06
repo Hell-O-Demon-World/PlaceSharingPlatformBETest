@@ -50,13 +50,9 @@ public class ReservedRoom {
             }
         } else {
             if (realDateTime.toLocalDate().equals(placeDateTime.toLocalDate()) && realDateTime.isAfter(placeDateTime)) {
-                startTime = realDateTime.getHour();
+                startTime = realDateTime.plusHours(1).getHour();
             }
             for (int i = DefaultTimeOfDay.getStartTime(); i < startTime; i++) {
-                if (i == 0) {
-                    i = 24;
-                }
-
                 resultMap.replace(i, false);
             }
             for (int j = endTime; j <= DefaultTimeOfDay.getEndTime(); j++) {

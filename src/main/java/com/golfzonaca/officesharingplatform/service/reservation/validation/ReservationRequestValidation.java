@@ -80,6 +80,10 @@ public class ReservationRequestValidation {
         if (!businessDay) {
             throw new NotBusinessDayException("NotBusinessDayException::: 입력한 날짜는 영업일이 아닙니다.");
         }
+        LocalDate realLocalDate = LocalDate.now();
+        if (date.isBefore(realLocalDate)) {
+            throw new NotBusinessDayException("NotBusinessDayException::: 지나간 날짜는 입력받을 수 없습니다.");
+        }
     }
 
     private void validResTimeBetweenPlaceOpeningTime(Place place, LocalTime resStartTime, LocalTime resEndTime) {
@@ -116,7 +120,7 @@ public class ReservationRequestValidation {
         if (!startTime.isBefore(placeEndTime)) {
             throw new NotBusinessTimeException("StartTimeAfterEndTimeError::: 선택된 시작 시각이 영업 종료 시각 이후입니다.");
         } else if (!startTime.isAfter(placeStartTime)) {
-            throw new NotBusinessTimeException("StartTimeAfterEndTimeError::: 선택된 시작 시각이 장소의 영업 시작 시각 이전입니다.");
+            throw new NotBusinessTimeException("StartTimeAfterEndTimeError::: 선택된 시작 시각이 사용 가능한 시작 시각 이전입니다.");
         }
     }
 
