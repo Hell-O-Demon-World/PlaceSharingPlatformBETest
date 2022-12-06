@@ -73,9 +73,9 @@ public class KakaoPayService {
 
         Payment findPayment = paymentRepository.findById(paymentId);
 
-        KakaoPayApprovalRequest kakaoPayApprovalRequest = kakaoPayUtility.makeRequestBodyForApprove(findPayment, pgToken);
+        KakaoPayApprovalRequest body = kakaoPayUtility.makeRequestBodyForApprove(findPayment, pgToken);
 
-        HttpEntity<MultiValueMap<String, String>> requestApprovalEntity = new HttpEntity<>(kakaoPayUtility.multiValueMapConverter(new ObjectMapper(), kakaoPayApprovalRequest), httpHeaders);
+        HttpEntity<MultiValueMap<String, String>> requestApprovalEntity = new HttpEntity<>(kakaoPayUtility.multiValueMapConverter(new ObjectMapper(), body), httpHeaders);
         KakaoPayApprovalResponse kakaoPayApprovalResponse = sendKakaoPayApprovalRequest(HOST, requestApprovalEntity);
 
         findPayment.updatePayStatus(true);
