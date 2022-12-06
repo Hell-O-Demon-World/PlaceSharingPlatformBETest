@@ -5,9 +5,7 @@ import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayCancelRespons
 import com.golfzonaca.officesharingplatform.service.payment.kakaopay.KakaoPayService;
 import com.golfzonaca.officesharingplatform.web.payment.dto.PaymentInfo;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -30,7 +28,7 @@ public class KakaoPayController {
     @PostMapping("/kakaoPay")
     public String kakaoPayReady(@RequestBody PaymentInfo paymentInfo) {
         log.info("kakaoPayReady");
-        Long reservationId = paymentInfo.getReservationId();
+        long reservationId = paymentInfo.getReservationId();
         long payMileage = paymentInfo.getPayMileage();
         String payWay = paymentInfo.getPayWay();
         String payType = paymentInfo.getPayType();

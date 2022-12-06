@@ -1,20 +1,9 @@
 package com.golfzonaca.officesharingplatform.service.payment.iamport;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.golfzonaca.officesharingplatform.domain.Payment;
-import com.golfzonaca.officesharingplatform.domain.Reservation;
-import com.golfzonaca.officesharingplatform.domain.User;
-import com.golfzonaca.officesharingplatform.domain.payment.*;
-import com.golfzonaca.officesharingplatform.domain.type.PG;
-import com.golfzonaca.officesharingplatform.domain.type.PayType;
-import com.golfzonaca.officesharingplatform.domain.type.PayWay;
 import com.golfzonaca.officesharingplatform.repository.mileage.MileageRepository;
 import com.golfzonaca.officesharingplatform.repository.payment.PaymentRepository;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
-import com.golfzonaca.officesharingplatform.service.payment.kakaopay.KakaoPayConverter;
-import com.golfzonaca.officesharingplatform.service.payment.kakaopay.KakaoPayConverterImpl;
-import com.golfzonaca.officesharingplatform.service.payment.kakaopay.KakaoPayService;
-import com.golfzonaca.officesharingplatform.service.payment.kakaopay.KakaoPayUtility;
 import com.siot.IamportRestClient.IamportClient;
 import com.siot.IamportRestClient.exception.IamportResponseException;
 import com.siot.IamportRestClient.request.CancelData;
@@ -23,17 +12,11 @@ import com.siot.IamportRestClient.request.OnetimePaymentData;
 import com.siot.IamportRestClient.response.IamportResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -44,13 +27,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class IamPortServiceImpl implements IamPortService {
 
-    private static final String HOST = "https://kapi.kakao.com/";
     private static final HttpHeaders httpheaders = new HttpHeaders();
 
-    public static KakaoPayReadyResponse kakaoPayReadyResponse;
-
-    private final KakaoPayConverter kakaoPayConverter;
-    private final KakaoPayUtility kakaoPayUtility;
     private final ReservationRepository reservationRepository;
     private final PaymentRepository paymentRepository;
     private final MileageRepository mileageRepository;
@@ -75,15 +53,7 @@ public class IamPortServiceImpl implements IamPortService {
         return findPayment;
     }
 
-    public void checkHttpHeader() {
-        if (httpheaders.isEmpty()) {
-            kakaoPayConverter.makeHttpHeader(httpheaders);
-        }
-    }
-
     // todo : update 구문에 조건 더 필요 id + ...
-    // payment 에서는 tid 로 검색해서 payStatus update 하면 됨
-    // reservation에서는 쿼리가 잘 동작 안하는 것 같으니 확인 필요
     public void updatePaymentStatus(long reservationId, String tid) {
 
         for (Payment payment : paymentRepository.findByReservationId(reservationId)) {
