@@ -3,12 +3,11 @@ package com.golfzonaca.officesharingplatform.web.payment;
 import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayApprovalResponse;
 import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayCancelResponse;
 import com.golfzonaca.officesharingplatform.service.payment.kakaopay.KakaoPayService;
+import com.golfzonaca.officesharingplatform.web.payment.dto.CancelInfo;
 import com.golfzonaca.officesharingplatform.web.payment.dto.PaymentInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @Slf4j
 @RestController
@@ -29,13 +28,13 @@ public class KakaoPayController {
     }
 
     @GetMapping("/{paymentId}/kakaopayapprove")
-    public KakaoPayApprovalResponse kakaoPayApprove(@PathVariable long paymentId, @RequestParam("pg_token") String pg_token) {
-        return kakaoPayService.kakaoPayApprovalRequest(paymentId, pg_token);
+    public KakaoPayApprovalResponse kakaoPayApprove(@PathVariable long paymentId, @RequestParam("pg_token") String pgToken) {
+        return kakaoPayService.kakaoPayApprovalRequest(paymentId, pgToken);
     }
 
     @PostMapping("/kakaopaycancel")
-    public KakaoPayCancelResponse kakaoPayCancel(@RequestBody Map<String, Long> reservationInfo) {
-        Long reservationId = reservationInfo.get("reservationId");
+    public KakaoPayCancelResponse kakaoPayCancel(@RequestBody CancelInfo cancelInfo) {
+        Long reservationId = cancelInfo.getReservationId();
         return kakaoPayService.kakaoPayCancelRequest(reservationId);
     }
 }

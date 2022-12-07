@@ -36,8 +36,6 @@ public class KakaoPayService {
 
     private static final String HOST = "https://kapi.kakao.com/";
 
-    public static KakaoPayReadyResponse kakaoPayReadyResponse;
-
     private final ReservationRepository reservationRepository;
     private final PaymentRepository paymentRepository;
     private final MileageRepository mileageRepository;
@@ -45,22 +43,17 @@ public class KakaoPayService {
     public String kakaoPayReadyRequest(long reservationId, String payWay, String payType, long payMileage) {
 
         KakaoPayUtility kakaoPayUtility = new KakaoPayUtility();
-
-        HttpHeaders httpHeaders = kakaoPayUtility.makeHttpHeader();
-
+        HttpHeaders header = kakaoPayUtility.makeHttpHeader();
 
         Reservation reservation = reservationRepository.findById(reservationId);
-        Payment payment = getPayment(reservation, payWay, payType, payMileage, "");
+        Payment payment = processingPaymentData(reservation, payWay, payType, payMileage, "");
         paymentRepository.save(payment);
 
         KakaoPayReadyRequest kakaoPayReadyRequest = kakaoPayUtility.makeRequestBodyForReady(payment);
+        HttpEntity<MultiValueMap<String, String>> requestReadyEntity = new HttpEntity<>(kakaoPayUtility.multiValueMapConverter(new ObjectMapper(), kakaoPayReadyRequest), header);
+        KakaoPayReadyResponse kakaoPayReadyResponse = sendKakaoPayReadyRequest(HOST, requestReadyEntity);
 
-
-        HttpEntity<MultiValueMap<String, String>> requestReadyEntity = new HttpEntity<>(kakaoPayUtility.multiValueMapConverter(new ObjectMapper(), kakaoPayReadyRequest), httpHeaders);
-        kakaoPayReadyResponse = sendKakaoPayReadyRequest(HOST, requestReadyEntity);
         payment.updateApiCode(kakaoPayReadyResponse.getTid());
-
-
         return kakaoPayReadyResponse.getNextRedirectPcUrl();
     }
 
@@ -68,30 +61,26 @@ public class KakaoPayService {
     public KakaoPayApprovalResponse kakaoPayApprovalRequest(long paymentId, String pgToken) {
 
         KakaoPayUtility kakaoPayUtility = new KakaoPayUtility();
+        Payment payment = paymentRepository.findById(paymentId);
 
         HttpHeaders httpHeaders = kakaoPayUtility.makeHttpHeader();
-
-        Payment findPayment = paymentRepository.findById(paymentId);
-
-        KakaoPayApprovalRequest body = kakaoPayUtility.makeRequestBodyForApprove(findPayment, pgToken);
-
+        KakaoPayApprovalRequest body = kakaoPayUtility.makeRequestBodyForApprove(payment, pgToken);
         HttpEntity<MultiValueMap<String, String>> requestApprovalEntity = new HttpEntity<>(kakaoPayUtility.multiValueMapConverter(new ObjectMapper(), body), httpHeaders);
-        KakaoPayApprovalResponse kakaoPayApprovalResponse = sendKakaoPayApprovalRequest(HOST, requestApprovalEntity);
 
-        findPayment.updatePayStatus(true);
+        KakaoPayApprovalResponse kakaoPayApprovalResponse = sendKakaoPayApprovalRequest(HOST, requestApprovalEntity);
+        payment.updatePayStatus(true);
 
         return kakaoPayApprovalResponse;
     }
 
-    public KakaoPayCancelResponse kakaoPayCancelRequest(long reservationId) {
+    public KakaoPayCancelResponse kakaoPayCancelRequest(Long reservationId) {
 
         KakaoPayUtility kakaoPayUtility = new KakaoPayUtility();
 
-        HttpHeaders httpHeaders = kakaoPayUtility.makeHttpHeader();
-
-
         Reservation reservation = reservationRepository.findById(reservationId);
         Payment findPayment = checkAvailablePaymentInHour(reservationId);
+
+        HttpHeaders httpHeaders = kakaoPayUtility.makeHttpHeader();
 
         KakaoPayCancelRequest kakaoPayCancelRequest = kakaoPayUtility.makeRequestBodyForCancel(reservation, findPayment);
 
@@ -188,7 +177,7 @@ public class KakaoPayService {
         reservationRepository.findById(reservationId).updateStatus(false);
     }
 
-    private Payment getPayment(Reservation reservation, String payWay, String payType, long payMileage, String apiCode) {
+    private Payment processingPaymentData(Reservation reservation, String payWay, String payType, long payMileage, String apiCode) {
 
         KakaoPayUtility kakaoPayUtility = new KakaoPayUtility();
 
