@@ -152,9 +152,7 @@ public class JpaReservationService implements ReservationService {
 
         LocalTime startTime = findPlace.getPlaceStart();
         LocalTime endTime = findPlace.getPlaceEnd();
-       /* if (reservationRepository.findInDateByPlaceIdAndRoomTypeAndDate(findPlace.getId(), selectedRoomType, selectedStartTime).isPresent()) {
-            return new ArrayList<>();
-        } else */if (!hasFullReservation(totalReservationCount, beforeReservationCount)) {
+       if (!hasFullReservation(totalReservationCount, beforeReservationCount)) {
             Map<Integer, ReservedRoom> reservedRoomMap = getReservedRoomMap(findPlace, findReservationList, reservedRoomList, selectedDate);
             return getResultList(findPlace, selectedStartTime.getHour(), reservedRoomMap);
         } else {
@@ -216,8 +214,11 @@ public class JpaReservationService implements ReservationService {
         }
 
         List<Integer> result = new ArrayList<>();
-        for (int i = minusMinPointer; i < plusMaxPointer + 1; i++) {
-            result.add(i);
+
+        if (minusMinPointer != plusMaxPointer) {
+            for (int i = minusMinPointer; i < plusMaxPointer + 1; i++) {
+                result.add(i);
+            }
         }
         return result;
     }
