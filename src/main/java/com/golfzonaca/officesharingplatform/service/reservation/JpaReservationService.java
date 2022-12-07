@@ -152,11 +152,14 @@ public class JpaReservationService implements ReservationService {
 
         LocalTime startTime = findPlace.getPlaceStart();
         LocalTime endTime = findPlace.getPlaceEnd();
-        if (!hasFullReservation(totalReservationCount, beforeReservationCount)) {
+        if (reservationRepository.findInDateByPlaceIdAndRoomTypeAndDate(findPlace.getId(), selectedRoomType, selectedStartTime).isPresent()) {
+            return new ArrayList<>();
+        } else if (!hasFullReservation(totalReservationCount, beforeReservationCount)) {
             Map<Integer, ReservedRoom> reservedRoomMap = getReservedRoomMap(findPlace, findReservationList, reservedRoomList, selectedDate);
             return getResultList(findPlace, selectedStartTime.getHour(), reservedRoomMap);
+        } else {
+            return parsingMapToList(new ReservedRoom(0L, startTime, endTime, selectedDate).getTimeStates());
         }
-        return parsingMapToList(new ReservedRoom(0L, startTime, endTime, selectedDate).getTimeStates());
     }
 
     private boolean isFullReservation(Place findPlace, Map<Integer, ReservedRoom> reservedRoomMap) {
