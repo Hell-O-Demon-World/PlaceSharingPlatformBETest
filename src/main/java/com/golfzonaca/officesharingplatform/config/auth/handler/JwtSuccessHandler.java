@@ -9,6 +9,7 @@ import com.golfzonaca.officesharingplatform.service.refreshtoken.RefreshTokenSer
 import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.jwt.Jwt;
 import org.springframework.security.jwt.JwtHelper;
@@ -39,7 +40,7 @@ public class JwtSuccessHandler implements AuthenticationSuccessHandler {
         json.addProperty("accessToken", accessJwt.getEncoded());
         json.addProperty("refreshToken", refreshJwt.getEncoded());
 
-        jwtHttpServletProvider.responseJsonObject(response, json);
+        jwtHttpServletProvider.responseJsonObject(response, HttpStatus.ACCEPTED, json);
     }
 
     private Jwt createRefreshJwt(Long userId) {

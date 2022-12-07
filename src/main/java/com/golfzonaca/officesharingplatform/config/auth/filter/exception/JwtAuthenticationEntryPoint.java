@@ -3,9 +3,12 @@ package com.golfzonaca.officesharingplatform.config.auth.filter.exception;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.golfzonaca.officesharingplatform.config.auth.filter.servlet.JwtHttpServletProvider;
 import com.golfzonaca.officesharingplatform.config.auth.token.JwtManager;
+import com.golfzonaca.officesharingplatform.exception.NonExistedPlaceException;
 import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.web.reactive.error.DefaultErrorAttributes;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.jwt.Jwt;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -26,11 +29,10 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         String path = request.getServletPath();
-        // TODO: 1. isHeader, TODO: 2. isToken
         String token = Optional.ofNullable(request.getHeader("Authorization"))
                 .orElseThrow(() -> new NullPointerException("HTTPHeaderException::: No Authorization Parameter in HttpHeader"));
+
         if (!token.isEmpty()) {
-            // TODO: 3. isAccessTokenOrRefreshToken
             String refreshPath = "/auth/refresh";
             if (path.equals(refreshPath)) {
                 String refreshToken = token;
@@ -38,15 +40,15 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
                     Jwt newAccessToken = getNewAccessToken(refreshToken);
                     JsonObject jsonObject = encodedTokenToJson(newAccessToken.getEncoded(), refreshToken);
                     log.info("JWTExpiredException::: Create New AccessToken");
-                    jwtHttpServletProvider.responseJsonObject(response, jsonObject);
+                    jwtHttpServletProvider.responseJsonObject(response, HttpStatus.ACCEPTED,jsonObject);
                 } else {
-                    log.info("JWTExpiredException::: RefreshToken Expired");
+                    log.warn("JWTExpiredException::: RefreshToken Expired");
                     response.sendError(HttpServletResponse.SC_FORBIDDEN, "Login Again");
                 }
             } else {
                 if (!JwtManager.validateJwt(token)) {
                     log.warn("JWTException::: AccessToken Expired");
-                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "expiration token");
+                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "expiration access token");
                 } else {
                     log.warn("JWTException::: Validate AccessToken = {}", false);
                     response.sendError(HttpServletResponse.SC_BAD_REQUEST, "expiration token");

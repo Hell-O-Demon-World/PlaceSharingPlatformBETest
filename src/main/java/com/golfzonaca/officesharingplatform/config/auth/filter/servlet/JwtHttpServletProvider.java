@@ -13,11 +13,11 @@ import java.io.PrintWriter;
 @Component
 public class JwtHttpServletProvider implements TokenHttpServletProvider {
     @Override
-    public void responseJsonObject(HttpServletResponse response, JsonObject jsonObject) throws IOException {
+    public void responseJsonObject(HttpServletResponse response, HttpStatus status, JsonObject jsonObject) throws IOException {
+        response.setCharacterEncoding("UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            response.setStatus(HttpStatus.ACCEPTED.value());
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
+            response.setStatus(status.value());
+            response.setContentType("application/json; charset=UTF-8");
             out.print(jsonObject);
             out.flush();
         } catch (IOException e) {
