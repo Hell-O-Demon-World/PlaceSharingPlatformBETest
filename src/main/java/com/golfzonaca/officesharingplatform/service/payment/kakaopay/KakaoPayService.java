@@ -1,10 +1,7 @@
 package com.golfzonaca.officesharingplatform.service.payment.kakaopay;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.golfzonaca.officesharingplatform.domain.Mileage;
-import com.golfzonaca.officesharingplatform.domain.Payment;
-import com.golfzonaca.officesharingplatform.domain.Reservation;
-import com.golfzonaca.officesharingplatform.domain.User;
+import com.golfzonaca.officesharingplatform.domain.*;
 import com.golfzonaca.officesharingplatform.domain.payment.*;
 import com.golfzonaca.officesharingplatform.domain.type.*;
 import com.golfzonaca.officesharingplatform.repository.mileage.MileageRepository;
@@ -12,7 +9,8 @@ import com.golfzonaca.officesharingplatform.repository.payment.PaymentRepository
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
 import com.golfzonaca.officesharingplatform.repository.user.UserRepository;
 import com.golfzonaca.officesharingplatform.service.payment.PaymentValidation;
-import com.golfzonaca.officesharingplatform.web.payment.dto.PaymentInfo;
+import com.golfzonaca.officesharingplatform.service.refund.RefundService;
+import com.golfzonaca.officesharingplatform.service.refund.SpringJpaRefundService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
@@ -42,6 +40,7 @@ public class KakaoPayService {
     private final PaymentRepository paymentRepository;
     private final MileageRepository mileageRepository;
     private final UserRepository userRepository;
+    private final RefundService refundService;
 
     public String kakaoPayReadyRequest(Long userId, long reservationId, String payWay, String payType, long payMileage) {
 
@@ -52,7 +51,7 @@ public class KakaoPayService {
         paymentValidation.validExistedType(payType);
         paymentValidation.validExistedPayWay(payWay);
         paymentValidation.validPairByRoomType(payType, payWay, reservation.getRoom().getRoomKind().getRoomType());
-        paymentValidation.validUserForReservation(user,reservation);
+        paymentValidation.validUserForReservation(user, reservation);
 
         KakaoPayUtility kakaoPayUtility = new KakaoPayUtility();
         HttpHeaders header = kakaoPayUtility.makeHttpHeader();
@@ -95,30 +94,35 @@ public class KakaoPayService {
 
         List<Payment> findPayment = paymentValidation.cancelAvailableTimeValidation(reservation);
 
-
         restoreUserMileage(user, findPayment);
 
-        List<KakaoPayCancelResponse> kakaoPayCancelResponses = kakaoPayCancelRequest(findPayment, reservation);
+        List<Refund> refunds = refundService.processingRefundData(findPayment);
+
+        List<KakaoPayCancelResponse> kakaoPayCancelResponses = kakaoPayCancelRequest(refunds);
+
+        for (Refund refund : refunds) {
+            refund.updateRefundStatus(true);
+            refund.getPayment().updatePayStatus(PaymentStatus.CANCELED); //이거 안바뀜 일단 ..
+        }
+        reservation.updateStatus(false);
 
         return kakaoPayCancelResponses;
     }
 
-    public List<KakaoPayCancelResponse> kakaoPayCancelRequest(List<Payment> findPayment, Reservation reservation) {
+    public List<KakaoPayCancelResponse> kakaoPayCancelRequest(List<Refund> refunds) {
 
         KakaoPayUtility kakaoPayUtility = new KakaoPayUtility();
 
         List<KakaoPayCancelResponse> cancelResult = new LinkedList<>();
-        reservation.updateStatus(false);
 
-        for (Payment payment : findPayment) { // 검증이 끝나면 취소요청하기
+        for (Refund refund : refunds) { // 검증이 끝나면 취소요청하기
             HttpHeaders httpHeaders = kakaoPayUtility.makeHttpHeader();
 
-            KakaoPayCancelRequest kakaoPayCancelRequest = kakaoPayUtility.makeRequestBodyForCancel(reservation, payment);
+            KakaoPayCancelRequest kakaoPayCancelRequest = kakaoPayUtility.makeRequestBodyForCancel(refund);
 
             HttpEntity<MultiValueMap<String, String>> requestCancelEntity = new HttpEntity<>(kakaoPayUtility.multiValueMapConverter(new ObjectMapper(), kakaoPayCancelRequest), httpHeaders);
             KakaoPayCancelResponse kakaoPayCancelResponse = sendKakaoPayCancelRequest(HOST, requestCancelEntity);
             cancelResult.add(kakaoPayCancelResponse);
-            payment.updatePayStatus(PaymentStatus.CANCELED);
         }
         return cancelResult;
     }

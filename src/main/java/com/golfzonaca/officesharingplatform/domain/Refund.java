@@ -1,5 +1,7 @@
 package com.golfzonaca.officesharingplatform.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -9,7 +11,9 @@ import java.time.LocalDateTime;
 @Getter
 @Entity
 @Table(name = "REFUND")
+@AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Refund {
 
     @Id
@@ -34,4 +38,8 @@ public class Refund {
 
     @Column(name = "REFUND_STATUS", nullable = false)
     private boolean refundStatus;
+
+    public void updateRefundStatus(boolean refundStatus) {
+        this.refundStatus = refundStatus;
+    }
 }

@@ -24,26 +24,7 @@ public class PaymentValidation {
         if (reservationTime.isBefore(now)) {
             for (Payment payment : reservation.getPaymentList()) {
 
-                if (payment.getType().equals(PayType.FULLPAYMENT)) {
-
-                    Payment cancelBalance = Payment.builder()
-                            .reservation(payment.getReservation())
-                            .payDate(payment.getPayDate())
-                            .payTime(payment.getPayTime())
-                            .price((long) (payment.getPrice() * 0.8))
-                            .payMileage(payment.getPayMileage())
-                            .payWay(payment.getPayWay())
-                            .savedMileage(payment.getSavedMileage())
-                            .type(payment.getType())
-                            .apiCode(payment.getApiCode())
-                            .pg(payment.getPg())
-                            .payStatus(payment.getPayStatus())
-                            .build();
-
-                    availableCancelTarget.add(cancelBalance);
-
-                } else if (payment.getType().equals(PayType.BALANCE)) {
-                    // 보증금 빼고 잔금은 다 돌려주나?
+                if (payment.getType().equals(PayType.FULLPAYMENT) || payment.getType().equals(PayType.BALANCE)) {
                     availableCancelTarget.add(payment);
                 }
             }

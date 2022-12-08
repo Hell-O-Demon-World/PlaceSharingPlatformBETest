@@ -2,10 +2,7 @@ package com.golfzonaca.officesharingplatform.service.payment.kakaopay;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.golfzonaca.officesharingplatform.domain.CompanyId;
-import com.golfzonaca.officesharingplatform.domain.Mileage;
-import com.golfzonaca.officesharingplatform.domain.Payment;
-import com.golfzonaca.officesharingplatform.domain.Reservation;
+import com.golfzonaca.officesharingplatform.domain.*;
 import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayApprovalRequest;
 import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayCancelRequest;
 import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayReadyRequest;
@@ -113,13 +110,13 @@ public class KakaoPayUtility {
                 .build();
     }
 
-    public KakaoPayCancelRequest makeRequestBodyForCancel(Reservation reservation, Payment payment) {
+    public KakaoPayCancelRequest makeRequestBodyForCancel(Refund refund) {
 
-        int cancelAmount = (int) payment.getPrice();
+        int cancelAmount = (int) refund.getRefundPrice();
 
         return KakaoPayCancelRequest.builder()
                 .cid(CompanyId.KAKAOPAYCID)
-                .tid(payment.getApiCode())
+                .tid(refund.getPayment().getApiCode())
                 .cancelAmount(cancelAmount)
                 .cancelTaxFreeAmount(calculateTaxFreeAmount(cancelAmount))
                 .cancelVatAmount(calculateVatAmount(cancelAmount))
