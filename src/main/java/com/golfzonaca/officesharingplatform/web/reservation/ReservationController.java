@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -29,7 +30,7 @@ public class ReservationController {
     private final ReservationRequestValidation reservationRequestValidation;
 
     @GetMapping("places/{placeId}/type/{typeName}/date/{inputDate}")
-    public List<ReservationResponseData> selectedRoomType(@PathVariable Long placeId, @PathVariable String typeName, @PathVariable String inputDate) {
+    public List<ReservationResponseData> selectedRoomType(@PathVariable Long placeId, @PathVariable String typeName, @PathVariable String inputDate) throws IOException {
         Place place = placeService.findById(placeId);
         reservationRequestValidation.validation(place, typeName, inputDate);
 

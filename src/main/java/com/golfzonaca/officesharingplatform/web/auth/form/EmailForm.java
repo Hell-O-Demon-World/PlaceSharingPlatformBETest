@@ -1,6 +1,5 @@
 package com.golfzonaca.officesharingplatform.web.auth.form;
 
-import com.golfzonaca.officesharingplatform.service.auth.VerifyingCodeMaker;
 import lombok.Getter;
 
 import java.security.NoSuchAlgorithmException;

@@ -26,7 +26,7 @@ public class ReservedRoom {
         return timeMap;
     }
 
-    public Boolean getTimeState(int time) {
+    public boolean getTimeState(int time) {
         return this.timeStates.get(time);
     }
     public void setStartAndEndTimeMap(LocalTime startLocalTime, LocalTime endLocalTime, LocalDate selectedDate) {

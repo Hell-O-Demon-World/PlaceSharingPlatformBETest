@@ -5,7 +5,7 @@ import com.golfzonaca.officesharingplatform.domain.Reservation;
 import com.golfzonaca.officesharingplatform.domain.Room;
 import com.golfzonaca.officesharingplatform.domain.User;
 import com.golfzonaca.officesharingplatform.domain.type.ReservationStatus;
-import com.golfzonaca.officesharingplatform.domain.type.dateformat.DateFormat;
+import com.golfzonaca.officesharingplatform.domain.type.dateformat.DateTimeFormat;
 import com.golfzonaca.officesharingplatform.exception.DuplicatedReservationException;
 import com.golfzonaca.officesharingplatform.repository.place.PlaceRepository;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
@@ -15,12 +15,12 @@ import com.golfzonaca.officesharingplatform.service.reservation.validation.Reser
 import com.golfzonaca.officesharingplatform.web.formatter.TimeFormatter;
 import com.golfzonaca.officesharingplatform.web.reservation.dto.process.ProcessReservationData;
 import com.golfzonaca.officesharingplatform.web.reservation.dto.response.ReservationResponseData;
-import com.golfzonaca.officesharingplatform.web.reservation.form.StringDateForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -38,24 +38,24 @@ public class JpaReservationService implements ReservationService {
     private final ReservationRequestValidation reservationRequestValidation;
 
     @Override
-    public List<ReservationResponseData> getReservationResponseData(Place findPlace, String selectedType, String inputDate) {
+    public List<ReservationResponseData> getReservationResponseData(Place findPlace, String selectedType, String inputDate) throws IOException {
         String selectedRoomType = selectedType.toUpperCase();
-        LocalDate selectedStartDate = TimeFormatter.toLocalDate(inputDate);
-        LocalDate selectedEndDate = TimeFormatter.toLocalDate(inputDate).plusMonths(1);
+        LocalDateTime selectedStartDateTime = LocalDateTime.of(TimeFormatter.toLocalDate(inputDate), LocalTime.now());
+        LocalDateTime selectedEndDateTime = LocalDateTime.of(TimeFormatter.toLocalDate(inputDate).plusYears(1), LocalTime.of(23, 59));
 
-        return getTotalDayData(findPlace, selectedRoomType, selectedStartDate, selectedEndDate);
+        return getTotalDayData(findPlace, selectedRoomType, selectedStartDateTime, selectedEndDateTime);
     }
 
-    private List<ReservationResponseData> getTotalDayData(Place findPlace, String roomType, LocalDate selectedStartDate, LocalDate selectedEndDate) {
+    private List<ReservationResponseData> getTotalDayData(Place findPlace, String roomType, LocalDateTime startDateTime, LocalDateTime endDateTime) throws IOException {
         List<ReservationResponseData> resultList = new ArrayList<>();
         String[] openDays = findPlace.getOpenDays().split(", ");
-        int startYear = selectedStartDate.getYear();
-        int endYear = selectedEndDate.getYear();
+        int startYear = startDateTime.getYear();
+        int endYear = endDateTime.getYear();
         List<Integer> years = getTotalYears(startYear, endYear);
 
         for (Integer year : years) {
-            Month startMonth = selectedStartDate.getMonth();
-            Month endMonth = selectedEndDate.getMonth();
+            Month startMonth = startDateTime.getMonth();
+            Month endMonth = endDateTime.getMonth();
             if (startYear != endYear) {
                 if (startYear == year) {
                     endMonth = Month.of(12);
@@ -68,8 +68,8 @@ public class JpaReservationService implements ReservationService {
             }
             List<Month> months = getTotalMonth(startMonth, endMonth);
             for (Month month : months) {
-                int startDay = selectedStartDate.getDayOfMonth();
-                int endDay = selectedEndDate.getDayOfMonth();
+                int startDay = startDateTime.getDayOfMonth();
+                int endDay = endDateTime.getDayOfMonth();
                 Calendar cal = Calendar.getInstance();
                 if (month.equals(startMonth) && year.equals(startYear)) {
                     cal.set(year, month.getValue() - 1, startDay);
@@ -83,29 +83,58 @@ public class JpaReservationService implements ReservationService {
                     endDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
                 }
                 for (int day = startDay; day < endDay + 1; day++) {
-                    DateFormat formDate = new DateFormat(year, month.getValue(), day);
-                    LocalDate date = StringDateForm.toLocalDate(String.valueOf(year), String.valueOf(month.getValue()), String.valueOf(day));
+                    LocalDateTime date = LocalDateTime.of(year, month, day, 0, 0);
+                    LocalTime startTime = getStartTime(startDateTime, date);
+                    date = LocalDateTime.of(date.toLocalDate(), startTime);
                     boolean state;
-
+                    TimeStates timeStates = TimeStates.of();
                     if (roomType.contains("OFFICE")) {
-                        state = getOfficeStateThatDate(findPlace.getId(), roomType, date);
-                    } else if (reservationRequestValidation.isOpenDaysByDate(openDays, date)) {
+                        state = getOfficeStateThatDate(findPlace.getId(), roomType, date.toLocalDate());
+                    } else if (reservationRequestValidation.isOpenDaysByDate(openDays, date.toLocalDate())) {
                         state = false;
                     } else {
                         List<Room> roomByPlaceIdAndRoomType = roomRepository.findRoomByPlaceIdAndRoomType(findPlace.getId(), roomType);
-                        List<Reservation> findReservationList = reservationRepository.findAllByPlaceIdAndRoomTypeAndDate(findPlace.getId(), roomType, date);
-                        Map<Integer, ReservedRoom> reservedRoomMap = getReservedRoomMap(findPlace, findReservationList, roomByPlaceIdAndRoomType, date);
+                        List<Reservation> findReservationList = reservationRepository.findAllByPlaceIdAndRoomTypeAndDate(findPlace.getId(), roomType, date.toLocalDate());
+                        Map<Integer, ReservedRoom> reservedRoomMap = getReservedRoomMap(findPlace, findReservationList, roomByPlaceIdAndRoomType, date.toLocalDate());
                         state = !isFullReservation(findPlace, reservedRoomMap);
+                        timeStates = getTimeStateOfDay(date, endDateTime, findPlace, reservedRoomMap);
                     }
                     resultList.add(ReservationResponseData.builder()
                             .state(state)
                             .productType(roomType)
-                            .date(formDate)
+                            .date(DateTimeFormat.of(year, month, day, timeStates))
                             .build());
                 }
             }
         }
         return resultList;
+    }
+
+    private static LocalTime getStartTime(LocalDateTime startDateTime, LocalDateTime date) {
+        LocalTime startTime = LocalTime.of(0, 0);
+        if (date.toLocalDate().isEqual(startDateTime.toLocalDate())) {
+            startTime = LocalTime.now().plusHours(1);
+        }
+        return startTime;
+    }
+
+    private TimeStates getTimeStateOfDay(LocalDateTime startDateTime, LocalDateTime endDateTime, Place place, Map<Integer, ReservedRoom> reservedRoomMap) throws IOException {
+        TimeStates resultTimeStates = TimeStates.of();
+        resultTimeStates.updateStartAndEndDateTime(startDateTime, endDateTime);
+
+        for (int time = startDateTime.getHour(); time < endDateTime.getHour(); time++) {
+            boolean resultState = true;
+            for (int i = 0; i < reservedRoomMap.size(); i++) {
+                ReservedRoom reservedRoom = reservedRoomMap.get(i);
+                resultState &=  reservedRoom.getTimeState(time);
+                if (!resultState) {
+                    resultTimeStates.replace(time, false);
+                    break;
+                }
+            }
+        }
+
+        return resultTimeStates;
     }
 
     private boolean getOfficeStateThatDate(Long placeId, String roomType, LocalDate date) {
