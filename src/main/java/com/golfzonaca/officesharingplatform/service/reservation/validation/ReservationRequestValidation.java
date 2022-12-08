@@ -143,7 +143,6 @@ public class ReservationRequestValidation {
     private void validRestRoomForSelectedPlaceAndDateTime(Place place, String selectedType, LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
         String message = "";
         List<Room> roomByPlaceAndRoomKind = roomRepository.findRoomByPlaceAndRoomKind(place, selectedType);
-        List<Reservation> resByRoomKindAndDateTime = reservationRepository.findResByRoomKindAndDateTime(selectedType, startDate, startTime, endDate, endTime);
 
         if (roomByPlaceAndRoomKind.size() == 0) {
             if (selectedType.contains("DESK")) {
