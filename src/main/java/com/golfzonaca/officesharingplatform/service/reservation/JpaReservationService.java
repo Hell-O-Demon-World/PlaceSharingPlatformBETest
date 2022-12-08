@@ -52,6 +52,7 @@ public class JpaReservationService implements ReservationService {
         int startYear = selectedStartDate.getYear();
         int endYear = selectedEndDate.getYear();
         List<Integer> years = getTotalYears(startYear, endYear);
+
         for (Integer year : years) {
             Month startMonth = selectedStartDate.getMonth();
             Month endMonth = selectedEndDate.getMonth();
