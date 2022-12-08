@@ -3,6 +3,7 @@ package com.golfzonaca.officesharingplatform.domain;
 import com.golfzonaca.officesharingplatform.domain.type.PG;
 import com.golfzonaca.officesharingplatform.domain.type.PayType;
 import com.golfzonaca.officesharingplatform.domain.type.PayWay;
+import com.golfzonaca.officesharingplatform.domain.type.PaymentStatus;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -56,10 +57,11 @@ public class Payment {
     private PG pg;
 
     @Column(name = "PAY_STATUS", nullable = false)
-    private Boolean payStatus; //True : 정상결제, False : 취소한 결제
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus payStatus;
 
     @Builder
-    public Payment(Reservation reservation, LocalDate payDate, LocalTime payTime, long price, long payMileage, PayWay payWay, long savedMileage, PayType type, String apiCode, PG pg, Boolean payStatus) {
+    public Payment(Reservation reservation, LocalDate payDate, LocalTime payTime, long price, long payMileage, PayWay payWay, long savedMileage, PayType type, String apiCode, PG pg, PaymentStatus payStatus) {
         this.reservation = reservation;
         this.payDate = payDate;
         this.payTime = payTime;
@@ -73,7 +75,15 @@ public class Payment {
         this.payStatus = payStatus;
     }
 
-    public void updatePayStatus(Boolean payStatus) {
+    public void updatePayStatus(PaymentStatus payStatus) {
         this.payStatus = payStatus;
+    }
+
+    public void updateApiCode(String apiCode) {
+        this.apiCode = apiCode;
+    }
+
+    public void cancelPrice(long price) {
+        this.price = price;
     }
 }

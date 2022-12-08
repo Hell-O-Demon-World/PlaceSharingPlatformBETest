@@ -9,7 +9,10 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.LinkedList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -30,6 +33,9 @@ public class Reservation {
     @JoinColumn(name = "ROOM_ID")
     private Room room;
 
+    @Column(name = "RES_COMPLETED", nullable = false)
+    private LocalDateTime resCompleted;
+
     @Column(name = "RES_STARTDATE", nullable = false)
     private LocalDate resStartDate;
 
@@ -48,6 +54,9 @@ public class Reservation {
 
     @OneToOne(mappedBy = "reservation")
     private Rating rating;
+
+    @OneToMany(mappedBy = "reservation")
+    private List<Payment> paymentList = new LinkedList<>();
 
     public Reservation(User user, Room room, LocalDate resStartDate, LocalTime resStartTime, LocalDate resEndDate, LocalTime resEndTime, ReservationStatus status) {
         this.user = user;

@@ -7,27 +7,18 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class KakaoPayApprovalResponse {
+public class KakaoPayApprovalRequest {
 
-    private String aid;
-    private String tid;
     private String cid;
-    private String sid;
+    private String tid;
     private String partnerOrderId;
     private String partnerUserId;
-    private Amount amount;
-    private CardInfo cardInfo;
-    private String itemName;
-    private String itemCode;
-    private Integer quantity;
-    private LocalDateTime createdAt;
-    private LocalDateTime approvedAt;
+    private String pgToken;
     private String payload;
+//    private Integer totalAmount;
 }

@@ -14,20 +14,14 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class KakaoPayApprovalResponse {
+public class KakaoPayReadyResponse {
 
-    private String aid;
     private String tid;
-    private String cid;
-    private String sid;
-    private String partnerOrderId;
-    private String partnerUserId;
-    private Amount amount;
-    private CardInfo cardInfo;
-    private String itemName;
-    private String itemCode;
-    private Integer quantity;
+    private String nextRedirectAppUrl;
+    private String nextRedirectMobileUrl;
+    private String nextRedirectPcUrl;
+    private String androidAppScheme;
+    private String iosAppScheme; //카카오페이랑 사전 협의
     private LocalDateTime createdAt;
-    private LocalDateTime approvedAt;
-    private String payload;
+
 }
