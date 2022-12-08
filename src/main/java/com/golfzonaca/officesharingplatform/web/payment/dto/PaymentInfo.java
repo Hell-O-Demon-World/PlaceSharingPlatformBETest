@@ -10,6 +10,7 @@ import lombok.Getter;
 public class PaymentInfo {
     
     private long reservationId;
+    private long roomId;
     private String payWay;
     private String payType;
     private long payMileage;

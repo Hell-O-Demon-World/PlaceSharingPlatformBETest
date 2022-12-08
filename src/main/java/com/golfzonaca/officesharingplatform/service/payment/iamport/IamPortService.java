@@ -52,13 +52,13 @@ public class IamPortService {
     }
 
     // todo : update 구문에 조건 더 필요 id + ...
-    public void updatePaymentStatus(long reservationId, String tid) {
+    /*public void updatePaymentStatus(long reservationId, String tid) {
 
         for (Payment payment : paymentRepository.findByReservationId(reservationId)) {
             payment.updatePayStatus(false);
         }
         reservationRepository.findById(reservationId).updateStatus(false);
-    }
+    }*/
 
 
     public IamportResponse<com.siot.IamportRestClient.response.Payment> nicePay(CardInfo cardInfo) throws IamportResponseException, IOException {

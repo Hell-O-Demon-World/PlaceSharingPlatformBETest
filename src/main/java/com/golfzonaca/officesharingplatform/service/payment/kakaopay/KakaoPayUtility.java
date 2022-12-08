@@ -3,6 +3,7 @@ package com.golfzonaca.officesharingplatform.service.payment.kakaopay;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.golfzonaca.officesharingplatform.domain.CompanyId;
+import com.golfzonaca.officesharingplatform.domain.Mileage;
 import com.golfzonaca.officesharingplatform.domain.Payment;
 import com.golfzonaca.officesharingplatform.domain.Reservation;
 import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayApprovalRequest;
@@ -10,6 +11,7 @@ import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayCancelRequest
 import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayReadyRequest;
 import com.golfzonaca.officesharingplatform.domain.type.PayType;
 import com.golfzonaca.officesharingplatform.domain.type.PayWay;
+import com.golfzonaca.officesharingplatform.web.payment.dto.PaymentInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -17,6 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Map;
 
@@ -24,23 +27,27 @@ import java.util.Map;
 @Slf4j
 public class KakaoPayUtility {
 
-    public Integer calculateTotalAmount(Reservation reservation, String payWay, String payType) {
+    public Integer calculateTotalAmount(Reservation reservation, String payWay, String payType, long payMileage) {
 
-        int totalAmount = ((reservation.getResEndTime().getHour()) - (reservation.getResStartTime().getHour())) * (reservation.getRoom().getRoomKind().getPrice());
+        int totalAmount;
+        int payPrice;
 
         if (reservation.getRoom().getRoomKind().getRoomType().contains("OFFICE")) {
-            return Math.toIntExact((ChronoUnit.DAYS.between(reservation.getResEndDate(), reservation.getResStartDate()) * reservation.getRoom().getRoomKind().getPrice()));
+            return (int) Math.abs((ChronoUnit.DAYS.between(reservation.getResEndDate(), reservation.getResStartDate()) * reservation.getRoom().getRoomKind().getPrice()));
         } else {
-            if (PayWay.valueOf(payWay).equals(PayWay.PREPAYMENT)) {
-
-                if (PayType.valueOf(payType).equals(PayType.DEPOSIT)) {
-                    totalAmount = (int) (totalAmount * 0.2);
-                }
-            } else {
-                totalAmount = (int) (totalAmount * 0.8);
-            }
+            totalAmount = (int) Math.abs(ChronoUnit.HOURS.between(LocalDateTime.of(reservation.getResEndDate(), reservation.getResEndTime()), LocalDateTime.of(reservation.getResStartDate(), reservation.getResStartTime())) * (reservation.getRoom().getRoomKind().getPrice()));
+            payPrice = (int) (totalAmount - payMileage);
         }
-        return totalAmount;
+
+        if (PayWay.valueOf(payWay).equals(PayWay.PREPAYMENT)) {
+            if (PayType.valueOf(payType).equals(PayType.DEPOSIT)) {
+                return (int) (payPrice * 0.2);
+            } else {
+                return (payPrice);
+            }
+        } else {
+            return (int) (payPrice * 0.8);
+        }
     }
 
 
@@ -52,8 +59,13 @@ public class KakaoPayUtility {
         return totalAmount / 11;
     }
 
-    public long calculateMileage(Integer totalAmount) {
-        return (long) (totalAmount * 0.05);
+    public long calculateMileage(Integer totalAmount, String payWay, String payType) {
+
+        if (payWay.equals(PayWay.PREPAYMENT.toString()) && payType.equals(PayType.FULLPAYMENT.toString())) {
+            return (long) (totalAmount * 0.05);
+        } else {
+            return 0;
+        }
     }
 
     public HttpHeaders makeHttpHeader() {
@@ -83,9 +95,9 @@ public class KakaoPayUtility {
                 .totalAmount(totalAmount)
                 .taxFreeAmount(calculateTaxFreeAmount(totalAmount))
                 .vatAmount(calculateVatAmount(totalAmount))
-                .approvalUrl("http://localhost:8080/payment/" + payment.getId() + "/kakaoPayApprove")
-                .cancelUrl("http://localhost:8080/payment/kakaoPayCancel")
-                .failUrl("http://localhost:8080/kakaoPaySuccessFail")
+                .approvalUrl("http://localhost:8080/payment/" + payment.getId() + "/kakaopayapprove")
+                .cancelUrl("http://localhost:8080/payment/kakaopaycancel")
+                .failUrl("http://localhost:8080/kakaopaysuccessfail")
                 .build();
     }
 
@@ -101,7 +113,6 @@ public class KakaoPayUtility {
                 .build();
     }
 
-    // TODO 1 : 1시간 이내 결제된 PAYMENT 모두 변경됨 -> 추가 조건 필요
     public KakaoPayCancelRequest makeRequestBodyForCancel(Reservation reservation, Payment payment) {
 
         int cancelAmount = (int) payment.getPrice();

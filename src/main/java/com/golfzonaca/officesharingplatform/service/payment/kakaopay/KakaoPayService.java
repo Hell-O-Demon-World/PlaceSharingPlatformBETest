@@ -1,16 +1,18 @@
 package com.golfzonaca.officesharingplatform.service.payment.kakaopay;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.golfzonaca.officesharingplatform.domain.Mileage;
 import com.golfzonaca.officesharingplatform.domain.Payment;
 import com.golfzonaca.officesharingplatform.domain.Reservation;
 import com.golfzonaca.officesharingplatform.domain.User;
 import com.golfzonaca.officesharingplatform.domain.payment.*;
-import com.golfzonaca.officesharingplatform.domain.type.PG;
-import com.golfzonaca.officesharingplatform.domain.type.PayType;
-import com.golfzonaca.officesharingplatform.domain.type.PayWay;
+import com.golfzonaca.officesharingplatform.domain.type.*;
 import com.golfzonaca.officesharingplatform.repository.mileage.MileageRepository;
 import com.golfzonaca.officesharingplatform.repository.payment.PaymentRepository;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
+import com.golfzonaca.officesharingplatform.repository.user.UserRepository;
+import com.golfzonaca.officesharingplatform.service.payment.PaymentValidation;
+import com.golfzonaca.officesharingplatform.web.payment.dto.PaymentInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
@@ -23,9 +25,9 @@ import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.LinkedList;
 import java.util.List;
 
 @Slf4j
@@ -39,13 +41,22 @@ public class KakaoPayService {
     private final ReservationRepository reservationRepository;
     private final PaymentRepository paymentRepository;
     private final MileageRepository mileageRepository;
+    private final UserRepository userRepository;
 
-    public String kakaoPayReadyRequest(long reservationId, String payWay, String payType, long payMileage) {
+    public String kakaoPayReadyRequest(Long userId, long reservationId, String payWay, String payType, long payMileage) {
+
+        Reservation reservation = reservationRepository.findById(reservationId);
+        User user = userRepository.findById(userId);
+
+        PaymentValidation paymentValidation = new PaymentValidation();
+        paymentValidation.validExistedType(payType);
+        paymentValidation.validExistedPayWay(payWay);
+        paymentValidation.validPairByRoomType(payType, payWay, reservation.getRoom().getRoomKind().getRoomType());
+        paymentValidation.validUserForReservation(user,reservation);
 
         KakaoPayUtility kakaoPayUtility = new KakaoPayUtility();
         HttpHeaders header = kakaoPayUtility.makeHttpHeader();
 
-        Reservation reservation = reservationRepository.findById(reservationId);
         Payment payment = processingPaymentData(reservation, payWay, payType, payMileage, "");
         paymentRepository.save(payment);
 
@@ -57,7 +68,6 @@ public class KakaoPayService {
         return kakaoPayReadyResponse.getNextRedirectPcUrl();
     }
 
-
     public KakaoPayApprovalResponse kakaoPayApprovalRequest(long paymentId, String pgToken) {
 
         KakaoPayUtility kakaoPayUtility = new KakaoPayUtility();
@@ -68,30 +78,59 @@ public class KakaoPayService {
         HttpEntity<MultiValueMap<String, String>> requestApprovalEntity = new HttpEntity<>(kakaoPayUtility.multiValueMapConverter(new ObjectMapper(), body), httpHeaders);
 
         KakaoPayApprovalResponse kakaoPayApprovalResponse = sendKakaoPayApprovalRequest(HOST, requestApprovalEntity);
-        payment.updatePayStatus(true);
+        Mileage mileage = payment.getReservation().getUser().getMileage();
+        mileage.addPoint(payment.getSavedMileage());
+        payment.updatePayStatus(PaymentStatus.COMPLETED);
 
         return kakaoPayApprovalResponse;
     }
 
-    public KakaoPayCancelResponse kakaoPayCancelRequest(Long reservationId) {
+    public List<KakaoPayCancelResponse> kakaoPayCancel(Long userId, Long reservationId) {
+
+        Reservation reservation = reservationRepository.findById(reservationId);
+        User user = userRepository.findById(userId);
+
+        PaymentValidation paymentValidation = new PaymentValidation();
+        paymentValidation.validUserForReservation(user, reservation);
+
+        List<Payment> findPayment = paymentValidation.cancelAvailableTimeValidation(reservation);
+
+
+        restoreUserMileage(user, findPayment);
+
+        List<KakaoPayCancelResponse> kakaoPayCancelResponses = kakaoPayCancelRequest(findPayment, reservation);
+
+        return kakaoPayCancelResponses;
+    }
+
+    public List<KakaoPayCancelResponse> kakaoPayCancelRequest(List<Payment> findPayment, Reservation reservation) {
 
         KakaoPayUtility kakaoPayUtility = new KakaoPayUtility();
 
-        Reservation reservation = reservationRepository.findById(reservationId);
-        Payment findPayment = checkAvailablePaymentInHour(reservationId);
+        List<KakaoPayCancelResponse> cancelResult = new LinkedList<>();
+        reservation.updateStatus(false);
 
-        HttpHeaders httpHeaders = kakaoPayUtility.makeHttpHeader();
+        for (Payment payment : findPayment) { // 검증이 끝나면 취소요청하기
+            HttpHeaders httpHeaders = kakaoPayUtility.makeHttpHeader();
 
-        KakaoPayCancelRequest kakaoPayCancelRequest = kakaoPayUtility.makeRequestBodyForCancel(reservation, findPayment);
+            KakaoPayCancelRequest kakaoPayCancelRequest = kakaoPayUtility.makeRequestBodyForCancel(reservation, payment);
 
-        HttpEntity<MultiValueMap<String, String>> requestCancelEntity = new HttpEntity<>(kakaoPayUtility.multiValueMapConverter(new ObjectMapper(), kakaoPayCancelRequest), httpHeaders);
-        KakaoPayCancelResponse kakaoPayCancelResponse = sendKakaoPayCancelRequest(HOST, requestCancelEntity);
+            HttpEntity<MultiValueMap<String, String>> requestCancelEntity = new HttpEntity<>(kakaoPayUtility.multiValueMapConverter(new ObjectMapper(), kakaoPayCancelRequest), httpHeaders);
+            KakaoPayCancelResponse kakaoPayCancelResponse = sendKakaoPayCancelRequest(HOST, requestCancelEntity);
+            cancelResult.add(kakaoPayCancelResponse);
+            payment.updatePayStatus(PaymentStatus.CANCELED);
+        }
+        return cancelResult;
+    }
 
-        // todo : update 구문에 조건 더 필요 id + kakaoPayCancelResponse.getTid()
-        // detail : reservationId 말고 tid 만 이용해서 삭제해도 될 것 같다 ~~
-        updatePaymentStatus(reservationId, kakaoPayCancelResponse.getTid());
+    public void restoreUserMileage(User user, List<Payment> findPayment) {
 
-        return kakaoPayCancelResponse;
+        Mileage getUserMileage = user.getMileage();
+
+        for (Payment payment : findPayment) {
+            getUserMileage.addPoint(payment.getPayMileage());
+            getUserMileage.minusPoint(payment.getSavedMileage());
+        }
     }
 
     public KakaoPayReadyResponse sendKakaoPayReadyRequest(String host, HttpEntity<MultiValueMap<String, String>> body) {
@@ -134,54 +173,11 @@ public class KakaoPayService {
         return null;
     }
 
-    //todo : 마일리지 업데이트 필요
-    public void saveMileage(User user, long point) {
-        // mileageRepository 에서 userId로 Mileage 찾음
-        // 찾은 Mileage에서 .getPoint 하고 그것을 파라미터로 온 point와 더함
-        // 그리고 mileageRepository에서 update 할건데
-        //  where 조건은 userId
-
-//        long originPoint = mileageRepository.findByID()
-//        Mileage mileage = new Mileage(user, point);
-//
-    }
-
-    public Payment checkAvailablePaymentInHour(long reservationId) {
-
-        List<Payment> payments = paymentRepository.findByReservationId(reservationId);
-
-        LocalDate currentDate = LocalDate.now();
-        LocalTime currentTime = LocalTime.now();
-
-        Payment findPayment = null;
-
-        for (Payment payment : payments) {
-            if (payment.getPayDate().equals(currentDate)) {
-                if ((Duration.between(currentTime, payment.getPayTime())).getSeconds() < 3600) {
-                    findPayment = payment;
-                }
-            }
-        }
-
-        return findPayment;
-    }
-
-    // todo : update 구문에 조건 더 필요 id + ...
-    // payment 에서는 tid 로 검색해서 payStatus update 하면 됨
-    // reservation에서는 쿼리가 잘 동작 안하는 것 같으니 확인 필요
-    public void updatePaymentStatus(long reservationId, String tid) {
-
-        for (Payment payment : paymentRepository.findByReservationId(reservationId)) {
-            payment.updatePayStatus(false);
-        }
-        reservationRepository.findById(reservationId).updateStatus(false);
-    }
-
     private Payment processingPaymentData(Reservation reservation, String payWay, String payType, long payMileage, String apiCode) {
 
         KakaoPayUtility kakaoPayUtility = new KakaoPayUtility();
 
-        Integer totalAmount = kakaoPayUtility.calculateTotalAmount(reservation, payWay, payType);
+        Integer totalAmount = kakaoPayUtility.calculateTotalAmount(reservation, payWay, payType, payMileage);
 
         return Payment.builder()
                 .reservation(reservation)
@@ -190,11 +186,11 @@ public class KakaoPayService {
                 .price(totalAmount)
                 .payMileage(payMileage)
                 .payWay(PayWay.valueOf(payWay))
-                .savedMileage(kakaoPayUtility.calculateMileage(totalAmount))
+                .savedMileage(kakaoPayUtility.calculateMileage(totalAmount, payWay, payType))
                 .type(PayType.valueOf(payType))
                 .apiCode(apiCode)
                 .pg(PG.KAKAOPAY)
-                .payStatus(false) //TODO : DB 바뀜에 따라 바뀌어 질 예정
+                .payStatus(PaymentStatus.PROGRESSING) //TODO : DB 바뀜에 따라 바뀌어 질 예정
                 .build();
     }
 }
