@@ -152,7 +152,7 @@ public class JpaReservationService implements ReservationService {
 
         LocalTime startTime = findPlace.getPlaceStart();
         LocalTime endTime = findPlace.getPlaceEnd();
-       if (!hasFullReservation(totalReservationCount, beforeReservationCount)) {
+        if (!hasFullReservation(totalReservationCount, beforeReservationCount)) {
             Map<Integer, ReservedRoom> reservedRoomMap = getReservedRoomMap(findPlace, findReservationList, reservedRoomList, selectedDate);
             return getResultList(findPlace, selectedStartTime.getHour(), reservedRoomMap);
         } else {
@@ -234,7 +234,7 @@ public class JpaReservationService implements ReservationService {
 
         Room resultRoom = getResultRoom(place, startTime, endTime, date, selectedType);
         // TODO: Need to change status of reservation when user choose pay method
-        Reservation reservation = new Reservation(user, resultRoom, date, startTime, date, endTime, ReservationStatus.COMPLETED);
+        Reservation reservation = new Reservation(user, resultRoom, LocalDateTime.now(), date, startTime, date, endTime, ReservationStatus.COMPLETED);
         Reservation save = Optional.ofNullable(reservationRepository.save(reservation)).orElseThrow(() -> new DuplicatedReservationException("ReservationError::: 예약 실패"));
 
         result.put("reservationId", save.getId().toString());

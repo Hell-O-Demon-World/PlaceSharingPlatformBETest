@@ -58,9 +58,10 @@ public class Reservation {
     @OneToMany(mappedBy = "reservation")
     private List<Payment> paymentList = new LinkedList<>();
 
-    public Reservation(User user, Room room, LocalDate resStartDate, LocalTime resStartTime, LocalDate resEndDate, LocalTime resEndTime, ReservationStatus status) {
+    public Reservation(User user, Room room, LocalDateTime resCompleted, LocalDate resStartDate, LocalTime resStartTime, LocalDate resEndDate, LocalTime resEndTime, ReservationStatus status) {
         this.user = user;
         this.room = room;
+        this.resCompleted = resCompleted;
         this.resStartDate = resStartDate;
         this.resStartTime = resStartTime;
         this.resEndDate = resEndDate;

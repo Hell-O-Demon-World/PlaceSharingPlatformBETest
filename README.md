@@ -15,7 +15,7 @@ title OfficeSharingPlatform
 
     section 공통
     환경 설정(Git)             :chap1, 11-16, 1d
-    개발 및 리팩토링             :chap2, 11-16, 12-16
+    개발 및 리팩토링             :chap2, 11-16, 12-11
 
     section 오령기
     Spring Jpa, QueryDsl 적용 (Main Platform)                     : chap1, 11-16, 3d
@@ -49,6 +49,8 @@ title OfficeSharingPlatform
     Exception 처리 (Main Platform)                    : chap12, 11-30, 1d
     이미지 업로드 추가 (Back Office)                      : chap13, 12-01, 2d
     공간 상세 정보와 Reservation Part.1 통합               : chap14, 12-03, 2d
+    마이페이지  - 예약 내역 조회                            : chap15, 12-07, 2d
+    Spring Cache (CaffeineCache) 도입                 : chap16, 12-08, 1d
 
 
 ```
