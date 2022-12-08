@@ -1,11 +1,14 @@
 package com.golfzonaca.officesharingplatform.service.reservation.validation;
 
 import com.golfzonaca.officesharingplatform.domain.Place;
+import com.golfzonaca.officesharingplatform.domain.Reservation;
+import com.golfzonaca.officesharingplatform.domain.Room;
 import com.golfzonaca.officesharingplatform.domain.User;
 import com.golfzonaca.officesharingplatform.exception.*;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
 import com.golfzonaca.officesharingplatform.repository.room.RoomRepository;
 import com.golfzonaca.officesharingplatform.repository.roomkind.RoomKindRepository;
+import com.golfzonaca.officesharingplatform.service.reservation.dto.ReservedRoom;
 import com.golfzonaca.officesharingplatform.web.formatter.TimeFormatter;
 import com.golfzonaca.officesharingplatform.web.reservation.dto.process.ProcessReservationData;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +20,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.TextStyle;
+import java.util.List;
 import java.util.Locale;
 
 @Component
@@ -38,6 +42,7 @@ public class ReservationRequestValidation {
         validRealTime(Integer.parseInt(startTime));
         validRoomType(roomType);
         validTimeOfRoomType(roomType);
+        validStartTime(TimeFormatter.toLocalTime(startTime), place.getPlaceStart(), place.getPlaceEnd(), TimeFormatter.toLocalDate(date));
         validBusinessTime(place, TimeFormatter.toLocalTime(startTime));
         validBusinessDay(place, TimeFormatter.toLocalDate(date));
     }
@@ -63,6 +68,7 @@ public class ReservationRequestValidation {
             throw new InvalidTimeException("InvalidTimeException::: 유효하지 않은 시간입니다. range = 0 ~ 23");
         }
     }
+
     private void validRoomType(String roomType) {
         roomKindRepository.findByRoomType(roomType);
     }
@@ -77,6 +83,10 @@ public class ReservationRequestValidation {
         boolean businessDay = place.getOpenDays().contains(date.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.US));
         if (!businessDay) {
             throw new NotBusinessDayException("NotBusinessDayException::: 입력한 날짜는 영업일이 아닙니다.");
+        }
+        LocalDate realLocalDate = LocalDate.now();
+        if (date.isBefore(realLocalDate)) {
+            throw new NotBusinessDayException("NotBusinessDayException::: 지나간 날짜는 입력받을 수 없습니다.");
         }
     }
 
@@ -104,6 +114,20 @@ public class ReservationRequestValidation {
         }
     }
 
+    private void validStartTime(LocalTime startTime, LocalTime placeStartTime, LocalTime placeEndTime, LocalDate date) {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime localDateTime = LocalDateTime.of(date, placeStartTime);
+        if (localDateTime.isBefore(now)) {
+            placeStartTime = now.toLocalTime();
+        }
+
+        if (!startTime.isBefore(placeEndTime)) {
+            throw new NotBusinessTimeException("StartTimeAfterEndTimeError::: 선택된 시작 시각이 영업 종료 시각 이후입니다.");
+        } else if (!startTime.isAfter(placeStartTime)) {
+            throw new NotBusinessTimeException("StartTimeAfterEndTimeError::: 선택된 시작 시각이 사용 가능한 시작 시각 이전입니다.");
+        }
+    }
+
     private void validPastOfDateTime(LocalDateTime startDateTime, LocalDateTime endDateTime) {
         if (!(startDateTime.isAfter(LocalDateTime.now()) && endDateTime.isAfter(LocalDateTime.now()))) {
             throw new NotBusinessDayException("PastDateTimeError::: 예약일시가 현재보다 과거입니다.");
@@ -118,7 +142,10 @@ public class ReservationRequestValidation {
 
     private void validRestRoomForSelectedPlaceAndDateTime(Place place, String selectedType, LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
         String message = "";
-        if (!(roomRepository.findRoomByPlaceAndRoomKind(place, selectedType).size() > reservationRepository.findResByRoomKindAndDateTime(selectedType, startDate, startTime, endDate, endTime).size())) {
+        List<Room> roomByPlaceAndRoomKind = roomRepository.findRoomByPlaceAndRoomKind(place, selectedType);
+        List<Reservation> resByRoomKindAndDateTime = reservationRepository.findResByRoomKindAndDateTime(selectedType, startDate, startTime, endDate, endTime);
+
+        if (roomByPlaceAndRoomKind.size() == 0) {
             if (selectedType.contains("DESK")) {
                 message = selectedType.replace("DESK", "데스크");
             } else if (selectedType.contains("MEETINGROOM")) {
@@ -139,6 +166,7 @@ public class ReservationRequestValidation {
             throw new InvalidDateException("InvalidDateError::: 선택하신 날짜는 존재하지 않습니다.");
         }
     }
+
     public void validSelectedDate(LocalDate startDate, LocalDate endDate) {
         if (startDate.isBefore(endDate)) {
             throw new InvalidDateException();

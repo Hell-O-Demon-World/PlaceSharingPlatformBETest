@@ -26,6 +26,8 @@ allprojects {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
+//  Mail 추가
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
 //	MyBatis 추가
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.2'
 

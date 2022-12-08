@@ -3,6 +3,8 @@ package com.golfzonaca.officesharingplatform.service.reservation.dto;
 import com.golfzonaca.officesharingplatform.web.reservation.form.DefaultTimeOfDay;
 import lombok.Getter;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,9 +13,9 @@ public class ReservedRoom {
     private Long roomId;
     private Map<Integer, Boolean> timeStates = getTimeMap();
 
-    public ReservedRoom(Long roomId, LocalTime startLocalTime, LocalTime endLocalTime) {
+    public ReservedRoom(Long roomId, LocalTime startLocalTime, LocalTime endLocalTime, LocalDate selectedDate) {
         this.roomId = roomId;
-        setStartAndEndTimeMap(startLocalTime, endLocalTime);
+        setStartAndEndTimeMap(startLocalTime, endLocalTime, selectedDate);
     }
 
     private Map<Integer, Boolean> getTimeMap() {
@@ -27,8 +29,10 @@ public class ReservedRoom {
     public Boolean getTimeState(int time) {
         return this.timeStates.get(time);
     }
-    public void setStartAndEndTimeMap(LocalTime startLocalTime, LocalTime endLocalTime) {
+    public void setStartAndEndTimeMap(LocalTime startLocalTime, LocalTime endLocalTime, LocalDate selectedDate) {
         Map<Integer, Boolean> resultMap = this.timeStates;
+        LocalDateTime realDateTime = LocalDateTime.now();
+        LocalDateTime placeDateTime = LocalDateTime.of(selectedDate, startLocalTime);
         int startTime = startLocalTime.getHour();
         int endTime = endLocalTime.getHour();
         if (endTime - startTime == 0) {
@@ -45,11 +49,10 @@ public class ReservedRoom {
                 resultMap.replace(i, false);
             }
         } else {
-
+            if (realDateTime.toLocalDate().equals(placeDateTime.toLocalDate()) && realDateTime.isAfter(placeDateTime)) {
+                startTime = realDateTime.plusHours(1).getHour();
+            }
             for (int i = DefaultTimeOfDay.getStartTime(); i < startTime; i++) {
-                if (i == 0) {
-                    i = 24;
-                }
                 resultMap.replace(i, false);
             }
             for (int j = endTime; j <= DefaultTimeOfDay.getEndTime(); j++) {

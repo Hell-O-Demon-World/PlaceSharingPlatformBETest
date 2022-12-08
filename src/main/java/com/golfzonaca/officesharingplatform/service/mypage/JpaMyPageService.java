@@ -1,20 +1,22 @@
 package com.golfzonaca.officesharingplatform.service.mypage;
 
-import com.golfzonaca.officesharingplatform.domain.*;
-import com.golfzonaca.officesharingplatform.repository.place.PlaceRepository;
+import com.golfzonaca.officesharingplatform.domain.Mileage;
+import com.golfzonaca.officesharingplatform.domain.MyPage;
+import com.golfzonaca.officesharingplatform.domain.Reservation;
+import com.golfzonaca.officesharingplatform.domain.User;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationSearchCond;
-import com.golfzonaca.officesharingplatform.repository.roomkind.RoomKindRepository;
 import com.golfzonaca.officesharingplatform.repository.user.UserRepository;
-import com.golfzonaca.officesharingplatform.web.mypage.form.MyPageReservationForm;
 import com.golfzonaca.officesharingplatform.web.mypage.form.MyPageUsageForm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Transactional
 @Service
@@ -22,8 +24,6 @@ import java.util.*;
 public class JpaMyPageService implements MyPageService {
     private final UserRepository userRepository;
     private final ReservationRepository reservationRepository;
-    private final PlaceRepository placeRepository;
-    private final RoomKindRepository roomKindRepository;
 
     @Override
     public MyPage createMyPageForm(Long userId) {
@@ -68,28 +68,5 @@ public class JpaMyPageService implements MyPageService {
             cnt++;
         }
         return resultMap;
-    }
-
-    @Override
-    public List<MyPageReservationForm> getMyPageReservationListByUserId(long userId) {
-        List<Reservation> findReservationList = reservationRepository.findAll(ReservationSearchCond.builder()
-                .userId(userId)
-                .build());
-        return getMyPageReservationFormList(findReservationList);
-    }
-
-    private List<MyPageReservationForm> getMyPageReservationFormList(List<Reservation> findReservationList) {
-        List<MyPageReservationForm> myPageReservationFormList = new ArrayList<>();
-        for (int i = 0; i < findReservationList.size(); i++) {
-            Reservation findReservation = findReservationList.get(i);
-            MyPageReservationForm myPageReservationForm = MyPageReservationForm.builder()
-                    .resDate(findReservation.getResStartDate().toString() + "~" + findReservationList.get(i).getResEndDate().toString())
-                    .placeName(placeRepository.findById(findReservation.getRoom().getPlace().getId()).getPlaceName())
-                    .roomKind(roomKindRepository.findById(findReservation.getRoom().getRoomKind().getId()).getRoomType())
-                    .resTime(findReservation.getResStartTime().toString() + "~" + findReservation.getResEndTime().toString())
-                    .build();
-            myPageReservationFormList.add(myPageReservationForm);
-        }
-        return myPageReservationFormList;
     }
 }

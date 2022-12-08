@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
 import java.util.*;
@@ -84,14 +85,15 @@ public class JpaReservationService implements ReservationService {
                     DateFormat formDate = new DateFormat(year, month.getValue(), day);
                     LocalDate date = StringDateForm.toLocalDate(String.valueOf(year), String.valueOf(month.getValue()), String.valueOf(day));
                     boolean state;
-                    if (reservationRequestValidation.isOpenDaysByDate(openDays, date)) {
-                        state = false;
-                    } else if (roomType.contains("OFFICE")) {
+
+                    if (roomType.contains("OFFICE")) {
                         state = getOfficeStateThatDate(findPlace.getId(), roomType, date);
+                    } else if (reservationRequestValidation.isOpenDaysByDate(openDays, date)) {
+                        state = false;
                     } else {
                         List<Room> roomByPlaceIdAndRoomType = roomRepository.findRoomByPlaceIdAndRoomType(findPlace.getId(), roomType);
                         List<Reservation> findReservationList = reservationRepository.findAllByPlaceIdAndRoomTypeAndDate(findPlace.getId(), roomType, date);
-                        Map<Integer, ReservedRoom> reservedRoomMap = getReservedRoomMap(findPlace, findReservationList, roomByPlaceIdAndRoomType);
+                        Map<Integer, ReservedRoom> reservedRoomMap = getReservedRoomMap(findPlace, findReservationList, roomByPlaceIdAndRoomType, date);
                         state = !isFullReservation(findPlace, reservedRoomMap);
                     }
                     resultList.add(ReservationResponseData.builder()
@@ -150,11 +152,12 @@ public class JpaReservationService implements ReservationService {
 
         LocalTime startTime = findPlace.getPlaceStart();
         LocalTime endTime = findPlace.getPlaceEnd();
-        if (!hasFullReservation(totalReservationCount, beforeReservationCount)) {
-            Map<Integer, ReservedRoom> reservedRoomMap = getReservedRoomMap(findPlace, findReservationList, reservedRoomList);
+       if (!hasFullReservation(totalReservationCount, beforeReservationCount)) {
+            Map<Integer, ReservedRoom> reservedRoomMap = getReservedRoomMap(findPlace, findReservationList, reservedRoomList, selectedDate);
             return getResultList(findPlace, selectedStartTime.getHour(), reservedRoomMap);
+        } else {
+            return parsingMapToList(new ReservedRoom(0L, startTime, endTime, selectedDate).getTimeStates());
         }
-        return parsingMapToList(new ReservedRoom(0L, startTime, endTime).getTimeStates());
     }
 
     private boolean isFullReservation(Place findPlace, Map<Integer, ReservedRoom> reservedRoomMap) {
@@ -211,8 +214,11 @@ public class JpaReservationService implements ReservationService {
         }
 
         List<Integer> result = new ArrayList<>();
-        for (int i = minusMinPointer; i < plusMaxPointer + 1; i++) {
-            result.add(i);
+
+        if (minusMinPointer != plusMaxPointer) {
+            for (int i = minusMinPointer; i < plusMaxPointer + 1; i++) {
+                result.add(i);
+            }
         }
         return result;
     }
@@ -247,7 +253,7 @@ public class JpaReservationService implements ReservationService {
         }
         int maxWindowSize = maxTime - startTime;
         int window = endTime - startTime;
-        Map<Integer, ReservedRoom> reservedRoomMap = getReservedRoomMap(place, findReservationList, reservedRoomList);
+        Map<Integer, ReservedRoom> reservedRoomMap = getReservedRoomMap(place, findReservationList, reservedRoomList, date);
         Long resultRoomId = -1L;
         while (window <= maxWindowSize) {
             for (int i = 0; i < reservedRoomMap.size(); i++) {
@@ -278,10 +284,10 @@ public class JpaReservationService implements ReservationService {
     /**
      * Room 단위로 모든 예약된 시간을 맵으로 저장 후 반환해주는 메서드 (Key: Order, Value: ReservedRoom)
      */
-    private Map<Integer, ReservedRoom> getReservedRoomMap(Place findPlace, List<Reservation> findReservationList, List<Room> reservedRoomList) {
+    private Map<Integer, ReservedRoom> getReservedRoomMap(Place findPlace, List<Reservation> findReservationList, List<Room> reservedRoomList, LocalDate selectedDate) {
         Map<Integer, ReservedRoom> reservedRoomMap = new HashMap<>();
         for (int i = 0; i < reservedRoomList.size(); i++) {
-            ReservedRoom reservedRoom = new ReservedRoom(reservedRoomList.get(i).getId(), findPlace.getPlaceStart(), findPlace.getPlaceEnd());
+            ReservedRoom reservedRoom = new ReservedRoom(reservedRoomList.get(i).getId(), findPlace.getPlaceStart(), findPlace.getPlaceEnd(), selectedDate);
             reservedRoomMap.put(i, reservedRoom);
         }
 
@@ -321,6 +327,7 @@ public class JpaReservationService implements ReservationService {
         for (Reservation reservation : findReservationList) {
             countRoomIdSet.add(reservation.getRoom().getId());
         }
+        System.out.println("countRoomIdSet = " + countRoomIdSet);
         return countRoomIdSet.size();
     }
 }
