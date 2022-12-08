@@ -42,7 +42,7 @@ public class AuthController {
     }
 
     @PostMapping("/sendemail")
-    public void verifyingMail(@RequestBody AddressForm address, BindingResult bindingResult) throws NoSuchAlgorithmException{
+    public void verifyingMail(@Validated @RequestBody AddressForm address, BindingResult bindingResult) throws NoSuchAlgorithmException{
         authRequestValidation.validation(address.getAddress(), bindingResult);
         String email = address.getAddress();
         String code = VerifyingCodeMaker.makeCode();
@@ -53,7 +53,7 @@ public class AuthController {
     }
 
     @PostMapping("/verifying")
-    public void verifyingCode(@RequestBody CodeForm codeForm, BindingResult bindingResult) {
+    public void verifyingCode(@Validated @RequestBody CodeForm codeForm, BindingResult bindingResult) {
         authRequestValidation.validation(codeForm.getEmail(), bindingResult);
 
         String email = codeForm.getEmail();
