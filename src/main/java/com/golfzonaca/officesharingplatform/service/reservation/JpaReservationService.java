@@ -18,11 +18,11 @@ import com.golfzonaca.officesharingplatform.web.reservation.dto.response.Reserva
 import com.golfzonaca.officesharingplatform.web.reservation.form.StringDateForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
 import java.util.*;
@@ -37,6 +37,7 @@ public class JpaReservationService implements ReservationService {
     private final PlaceRepository placeRepository;
     private final ReservationRequestValidation reservationRequestValidation;
 
+    @Cacheable(cacheNames = "resTotalDayData")
     @Override
     public List<ReservationResponseData> getReservationResponseData(Place findPlace, String selectedType, String inputDate) {
         String selectedRoomType = selectedType.toUpperCase();
@@ -152,7 +153,7 @@ public class JpaReservationService implements ReservationService {
 
         LocalTime startTime = findPlace.getPlaceStart();
         LocalTime endTime = findPlace.getPlaceEnd();
-       if (!hasFullReservation(totalReservationCount, beforeReservationCount)) {
+        if (!hasFullReservation(totalReservationCount, beforeReservationCount)) {
             Map<Integer, ReservedRoom> reservedRoomMap = getReservedRoomMap(findPlace, findReservationList, reservedRoomList, selectedDate);
             return getResultList(findPlace, selectedStartTime.getHour(), reservedRoomMap);
         } else {

@@ -26,6 +26,12 @@ allprojects {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
+//  Spring Cache 추가
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
+
+//  Caffeine Cache 추가
+    implementation 'com.github.ben-manes.caffeine:caffeine'
+
 //  Mail 추가
     implementation 'org.springframework.boot:spring-boot-starter-mail'
 //	MyBatis 추가
