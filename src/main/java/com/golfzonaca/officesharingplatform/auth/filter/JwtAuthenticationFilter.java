@@ -1,6 +1,6 @@
 package com.golfzonaca.officesharingplatform.auth.filter;
 
-import com.golfzonaca.officesharingplatform.auth.PrincipalDetailsService;
+import com.golfzonaca.officesharingplatform.service.auth.PrincipalDetailsService;
 import com.golfzonaca.officesharingplatform.auth.token.IdPwAuthenticationToken;
 import com.golfzonaca.officesharingplatform.auth.token.JwtManager;
 import lombok.RequiredArgsConstructor;

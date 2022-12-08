@@ -1,11 +1,10 @@
 package com.golfzonaca.officesharingplatform.web.auth;
 
-import com.golfzonaca.officesharingplatform.domain.EmailAuthenticationCode;
 import com.golfzonaca.officesharingplatform.domain.User;
 import com.golfzonaca.officesharingplatform.exception.FailedMatchingCodeException;
 import com.golfzonaca.officesharingplatform.service.auth.AuthService;
-import com.golfzonaca.officesharingplatform.service.auth.CustomEmailService;
-import com.golfzonaca.officesharingplatform.service.auth.VerifyingCodeMaker;
+import com.golfzonaca.officesharingplatform.service.auth.email.CustomEmailService;
+import com.golfzonaca.officesharingplatform.service.auth.email.VerifyingCodeMaker;
 import com.golfzonaca.officesharingplatform.service.auth.validation.AuthRequestValidation;
 import com.golfzonaca.officesharingplatform.web.auth.form.AddressForm;
 import com.golfzonaca.officesharingplatform.web.auth.form.CodeForm;

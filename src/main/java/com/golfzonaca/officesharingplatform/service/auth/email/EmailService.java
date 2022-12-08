@@ -1,4 +1,4 @@
-package com.golfzonaca.officesharingplatform.service.auth;
+package com.golfzonaca.officesharingplatform.service.auth.email;
 
 import com.golfzonaca.officesharingplatform.web.auth.form.EmailForm;
 

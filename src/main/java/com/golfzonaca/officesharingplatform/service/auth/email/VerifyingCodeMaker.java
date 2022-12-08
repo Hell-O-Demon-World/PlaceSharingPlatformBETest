@@ -1,4 +1,4 @@
-package com.golfzonaca.officesharingplatform.service.auth;
+package com.golfzonaca.officesharingplatform.service.auth.email;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;

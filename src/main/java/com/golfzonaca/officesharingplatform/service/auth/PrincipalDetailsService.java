@@ -1,5 +1,6 @@
-package com.golfzonaca.officesharingplatform.auth;
+package com.golfzonaca.officesharingplatform.service.auth;
 
+import com.golfzonaca.officesharingplatform.auth.PrincipalDetails;
 import com.golfzonaca.officesharingplatform.domain.User;
 import com.golfzonaca.officesharingplatform.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;

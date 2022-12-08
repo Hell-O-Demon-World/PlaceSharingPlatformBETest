@@ -1,6 +1,6 @@
 package com.golfzonaca.officesharingplatform.config;
 
-import com.golfzonaca.officesharingplatform.auth.PrincipalDetailsService;
+import com.golfzonaca.officesharingplatform.service.auth.PrincipalDetailsService;
 import com.golfzonaca.officesharingplatform.auth.filter.JsonIdPwAuthenticationProcessingFilter;
 import com.golfzonaca.officesharingplatform.auth.filter.JwtAuthenticationFilter;
 import com.golfzonaca.officesharingplatform.auth.filter.exception.JwtAuthenticationEntryPoint;
