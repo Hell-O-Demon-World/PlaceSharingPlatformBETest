@@ -123,7 +123,7 @@ public class ReservationRequestValidation {
 
         if (!startTime.isBefore(placeEndTime)) {
             throw new NotBusinessTimeException("StartTimeAfterEndTimeError::: 선택된 시작 시각이 영업 종료 시각 이후입니다.");
-        } else if (!startTime.isAfter(placeStartTime)) {
+        } else if (!startTime.isAfter(placeStartTime) && !startTime.equals(placeStartTime)) {
             throw new NotBusinessTimeException("StartTimeAfterEndTimeError::: 선택된 시작 시각이 사용 가능한 시작 시각 이전입니다.");
         }
     }
@@ -143,7 +143,6 @@ public class ReservationRequestValidation {
     private void validRestRoomForSelectedPlaceAndDateTime(Place place, String selectedType, LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
         String message = "";
         List<Room> roomByPlaceAndRoomKind = roomRepository.findRoomByPlaceAndRoomKind(place, selectedType);
-        List<Reservation> resByRoomKindAndDateTime = reservationRepository.findResByRoomKindAndDateTime(selectedType, startDate, startTime, endDate, endTime);
 
         if (roomByPlaceAndRoomKind.size() == 0) {
             if (selectedType.contains("DESK")) {
