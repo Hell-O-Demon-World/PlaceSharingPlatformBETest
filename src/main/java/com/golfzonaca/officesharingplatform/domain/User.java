@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.LinkedList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -48,7 +50,10 @@ public class User {
     @ManyToOne
     @JoinColumn(name = "ROLE_ID")
     private Role role;
-    
+
+    @OneToMany(mappedBy = "user")
+    private List<Reservation> reservationList = new LinkedList<>();
+
     public User(Long id) {
         this.id = id;
     }
