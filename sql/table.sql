@@ -263,3 +263,19 @@ create table comment
         foreign key (USER_ID) references user (ID)
             on update cascade on delete cascade
 );
+
+create table refund
+(
+    ID              bigint unsigned auto_increment primary key,
+    PAYMENT_ID      bigint unsigned not null,
+    REFUND_DATETIME datetime not null,
+    REFUND_PRICE    bigint unsigned not null,
+    REFUND_MILEAGE  bigint unsigned not null,
+    RECALL_MILEAGE  bigint unsigned not null,
+    REFUND_STATUS   tinyint(1) default 1 not null comment 'TRUE, FALSE (환불됨, 환불실패)',
+    constraint FK_PAYMENT_TO_REFUND_1
+        foreign key (PAYMENT_ID) references payment (ID)
+            on update cascade on delete cascade
+);
+
+
