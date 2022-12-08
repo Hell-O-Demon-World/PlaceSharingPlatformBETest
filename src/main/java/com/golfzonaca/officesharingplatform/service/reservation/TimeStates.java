@@ -8,7 +8,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Getter
@@ -19,8 +18,24 @@ public class TimeStates {
         this.timeStates = getTimeMap();
     }
 
+    private TimeStates(boolean state) {
+        if (state) {
+            this.timeStates = getTimeMap();
+        } else {
+            this.timeStates = getFalseTimeMap();
+        }
+    }
+
+    private TimeStates(Map<Integer, Boolean> item) {
+        this.timeStates = getTimeMap();
+    }
+
     public static TimeStates of() {
         return new TimeStates();
+    }
+
+    public static TimeStates allFalse() {
+        return new TimeStates(false);
     }
 
     public void replace(Integer key, Boolean value) {
@@ -34,6 +49,15 @@ public class TimeStates {
         }
         return timeMap;
     }
+
+    private Map<Integer, Boolean> getFalseTimeMap() {
+        Map<Integer, Boolean> timeMap = new HashMap<>();
+        for (int time : DefaultTimeOfDay.getTimes()) {
+            timeMap.put(time, false);
+        }
+        return timeMap;
+    }
+
 
     public Boolean getTimeState(int time) {
         return this.timeStates.get(time);

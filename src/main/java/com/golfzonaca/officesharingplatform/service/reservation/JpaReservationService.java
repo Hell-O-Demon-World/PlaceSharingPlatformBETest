@@ -92,6 +92,7 @@ public class JpaReservationService implements ReservationService {
                         state = getOfficeStateThatDate(findPlace.getId(), roomType, date.toLocalDate());
                     } else if (reservationRequestValidation.isOpenDaysByDate(openDays, date.toLocalDate())) {
                         state = false;
+                        timeStates = TimeStates.allFalse();
                     } else {
                         List<Room> roomByPlaceIdAndRoomType = roomRepository.findRoomByPlaceIdAndRoomType(findPlace.getId(), roomType);
                         List<Reservation> findReservationList = reservationRepository.findAllByPlaceIdAndRoomTypeAndDate(findPlace.getId(), roomType, date.toLocalDate());
@@ -126,7 +127,7 @@ public class JpaReservationService implements ReservationService {
             boolean resultState = true;
             for (int i = 0; i < reservedRoomMap.size(); i++) {
                 ReservedRoom reservedRoom = reservedRoomMap.get(i);
-                resultState &=  reservedRoom.getTimeState(time);
+                resultState &= reservedRoom.getTimeState(time);
                 if (!resultState) {
                     resultTimeStates.replace(time, false);
                     break;
