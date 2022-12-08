@@ -1,4 +1,4 @@
-package com.golfzonaca.officesharingplatform.config.auth.token;
+package com.golfzonaca.officesharingplatform.auth.token;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

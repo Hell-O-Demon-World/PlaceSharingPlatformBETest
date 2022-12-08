@@ -1,8 +1,8 @@
-package com.golfzonaca.officesharingplatform.config.auth.filter;
+package com.golfzonaca.officesharingplatform.auth.filter;
 
-import com.golfzonaca.officesharingplatform.config.auth.PrincipalDetailsService;
-import com.golfzonaca.officesharingplatform.config.auth.token.IdPwAuthenticationToken;
-import com.golfzonaca.officesharingplatform.config.auth.token.JwtManager;
+import com.golfzonaca.officesharingplatform.auth.PrincipalDetailsService;
+import com.golfzonaca.officesharingplatform.auth.token.IdPwAuthenticationToken;
+import com.golfzonaca.officesharingplatform.auth.token.JwtManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;

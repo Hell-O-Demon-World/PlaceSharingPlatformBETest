@@ -1,4 +1,4 @@
-package com.golfzonaca.officesharingplatform.config.auth;
+package com.golfzonaca.officesharingplatform.auth;
 
 import lombok.Builder;
 import org.apache.juli.logging.Log;

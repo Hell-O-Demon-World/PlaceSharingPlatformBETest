@@ -1,7 +1,7 @@
-package com.golfzonaca.officesharingplatform.config.auth.provider;
+package com.golfzonaca.officesharingplatform.auth.provider;
 
-import com.golfzonaca.officesharingplatform.config.auth.PrincipalDetailsService;
-import com.golfzonaca.officesharingplatform.config.auth.token.IdPwAuthenticationToken;
+import com.golfzonaca.officesharingplatform.auth.PrincipalDetailsService;
+import com.golfzonaca.officesharingplatform.auth.token.IdPwAuthenticationToken;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationProvider;

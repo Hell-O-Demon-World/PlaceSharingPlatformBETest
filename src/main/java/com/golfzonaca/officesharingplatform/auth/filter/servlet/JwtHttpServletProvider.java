@@ -1,4 +1,4 @@
-package com.golfzonaca.officesharingplatform.config.auth.filter.servlet;
+package com.golfzonaca.officesharingplatform.auth.filter.servlet;
 
 import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;

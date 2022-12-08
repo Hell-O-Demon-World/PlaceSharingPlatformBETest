@@ -1,11 +1,11 @@
 package com.golfzonaca.officesharingplatform.config;
 
-import com.golfzonaca.officesharingplatform.config.auth.PrincipalDetailsService;
-import com.golfzonaca.officesharingplatform.config.auth.filter.JsonIdPwAuthenticationProcessingFilter;
-import com.golfzonaca.officesharingplatform.config.auth.filter.JwtAuthenticationFilter;
-import com.golfzonaca.officesharingplatform.config.auth.filter.exception.JwtAuthenticationEntryPoint;
-import com.golfzonaca.officesharingplatform.config.auth.handler.JwtSuccessHandler;
-import com.golfzonaca.officesharingplatform.config.auth.handler.LoginFailureHandler;
+import com.golfzonaca.officesharingplatform.auth.PrincipalDetailsService;
+import com.golfzonaca.officesharingplatform.auth.filter.JsonIdPwAuthenticationProcessingFilter;
+import com.golfzonaca.officesharingplatform.auth.filter.JwtAuthenticationFilter;
+import com.golfzonaca.officesharingplatform.auth.filter.exception.JwtAuthenticationEntryPoint;
+import com.golfzonaca.officesharingplatform.auth.handler.JwtSuccessHandler;
+import com.golfzonaca.officesharingplatform.auth.handler.LoginFailureHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;

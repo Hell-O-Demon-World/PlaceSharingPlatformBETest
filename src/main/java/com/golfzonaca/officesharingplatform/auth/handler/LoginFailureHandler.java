@@ -1,6 +1,6 @@
-package com.golfzonaca.officesharingplatform.config.auth.handler;
+package com.golfzonaca.officesharingplatform.auth.handler;
 
-import com.golfzonaca.officesharingplatform.config.auth.filter.servlet.JwtHttpServletProvider;
+import com.golfzonaca.officesharingplatform.auth.filter.servlet.JwtHttpServletProvider;
 import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

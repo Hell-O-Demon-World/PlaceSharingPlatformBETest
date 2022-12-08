@@ -1,18 +1,13 @@
-package com.golfzonaca.officesharingplatform.config.auth.filter;
+package com.golfzonaca.officesharingplatform.auth.filter;
 
-import com.golfzonaca.officesharingplatform.config.auth.filter.dto.IdPwDto;
-import com.golfzonaca.officesharingplatform.config.auth.token.IdPwAuthenticationToken;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.golfzonaca.officesharingplatform.auth.filter.dto.IdPwDto;
+import com.golfzonaca.officesharingplatform.auth.token.IdPwAuthenticationToken;
 import org.springframework.boot.json.GsonJsonParser;
 import org.springframework.security.authentication.AuthenticationServiceException;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
-import org.springframework.stereotype.Component;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
