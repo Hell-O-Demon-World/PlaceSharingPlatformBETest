@@ -1,7 +1,7 @@
-package com.golfzonaca.officesharingplatform.config.auth.handler;
+package com.golfzonaca.officesharingplatform.auth.handler;
 
-import com.golfzonaca.officesharingplatform.config.auth.filter.servlet.JwtHttpServletProvider;
-import com.golfzonaca.officesharingplatform.config.auth.token.JwtManager;
+import com.golfzonaca.officesharingplatform.auth.filter.servlet.JwtHttpServletProvider;
+import com.golfzonaca.officesharingplatform.auth.token.JwtManager;
 import com.golfzonaca.officesharingplatform.domain.RefreshToken;
 import com.golfzonaca.officesharingplatform.domain.User;
 import com.golfzonaca.officesharingplatform.repository.user.UserRepository;

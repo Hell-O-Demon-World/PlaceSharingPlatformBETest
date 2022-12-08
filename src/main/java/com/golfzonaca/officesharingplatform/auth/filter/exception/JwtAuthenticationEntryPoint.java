@@ -1,13 +1,11 @@
-package com.golfzonaca.officesharingplatform.config.auth.filter.exception;
+package com.golfzonaca.officesharingplatform.auth.filter.exception;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.golfzonaca.officesharingplatform.config.auth.filter.servlet.JwtHttpServletProvider;
-import com.golfzonaca.officesharingplatform.config.auth.token.JwtManager;
-import com.golfzonaca.officesharingplatform.exception.NonExistedPlaceException;
+import com.golfzonaca.officesharingplatform.auth.filter.servlet.JwtHttpServletProvider;
+import com.golfzonaca.officesharingplatform.auth.token.JwtManager;
 import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.web.reactive.error.DefaultErrorAttributes;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.jwt.Jwt;

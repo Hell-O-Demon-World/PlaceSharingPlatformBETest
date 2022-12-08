@@ -1,4 +1,4 @@
-package com.golfzonaca.officesharingplatform.config.gson;
+package com.golfzonaca.officesharingplatform.config;
 
 import com.google.gson.*;
 import org.springframework.boot.autoconfigure.gson.GsonBuilderCustomizer;

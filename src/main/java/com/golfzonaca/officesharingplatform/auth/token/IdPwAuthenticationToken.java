@@ -1,4 +1,4 @@
-package com.golfzonaca.officesharingplatform.config.auth.token;
+package com.golfzonaca.officesharingplatform.auth.token;
 
 import lombok.EqualsAndHashCode;
 import org.springframework.security.authentication.AbstractAuthenticationToken;

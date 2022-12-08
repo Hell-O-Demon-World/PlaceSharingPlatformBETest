@@ -1,4 +1,4 @@
-package com.golfzonaca.officesharingplatform.config.auth.filter.dto;
+package com.golfzonaca.officesharingplatform.auth.filter.dto;
 
 public class IdPwDto {
     public static final String id = "email";

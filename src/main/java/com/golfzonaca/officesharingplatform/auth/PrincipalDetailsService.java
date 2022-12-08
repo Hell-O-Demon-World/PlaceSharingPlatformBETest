@@ -1,4 +1,4 @@
-package com.golfzonaca.officesharingplatform.config.auth;
+package com.golfzonaca.officesharingplatform.auth;
 
 import com.golfzonaca.officesharingplatform.domain.User;
 import com.golfzonaca.officesharingplatform.repository.user.UserRepository;

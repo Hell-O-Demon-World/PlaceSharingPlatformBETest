@@ -1,6 +1,6 @@
-package com.golfzonaca.officesharingplatform.config;
+package com.golfzonaca.officesharingplatform.config.web;
 
-import com.golfzonaca.officesharingplatform.config.argumentresolver.JwtTokenDecodeResolver;
+import com.golfzonaca.officesharingplatform.config.web.argumentresolver.JwtTokenDecodeResolver;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
