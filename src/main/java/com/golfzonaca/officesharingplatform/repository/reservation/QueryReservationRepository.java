@@ -43,7 +43,7 @@ public class QueryReservationRepository {
                 .fetch();
     }
 
-    Optional<Reservation> findFirst(Long placeId, String roomType, LocalDate date) {
+    Optional<Reservation> findFirstByPlaceIdAndRoomTypeAndDate(Long placeId, String roomType, LocalDate date) {
         Optional<String> optionalRoomType = Optional.ofNullable(roomType);
         return Optional.ofNullable(query
                 .select(reservation)
@@ -52,6 +52,18 @@ public class QueryReservationRepository {
                 .innerJoin(reservation.room.roomKind)
                 .where(reservation.room.place.id.eq(placeId), eqRoomType(optionalRoomType)
                         , reservation.resStartDate.before(date).and(reservation.resEndDate.after(date)))
+                .fetchFirst());
+    }
+
+    Optional<Reservation> findInTimeByPlaceAndRoomTypeAndDate(Long placeId, String roomType, LocalTime time) {
+        Optional<String> optionalRoomType = Optional.ofNullable(roomType);
+        return Optional.ofNullable(
+                query.select(reservation)
+                .from(reservation)
+                .innerJoin(reservation.room.place)
+                .innerJoin(reservation.room.roomKind)
+                .where(reservation.room.place.id.eq(placeId), eqRoomType(optionalRoomType)
+                        , reservation.resStartTime.loe(time).and(reservation.resEndTime.after(time)))
                 .fetchFirst());
     }
 

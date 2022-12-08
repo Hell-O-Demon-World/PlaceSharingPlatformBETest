@@ -5,6 +5,7 @@ import com.golfzonaca.officesharingplatform.exception.BindingResultErrorExceptio
 import com.golfzonaca.officesharingplatform.exception.InvalidEmailException;
 import com.golfzonaca.officesharingplatform.exception.InvalidPhoneNumException;
 import com.golfzonaca.officesharingplatform.repository.user.UserRepository;
+import com.golfzonaca.officesharingplatform.web.auth.form.CodeForm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
@@ -23,7 +24,10 @@ public class AuthRequestValidation {
         isAvailableEmail(userDto.getEmail());
         isAvailablePhoneNumber(userDto.getPhoneNumber());
     }
-
+    public void validation(String email, BindingResult bindingResult) {
+        bindingResultCheck(bindingResult);
+        isAvailableEmail(email);
+    }
     private void bindingResultCheck(BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             for (ObjectError objectError : bindingResult.getAllErrors()) {
@@ -44,5 +48,6 @@ public class AuthRequestValidation {
             throw new InvalidPhoneNumException("InvalidPhoneNumException::: 사용할 수 없는 전화번호입니다.");
         }
     }
+
 
 }

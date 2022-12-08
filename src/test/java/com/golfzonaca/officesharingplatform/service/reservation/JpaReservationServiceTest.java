@@ -1,6 +1,7 @@
 package com.golfzonaca.officesharingplatform.service.reservation;
 
 import com.golfzonaca.officesharingplatform.domain.*;
+import com.golfzonaca.officesharingplatform.domain.type.dateformat.DateFormat;
 import com.golfzonaca.officesharingplatform.web.formatter.TimeFormatter;
 import com.golfzonaca.officesharingplatform.web.reservation.dto.request.ResRequestData;
 import com.golfzonaca.officesharingplatform.web.reservation.dto.response.ReservationResponseData;
@@ -95,10 +96,9 @@ class JpaReservationServiceTest {
                     String date = year + "-" + month.getValue() + "-" + day;
                     boolean state = false;
                     result.add(ReservationResponseData.builder()
-                            .date(date)
+                            .date(new DateFormat(year, month.getValue(), day))
                             .state(state)
                             .productType(selectedRoomType)
-                            .timeList(defaultTimeList)
                             .build());
                 }
             }

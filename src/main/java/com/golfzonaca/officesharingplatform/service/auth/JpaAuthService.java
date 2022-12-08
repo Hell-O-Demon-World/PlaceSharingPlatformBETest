@@ -7,18 +7,28 @@ import com.golfzonaca.officesharingplatform.domain.type.RoleType;
 import com.golfzonaca.officesharingplatform.repository.role.RoleRepository;
 import com.golfzonaca.officesharingplatform.repository.user.UserRepository;
 import com.golfzonaca.officesharingplatform.service.mileage.MileageService;
+import com.golfzonaca.officesharingplatform.web.auth.form.EmailForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.mail.internet.InternetAddress;
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 
 @Transactional
 @Service
 @Slf4j
+
 @RequiredArgsConstructor
 public class JpaAuthService implements AuthService {
     private final UserRepository userRepository;
@@ -50,5 +60,15 @@ public class JpaAuthService implements AuthService {
     @Override
     public boolean isAvailableTelNum(String phoneNumber) {
         return userRepository.isUniqueTel(phoneNumber);
+    }
+
+    @Override
+    public void sendMail(EmailForm emailForm) {
+        JavaMailSender javaMailSender = new JavaMailSenderImpl();
+        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+        simpleMailMessage.setTo(emailForm.getAddress());
+        simpleMailMessage.setSubject(emailForm.getTitle());
+        simpleMailMessage.setText(emailForm.getMessage());
+        javaMailSender.send(simpleMailMessage);
     }
 }

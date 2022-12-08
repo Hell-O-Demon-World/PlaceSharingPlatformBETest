@@ -1,11 +1,14 @@
 package com.golfzonaca.officesharingplatform.service.reservation.validation;
 
 import com.golfzonaca.officesharingplatform.domain.Place;
+import com.golfzonaca.officesharingplatform.domain.Reservation;
+import com.golfzonaca.officesharingplatform.domain.Room;
 import com.golfzonaca.officesharingplatform.domain.User;
 import com.golfzonaca.officesharingplatform.exception.*;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
 import com.golfzonaca.officesharingplatform.repository.room.RoomRepository;
 import com.golfzonaca.officesharingplatform.repository.roomkind.RoomKindRepository;
+import com.golfzonaca.officesharingplatform.service.reservation.dto.ReservedRoom;
 import com.golfzonaca.officesharingplatform.web.formatter.TimeFormatter;
 import com.golfzonaca.officesharingplatform.web.reservation.dto.process.ProcessReservationData;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +20,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.TextStyle;
+import java.util.List;
 import java.util.Locale;
 
 @Component
@@ -138,7 +142,10 @@ public class ReservationRequestValidation {
 
     private void validRestRoomForSelectedPlaceAndDateTime(Place place, String selectedType, LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
         String message = "";
-        if (!(roomRepository.findRoomByPlaceAndRoomKind(place, selectedType).size() > reservationRepository.findResByRoomKindAndDateTime(selectedType, startDate, startTime, endDate, endTime).size())) {
+        List<Room> roomByPlaceAndRoomKind = roomRepository.findRoomByPlaceAndRoomKind(place, selectedType);
+        List<Reservation> resByRoomKindAndDateTime = reservationRepository.findResByRoomKindAndDateTime(selectedType, startDate, startTime, endDate, endTime);
+
+        if (roomByPlaceAndRoomKind.size() == 0) {
             if (selectedType.contains("DESK")) {
                 message = selectedType.replace("DESK", "데스크");
             } else if (selectedType.contains("MEETINGROOM")) {

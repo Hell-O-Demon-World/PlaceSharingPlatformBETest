@@ -15,6 +15,8 @@ public interface ReservationRepository {
 
     List<Reservation> findAllByUserId(Long userId);
 
+    Optional<Reservation> findInDateByPlaceIdAndRoomTypeAndDate(Long placeId, String roomType, LocalTime date);
+
     List<Reservation> findResByPlaceIdAndRoomKindId(long roomTypeId, LocalDate resStartDate, LocalDate resEndDate);
 
     void deleteById(Long reservationId);

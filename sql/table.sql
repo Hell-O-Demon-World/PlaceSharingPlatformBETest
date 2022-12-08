@@ -1,9 +1,19 @@
+create table email_authentication_code
+(
+    ID         bigint unsigned auto_increment primary key,
+    EMAIL      varchar(30) not null unique,
+    CODE       varchar(4)  not null,
+    EXPIRATION boolean     not null
+) DEFAULT CHARACTER SET = 'utf8'
+  COLLATE = 'utf8_general_ci';
+
 create table address
 (
     ID         bigint unsigned auto_increment primary key,
     ADDRESS    varchar(100) not null,
     POSTALCODE varchar(5)   not null
-) DEFAULT CHARACTER SET='utf8' COLLATE='utf8_general_ci';
+) DEFAULT CHARACTER SET = 'utf8'
+  COLLATE = 'utf8_general_ci';
 
 create table company
 (
@@ -26,13 +36,15 @@ create table company
     constraint FK_ADDRESS_TO_COMPANY_1
         foreign key (ADDRESS_ID) references address (ID)
             on update cascade on delete cascade
-) DEFAULT CHARACTER SET='utf8' COLLATE='utf8_general_ci';
+) DEFAULT CHARACTER SET = 'utf8'
+  COLLATE = 'utf8_general_ci';
 
 create table ratepoint
 (
     ID          bigint unsigned auto_increment primary key,
     RATINGPOINT float unsigned not null
-) DEFAULT CHARACTER SET='utf8' COLLATE='utf8_general_ci';
+) DEFAULT CHARACTER SET = 'utf8'
+  COLLATE = 'utf8_general_ci';
 
 create table place
 (
@@ -57,7 +69,8 @@ create table place
     constraint FK_RATEPOINT_TO_PLACE_1
         foreign key (RATEPOINT_ID) references ratepoint (ID)
             on update cascade on delete cascade
-) DEFAULT CHARACTER SET='utf8' COLLATE='utf8_general_ci';
+) DEFAULT CHARACTER SET = 'utf8'
+  COLLATE = 'utf8_general_ci';
 
 create table room_kind
 (
@@ -66,7 +79,8 @@ create table room_kind
     PRICE     enum ('10000', '20000', '30000', '50000', '100000', '200000', '300000', '500000') not null,
     constraint ROOM_TYPE
         unique (ROOM_TYPE)
-) DEFAULT CHARACTER SET='utf8' COLLATE='utf8_general_ci';
+) DEFAULT CHARACTER SET = 'utf8'
+  COLLATE = 'utf8_general_ci';
 
 create table room
 (
@@ -79,7 +93,8 @@ create table room
     constraint FK_ROOM_KIND_TO_ROOM_1
         foreign key (ROOM_KIND_ID) references room_kind (ID)
             on update cascade on delete cascade
-) DEFAULT CHARACTER SET='utf8' COLLATE='utf8_general_ci';
+) DEFAULT CHARACTER SET = 'utf8'
+  COLLATE = 'utf8_general_ci';
 
 create table roomstatus
 (
@@ -91,7 +106,8 @@ create table roomstatus
     constraint FK_ROOM_TO_ROOMSTATUS_1
         foreign key (ROOM_ID) references room (ID)
             on update cascade on delete cascade
-) DEFAULT CHARACTER SET='utf8' COLLATE='utf8_general_ci';
+) DEFAULT CHARACTER SET = 'utf8'
+  COLLATE = 'utf8_general_ci';
 
 create table role
 (
@@ -99,13 +115,15 @@ create table role
     role enum ('ROLE_USER', 'ROLE_MANAGER') not null,
     constraint ROLE
         unique (role)
-) DEFAULT CHARACTER SET='utf8' COLLATE='utf8_general_ci';
+) DEFAULT CHARACTER SET = 'utf8'
+  COLLATE = 'utf8_general_ci';
 
 create table mileage
 (
     ID    bigint unsigned auto_increment primary key,
     POINT bigint unsigned not null
-) DEFAULT CHARACTER SET='utf8' COLLATE='utf8_general_ci';
+) DEFAULT CHARACTER SET = 'utf8'
+  COLLATE = 'utf8_general_ci';
 
 create table user
 (
@@ -129,7 +147,8 @@ create table user
     constraint FK_ROLE_TO_USER_1
         foreign key (ROLE_ID) references role (ID)
             on update cascade on delete cascade
-) DEFAULT CHARACTER SET='utf8' COLLATE='utf8_general_ci';
+) DEFAULT CHARACTER SET = 'utf8'
+  COLLATE = 'utf8_general_ci';
 
 create table refresh_token
 (
@@ -141,7 +160,8 @@ create table refresh_token
     constraint FK_USER_TO_REFRESH_TOKEN_1
         foreign key (USER_ID) references user (ID)
             on update cascade on delete cascade
-) DEFAULT CHARACTER SET='utf8' COLLATE='utf8_general_ci';
+) DEFAULT CHARACTER SET = 'utf8'
+  COLLATE = 'utf8_general_ci';
 
 create table manager
 (
@@ -158,7 +178,8 @@ create table manager
     constraint FK_ROLE_TO_MANAGER_1
         foreign key (ROLE_ID) references role (ID)
             on update cascade on delete cascade
-) DEFAULT CHARACTER SET='utf8' COLLATE='utf8_general_ci';
+) DEFAULT CHARACTER SET = 'utf8'
+  COLLATE = 'utf8_general_ci';
 
 create table reservation
 (
@@ -176,7 +197,8 @@ create table reservation
     constraint FK_USER_TO_RESERVATION_1
         foreign key (USER_ID) references user (ID)
             on delete cascade
-) DEFAULT CHARACTER SET='utf8' COLLATE='utf8_general_ci';
+) DEFAULT CHARACTER SET = 'utf8'
+  COLLATE = 'utf8_general_ci';
 
 create table payment
 (
@@ -196,7 +218,8 @@ create table payment
         unique (PAY_API_CODE),
     constraint FK_RESERVATION_TO_PAYMENT_1
         foreign key (RESERVATION_ID) references reservation (ID)
-) DEFAULT CHARACTER SET='utf8' COLLATE='utf8_general_ci';
+) DEFAULT CHARACTER SET = 'utf8'
+  COLLATE = 'utf8_general_ci';
 
 create table rating
 (
@@ -208,7 +231,8 @@ create table rating
     constraint FK_RESERVATION_TO_RATING_1
         foreign key (RESERVATION_ID) references reservation (ID)
             on update cascade on delete cascade
-) DEFAULT CHARACTER SET='utf8' COLLATE='utf8_general_ci';
+) DEFAULT CHARACTER SET = 'utf8'
+  COLLATE = 'utf8_general_ci';
 
 create table inquiry
 (
@@ -220,7 +244,8 @@ create table inquiry
     constraint FK_USER_TO_INQUIRY_1
         foreign key (USER_ID) references user (ID)
             on update cascade on delete cascade
-) DEFAULT CHARACTER SET='utf8' COLLATE='utf8_general_ci';
+) DEFAULT CHARACTER SET = 'utf8'
+  COLLATE = 'utf8_general_ci';
 
 create table inquirystatus
 (
@@ -232,7 +257,8 @@ create table inquirystatus
     constraint FK_INQUIRY_TO_INQUIRYSTATUS_1
         foreign key (INQUIRY_ID) references inquiry (ID)
             on update cascade on delete cascade
-) DEFAULT CHARACTER SET='utf8' COLLATE='utf8_general_ci';
+) DEFAULT CHARACTER SET = 'utf8'
+  COLLATE = 'utf8_general_ci';
 
 create table answer
 (
@@ -248,7 +274,8 @@ create table answer
     constraint FK_INQUIRY_TO_ANSWER_1
         foreign key (INQUIRY_ID) references inquiry (ID)
             on update cascade on delete cascade
-) DEFAULT CHARACTER SET='utf8' COLLATE='utf8_general_ci';
+) DEFAULT CHARACTER SET = 'utf8'
+  COLLATE = 'utf8_general_ci';
 
 create table comment
 (
@@ -263,7 +290,8 @@ create table comment
     constraint FK_USER_TO_COMMENT_1
         foreign key (USER_ID) references user (ID)
             on update cascade on delete cascade
-) DEFAULT CHARACTER SET='utf8' COLLATE='utf8_general_ci';
+) DEFAULT CHARACTER SET = 'utf8'
+  COLLATE = 'utf8_general_ci';
 
 create table placeimage
 (
@@ -275,7 +303,8 @@ create table placeimage
     constraint FK_PLACE_TO_PLACEIMAGE_1
         foreign key (PLACE_ID) references place (ID)
             on update cascade on delete cascade
-) DEFAULT CHARACTER SET='utf8' COLLATE='utf8_general_ci';
+) DEFAULT CHARACTER SET = 'utf8'
+  COLLATE = 'utf8_general_ci';
 
 create table roomimage
 (
@@ -292,3 +321,17 @@ create table roomimage
         foreign key (ROOMKIND_ID) references room_kind (ID)
             on update cascade on delete cascade
 ) DEFAULT CHARACTER SET='utf8' COLLATE='utf8_general_ci';
+
+create table refund
+(
+    ID              bigint unsigned auto_increment primary key,
+    PAYMENT_ID      bigint unsigned not null,
+    REFUND_DATETIME datetime not null,
+    REFUND_PRICE    bigint unsigned not null,
+    REFUND_MILEAGE  bigint unsigned not null,
+    RECALL_MILEAGE  bigint unsigned not null,
+    REFUND_STATUS   tinyint(1) default 1 not null comment 'TRUE, FALSE (환불됨, 환불실패)',
+    constraint FK_PAYMENT_TO_REFUND_1
+        foreign key (PAYMENT_ID) references payment (ID)
+            on update cascade on delete cascade
+)DEFAULT CHARACTER SET='utf8' COLLATE='utf8_general_ci';

@@ -16,12 +16,18 @@ import java.time.LocalDateTime;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class KakaoPayApprovalResponse {
 
-    private String aid, tid, cid, sid;
-    private String partner_order_id, partner_user_id, payment_method_type;
+    private String aid;
+    private String tid;
+    private String cid;
+    private String sid;
+    private String partnerOrderId;
+    private String partnerUserId;
     private Amount amount;
-    private Card card_info;
-    private String item_name, item_code, payload;
+    private CardInfo cardInfo;
+    private String itemName;
+    private String itemCode;
     private Integer quantity;
-    private LocalDateTime created_at, approved_at;
-
+    private LocalDateTime createdAt;
+    private LocalDateTime approvedAt;
+    private String payload;
 }

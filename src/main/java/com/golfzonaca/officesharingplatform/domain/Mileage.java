@@ -22,13 +22,13 @@ public class Mileage {
         this.point = point;
     }
 
-    public long addPoint(long userPoint, long addPoint) {
-        this.point = userPoint + addPoint;
+    public long addPoint(long addPoint) {
+        this.point = this.point + addPoint;
         return point;
     }
 
-    public long minusPoint(long userPoint, long minusPoint) {
-        this.point = userPoint - minusPoint;
+    public long minusPoint(long minusPoint) {
+        this.point = this.point - minusPoint;
         return point;
     }
 }

@@ -152,11 +152,12 @@ public class JpaReservationService implements ReservationService {
 
         LocalTime startTime = findPlace.getPlaceStart();
         LocalTime endTime = findPlace.getPlaceEnd();
-        if (!hasFullReservation(totalReservationCount, beforeReservationCount)) {
+       if (!hasFullReservation(totalReservationCount, beforeReservationCount)) {
             Map<Integer, ReservedRoom> reservedRoomMap = getReservedRoomMap(findPlace, findReservationList, reservedRoomList, selectedDate);
             return getResultList(findPlace, selectedStartTime.getHour(), reservedRoomMap);
+        } else {
+            return parsingMapToList(new ReservedRoom(0L, startTime, endTime, selectedDate).getTimeStates());
         }
-        return parsingMapToList(new ReservedRoom(0L, startTime, endTime, selectedDate).getTimeStates());
     }
 
     private boolean isFullReservation(Place findPlace, Map<Integer, ReservedRoom> reservedRoomMap) {
@@ -213,8 +214,11 @@ public class JpaReservationService implements ReservationService {
         }
 
         List<Integer> result = new ArrayList<>();
-        for (int i = minusMinPointer; i < plusMaxPointer + 1; i++) {
-            result.add(i);
+
+        if (minusMinPointer != plusMaxPointer) {
+            for (int i = minusMinPointer; i < plusMaxPointer + 1; i++) {
+                result.add(i);
+            }
         }
         return result;
     }
@@ -323,6 +327,7 @@ public class JpaReservationService implements ReservationService {
         for (Reservation reservation : findReservationList) {
             countRoomIdSet.add(reservation.getRoom().getId());
         }
+        System.out.println("countRoomIdSet = " + countRoomIdSet);
         return countRoomIdSet.size();
     }
 }

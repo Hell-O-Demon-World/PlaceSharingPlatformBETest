@@ -1,7 +1,7 @@
 package com.golfzonaca.officesharingplatform.service.refreshtoken;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.golfzonaca.officesharingplatform.config.auth.token.JwtManager;
+import com.golfzonaca.officesharingplatform.auth.token.JwtManager;
 import com.golfzonaca.officesharingplatform.domain.RefreshToken;
 import com.golfzonaca.officesharingplatform.repository.refreshtoken.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;

@@ -1,19 +1,17 @@
 package com.golfzonaca.officesharingplatform.config;
 
-import com.golfzonaca.officesharingplatform.config.auth.PrincipalDetailsService;
-import com.golfzonaca.officesharingplatform.config.auth.filter.JsonIdPwAuthenticationProcessingFilter;
-import com.golfzonaca.officesharingplatform.config.auth.filter.JwtAuthenticationFilter;
-import com.golfzonaca.officesharingplatform.config.auth.filter.exception.JwtAuthenticationEntryPoint;
-import com.golfzonaca.officesharingplatform.config.auth.handler.JwtSuccessHandler;
-import com.golfzonaca.officesharingplatform.config.auth.provider.IdPwAuthenticationProvider;
+import com.golfzonaca.officesharingplatform.auth.PrincipalDetailsService;
+import com.golfzonaca.officesharingplatform.auth.filter.JsonIdPwAuthenticationProcessingFilter;
+import com.golfzonaca.officesharingplatform.auth.filter.JwtAuthenticationFilter;
+import com.golfzonaca.officesharingplatform.auth.filter.exception.JwtAuthenticationEntryPoint;
+import com.golfzonaca.officesharingplatform.auth.handler.JwtSuccessHandler;
+import com.golfzonaca.officesharingplatform.auth.handler.LoginFailureHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.authority.mapping.SimpleAuthorityMapper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -27,6 +25,7 @@ public class SecurityConfig {
     private final PrincipalDetailsService principalDetailsService;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final JwtSuccessHandler jwtSuccessHandler;
+    private final LoginFailureHandler loginFailureHandler;
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private static final RequestMatcher LOGIN_REQUEST_MATCHER = new AntPathRequestMatcher("/auth/signin", "POST");
@@ -41,14 +40,8 @@ public class SecurityConfig {
         JsonIdPwAuthenticationProcessingFilter jsonAuthenticationFilter = new JsonIdPwAuthenticationProcessingFilter(LOGIN_REQUEST_MATCHER);
         jsonAuthenticationFilter.setAuthenticationManager(authenticationConfiguration.getAuthenticationManager());
         jsonAuthenticationFilter.setAuthenticationSuccessHandler(jwtSuccessHandler);
+        jsonAuthenticationFilter.setAuthenticationFailureHandler(loginFailureHandler);
         return jsonAuthenticationFilter;
-    }
-
-    @Bean
-    public AuthenticationProvider authenticationProvider() {
-        return new IdPwAuthenticationProvider(principalDetailsService,
-                passwordEncoder(),
-                new SimpleAuthorityMapper());
     }
 
     @Bean

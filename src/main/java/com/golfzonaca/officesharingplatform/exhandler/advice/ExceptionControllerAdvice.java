@@ -65,6 +65,13 @@ public class ExceptionControllerAdvice {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(NoSuchEmailException.class)
+    public ErrorResult illegalExHandler(NoSuchEmailException e) {
+        log.error("[exceptionHandle] ex", e);
+        return new ErrorResult("BAD", e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(NonExistedUserException.class)
     public ErrorResult nonExistedUser(NonExistedUserException e) {
         log.error("[exceptionHandle] ex", e);
@@ -133,5 +140,10 @@ public class ExceptionControllerAdvice {
         log.error("[exceptionHandle] ex", e);
         return new ErrorResult("BAD", e.getMessage());
     }
-
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(FailedMatchingCodeException.class)
+    public ErrorResult illegalExHandler(FailedMatchingCodeException e) {
+        log.error("[exceptionHandle] ex", e);
+        return new ErrorResult("BAD", e.getMessage());
+    }
 }
