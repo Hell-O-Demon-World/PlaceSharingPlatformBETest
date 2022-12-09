@@ -42,11 +42,11 @@ public class JpaReservationService implements ReservationService {
     public List<ReservationResponseData> getReservationResponseData(Place findPlace, RoomType roomType, String inputDate) throws IOException {
         LocalDateTime selectedStartDateTime = LocalDateTime.of(TimeFormatter.toLocalDate(inputDate), LocalTime.now());
         LocalDateTime selectedEndDateTime = LocalDateTime.of(TimeFormatter.toLocalDate(inputDate).plusYears(1), LocalTime.of(23, 59));
-
         return getTotalDayData(findPlace, roomType, selectedStartDateTime, selectedEndDateTime);
     }
 
     private List<ReservationResponseData> getTotalDayData(Place findPlace, RoomType roomType, LocalDateTime startDateTime, LocalDateTime endDateTime) throws IOException {
+
         List<ReservationResponseData> resultList = new ArrayList<>();
         String[] openDays = findPlace.getOpenDays().split(", ");
         int startYear = startDateTime.getYear();
