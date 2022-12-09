@@ -24,7 +24,7 @@ public class CustomReservationRepository implements ReservationRepository {
     private final SpringDataJpaReservationRepository jpaReservationRepository;
     private final QueryReservationRepository queryReservationRepository;
 
-    @CacheEvict(cacheNames = "resDataByPlaceAndTypeAndDate")
+    @CacheEvict(cacheNames = "resDataByPlaceAndTypeAndDate", allEntries = true)
     @Override
     public Reservation save(Reservation reservation) {
         return jpaReservationRepository.save(reservation);
