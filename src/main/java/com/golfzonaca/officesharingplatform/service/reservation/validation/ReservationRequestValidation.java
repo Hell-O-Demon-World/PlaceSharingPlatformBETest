@@ -1,14 +1,13 @@
 package com.golfzonaca.officesharingplatform.service.reservation.validation;
 
 import com.golfzonaca.officesharingplatform.domain.Place;
-import com.golfzonaca.officesharingplatform.domain.Reservation;
 import com.golfzonaca.officesharingplatform.domain.Room;
 import com.golfzonaca.officesharingplatform.domain.User;
+import com.golfzonaca.officesharingplatform.domain.type.RoomType;
 import com.golfzonaca.officesharingplatform.exception.*;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
 import com.golfzonaca.officesharingplatform.repository.room.RoomRepository;
 import com.golfzonaca.officesharingplatform.repository.roomkind.RoomKindRepository;
-import com.golfzonaca.officesharingplatform.service.reservation.dto.ReservedRoom;
 import com.golfzonaca.officesharingplatform.web.formatter.TimeFormatter;
 import com.golfzonaca.officesharingplatform.web.reservation.dto.process.ProcessReservationData;
 import lombok.RequiredArgsConstructor;
@@ -68,7 +67,7 @@ public class ReservationRequestValidation {
         }
     }
 
-    private void validRoomType(String roomType) {
+    private void validRoomType(RoomType roomType) {
         roomKindRepository.findByRoomType(roomType);
     }
 

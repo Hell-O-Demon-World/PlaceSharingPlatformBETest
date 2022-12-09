@@ -1,6 +1,7 @@
 package com.golfzonaca.officesharingplatform.repository.reservation;
 
 import com.golfzonaca.officesharingplatform.domain.*;
+import com.golfzonaca.officesharingplatform.domain.type.RoomType;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.extern.slf4j.Slf4j;
@@ -43,8 +44,8 @@ public class QueryReservationRepository {
                 .fetch();
     }
 
-    Optional<Reservation> findFirstByPlaceIdAndRoomTypeAndDate(Long placeId, String roomType, LocalDate date) {
-        Optional<String> optionalRoomType = Optional.ofNullable(roomType);
+    Optional<Reservation> findFirstByPlaceIdAndRoomTypeAndDate(Long placeId, RoomType roomType, LocalDate date) {
+        Optional<RoomType> optionalRoomType = Optional.ofNullable(roomType);
         return Optional.ofNullable(query
                 .select(reservation)
                 .from(reservation)
@@ -59,12 +60,12 @@ public class QueryReservationRepository {
         Optional<String> optionalRoomType = Optional.ofNullable(roomType);
         return Optional.ofNullable(
                 query.select(reservation)
-                .from(reservation)
-                .innerJoin(reservation.room.place)
-                .innerJoin(reservation.room.roomKind)
-                .where(reservation.room.place.id.eq(placeId), eqRoomType(optionalRoomType)
-                        , reservation.resStartTime.loe(time).and(reservation.resEndTime.after(time)))
-                .fetchFirst());
+                        .from(reservation)
+                        .innerJoin(reservation.room.place)
+                        .innerJoin(reservation.room.roomKind)
+                        .where(reservation.room.place.id.eq(placeId), eqRoomType(optionalRoomType)
+                                , reservation.resStartTime.loe(time).and(reservation.resEndTime.after(time)))
+                        .fetchFirst());
     }
 
     List<Reservation> findAllLimit(ReservationSearchCond cond, Integer maxNum) {
@@ -85,6 +86,7 @@ public class QueryReservationRepository {
                 .limit(maxNum)
                 .fetch();
     }
+
     public List<Reservation> findInResValid(User user, Place place, LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
         log.info("Reservation findInResValid");
         return query
@@ -111,7 +113,7 @@ public class QueryReservationRepository {
                 .from(reservation)
                 .innerJoin(reservation.room.place)
                 .innerJoin(reservation.room.roomKind)
-                .where(reservation.room.place.id.eq(placeId) ,eqRoomType(optionalRoomType), eqResStartDate(optionalLocalDate))
+                .where(reservation.room.place.id.eq(placeId), eqRoomType(optionalRoomType), eqResStartDate(optionalLocalDate))
                 .fetch();
     }
 
@@ -244,7 +246,7 @@ public class QueryReservationRepository {
         return null;
     }
 
-    private BooleanExpression eqRoomType(Optional<String> optionalRoomType) {
+    private BooleanExpression eqRoomType(Optional<RoomType> optionalRoomType) {
         if (optionalRoomType.isPresent()) {
             return reservation.room.roomKind.roomType.eq(optionalRoomType.get());
         }

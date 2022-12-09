@@ -4,6 +4,7 @@ package com.golfzonaca.officesharingplatform.repository.reservation;
 import com.golfzonaca.officesharingplatform.domain.Place;
 import com.golfzonaca.officesharingplatform.domain.Reservation;
 import com.golfzonaca.officesharingplatform.domain.User;
+import com.golfzonaca.officesharingplatform.domain.type.RoomType;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -27,9 +28,9 @@ public interface ReservationRepository {
 
     List<Reservation> findResByRoomKindAndDateTime(String selectedType, LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime);
 
-    List<Reservation> findAllByPlaceIdAndRoomTypeAndDate(Long placeId, String roomType, LocalDate date);
+    List<Reservation> findAllByPlaceIdAndRoomTypeAndDate(Long placeId, RoomType roomType, LocalDate date);
 
-    Optional<Reservation> findByPlaceIdAndRoomTypeAndDate(Long placeId, String roomType, LocalDate date);
+    Optional<Reservation> findByPlaceIdAndRoomTypeAndDate(Long placeId, RoomType roomType, LocalDate date);
 
     Reservation findById(Long reservationId);
 

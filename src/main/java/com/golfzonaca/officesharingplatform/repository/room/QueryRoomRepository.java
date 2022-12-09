@@ -2,6 +2,7 @@ package com.golfzonaca.officesharingplatform.repository.room;
 
 import com.golfzonaca.officesharingplatform.domain.Place;
 import com.golfzonaca.officesharingplatform.domain.Room;
+import com.golfzonaca.officesharingplatform.domain.type.RoomType;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.extern.slf4j.Slf4j;
@@ -49,7 +50,7 @@ public class QueryRoomRepository {
                 .fetch();
     }
 
-    public List<Room> findRoomByPlaceAndRoomKind(Place place, String selectedType) {
+    public List<Room> findRoomByPlaceAndRoomKind(Place place, RoomType selectedType) {
         log.info("Room findRoomByPlaceAndRoomKind");
         return query
                 .selectFrom(room)
@@ -79,21 +80,21 @@ public class QueryRoomRepository {
         return null;
     }
 
-    private BooleanExpression eqRoomType(String roomType) {
+    private BooleanExpression eqRoomType(RoomType roomType) {
         if (roomKind != null) {
             return room.roomKind.roomType.eq(roomType);
         }
         return null;
     }
 
-    private BooleanExpression roomTypeLike(String selectedType) {
+    private BooleanExpression roomTypeLike(RoomType selectedType) {
         if (StringUtils.hasText(selectedType)) {
             return room.roomKind.roomType.like(selectedType);
         }
         return null;
     }
 
-    public List<Room> findAllByPlaceIdAndRoomType(Long id, String roomType) {
+    public List<Room> findAllByPlaceIdAndRoomType(Long id, RoomType roomType) {
         log.info("Room findAllByPlaceIdAndRoomType");
         Optional<Long> placeId = Optional.ofNullable(id);
         return query

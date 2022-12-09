@@ -1,6 +1,7 @@
 package com.golfzonaca.officesharingplatform.service.place;
 
 import com.golfzonaca.officesharingplatform.domain.*;
+import com.golfzonaca.officesharingplatform.domain.type.RoomType;
 import com.golfzonaca.officesharingplatform.repository.place.PlaceRepository;
 import com.golfzonaca.officesharingplatform.repository.roomkind.RoomKindRepository;
 import com.golfzonaca.officesharingplatform.service.place.dto.PlaceDetailsInfo;
@@ -107,13 +108,13 @@ public class JpaPlaceService implements PlaceService {
         int price = 0;
 
         RoomTypeResponse roomTypeResponse = new RoomTypeResponse();
-        Set<String> nonDuplicatedRoomSet = getNonDuplicatedRoomSet(place.getRooms());
+        Set<RoomType> nonDuplicatedRoomSet = getNonDuplicatedRoomSet(place.getRooms());
 
         Desk resultDesk = new Desk(false, price, new LinkedList<>());
         SortedSet<MeetingRoom> responseMeetingRoom = new TreeSet<>();
         SortedSet<Office> responseOffice = new TreeSet<>();
 
-        for (String roomType : nonDuplicatedRoomSet) {
+        for (RoomType roomType : nonDuplicatedRoomSet) {
             price = roomKindRepository.findByRoomType(roomType).getPrice();
 
             List<String> images = new LinkedList<>();
@@ -138,18 +139,18 @@ public class JpaPlaceService implements PlaceService {
         return roomTypeResponse;
     }
 
-    private Set<String> getNonDuplicatedRoomSet(List<Room> roomList) {
-        SortedSet<String> nonDuplicatedRoomSet = new TreeSet<>();
+    private Set<RoomType> getNonDuplicatedRoomSet(List<Room> roomList) {
+        SortedSet<RoomType> nonDuplicatedRoomSet = new TreeSet<>();
         for (Room room : roomList) {
             nonDuplicatedRoomSet.add(room.getRoomKind().getRoomType());
         }
         return nonDuplicatedRoomSet;
     }
 
-    private String getQuantityByRoomType(Place place, String roomType) {
+    private String getQuantityByRoomType(Place place, RoomType roomType) {
         int quantity = 0;
         for (Room room : place.getRooms()) {
-            if (room.getRoomKind().getRoomType().contains(roomType)) {
+            if (room.getRoomKind().getRoomType().equals(roomType)) {
                 quantity++;
             }
         }
