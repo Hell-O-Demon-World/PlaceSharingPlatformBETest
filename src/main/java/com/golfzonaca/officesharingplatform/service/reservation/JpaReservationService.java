@@ -83,7 +83,7 @@ public class JpaReservationService implements ReservationService {
                     endDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
                 }
                 for (int day = startDay; day < endDay + 1; day++) {
-                    LocalDateTime date = LocalDateTime.of(year, month, day, findPlace.getPlaceStart().getHour(), findPlace.getPlaceEnd().minusHours(1).getHour());
+                    LocalDateTime date = LocalDateTime.of(year, month, day, findPlace.getPlaceStart().getHour(), findPlace.getPlaceEnd().getHour());
                     LocalTime startTime = getStartTime(startDateTime, date);
                     date = LocalDateTime.of(date.toLocalDate(), startTime);
                     boolean state;
