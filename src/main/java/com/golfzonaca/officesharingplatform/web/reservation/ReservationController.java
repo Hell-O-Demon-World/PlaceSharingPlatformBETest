@@ -32,7 +32,7 @@ public class ReservationController {
     @GetMapping("places/{placeId}/type/{typeName}/date/{inputDate}")
     public List<ReservationResponseData> selectedRoomType(@PathVariable Long placeId, @PathVariable String typeName, @PathVariable String inputDate) throws IOException {
         Place place = placeService.findById(placeId);
-        reservationRequestValidation.validation(place, typeName, inputDate);
+        reservationRequestValidation.validation(typeName, inputDate);
 
         return reservationService.getReservationResponseData(place, typeName, inputDate);
     }

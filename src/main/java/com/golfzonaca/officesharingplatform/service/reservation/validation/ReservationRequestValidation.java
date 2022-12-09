@@ -31,10 +31,9 @@ public class ReservationRequestValidation {
     private final RoomKindRepository roomKindRepository;
     private final ReservationRepository reservationRepository;
 
-    public void validation(Place place, String roomType, String date) {
+    public void validation(String roomType, String date) {
         validRealDate(date);
         validRoomType(roomType);
-        validBusinessDay(place, TimeFormatter.toLocalDate(date));
     }
 
     public void validation(Place place, String roomType, String date, String startTime) {
