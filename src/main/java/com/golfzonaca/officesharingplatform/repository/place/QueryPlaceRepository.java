@@ -2,7 +2,6 @@ package com.golfzonaca.officesharingplatform.repository.place;
 
 import com.golfzonaca.officesharingplatform.domain.Place;
 import com.golfzonaca.officesharingplatform.domain.type.RoomType;
-import com.golfzonaca.officesharingplatform.web.formatter.TimeFormatter;
 import com.golfzonaca.officesharingplatform.web.main.dto.request.RequestSearchData;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -42,28 +41,13 @@ public class QueryPlaceRepository {
                 .fetch();
     }
 
-    public List<Place> filterPlaces(String day, String startTime, String endTime, String city, String subCity, String type) {
-        if (StringUtils.hasText(day)) {
-            day = TimeFormatter.toDayOfTheWeek(TimeFormatter.toLocalDate(day));
-        }
-        LocalTime startTime = null;
-        if (StringUtils.hasText(startTime)) {
-            startTime = TimeFormatter.toLocalTime(startTime);
-        }
-        LocalTime endTime = null;
-        if (StringUtils.hasText(requestFilterData.getEndTime())) {
-            endTime = TimeFormatter.toLocalTime(requestFilterData.getEndTime());
-        }
-        String city = requestFilterData.getCity();
-        String subCity = requestFilterData.getSubCity();
-        RoomType roomType = requestFilterData.getType();
-
+    public List<Place> filterPlaces(String day, LocalTime startTime, LocalTime endTime, String city, String subCity, List<RoomType> typeList) {
 
         return query
                 .selectFrom(place)
                 .join(place.rooms, room)
                 .join(room.roomKind, roomKind)
-                .where(likeAddress(city), likeAddress(subCity), likeDay(day), beforeStartTime(startTime), afterEndTime(endTime), likeRoomType(roomType))
+                .where(likeAddress(city), likeAddress(subCity), likeDay(day), beforeStartTime(startTime), afterEndTime(endTime), likeRoomTypeCategory(typeList))
                 .groupBy(place)
                 .fetch();
     }
@@ -122,9 +106,9 @@ public class QueryPlaceRepository {
         return null;
     }
 
-    private BooleanExpression likeRoomType(RoomType roomType) {
-        if (roomType != null) {
-            return room.roomKind.roomType.eq(roomType);
+    private BooleanExpression likeRoomTypeCategory(List<RoomType> roomType) {
+        if (!roomType.isEmpty()) {
+            return room.roomKind.roomType.in(roomType);
         }
         return null;
     }

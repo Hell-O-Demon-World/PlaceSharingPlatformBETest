@@ -6,6 +6,7 @@ import com.golfzonaca.officesharingplatform.domain.Reservation;
 import com.golfzonaca.officesharingplatform.domain.User;
 import com.golfzonaca.officesharingplatform.domain.type.PayType;
 import com.golfzonaca.officesharingplatform.domain.type.PayWay;
+import com.golfzonaca.officesharingplatform.domain.type.RoomType;
 
 import java.time.LocalDateTime;
 import java.util.LinkedList;
@@ -52,9 +53,9 @@ public class PaymentValidation {
         throw new NoSuchElementException("지원하지 않는 결제 방식입니다.");
     }
 
-    public void validPairByRoomType(String payType, String payWay, String roomType) {
+    public void validPairByRoomType(String payType, String payWay, RoomType roomType) {
         // DESK,MEETINGROOM이면 PrePayment, POSTPAYMENT 둘다 가능
-        if (roomType.contains("OFFICE")) {
+        if (roomType.toString().contains("OFFICE")) {
             if (payWay.equals(PayWay.POSTPAYMENT.toString()) && payType.equals(PayType.FULLPAYMENT.toString())) {
 
             } else {

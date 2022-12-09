@@ -1,6 +1,7 @@
 package com.golfzonaca.officesharingplatform.repository.place;
 
 import com.golfzonaca.officesharingplatform.domain.Place;
+import com.golfzonaca.officesharingplatform.domain.type.RoomType;
 import com.golfzonaca.officesharingplatform.exception.NonExistedPlaceException;
 import com.golfzonaca.officesharingplatform.web.main.dto.request.RequestSearchData;
 import com.querydsl.core.Tuple;
@@ -8,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalTime;
 import java.util.List;
 
 @Repository
@@ -34,8 +36,8 @@ public class CustomPlaceRepository implements PlaceRepository {
     }
 
     @Override
-    public List<Place> filterPlaces(String day, String startTime, String endTime, String city, String subCity, String type) {
-        return queryPlaceRepository.filterPlaces(day, startTime, endTime, city, subCity, type);
+    public List<Place> filterPlaces(String day, LocalTime startTime, LocalTime endTime, String city, String subCity, List<RoomType> roomTypeList) {
+        return queryPlaceRepository.filterPlaces(day, startTime, endTime, city, subCity, roomTypeList);
     }
 
     @Override

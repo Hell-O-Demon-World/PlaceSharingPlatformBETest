@@ -2,13 +2,15 @@ package com.golfzonaca.officesharingplatform.service.payment.kakaopay;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.golfzonaca.officesharingplatform.domain.*;
+import com.golfzonaca.officesharingplatform.domain.CompanyId;
+import com.golfzonaca.officesharingplatform.domain.Payment;
+import com.golfzonaca.officesharingplatform.domain.Refund;
+import com.golfzonaca.officesharingplatform.domain.Reservation;
 import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayApprovalRequest;
 import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayCancelRequest;
 import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayReadyRequest;
 import com.golfzonaca.officesharingplatform.domain.type.PayType;
 import com.golfzonaca.officesharingplatform.domain.type.PayWay;
-import com.golfzonaca.officesharingplatform.web.payment.dto.PaymentInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -29,7 +31,7 @@ public class KakaoPayUtility {
         int totalAmount;
         int payPrice;
 
-        if (reservation.getRoom().getRoomKind().getRoomType().contains("OFFICE")) {
+        if (reservation.getRoom().getRoomKind().getRoomType().toString().contains("OFFICE")) {
             return (int) Math.abs((ChronoUnit.DAYS.between(reservation.getResEndDate(), reservation.getResStartDate()) * reservation.getRoom().getRoomKind().getPrice()));
         } else {
             totalAmount = (int) Math.abs(ChronoUnit.HOURS.between(LocalDateTime.of(reservation.getResEndDate(), reservation.getResEndTime()), LocalDateTime.of(reservation.getResStartDate(), reservation.getResStartTime())) * (reservation.getRoom().getRoomKind().getPrice()));

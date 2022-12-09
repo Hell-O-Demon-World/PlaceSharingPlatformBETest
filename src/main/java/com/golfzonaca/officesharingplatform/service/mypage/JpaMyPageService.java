@@ -46,7 +46,7 @@ public class JpaMyPageService implements MyPageService {
         for (int i = 0; i < reservationList.size(); i++) {
             Reservation reservation = reservationList.get(i);
             boolean ratingStatus = Optional.ofNullable(reservation.getRating()).isEmpty();
-            MyReservationList myReservationViewData = MyReservationList.builder().productType(reservation.getRoom().getRoomKind().getRoomType()).placeName(reservation.getRoom().getPlace().getPlaceName()).reservationCompletedDateTime(reservation.getResCompleted()).reservationStartDateTime(LocalDateTime.of(reservation.getResStartDate(), reservation.getResStartTime())).reservationEndDateTime(LocalDateTime.of(reservation.getResEndDate(), reservation.getResEndTime())).usageState(reservation.getStatus()).isAvailableReview(ratingStatus).build();
+            MyReservationList myReservationViewData = MyReservationList.builder().productType(reservation.getRoom().getRoomKind().getRoomType().getDescription()).placeName(reservation.getRoom().getPlace().getPlaceName()).reservationCompletedDateTime(reservation.getResCompleted()).reservationStartDateTime(LocalDateTime.of(reservation.getResStartDate(), reservation.getResStartTime())).reservationEndDateTime(LocalDateTime.of(reservation.getResEndDate(), reservation.getResEndTime())).usageState(reservation.getStatus()).isAvailableReview(ratingStatus).build();
 
             myReservationMap.put(i, myReservationViewData);
         }
@@ -70,7 +70,7 @@ public class JpaMyPageService implements MyPageService {
 
     private MyReservationDetail getMyReservationDetail(Long userId, long reservationId) {
         Reservation reservation = reservationInfoValidation(userId, reservationId);
-        return new MyReservationDetail(reservation.getRoom().getPlace().getPlaceName(), reservation.getRoom().getRoomKind().getRoomType(), reservation.getResCompleted().toString(), LocalDateTime.of(reservation.getResStartDate(), reservation.getResStartTime()).toString(), LocalDateTime.of(reservation.getResEndDate(), reservation.getResEndTime()).toString(), reservation.getStatus().toString(), String.valueOf(Optional.ofNullable(reservation.getRating()).isEmpty()));
+        return new MyReservationDetail(reservation.getRoom().getPlace().getPlaceName(), reservation.getRoom().getRoomKind().getRoomType().getDescription(), reservation.getResCompleted().toString(), LocalDateTime.of(reservation.getResStartDate(), reservation.getResStartTime()).toString(), LocalDateTime.of(reservation.getResEndDate(), reservation.getResEndTime()).toString(), reservation.getStatus().toString(), String.valueOf(Optional.ofNullable(reservation.getRating()).isEmpty()));
     }
 
     private List<MyPaymentDetail> getMyPaymentDetail(Long userId, long reservationId) {

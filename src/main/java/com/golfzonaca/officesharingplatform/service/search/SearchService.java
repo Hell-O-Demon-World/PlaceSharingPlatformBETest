@@ -8,5 +8,5 @@ import java.util.List;
 public interface SearchService {
     List<Place> findPlaces(RequestSearchData requestSearchData);
 
-    List<Place> filterPlaces(String day, String startTime, String endTime, String city, String subCity, String type);
+    List<Place> filterPlaces(String day, String startTime, String endTime, String city, String subCity, String typeCategory);
 }
