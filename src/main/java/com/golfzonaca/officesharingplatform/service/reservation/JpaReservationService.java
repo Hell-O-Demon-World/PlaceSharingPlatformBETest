@@ -216,6 +216,17 @@ public class JpaReservationService implements ReservationService {
             ReservedRoom reservedRoom = reservedRoomMap.get(i);
             int plusPointer = selectedStartTime;
             int minusPointer = selectedStartTime;
+            if (selectedStartTime == 0) {
+                if (reservedRoom.getTimeState(selectedStartTime) && !reservedRoom.getTimeState(selectedStartTime + 1)) {
+                    List<Integer> arrayList = new ArrayList<>();
+                    arrayList.add(plusMaxPointer);
+                    return arrayList;
+                }
+            } else if (!reservedRoom.getTimeState(selectedStartTime - 1) && reservedRoom.getTimeState(selectedStartTime) && !reservedRoom.getTimeState(selectedStartTime + 1)) {
+                List<Integer> arrayList = new ArrayList<>();
+                arrayList.add(plusMaxPointer);
+                return arrayList;
+            }
             if (!(plusMaxPointer == findPlace.getPlaceEnd().getHour())) {
                 for (int j = selectedStartTime; j < findPlace.getPlaceEnd().getHour() - 1; j++) {
                     if (reservedRoom.getTimeState(j) && reservedRoom.getTimeState(j + 1)) {
