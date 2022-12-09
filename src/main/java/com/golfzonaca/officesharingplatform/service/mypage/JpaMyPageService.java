@@ -7,6 +7,8 @@ import com.golfzonaca.officesharingplatform.repository.user.UserRepository;
 import com.golfzonaca.officesharingplatform.service.mypage.dto.MyPaymentDetail;
 import com.golfzonaca.officesharingplatform.service.mypage.dto.MyReservationDetail;
 import com.golfzonaca.officesharingplatform.service.mypage.dto.MyReservationList;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,19 +28,12 @@ public class JpaMyPageService implements MyPageService {
         User findUser = userRepository.findById(userId);
         Mileage mileage = findUser.getMileage();
         List<Reservation> findReservation = reservationRepository.findAllByUserId(userId);
-        return MyPage.builder()
-                .userName(findUser.getUsername())
-                .joinDate(findUser.getJoinDate())
-                .mileagePoint(mileage.getPoint())
-                .totalReviewNumber(findReservation.size())
-                .build();
+        return MyPage.builder().userName(findUser.getUsername()).joinDate(findUser.getJoinDate()).mileagePoint(mileage.getPoint()).totalReviewNumber(findReservation.size()).build();
     }
 
     @Override
     public void cancelByOrderAndUserId(Integer order, Long userId) {
-        List<Reservation> reservationList = reservationRepository.findAllLimit(ReservationSearchCond.builder()
-                .userId(userId)
-                .build(), order + 1);
+        List<Reservation> reservationList = reservationRepository.findAllLimit(ReservationSearchCond.builder().userId(userId).build(), order + 1);
         reservationRepository.deleteById(reservationList.get(order).getId());
     }
 
@@ -51,16 +46,7 @@ public class JpaMyPageService implements MyPageService {
         for (int i = 0; i < reservationList.size(); i++) {
             Reservation reservation = reservationList.get(i);
             boolean ratingStatus = Optional.ofNullable(reservation.getRating()).isEmpty();
-            MyReservationList myReservationViewData = MyReservationList.builder()
-                    .productType(reservation.getRoom().getRoomKind().getRoomType())
-                    .placeName(reservation.getRoom().getPlace().getPlaceName())
-//                    .reservationCompletedDateTime(reservation.getResCompleted())
-                    .reservationCompletedDateTime(null)
-                    .reservationStartDateTime(LocalDateTime.of(reservation.getResStartDate(), reservation.getResStartTime()))
-                    .reservationEndDateTime(LocalDateTime.of(reservation.getResEndDate(), reservation.getResEndTime()))
-                    .usageState(reservation.getStatus())
-                    .isAvailableReview(ratingStatus)
-                    .build();
+            MyReservationList myReservationViewData = MyReservationList.builder().productType(reservation.getRoom().getRoomKind().getRoomType().getDescription()).placeName(reservation.getRoom().getPlace().getPlaceName()).reservationCompletedDateTime(reservation.getResCompleted()).reservationStartDateTime(LocalDateTime.of(reservation.getResStartDate(), reservation.getResStartTime())).reservationEndDateTime(LocalDateTime.of(reservation.getResEndDate(), reservation.getResEndTime())).usageState(reservation.getStatus()).isAvailableReview(ratingStatus).build();
 
             myReservationMap.put(i, myReservationViewData);
         }
@@ -68,16 +54,26 @@ public class JpaMyPageService implements MyPageService {
     }
 
     @Override
-    public MyReservationDetail getMyReservationDetail(Long userId, long reservationId) {
-        Reservation reservation = reservationInfoValidation(userId, reservationId);
-        return new MyReservationDetail(reservation.getRoom().getPlace().getPlaceName(), reservation.getRoom().getRoomKind().getRoomType(),
-                LocalDateTime.now().toString(),
-//                reservation.getResCompleted(),
-                LocalDateTime.of(reservation.getResStartDate(), reservation.getResStartTime()).toString(), LocalDateTime.of(reservation.getResEndDate(), reservation.getResEndTime()).toString(), reservation.getStatus().toString(), String.valueOf(Optional.ofNullable(reservation.getRating()).isEmpty()));
+    public Map<String, JsonObject> getUsageDetail(Long userId, long reservationId) {
+        MyReservationDetail myReservationDetail = getMyReservationDetail(userId, reservationId);
+        List<MyPaymentDetail> myPaymentDetail = getMyPaymentDetail(userId, reservationId);
+
+        Gson gson = new Gson();
+        Map<String, JsonObject> usageDetail = new LinkedHashMap<>();
+        usageDetail.put("resData", gson.toJsonTree(myReservationDetail).getAsJsonObject());
+        for (int i = 0; i < myPaymentDetail.size(); i++) {
+            MyPaymentDetail paymentDetail = myPaymentDetail.get(i);
+            usageDetail.put("payData" + i, gson.toJsonTree(paymentDetail).getAsJsonObject());
+        }
+        return usageDetail;
     }
 
-    @Override
-    public List<MyPaymentDetail> getMyPaymentDetail(Long userId, long reservationId) {
+    private MyReservationDetail getMyReservationDetail(Long userId, long reservationId) {
+        Reservation reservation = reservationInfoValidation(userId, reservationId);
+        return new MyReservationDetail(reservation.getRoom().getPlace().getPlaceName(), reservation.getRoom().getRoomKind().getRoomType().getDescription(), reservation.getResCompleted().toString(), LocalDateTime.of(reservation.getResStartDate(), reservation.getResStartTime()).toString(), LocalDateTime.of(reservation.getResEndDate(), reservation.getResEndTime()).toString(), reservation.getStatus().toString(), String.valueOf(Optional.ofNullable(reservation.getRating()).isEmpty()));
+    }
+
+    private List<MyPaymentDetail> getMyPaymentDetail(Long userId, long reservationId) {
         Reservation reservation = reservationInfoValidation(userId, reservationId);
         List<MyPaymentDetail> paymentDetails = new LinkedList<>();
         for (Payment payment : reservation.getPaymentList()) {

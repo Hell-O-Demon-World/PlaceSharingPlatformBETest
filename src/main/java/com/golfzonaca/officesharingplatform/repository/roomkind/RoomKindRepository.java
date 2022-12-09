@@ -1,6 +1,7 @@
 package com.golfzonaca.officesharingplatform.repository.roomkind;
 
 import com.golfzonaca.officesharingplatform.domain.RoomKind;
+import com.golfzonaca.officesharingplatform.domain.type.RoomType;
 
 import java.util.List;
 
@@ -9,7 +10,7 @@ public interface RoomKindRepository {
 
     RoomKind findById(Long roomId);
 
-    RoomKind findByRoomType(String roomType);
+    RoomKind findByRoomType(RoomType roomType);
 
     List<RoomKind> findAll();
 }

@@ -49,6 +49,6 @@ public class MainController {
         if (requestFilterData.getDay().equals("0") && requestFilterData.getStartTime().equals("24") && requestFilterData.getEndTime().equals("0") && requestFilterData.getCity().equals("0") && requestFilterData.getSubCity().equals("0") && requestFilterData.getType().equals("0")) {
             return placeService.processingMainPlaceData(placeService.findAllPlaces());
         }
-        return placeService.processingMainPlaceData(searchService.filterPlaces(requestFilterData));
+        return placeService.processingMainPlaceData(searchService.filterPlaces(requestFilterData.getDay(), requestFilterData.getStartTime(), requestFilterData.getEndTime(), requestFilterData.getCity(), requestFilterData.getSubCity(), requestFilterData.getType()));
     }
 }

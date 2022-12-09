@@ -1,12 +1,12 @@
 package com.golfzonaca.officesharingplatform.repository.place;
 
 import com.golfzonaca.officesharingplatform.domain.Place;
-import com.golfzonaca.officesharingplatform.web.main.dto.request.RequestFilterData;
+import com.golfzonaca.officesharingplatform.domain.type.RoomType;
 import com.golfzonaca.officesharingplatform.web.main.dto.request.RequestSearchData;
 import com.querydsl.core.Tuple;
 
+import java.time.LocalTime;
 import java.util.List;
-import java.util.Optional;
 
 public interface PlaceRepository {
     List<Place> findAllPlaces();
@@ -15,7 +15,7 @@ public interface PlaceRepository {
 
     List<Place> findPlaces(RequestSearchData requestSearchData);
 
-    List<Place> filterPlaces(RequestFilterData requestFilterData);
+    List<Place> filterPlaces(String day, LocalTime startTime, LocalTime endTime, String city, String subCity, List<RoomType> roomTypeList);
 
     String findOpenDayById(Long id);
 

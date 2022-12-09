@@ -1,6 +1,7 @@
 package com.golfzonaca.officesharingplatform.service.place;
 
 import com.golfzonaca.officesharingplatform.domain.*;
+import com.golfzonaca.officesharingplatform.domain.type.RoomType;
 import com.golfzonaca.officesharingplatform.repository.place.PlaceRepository;
 import com.golfzonaca.officesharingplatform.repository.roomkind.RoomKindRepository;
 import com.golfzonaca.officesharingplatform.service.place.dto.PlaceDetailsInfo;
@@ -114,7 +115,7 @@ public class JpaPlaceService implements PlaceService {
         SortedSet<Office> responseOffice = new TreeSet<>();
 
         for (String roomType : nonDuplicatedRoomSet) {
-            price = roomKindRepository.findByRoomType(roomType).getPrice();
+            price = roomKindRepository.findByRoomType(RoomType.valueOf(roomType)).getPrice();
 
             List<String> images = new LinkedList<>();
             for (RoomImage roomImage : place.getRoomImages()) {
@@ -141,7 +142,7 @@ public class JpaPlaceService implements PlaceService {
     private Set<String> getNonDuplicatedRoomSet(List<Room> roomList) {
         SortedSet<String> nonDuplicatedRoomSet = new TreeSet<>();
         for (Room room : roomList) {
-            nonDuplicatedRoomSet.add(room.getRoomKind().getRoomType());
+            nonDuplicatedRoomSet.add(room.getRoomKind().getRoomType().toString());
         }
         return nonDuplicatedRoomSet;
     }
@@ -149,7 +150,7 @@ public class JpaPlaceService implements PlaceService {
     private String getQuantityByRoomType(Place place, String roomType) {
         int quantity = 0;
         for (Room room : place.getRooms()) {
-            if (room.getRoomKind().getRoomType().contains(roomType)) {
+            if (room.getRoomKind().getRoomType().toString().contains(roomType)) {
                 quantity++;
             }
         }
@@ -172,7 +173,7 @@ public class JpaPlaceService implements PlaceService {
             for (Reservation reservation : room.getReservationList()) {
                 if (reservation.getRating() != null) {
                     List<String> comment = getComment(reservation.getRating());
-                    ratingList.add(new RatingDto(String.valueOf(reservation.getRating().getId()), String.valueOf(reservation.getRating().getRatingScore()), reservation.getUser().getUsername(), reservation.getRating().getRatingTime().toString(), reservation.getRoom().getRoomKind().getRoomType(), reservation.getRating().getRatingReview(), comment));
+                    ratingList.add(new RatingDto(String.valueOf(reservation.getRating().getId()), String.valueOf(reservation.getRating().getRatingScore()), reservation.getUser().getUsername(), reservation.getRating().getRatingTime().toString(), reservation.getRoom().getRoomKind().getRoomType().toString(), reservation.getRating().getRatingReview(), comment));
                 }
             }
         }
@@ -214,49 +215,21 @@ public class JpaPlaceService implements PlaceService {
 
     private Map<String, String> processingRoomInfo(List<Room> rooms) {
         Map<String, String> roomInfo = new LinkedHashMap<>();
-        calculateMinPriceForDesk(rooms, roomInfo);
-        calculateMinPriceForMeetingRoom(rooms, roomInfo);
-        calculateMinPriceForOffice(rooms, roomInfo);
+        calculateMinPriceByType(rooms, roomInfo, "DESK");
+        calculateMinPriceByType(rooms, roomInfo, "MEETINGROOM");
+        calculateMinPriceByType(rooms, roomInfo, "OFFICE");
         return roomInfo;
     }
 
-    private void calculateMinPriceForDesk(List<Room> rooms, Map<String, String> roomInfo) {
+    private void calculateMinPriceByType(List<Room> rooms, Map<String, String> roomInfo, String type) {
         for (Room room : rooms) {
-            if (room.getRoomKind().getRoomType().contains("DESK")) {
-                if (roomInfo.containsKey("DESK")) {
-                    if (room.getRoomKind().getPrice() < Integer.parseInt(roomInfo.get("DESK"))) {
-                        roomInfo.put("DESK", String.valueOf(room.getRoomKind().getPrice()));
+            if (room.getRoomKind().getRoomType().toString().contains(type)) {
+                if (roomInfo.containsKey(type)) {
+                    if (room.getRoomKind().getPrice() < Integer.parseInt(roomInfo.get(type))) {
+                        roomInfo.put(type, String.valueOf(room.getRoomKind().getPrice()));
                     }
                 } else {
-                    roomInfo.put("DESK", String.valueOf(room.getRoomKind().getPrice()));
-                }
-            }
-        }
-    }
-
-    private void calculateMinPriceForMeetingRoom(List<Room> rooms, Map<String, String> roomInfo) {
-        for (Room room : rooms) {
-            if (room.getRoomKind().getRoomType().contains("MEETINGROOM")) {
-                if (roomInfo.containsKey("MEETINGROOM")) {
-                    if (room.getRoomKind().getPrice() < Integer.parseInt(roomInfo.get("MEETINGROOM"))) {
-                        roomInfo.put("MEETINGROOM", String.valueOf(room.getRoomKind().getPrice()));
-                    }
-                } else {
-                    roomInfo.put("MEETINGROOM", String.valueOf(room.getRoomKind().getPrice()));
-                }
-            }
-        }
-    }
-
-    private void calculateMinPriceForOffice(List<Room> rooms, Map<String, String> roomInfo) {
-        for (Room room : rooms) {
-            if (room.getRoomKind().getRoomType().contains("OFFICE")) {
-                if (roomInfo.containsKey("OFFICE")) {
-                    if (room.getRoomKind().getPrice() < Integer.parseInt(roomInfo.get("OFFICE"))) {
-                        roomInfo.put("OFFICE", String.valueOf(room.getRoomKind().getPrice()));
-                    }
-                } else {
-                    roomInfo.put("OFFICE", String.valueOf(room.getRoomKind().getPrice()));
+                    roomInfo.put(type, String.valueOf(room.getRoomKind().getPrice()));
                 }
             }
         }

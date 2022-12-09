@@ -3,6 +3,7 @@ package com.golfzonaca.officesharingplatform.repository.room;
 
 import com.golfzonaca.officesharingplatform.domain.Place;
 import com.golfzonaca.officesharingplatform.domain.Room;
+import com.golfzonaca.officesharingplatform.domain.type.RoomType;
 
 import java.util.List;
 
@@ -18,9 +19,9 @@ public interface RoomRepository {
 
     List<Room> findAll(RoomSearchCond cond);
 
-    List<Room> findRoomByPlaceAndRoomKind(Place place, String selectedType);
+    List<Room> findRoomByPlaceAndRoomKind(Place place, RoomType selectedType);
 
-    List<Room> findRoomByPlaceIdAndRoomType(Long placeId, String selectedType);
+    List<Room> findRoomByPlaceIdAndRoomType(Long placeId, RoomType selectedType);
 
     Room findById(Long resultRoomId);
 }

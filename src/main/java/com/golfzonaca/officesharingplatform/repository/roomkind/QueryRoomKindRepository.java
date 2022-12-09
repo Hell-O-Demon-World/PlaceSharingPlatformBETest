@@ -1,11 +1,11 @@
 package com.golfzonaca.officesharingplatform.repository.roomkind;
 
 import com.golfzonaca.officesharingplatform.domain.RoomKind;
+import com.golfzonaca.officesharingplatform.domain.type.RoomType;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import java.util.Optional;
@@ -21,16 +21,16 @@ public class QueryRoomKindRepository {
         this.query = new JPAQueryFactory(em);
     }
 
-    public Optional<RoomKind> findByRoomType(String roomType) {
+    public Optional<RoomKind> findByRoomType(RoomType roomType) {
         return Optional.ofNullable(query
                 .selectFrom(roomKind)
                 .where(likeRoomType(roomType))
                 .fetchFirst());
     }
 
-    private BooleanExpression likeRoomType(String roomType) {
-        if (StringUtils.hasText(roomType)) {
-            return roomKind.roomType.like(roomType);
+    private BooleanExpression likeRoomType(RoomType roomType) {
+        if (roomType != null) {
+            return roomKind.roomType.eq(roomType);
         }
         return null;
     }

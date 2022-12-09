@@ -2,19 +2,18 @@ package com.golfzonaca.officesharingplatform.repository.room;
 
 import com.golfzonaca.officesharingplatform.domain.Place;
 import com.golfzonaca.officesharingplatform.domain.Room;
+import com.golfzonaca.officesharingplatform.domain.type.RoomType;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 
 import static com.golfzonaca.officesharingplatform.domain.QRoom.room;
-import static com.golfzonaca.officesharingplatform.domain.QRoomKind.roomKind;
 
 @Slf4j
 @Transactional
@@ -49,7 +48,7 @@ public class QueryRoomRepository {
                 .fetch();
     }
 
-    public List<Room> findRoomByPlaceAndRoomKind(Place place, String selectedType) {
+    public List<Room> findRoomByPlaceAndRoomKind(Place place, RoomType selectedType) {
         log.info("Room findRoomByPlaceAndRoomKind");
         return query
                 .selectFrom(room)
@@ -79,21 +78,21 @@ public class QueryRoomRepository {
         return null;
     }
 
-    private BooleanExpression eqRoomType(String roomType) {
-        if (roomKind != null) {
+    private BooleanExpression eqRoomType(RoomType roomType) {
+        if (roomType != null) {
             return room.roomKind.roomType.eq(roomType);
         }
         return null;
     }
 
-    private BooleanExpression roomTypeLike(String selectedType) {
-        if (StringUtils.hasText(selectedType)) {
-            return room.roomKind.roomType.like(selectedType);
+    private BooleanExpression roomTypeLike(RoomType selectedType) {
+        if (selectedType != null) {
+            return room.roomKind.roomType.eq(selectedType);
         }
         return null;
     }
 
-    public List<Room> findAllByPlaceIdAndRoomType(Long id, String roomType) {
+    public List<Room> findAllByPlaceIdAndRoomType(Long id, RoomType roomType) {
         log.info("Room findAllByPlaceIdAndRoomType");
         Optional<Long> placeId = Optional.ofNullable(id);
         return query

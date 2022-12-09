@@ -3,6 +3,7 @@ package com.golfzonaca.officesharingplatform.repository.reservation;
 import com.golfzonaca.officesharingplatform.domain.Place;
 import com.golfzonaca.officesharingplatform.domain.Reservation;
 import com.golfzonaca.officesharingplatform.domain.User;
+import com.golfzonaca.officesharingplatform.domain.type.RoomType;
 import com.golfzonaca.officesharingplatform.exception.NonExistedReservationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -56,22 +57,22 @@ public class CustomReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public List<Reservation> findResByRoomKindAndDateTime(String selectedType, LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
+    public List<Reservation> findResByRoomKindAndDateTime(RoomType selectedType, LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
         return queryReservationRepository.findResByRoomKindAndDateTime(selectedType, startDate, startTime, endDate, endTime);
     }
 
     @Override
-    public List<Reservation> findAllByPlaceIdAndRoomTypeAndDate(Long placeId, String roomType, LocalDate date) {
+    public List<Reservation> findAllByPlaceIdAndRoomTypeAndDate(Long placeId, RoomType roomType, LocalDate date) {
         return queryReservationRepository.findAllByPlaceIdAndRoomTypeAndDate(placeId, roomType, date);
     }
 
     @Override
-    public Optional<Reservation> findByPlaceIdAndRoomTypeAndDate(Long placeId, String roomType, LocalDate date) {
+    public Optional<Reservation> findByPlaceIdAndRoomTypeAndDate(Long placeId, RoomType roomType, LocalDate date) {
         return queryReservationRepository.findFirstByPlaceIdAndRoomTypeAndDate(placeId, roomType, date);
     }
 
     @Override
-    public Optional<Reservation> findInDateByPlaceIdAndRoomTypeAndDate(Long placeId, String roomType, LocalTime time) {
+    public Optional<Reservation> findInDateByPlaceIdAndRoomTypeAndDate(Long placeId, RoomType roomType, LocalTime time) {
         return queryReservationRepository.findInTimeByPlaceAndRoomTypeAndDate(placeId, roomType, time);
     }
 

@@ -2,6 +2,7 @@ package com.golfzonaca.officesharingplatform.repository.room;
 
 import com.golfzonaca.officesharingplatform.domain.Place;
 import com.golfzonaca.officesharingplatform.domain.Room;
+import com.golfzonaca.officesharingplatform.domain.type.RoomType;
 import com.golfzonaca.officesharingplatform.exception.NonExistedRoomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -48,12 +49,12 @@ public class CustomRoomRepository implements RoomRepository {
     }
 
     @Override
-    public List<Room> findRoomByPlaceAndRoomKind(Place place, String selectedType) {
+    public List<Room> findRoomByPlaceAndRoomKind(Place place, RoomType selectedType) {
         return queryRoomRepository.findRoomByPlaceAndRoomKind(place, selectedType);
     }
 
     @Override
-    public List<Room> findRoomByPlaceIdAndRoomType(Long placeId, String selectedType) {
+    public List<Room> findRoomByPlaceIdAndRoomType(Long placeId, RoomType selectedType) {
         return queryRoomRepository.findAllByPlaceIdAndRoomType(placeId, selectedType);
     }
 

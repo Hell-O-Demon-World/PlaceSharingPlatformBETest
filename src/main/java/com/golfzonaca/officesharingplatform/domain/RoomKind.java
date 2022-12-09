@@ -1,5 +1,6 @@
 package com.golfzonaca.officesharingplatform.domain;
 
+import com.golfzonaca.officesharingplatform.domain.type.RoomType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,7 +20,8 @@ public class RoomKind {
     private Long id;
 
     @Column(name = "ROOM_TYPE", nullable = false)
-    private String roomType;
+    @Enumerated(EnumType.STRING)
+    private RoomType roomType;
 
     @Column(name = "PRICE", nullable = false)
     private int price;
