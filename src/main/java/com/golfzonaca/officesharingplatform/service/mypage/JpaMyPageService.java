@@ -1,6 +1,9 @@
 package com.golfzonaca.officesharingplatform.service.mypage;
 
 import com.golfzonaca.officesharingplatform.domain.*;
+import com.golfzonaca.officesharingplatform.domain.type.RatingStatus;
+import com.golfzonaca.officesharingplatform.domain.type.ReservationStatus;
+import com.golfzonaca.officesharingplatform.domain.type.UsageStatus;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationSearchCond;
 import com.golfzonaca.officesharingplatform.repository.user.UserRepository;
@@ -24,11 +27,11 @@ public class JpaMyPageService implements MyPageService {
     private final ReservationRepository reservationRepository;
 
     @Override
-    public MyPage createMyPageForm(Long userId) {
+    public UserData getUserData(Long userId) {
         User findUser = userRepository.findById(userId);
         Mileage mileage = findUser.getMileage();
         List<Reservation> findReservation = reservationRepository.findAllByUserId(userId);
-        return MyPage.builder().userName(findUser.getUsername()).joinDate(findUser.getJoinDate()).mileagePoint(mileage.getPoint()).totalReviewNumber(findReservation.size()).build();
+        return UserData.builder().userName(findUser.getUsername()).joinDate(findUser.getJoinDate()).mileagePoint(mileage.getPoint()).totalReviewNumber(findReservation.size()).build();
     }
 
     @Override
@@ -38,19 +41,22 @@ public class JpaMyPageService implements MyPageService {
     }
 
     @Override
-    public Map<Integer, MyReservationList> getMyReservationMap(long userId) {
-        Map<Integer, MyReservationList> myReservationMap = new LinkedHashMap<>();
+    public Map<String, JsonObject> getMyReservation(long userId) {
+        Gson gson = new Gson();
+        Map<String, JsonObject> myReservationList = new LinkedHashMap<>();
         User user = userRepository.findById(userId);
+        JsonObject userData = gson.toJsonTree(getUserData(userId)).getAsJsonObject();
+        myReservationList.put("userData", userData);
         List<Reservation> reservationList = user.getReservationList();
 
         for (int i = 0; i < reservationList.size(); i++) {
             Reservation reservation = reservationList.get(i);
-            boolean ratingStatus = Optional.ofNullable(reservation.getRating()).isEmpty();
-            MyReservationList myReservationViewData = MyReservationList.builder().productType(reservation.getRoom().getRoomKind().getRoomType().getDescription()).placeName(reservation.getRoom().getPlace().getPlaceName()).reservationCompletedDateTime(reservation.getResCompleted()).reservationStartDateTime(LocalDateTime.of(reservation.getResStartDate(), reservation.getResStartTime())).reservationEndDateTime(LocalDateTime.of(reservation.getResEndDate(), reservation.getResEndTime())).usageState(reservation.getStatus()).isAvailableReview(ratingStatus).build();
-
-            myReservationMap.put(i, myReservationViewData);
+            String usageStatus = getUsageStatus(reservation);
+            String ratingStatus = getRatingStatus(reservation, usageStatus);
+            JsonObject myReservationViewData = gson.toJsonTree(MyReservationList.builder().productType(reservation.getRoom().getRoomKind().getRoomType().getDescription()).placeName(reservation.getRoom().getPlace().getPlaceName()).reservationCompletedDateTime(reservation.getResCompleted()).reservationStartDateTime(LocalDateTime.of(reservation.getResStartDate(), reservation.getResStartTime())).reservationEndDateTime(LocalDateTime.of(reservation.getResEndDate(), reservation.getResEndTime())).usageStatus(usageStatus).ratingStatus(ratingStatus).build()).getAsJsonObject();
+            myReservationList.put(String.valueOf(i), myReservationViewData);
         }
-        return myReservationMap;
+        return myReservationList;
     }
 
     @Override
@@ -88,5 +94,40 @@ public class JpaMyPageService implements MyPageService {
             throw new NoSuchElementException("회원정보와 예약정보가 불일치합니다.");
         }
         return reservation;
+    }
+
+    private String getUsageStatus(Reservation reservation) {
+        String usageState = null;
+        if (reservation.getStatus().equals(ReservationStatus.CANCELED)) {
+            usageState = UsageStatus.CANCELED.getDescription();
+        } else if (reservation.getStatus().equals(ReservationStatus.PROGRESSING)) {
+            usageState = UsageStatus.UNFIXED.getDescription();
+        } else if (reservation.getStatus().equals(ReservationStatus.COMPLETED)) {
+            if (LocalDateTime.of(reservation.getResStartDate(), reservation.getResStartTime()).isAfter(LocalDateTime.now())) {
+                usageState = UsageStatus.BEFORE.getDescription();
+            } else if (LocalDateTime.of(reservation.getResStartDate(), reservation.getResStartTime()).isBefore(LocalDateTime.now()) || LocalDateTime.of(reservation.getResStartDate(), reservation.getResStartTime()).isEqual(LocalDateTime.now())) {
+                if (LocalDateTime.of(reservation.getResEndDate(), reservation.getResEndTime()).isAfter(LocalDateTime.now())) {
+                    usageState = UsageStatus.NOW.getDescription();
+                } else {
+                    usageState = UsageStatus.AFTER.getDescription();
+                }
+            }
+        }
+        if (usageState == null) {
+            throw new IllegalStateException("예약 상태를 확인할 수 없습니다.");
+        }
+        return usageState;
+    }
+
+    private String getRatingStatus(Reservation reservation, String usageStatus) {
+        String ratingStatus = RatingStatus.YET.getDescription();
+        if (usageStatus.equals(UsageStatus.AFTER.getDescription())) {
+            if (reservation.getRating() == null) {
+                ratingStatus = RatingStatus.WRITABLE.getDescription();
+            } else {
+                ratingStatus = RatingStatus.WRITTEN.getDescription();
+            }
+        }
+        return ratingStatus;
     }
 }

@@ -1,6 +1,5 @@
 package com.golfzonaca.officesharingplatform.service.mypage.dto;
 
-import com.golfzonaca.officesharingplatform.domain.type.ReservationStatus;
 import lombok.Builder;
 
 import java.time.LocalDateTime;
@@ -12,7 +11,7 @@ public class MyReservationList {
     private LocalDateTime reservationCompletedDateTime;
     private LocalDateTime reservationStartDateTime;
     private LocalDateTime reservationEndDateTime;
-    private ReservationStatus usageState;
-    private boolean isAvailableReview;
+    private String usageStatus;
+    private String ratingStatus;
 
 }

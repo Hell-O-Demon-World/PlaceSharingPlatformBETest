@@ -1,9 +1,8 @@
 package com.golfzonaca.officesharingplatform.web.mypage;
 
 import com.golfzonaca.officesharingplatform.annotation.TokenUserId;
-import com.golfzonaca.officesharingplatform.domain.MyPage;
+import com.golfzonaca.officesharingplatform.domain.UserData;
 import com.golfzonaca.officesharingplatform.service.mypage.MyPageService;
-import com.golfzonaca.officesharingplatform.service.mypage.dto.MyReservationList;
 import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -17,13 +16,13 @@ public class MyPageController {
     private final MyPageService myPageService;
 
     @GetMapping
-    public MyPage myPageForm(@TokenUserId Long userId) {
-        return myPageService.createMyPageForm(userId);
+    public UserData userData(@TokenUserId Long userId) {
+        return myPageService.getUserData(userId);
     }
 
     @GetMapping("/usage")
-    public Map<Integer, MyReservationList> usageHistory(@TokenUserId Long userId) {
-        return myPageService.getMyReservationMap(userId);
+    public Map<String, JsonObject> usageHistory(@TokenUserId Long userId) {
+        return myPageService.getMyReservation(userId);
     }
 
 //    @GetMapping("/edit")
