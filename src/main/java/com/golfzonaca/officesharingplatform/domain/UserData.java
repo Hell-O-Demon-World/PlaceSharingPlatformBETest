@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Builder
-public class MyPage {
+public class UserData {
     private String userName;
     private LocalDateTime joinDate;
     private Long mileagePoint;
