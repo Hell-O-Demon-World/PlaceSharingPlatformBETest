@@ -3,7 +3,6 @@ package com.golfzonaca.officesharingplatform.web.rating;
 import com.golfzonaca.officesharingplatform.annotation.TokenUserId;
 import com.golfzonaca.officesharingplatform.service.rating.RatingService;
 import com.golfzonaca.officesharingplatform.web.rating.dto.RatingSaveData;
-import com.golfzonaca.officesharingplatform.web.rating.dto.RatingUpdateData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
@@ -26,18 +25,6 @@ public class RatingController {
     @GetMapping("/{reservationId}/rating/{ratingId}")
     public String ratingDetail(@PathVariable Long reservationId, @PathVariable Long ratingId) {
         ratingService.findById(ratingId);
-        return "ok";
-    }
-
-    @PostMapping("/{reservationId}/rating/{ratingId}/edit")
-    public String editRating(@TokenUserId Long userId, @PathVariable Long reservationId, @PathVariable Long ratingId, @Validated @RequestBody RatingUpdateData updateData, BindingResult bindingResult) {
-        ratingService.update(userId, ratingId, updateData);
-        return "ok";
-    }
-
-    @GetMapping("/{reservationId}/rating/{ratingId}/delete")
-    public String deleteRating(@TokenUserId Long userId, @PathVariable Long reservationId, @PathVariable Long ratingId) {
-        ratingService.delete(userId, ratingId);
         return "ok";
     }
 }
