@@ -83,7 +83,7 @@ public class JpaReservationService implements ReservationService {
                     endDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
                 }
                 for (int day = startDay; day < endDay + 1; day++) {
-                    LocalDateTime date = LocalDateTime.of(year, month, day, 0, 0);
+                    LocalDateTime date = LocalDateTime.of(year, month, day, findPlace.getPlaceStart().getHour(), findPlace.getPlaceEnd().getHour());
                     LocalTime startTime = getStartTime(startDateTime, date);
                     date = LocalDateTime.of(date.toLocalDate(), startTime);
                     boolean state;
@@ -98,7 +98,7 @@ public class JpaReservationService implements ReservationService {
                         List<Reservation> findReservationList = reservationRepository.findAllByPlaceIdAndRoomTypeAndDate(findPlace.getId(), roomType, date.toLocalDate());
                         Map<Integer, ReservedRoom> reservedRoomMap = getReservedRoomMap(findPlace, findReservationList, roomByPlaceIdAndRoomType, date.toLocalDate());
                         state = !isFullReservation(findPlace, reservedRoomMap);
-                        timeStates = getTimeStateOfDay(date, endDateTime, reservedRoomMap);
+                        timeStates = getTimeStateOfDay(date, findPlace, endDateTime, reservedRoomMap);
                     }
                     resultList.add(ReservationResponseData.builder()
                             .state(state)
@@ -119,8 +119,9 @@ public class JpaReservationService implements ReservationService {
         return startTime;
     }
 
-    private TimeStates getTimeStateOfDay(LocalDateTime startDateTime, LocalDateTime endDateTime, Map<Integer, ReservedRoom> reservedRoomMap) throws IOException {
+    private TimeStates getTimeStateOfDay(LocalDateTime startDateTime, Place findPlace, LocalDateTime endDateTime, Map<Integer, ReservedRoom> reservedRoomMap) throws IOException {
         TimeStates resultTimeStates = TimeStates.of();
+        resultTimeStates.updateStartAndEndDateTime(startDateTime, endDateTime);
 
         for (int time = startDateTime.getHour(); time < endDateTime.getHour(); time++) {
             for (int i = 0; i < reservedRoomMap.size(); i++) {
