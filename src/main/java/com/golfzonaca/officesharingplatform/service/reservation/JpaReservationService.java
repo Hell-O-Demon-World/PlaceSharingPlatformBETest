@@ -98,7 +98,7 @@ public class JpaReservationService implements ReservationService {
                         List<Reservation> findReservationList = reservationRepository.findAllByPlaceIdAndRoomTypeAndDate(findPlace.getId(), roomType, date.toLocalDate());
                         Map<Integer, ReservedRoom> reservedRoomMap = getReservedRoomMap(findPlace, findReservationList, roomByPlaceIdAndRoomType, date.toLocalDate());
                         state = !isFullReservation(findPlace, reservedRoomMap);
-                        timeStates = getTimeStateOfDay(date, endDateTime, findPlace, reservedRoomMap);
+                        timeStates = getTimeStateOfDay(date, endDateTime, reservedRoomMap);
                     }
                     resultList.add(ReservationResponseData.builder()
                             .state(state)
@@ -119,17 +119,14 @@ public class JpaReservationService implements ReservationService {
         return startTime;
     }
 
-    private TimeStates getTimeStateOfDay(LocalDateTime startDateTime, LocalDateTime endDateTime, Place place, Map<Integer, ReservedRoom> reservedRoomMap) throws IOException {
+    private TimeStates getTimeStateOfDay(LocalDateTime startDateTime, LocalDateTime endDateTime, Map<Integer, ReservedRoom> reservedRoomMap) throws IOException {
         TimeStates resultTimeStates = TimeStates.of();
         resultTimeStates.updateStartAndEndDateTime(startDateTime, endDateTime);
 
         for (int time = startDateTime.getHour(); time < endDateTime.getHour(); time++) {
-            boolean resultState = true;
             for (int i = 0; i < reservedRoomMap.size(); i++) {
                 ReservedRoom reservedRoom = reservedRoomMap.get(i);
-                resultState &= reservedRoom.getTimeState(time);
-                if (!resultState) {
-                    resultTimeStates.replace(time, false);
+                if (reservedRoom.getTimeState(time)) {
                     break;
                 }
             }
