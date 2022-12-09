@@ -98,13 +98,9 @@ public class JpaReservationService implements ReservationService {
                         List<Reservation> findReservationList = reservationRepository.findAllByPlaceIdAndRoomTypeAndDate(findPlace.getId(), roomType, date.toLocalDate());
                         Map<Integer, ReservedRoom> reservedRoomMap = getReservedRoomMap(findPlace, findReservationList, roomByPlaceIdAndRoomType, date.toLocalDate());
                         state = !isFullReservation(findPlace, reservedRoomMap);
-                        timeStates = getTimeStateOfDay(date, findPlace, endDateTime, reservedRoomMap);
+                        timeStates = getTimeStateOfDay(date, endDateTime, reservedRoomMap);
                     }
-                    resultList.add(ReservationResponseData.builder()
-                            .state(state)
-                            .productType(roomType)
-                            .date(DateTimeFormat.of(year, month, day, timeStates))
-                            .build());
+                    resultList.add(ReservationResponseData.builder().state(state).productType(roomType).date(DateTimeFormat.of(year, month, day, timeStates)).build());
                 }
             }
         }
@@ -119,7 +115,7 @@ public class JpaReservationService implements ReservationService {
         return startTime;
     }
 
-    private TimeStates getTimeStateOfDay(LocalDateTime startDateTime, Place findPlace, LocalDateTime endDateTime, Map<Integer, ReservedRoom> reservedRoomMap) throws IOException {
+    private TimeStates getTimeStateOfDay(LocalDateTime startDateTime, LocalDateTime endDateTime, Map<Integer, ReservedRoom> reservedRoomMap) throws IOException {
         TimeStates resultTimeStates = TimeStates.of();
         resultTimeStates.updateStartAndEndDateTime(startDateTime, endDateTime);
 
