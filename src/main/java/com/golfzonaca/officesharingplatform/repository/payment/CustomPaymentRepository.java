@@ -18,8 +18,8 @@ public class CustomPaymentRepository implements PaymentRepository {
 
 
     @Override
-    public void save(Payment payment) {
-        jpaRepository.save(payment);
+    public Payment save(Payment payment) {
+        return jpaRepository.save(payment);
     }
 
     @Override
