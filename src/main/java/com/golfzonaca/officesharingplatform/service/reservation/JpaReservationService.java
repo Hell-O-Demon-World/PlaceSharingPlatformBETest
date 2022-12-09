@@ -18,7 +18,7 @@ import com.golfzonaca.officesharingplatform.web.reservation.dto.response.Reserva
 import com.golfzonaca.officesharingplatform.web.reservation.form.StringDateForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,18 +36,23 @@ public class JpaReservationService implements ReservationService {
     private final RoomRepository roomRepository;
     private final PlaceRepository placeRepository;
     private final ReservationRequestValidation reservationRequestValidation;
+    private final CacheManager cacheManager;
 
-    @Cacheable(cacheNames = "resTotalDayData")
     @Override
     public List<ReservationResponseData> getReservationResponseData(Place findPlace, String selectedType, String inputDate) {
         String selectedRoomType = selectedType.toUpperCase();
         LocalDate selectedStartDate = TimeFormatter.toLocalDate(inputDate);
-        LocalDate selectedEndDate = TimeFormatter.toLocalDate(inputDate).plusMonths(1);
+        LocalDate selectedEndDate = TimeFormatter.toLocalDate(inputDate).plusMonths(11);
 
-        return getTotalDayData(findPlace, selectedRoomType, selectedStartDate, selectedEndDate);
+        List<ReservationResponseData> totalDayData = getTotalDayData(findPlace, selectedRoomType, selectedStartDate, selectedEndDate);
+
+        for (String cacheName : cacheManager.getCacheNames()) {
+            log.info("cacheName={}", cacheName);
+        }
+        return totalDayData;
     }
 
-    private List<ReservationResponseData> getTotalDayData(Place findPlace, String roomType, LocalDate selectedStartDate, LocalDate selectedEndDate) {
+    public List<ReservationResponseData> getTotalDayData(Place findPlace, String roomType, LocalDate selectedStartDate, LocalDate selectedEndDate) {
         List<ReservationResponseData> resultList = new ArrayList<>();
         String[] openDays = findPlace.getOpenDays().split(", ");
         int startYear = selectedStartDate.getYear();

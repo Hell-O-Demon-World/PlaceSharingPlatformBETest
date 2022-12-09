@@ -19,7 +19,7 @@ public class CacheConfig {
                 .newBuilder()
                 .maximumSize(10_000)
                 .expireAfterWrite(60, TimeUnit.MINUTES)
-                .refreshAfterWrite(30, TimeUnit.MINUTES);
+                .recordStats();
     }
 
     @Bean
