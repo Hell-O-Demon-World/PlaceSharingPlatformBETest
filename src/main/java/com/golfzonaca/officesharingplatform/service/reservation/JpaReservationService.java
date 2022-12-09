@@ -39,13 +39,11 @@ public class JpaReservationService implements ReservationService {
     private final ReservationRequestValidation reservationRequestValidation;
 
     @Override
-    public List<ReservationResponseData> getReservationResponseData(Place findPlace, RoomType selectedType, String inputDate) throws IOException {
-//        String selectedRoomType = selectedType.toUpperCase();
-        RoomType selectedRoomType = RoomType.valueOf(selectedType.toUpperCase());
+    public List<ReservationResponseData> getReservationResponseData(Place findPlace, RoomType roomType, String inputDate) throws IOException {
         LocalDateTime selectedStartDateTime = LocalDateTime.of(TimeFormatter.toLocalDate(inputDate), LocalTime.now());
         LocalDateTime selectedEndDateTime = LocalDateTime.of(TimeFormatter.toLocalDate(inputDate).plusYears(1), LocalTime.of(23, 59));
 
-        return getTotalDayData(findPlace, selectedRoomType, selectedStartDateTime, selectedEndDateTime);
+        return getTotalDayData(findPlace, roomType, selectedStartDateTime, selectedEndDateTime);
     }
 
     private List<ReservationResponseData> getTotalDayData(Place findPlace, RoomType roomType, LocalDateTime startDateTime, LocalDateTime endDateTime) throws IOException {
@@ -260,7 +258,7 @@ public class JpaReservationService implements ReservationService {
         LocalTime startTime = data.getStartTime();
         LocalTime endTime = data.getEndTime();
         LocalDate date = data.getStartDate();
-        String selectedType = data.getSelectedType();
+        RoomType selectedType = RoomType.getRoomType(data.getSelectedType());
 
         Room resultRoom = getResultRoom(place, startTime, endTime, date, selectedType);
         // TODO: Need to change status of reservation when user choose pay method
@@ -271,7 +269,7 @@ public class JpaReservationService implements ReservationService {
         return result;
     }
 
-    private Room getResultRoom(Place place, LocalTime startLocalTime, LocalTime endLocalTime, LocalDate date, String selectedType) {
+    private Room getResultRoom(Place place, LocalTime startLocalTime, LocalTime endLocalTime, LocalDate date, RoomType selectedType) {
         int startTime = startLocalTime.getHour();
         int endTime = endLocalTime.getHour();
 

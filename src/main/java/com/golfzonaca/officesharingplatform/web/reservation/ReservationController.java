@@ -3,6 +3,7 @@ package com.golfzonaca.officesharingplatform.web.reservation;
 import com.golfzonaca.officesharingplatform.annotation.TokenUserId;
 import com.golfzonaca.officesharingplatform.domain.Place;
 import com.golfzonaca.officesharingplatform.domain.User;
+import com.golfzonaca.officesharingplatform.domain.type.RoomType;
 import com.golfzonaca.officesharingplatform.service.place.PlaceService;
 import com.golfzonaca.officesharingplatform.service.reservation.ReservationService;
 import com.golfzonaca.officesharingplatform.service.reservation.validation.ReservationRequestValidation;
@@ -32,17 +33,19 @@ public class ReservationController {
     @GetMapping("places/{placeId}/type/{typeName}/date/{inputDate}")
     public List<ReservationResponseData> selectedRoomType(@PathVariable Long placeId, @PathVariable String typeName, @PathVariable String inputDate) throws IOException {
         Place place = placeService.findById(placeId);
-        reservationRequestValidation.validation(typeName, inputDate);
+        RoomType roomType = RoomType.getRoomType(typeName);
+        reservationRequestValidation.validation(roomType, inputDate);
 
-        return reservationService.getReservationResponseData(place, typeName, inputDate);
+        return reservationService.getReservationResponseData(place, roomType, inputDate);
     }
 
     @GetMapping("places/{placeId}/type/{typeName}/date/{date}/startTime/{startTime}")
     public List<Integer> selectedDateTime(@PathVariable Long placeId, @PathVariable String typeName, @PathVariable String date, @PathVariable String startTime) {
         Place place = placeService.findById(placeId);
-        reservationRequestValidation.validation(place, typeName, date, startTime);
+        RoomType roomType = RoomType.getRoomType(typeName);
+        reservationRequestValidation.validation(place, roomType, date, startTime);
 
-        return reservationService.findAvailableTimes(place.getId(), typeName.toUpperCase(), TimeFormatter.toLocalDate(date), TimeFormatter.toLocalTime(startTime));
+        return reservationService.findAvailableTimes(place.getId(), roomType, TimeFormatter.toLocalDate(date), TimeFormatter.toLocalTime(startTime));
     }
 
     @PostMapping("places/{placeId}/book")
@@ -51,6 +54,7 @@ public class ReservationController {
 
         Place place = placeService.findById(placeId);
         User user = userService.findById(userId);
+        RoomType roomType = RoomType.getRoomType(processReservationData.getSelectedType());
         reservationRequestValidation.validation(user, place, processReservationData);
 
         return reservationService.saveReservation(user, place, processReservationData);

@@ -30,12 +30,12 @@ public class ReservationRequestValidation {
     private final RoomKindRepository roomKindRepository;
     private final ReservationRepository reservationRepository;
 
-    public void validation(String roomType, String date) {
+    public void validation(RoomType roomType, String date) {
         validRealDate(date);
         validRoomType(roomType);
     }
 
-    public void validation(Place place, String roomType, String date, String startTime) {
+    public void validation(Place place, RoomType roomType, String date, String startTime) {
         validRealDate(date);
         validRealTime(Integer.parseInt(startTime));
         validRoomType(roomType);
@@ -46,12 +46,13 @@ public class ReservationRequestValidation {
     }
 
     public void validation(User user, Place place, ProcessReservationData data) {
+        RoomType roomType = RoomType.getRoomType(data.getSelectedType());
         validBusinessDay(place, data.getStartDate());
         validResTimeBetweenPlaceOpeningTime(place, data.getStartTime(), data.getEndTime());
         validStartTimeBeforeEndTime(data.getStartTime(), data.getEndTime());
         validPastOfDateTime(LocalDateTime.of(data.getStartDate(), data.getStartTime()), LocalDateTime.of(data.getStartDate(), data.getEndTime()));
         validDuplicatedResForSameUser(user, place, data.getStartDate(), data.getStartTime(), data.getStartDate(), data.getEndTime());
-        validRestRoomForSelectedPlaceAndDateTime(place, data.getSelectedType(), data.getStartDate(), data.getStartTime(), data.getStartDate(), data.getEndTime());
+        validRestRoomForSelectedPlaceAndDateTime(place, roomType, data.getStartDate(), data.getStartTime(), data.getStartDate(), data.getEndTime());
         validSelectedDate(data.getStartDate(), data.getEndDate());
     }
 
@@ -71,8 +72,8 @@ public class ReservationRequestValidation {
         roomKindRepository.findByRoomType(roomType);
     }
 
-    private void validTimeOfRoomType(String roomType) {
-        if (roomType.toUpperCase().contains("OFFICE")) {
+    private void validTimeOfRoomType(RoomType roomType) {
+        if (roomType.name().contains("OFFICE")) {
             throw new NonExistedRoomKindException("NonExistedRoomKindException::: 지원하지 않는 공간유형 입니다.");
         }
     }
@@ -138,18 +139,12 @@ public class ReservationRequestValidation {
         }
     }
 
-    private void validRestRoomForSelectedPlaceAndDateTime(Place place, String selectedType, LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
+    private void validRestRoomForSelectedPlaceAndDateTime(Place place, RoomType selectedType, LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
         String message = "";
         List<Room> roomByPlaceAndRoomKind = roomRepository.findRoomByPlaceAndRoomKind(place, selectedType);
 
         if (roomByPlaceAndRoomKind.size() == 0) {
-            if (selectedType.contains("DESK")) {
-                message = selectedType.replace("DESK", "데스크");
-            } else if (selectedType.contains("MEETINGROOM")) {
-                message = selectedType.replace("MEETINGROOM", "") + "인 회의실";
-            } else if (selectedType.contains("OFFICE")) {
-                message = selectedType.replace("OFFICE", "") + "평 사무실";
-            }
+            message = selectedType.getDescription();
             throw new NonexistentRestRoomForSelectedPlaceAndDateTime("NonexistentRestRoomForSelectedPlaceAndDateTime::: 선택하신 시간과 공간에 대해 빈 " + message + "이(가) 없습니다.");
         }
     }
