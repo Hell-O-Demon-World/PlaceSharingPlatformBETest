@@ -121,7 +121,6 @@ public class JpaReservationService implements ReservationService {
 
     private TimeStates getTimeStateOfDay(LocalDateTime startDateTime, LocalDateTime endDateTime, Map<Integer, ReservedRoom> reservedRoomMap) throws IOException {
         TimeStates resultTimeStates = TimeStates.of();
-        resultTimeStates.updateStartAndEndDateTime(startDateTime, endDateTime);
 
         for (int time = startDateTime.getHour(); time < endDateTime.getHour(); time++) {
             for (int i = 0; i < reservedRoomMap.size(); i++) {
@@ -129,6 +128,7 @@ public class JpaReservationService implements ReservationService {
                 if (reservedRoom.getTimeState(time)) {
                     break;
                 }
+                resultTimeStates.replace(time, reservedRoom.getTimeState(time));
             }
         }
 
