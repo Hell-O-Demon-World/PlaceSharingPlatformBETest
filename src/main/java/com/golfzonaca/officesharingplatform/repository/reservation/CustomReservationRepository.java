@@ -6,6 +6,7 @@ import com.golfzonaca.officesharingplatform.domain.User;
 import com.golfzonaca.officesharingplatform.domain.type.RoomType;
 import com.golfzonaca.officesharingplatform.exception.NonExistedReservationException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +24,7 @@ public class CustomReservationRepository implements ReservationRepository {
     private final SpringDataJpaReservationRepository jpaReservationRepository;
     private final QueryReservationRepository queryReservationRepository;
 
+    @CacheEvict(cacheNames = "resDataByPlaceAndTypeAndDate")
     @Override
     public Reservation save(Reservation reservation) {
         return jpaReservationRepository.save(reservation);
