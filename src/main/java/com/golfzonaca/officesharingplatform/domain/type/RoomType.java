@@ -17,7 +17,7 @@ public enum RoomType {
 
     public static RoomType getRoomType(String beforeRoomType) {
         int count = 0;
-        for (RoomType room :RoomType.values()) {
+        for (RoomType room : RoomType.values()) {
             if (!beforeRoomType.toUpperCase().equals(room.name())) {
                 count++;
             }

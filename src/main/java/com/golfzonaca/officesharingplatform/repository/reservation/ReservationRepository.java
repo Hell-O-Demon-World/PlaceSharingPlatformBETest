@@ -16,7 +16,7 @@ public interface ReservationRepository {
 
     List<Reservation> findAllByUserId(Long userId);
 
-    Optional<Reservation> findInDateByPlaceIdAndRoomTypeAndDate(Long placeId, String roomType, LocalTime date);
+    Optional<Reservation> findInDateByPlaceIdAndRoomTypeAndDate(Long placeId, RoomType roomType, LocalTime date);
 
     List<Reservation> findResByPlaceIdAndRoomKindId(long roomTypeId, LocalDate resStartDate, LocalDate resEndDate);
 
@@ -26,7 +26,7 @@ public interface ReservationRepository {
 
     boolean findInResValid(User user, Place place, LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime);
 
-    List<Reservation> findResByRoomKindAndDateTime(String selectedType, LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime);
+    List<Reservation> findResByRoomKindAndDateTime(RoomType selectedType, LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime);
 
     List<Reservation> findAllByPlaceIdAndRoomTypeAndDate(Long placeId, RoomType roomType, LocalDate date);
 

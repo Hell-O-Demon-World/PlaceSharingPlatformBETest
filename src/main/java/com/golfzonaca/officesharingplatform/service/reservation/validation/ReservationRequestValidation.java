@@ -140,12 +140,10 @@ public class ReservationRequestValidation {
     }
 
     private void validRestRoomForSelectedPlaceAndDateTime(Place place, RoomType selectedType, LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
-        String message = "";
         List<Room> roomByPlaceAndRoomKind = roomRepository.findRoomByPlaceAndRoomKind(place, selectedType);
 
         if (roomByPlaceAndRoomKind.size() == 0) {
-            message = selectedType.getDescription();
-            throw new NonexistentRestRoomForSelectedPlaceAndDateTime("NonexistentRestRoomForSelectedPlaceAndDateTime::: 선택하신 시간과 공간에 대해 빈 " + message + "이(가) 없습니다.");
+            throw new NonexistentRestRoomForSelectedPlaceAndDateTime("NonexistentRestRoomForSelectedPlaceAndDateTime::: 선택하신 시간과 공간에 대해 빈 " + selectedType.getDescription() + "이(가) 없습니다.");
         }
     }
 

@@ -8,14 +8,12 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 
 import static com.golfzonaca.officesharingplatform.domain.QRoom.room;
-import static com.golfzonaca.officesharingplatform.domain.QRoomKind.roomKind;
 
 @Slf4j
 @Transactional
@@ -81,15 +79,15 @@ public class QueryRoomRepository {
     }
 
     private BooleanExpression eqRoomType(RoomType roomType) {
-        if (roomKind != null) {
+        if (roomType != null) {
             return room.roomKind.roomType.eq(roomType);
         }
         return null;
     }
 
     private BooleanExpression roomTypeLike(RoomType selectedType) {
-        if (StringUtils.hasText(selectedType)) {
-            return room.roomKind.roomType.like(selectedType);
+        if (selectedType != null) {
+            return room.roomKind.roomType.eq(selectedType);
         }
         return null;
     }

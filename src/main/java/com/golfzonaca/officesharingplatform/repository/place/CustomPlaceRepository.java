@@ -2,7 +2,6 @@ package com.golfzonaca.officesharingplatform.repository.place;
 
 import com.golfzonaca.officesharingplatform.domain.Place;
 import com.golfzonaca.officesharingplatform.exception.NonExistedPlaceException;
-import com.golfzonaca.officesharingplatform.web.main.dto.request.RequestFilterData;
 import com.golfzonaca.officesharingplatform.web.main.dto.request.RequestSearchData;
 import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +9,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 @Transactional
@@ -27,7 +25,7 @@ public class CustomPlaceRepository implements PlaceRepository {
 
     @Override
     public Place findById(long id) {
-        return jpaRepository.findById(id).orElseThrow(()->new NonExistedPlaceException("NonExistedPlaceException::: 공간이 존재하지 않습니다."));
+        return jpaRepository.findById(id).orElseThrow(() -> new NonExistedPlaceException("NonExistedPlaceException::: 공간이 존재하지 않습니다."));
     }
 
     @Override
@@ -36,13 +34,13 @@ public class CustomPlaceRepository implements PlaceRepository {
     }
 
     @Override
-    public List<Place> filterPlaces(RequestFilterData requestFilterData) {
-        return queryPlaceRepository.filterPlaces(requestFilterData);
+    public List<Place> filterPlaces(String day, String startTime, String endTime, String city, String subCity, String type) {
+        return queryPlaceRepository.filterPlaces(day, startTime, endTime, city, subCity, type);
     }
 
     @Override
     public String findOpenDayById(Long id) {
-        return queryPlaceRepository.findOpenDayById(id).orElseThrow(()->new NonExistedPlaceException("NonExistedPlaceException::: 공간이 존재하지 않습니다."));
+        return queryPlaceRepository.findOpenDayById(id).orElseThrow(() -> new NonExistedPlaceException("NonExistedPlaceException::: 공간이 존재하지 않습니다."));
     }
 
     @Override
