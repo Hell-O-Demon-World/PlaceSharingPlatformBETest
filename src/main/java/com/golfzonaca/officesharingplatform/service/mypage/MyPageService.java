@@ -9,7 +9,7 @@ public interface MyPageService {
 
     void cancelByOrderAndUserId(Integer order, Long userId);
 
-    Map<String, JsonObject> getUsageList(long userId);
+    Map<String, JsonObject> getResView(long userId);
 
     Map<String, JsonObject> getUsageDetail(Long userId, long reservationId);
 
