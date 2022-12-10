@@ -2,6 +2,7 @@ package com.golfzonaca.officesharingplatform.repository.comment;
 
 import com.golfzonaca.officesharingplatform.domain.Comment;
 import com.golfzonaca.officesharingplatform.domain.Rating;
+import com.golfzonaca.officesharingplatform.domain.User;
 import com.golfzonaca.officesharingplatform.web.comment.dto.CommentData;
 
 import java.util.List;
@@ -17,4 +18,5 @@ public interface CommentRepository {
 
     void delete(Comment comment);
 
+    List<Comment> findAllByUser(User user, Integer page);
 }

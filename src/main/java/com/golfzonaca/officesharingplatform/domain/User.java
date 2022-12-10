@@ -54,6 +54,9 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Reservation> reservationList = new LinkedList<>();
 
+    @OneToMany(mappedBy = "writer")
+    private List<Comment> commentList = new LinkedList<>();
+
     public User(Long id) {
         this.id = id;
     }

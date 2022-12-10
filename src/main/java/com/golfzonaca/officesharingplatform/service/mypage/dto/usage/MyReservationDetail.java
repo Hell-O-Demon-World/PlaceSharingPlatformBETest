@@ -1,4 +1,4 @@
-package com.golfzonaca.officesharingplatform.service.mypage.dto;
+package com.golfzonaca.officesharingplatform.service.mypage.dto.usage;
 
 import lombok.AllArgsConstructor;
 

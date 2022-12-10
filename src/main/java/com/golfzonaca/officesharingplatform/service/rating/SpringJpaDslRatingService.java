@@ -9,13 +9,12 @@ import com.golfzonaca.officesharingplatform.repository.ratepoint.RatePointReposi
 import com.golfzonaca.officesharingplatform.repository.rating.RatingRepository;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
 import com.golfzonaca.officesharingplatform.repository.user.UserRepository;
-import com.golfzonaca.officesharingplatform.web.formatter.TimeFormatter;
-import com.golfzonaca.officesharingplatform.web.rating.dto.RatingSaveData;
 import com.golfzonaca.officesharingplatform.web.rating.dto.RatingUpdateData;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
 
 @Service
@@ -28,13 +27,13 @@ public class SpringJpaDslRatingService implements RatingService {
     private final RatePointRepository ratePointRepository;
 
     @Override
-    public void save(Long userId, Long reservationId, RatingSaveData ratingSaveData) {
+    public void save(Long userId, Long reservationId, Float ratingScore, String ratingReview) {
         User user = userRepository.findById(userId);
         Reservation reservation = reservationRepository.findById(reservationId);
         if (user != reservation.getUser()) {
             throw new MismatchInfoException("회원 정보와 예약자 정보가 일치하지 않습니다.");
         }
-        Rating rating = new Rating(reservation, Float.parseFloat(ratingSaveData.getRatingScore()), ratingSaveData.getRatingReview(), TimeFormatter.toLocalDateTime(ratingSaveData.getRatingTime()));
+        Rating rating = new Rating(reservation, ratingScore, ratingReview, LocalDateTime.now());
         Rating rate = ratingRepository.save(rating);
         Place place = rating.getReservation().getRoom().getPlace();
         if (place.getRatePoint().getRatingPoint() == 0) {
