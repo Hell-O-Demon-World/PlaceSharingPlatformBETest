@@ -48,12 +48,19 @@ public class ReservationRequestValidation {
     public void validation(User user, Place place, ProcessReservationData data) {
         RoomType roomType = RoomType.getRoomType(data.getSelectedType());
         validBusinessDay(place, data.getStartDate());
+        validDuplicatedResStartAndEndTime(data);
         validResTimeBetweenPlaceOpeningTime(place, data.getStartTime(), data.getEndTime());
         validStartTimeBeforeEndTime(data.getStartTime(), data.getEndTime());
         validPastOfDateTime(LocalDateTime.of(data.getStartDate(), data.getStartTime()), LocalDateTime.of(data.getStartDate(), data.getEndTime()));
         validDuplicatedResForSameUser(user, place, data.getStartDate(), data.getStartTime(), data.getStartDate(), data.getEndTime());
         validRestRoomForSelectedPlaceAndDateTime(place, roomType, data.getStartDate(), data.getStartTime(), data.getStartDate(), data.getEndTime());
         validSelectedDate(data.getStartDate(), data.getEndDate());
+    }
+
+    private void validDuplicatedResStartAndEndTime(ProcessReservationData data) {
+        if (data.getStartTime().equals(data.getEndTime())) {
+            throw new DuplicatedReservationException("DuplicatedReservationException::: 시작시간과 종료시간이 같습니다.");
+        }
     }
 
     private void validBusinessTime(Place place, LocalTime time) {
