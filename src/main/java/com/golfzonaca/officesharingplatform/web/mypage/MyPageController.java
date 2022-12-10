@@ -21,7 +21,7 @@ public class MyPageController {
 
     @GetMapping("/usage")
     public Map<String, JsonObject> usageHistory(@TokenUserId Long userId) {
-        return myPageService.getUsageList(userId);
+        return myPageService.getResView(userId);
     }
 
     @GetMapping("/{reservationId}")

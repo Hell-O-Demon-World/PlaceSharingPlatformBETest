@@ -35,6 +35,9 @@ public class JpaMyPageService implements MyPageService {
     public Map<String, JsonObject> getOverView(Long userId) {
         Gson gson = new Gson();
         Map<String, JsonObject> overViewMap = getMyDataMap(userId, gson);
+//        getReservationAtNow
+        //현재 시간 기준으로 이용중인 내역
+        //일주일 이내 예약된 내역 (시간 오름차순, 최대 7개)
         return overViewMap;
     }
 
@@ -45,21 +48,13 @@ public class JpaMyPageService implements MyPageService {
     }
 
     @Override
-    public Map<String, JsonObject> getUsageList(long userId) {
+    public Map<String, JsonObject> getResView(long userId) {
+        //예약내역에서 나노초 제거
+        //시간, 분, 초 가 1자리인 경우, 0N으로 표기
         Gson gson = new Gson();
-        Map<String, JsonObject> myUsageMap = getMyDataMap(userId, gson);
-        User user = userRepository.findById(userId);
-        List<Reservation> reservationList = user.getReservationList();
-        Map<String, JsonObject> myUsage = new LinkedHashMap<>();
-        for (Reservation reservation : reservationList) {
-            String usageStatus = getUsageStatus(reservation);
-            String ratingStatus = getRatingStatus(reservation, usageStatus);
-            JsonObject myReservationViewData = gson.toJsonTree(MyReservationList.builder().productType(reservation.getRoom().getRoomKind().getRoomType().getDescription()).placeName(reservation.getRoom().getPlace().getPlaceName()).reservationCompletedDate(reservation.getResCompleted().toLocalDate()).reservationCompletedTime(reservation.getResCompleted().toLocalTime()).reservationStartDate(reservation.getResStartDate()).reservationStartTime(reservation.getResStartTime()).reservationEndDate(reservation.getResEndDate()).reservationEndTime(reservation.getResEndTime()).usageStatus(usageStatus).ratingStatus(ratingStatus).build()).getAsJsonObject();
-            myUsage.put(String.valueOf(reservation.getId()), myReservationViewData);
-        }
-        JsonObject asJsonObject = gson.toJsonTree(myUsage).getAsJsonObject();
-        myUsageMap.put("reservationData", asJsonObject);
-        return myUsageMap;
+        Map<String, JsonObject> myResMap = getMyDataMap(userId, gson);
+        putReservationData(userId, gson, myResMap);
+        return myResMap;
     }
 
     @Override
@@ -97,8 +92,7 @@ public class JpaMyPageService implements MyPageService {
     @NotNull
     private Map<String, JsonObject> getMyDataMap(Long userId, Gson gson) {
         Map<String, JsonObject> myDataMap = new LinkedHashMap<>();
-        UserData user = getUserData(userId);
-        JsonObject userData = gson.toJsonTree(user).getAsJsonObject();
+        JsonObject userData = gson.toJsonTree(getUserData(userId)).getAsJsonObject();
         myDataMap.put("userData", userData);
         return myDataMap;
     }
@@ -108,6 +102,28 @@ public class JpaMyPageService implements MyPageService {
         Mileage mileage = findUser.getMileage();
         List<Reservation> findReservation = reservationRepository.findAllByUserId(userId);
         return UserData.builder().userName(findUser.getUsername()).joinDate(findUser.getJoinDate().toLocalDate().toString()).mileagePoint(mileage.getPoint()).totalReviewNumber(findReservation.size()).build();
+    }
+
+    private void putReservationData(long userId, Gson gson, Map<String, JsonObject> myResMap) {
+        User user = userRepository.findById(userId);
+        Map<String, JsonObject> myUsage = new LinkedHashMap<>();
+        for (Reservation reservation : user.getReservationList()) {
+            String usageStatus = getUsageStatus(reservation);
+            String ratingStatus = getRatingStatus(reservation, usageStatus);
+            JsonObject myReservationViewData = gson.toJsonTree(MyReservationList.builder()
+                    .productType(reservation.getRoom().getRoomKind().getRoomType().getDescription())
+                    .placeName(reservation.getRoom().getPlace().getPlaceName())
+                    .reservationCompletedDate(reservation.getResCompleted().toLocalDate().toString())
+                    .reservationCompletedTime(reservation.getResCompleted().toLocalTime().toString())
+                    .reservationStartDate(reservation.getResStartDate().toString())
+                    .reservationStartTime(reservation.getResStartTime().toString())
+                    .reservationEndDate(reservation.getResEndDate().toString())
+                    .reservationEndTime(reservation.getResEndTime().toString())
+                    .usageStatus(usageStatus).ratingStatus(ratingStatus)
+                    .build()).getAsJsonObject();
+            myUsage.put(String.valueOf(reservation.getId()), myReservationViewData);
+        }
+        myResMap.put("reservationData", gson.toJsonTree(myUsage).getAsJsonObject());
     }
 
     private MyReservationDetail getMyReservationDetail(Long userId, long reservationId) {
