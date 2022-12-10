@@ -127,11 +127,11 @@ public class QueryReservationRepository {
                 .fetch();
     }
 
-    public List<Reservation> findByUserAndDate(User user, LocalDate date) {
+    public List<Reservation> findByUserAndDateTime(User user, LocalDate date, LocalTime time) {
         return query
                 .selectFrom(reservation)
                 .innerJoin(reservation.user)
-                .where(reservation.user.eq(user), startDateEquals(date))
+                .where(reservation.user.eq(user), startDateEquals(date), startTimeLoe(time), endTimeGt(time))
                 .orderBy(reservation.resStartTime.asc())
                 .fetch();
     }

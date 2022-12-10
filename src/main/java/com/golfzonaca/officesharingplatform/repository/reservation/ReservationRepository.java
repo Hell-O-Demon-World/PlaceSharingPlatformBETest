@@ -36,5 +36,5 @@ public interface ReservationRepository {
 
     List<Reservation> findAllLimit(ReservationSearchCond cond, Integer maxNum);
 
-    List<Reservation> findByUserAndDate(User user, LocalDate date);
+    List<Reservation> findByUserAndDateTime(User user, LocalDate date, LocalTime time);
 }
