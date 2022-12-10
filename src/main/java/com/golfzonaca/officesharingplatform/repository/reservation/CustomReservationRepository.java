@@ -88,8 +88,8 @@ public class CustomReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public List<Reservation> findByUserAndDate(User user, LocalDate date) {
-        return queryReservationRepository.findByUserAndDate(user, date);
+    public List<Reservation> findByUserAndDateTime(User user, LocalDate date, LocalTime time) {
+        return queryReservationRepository.findByUserAndDateTime(user, date, time);
     }
 
 }
