@@ -130,11 +130,12 @@ public class JpaMyPageService implements MyPageService {
     private Map<String, JsonObject> processingAllReservationData(User user, Integer page, LocalDate date) {
         Gson gson = new Gson();
         Map<String, JsonObject> myUsage = new LinkedHashMap<>();
-        for (Reservation reservation : reservationRepository.findAllByUserWithPagination(user, page, date)) {
+        for (int i = 0; i < reservationRepository.findAllByUserWithPagination(user, page, date).size(); i++) {
+            Reservation reservation = reservationRepository.findAllByUserWithPagination(user, page, date).get(i);
             UsageStatus usageStatus = getUsageStatus(reservation);
             RatingStatus ratingStatus = getRatingStatus(reservation, usageStatus);
-            JsonObject myReservationViewData = gson.toJsonTree(MyReservationList.builder().productType(reservation.getRoom().getRoomKind().getRoomType().getDescription()).placeName(reservation.getRoom().getPlace().getPlaceName()).reservationCompletedDate(reservation.getResCompleted().toLocalDate().toString()).reservationCompletedTime(reservation.getResCompleted().toLocalTime().toString()).reservationStartDate(reservation.getResStartDate().toString()).reservationStartTime(reservation.getResStartTime().toString()).reservationEndDate(reservation.getResEndDate().toString()).reservationEndTime(reservation.getResEndTime().toString()).usageStatus(usageStatus.getDescription()).ratingStatus(ratingStatus.equals(RatingStatus.WRITABLE)).ratingStatusDescription(ratingStatus.getDescription()).build()).getAsJsonObject();
-            myUsage.put(String.valueOf(reservation.getId()), myReservationViewData);
+            JsonObject myReservationViewData = gson.toJsonTree(MyReservationList.builder().reservationId(reservation.getId()).productType(reservation.getRoom().getRoomKind().getRoomType().getDescription()).placeName(reservation.getRoom().getPlace().getPlaceName()).reservationCompletedDate(reservation.getResCompleted().toLocalDate().toString()).reservationCompletedTime(reservation.getResCompleted().toLocalTime().toString()).reservationStartDate(reservation.getResStartDate().toString()).reservationStartTime(reservation.getResStartTime().toString()).reservationEndDate(reservation.getResEndDate().toString()).reservationEndTime(reservation.getResEndTime().toString()).usageStatus(usageStatus.getDescription()).ratingStatus(ratingStatus.equals(RatingStatus.WRITABLE)).ratingStatusDescription(ratingStatus.getDescription()).build()).getAsJsonObject();
+            myUsage.put(String.valueOf(i), myReservationViewData);
         }
         return myUsage;
     }
