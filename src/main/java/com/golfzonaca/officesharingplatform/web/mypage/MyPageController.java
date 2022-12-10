@@ -1,7 +1,6 @@
 package com.golfzonaca.officesharingplatform.web.mypage;
 
 import com.golfzonaca.officesharingplatform.annotation.TokenUserId;
-import com.golfzonaca.officesharingplatform.domain.UserData;
 import com.golfzonaca.officesharingplatform.service.mypage.MyPageService;
 import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +15,8 @@ public class MyPageController {
     private final MyPageService myPageService;
 
     @GetMapping
-    public UserData userData(@TokenUserId Long userId) {
-        return myPageService.getUserData(userId);
+    public Map<String, JsonObject> overView(@TokenUserId Long userId) {
+        return myPageService.getOverView(userId);
     }
 
     @GetMapping("/usage")
