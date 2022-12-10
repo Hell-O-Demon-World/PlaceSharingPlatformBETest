@@ -116,12 +116,14 @@ public class QueryReservationRepository {
                 .fetch();
     }
 
-    public List<Reservation> findAllByUser(User user) {
+    public List<Reservation> findAllByUserWithPagination(User user, Integer page) {
         return query
                 .selectFrom(reservation)
                 .innerJoin(reservation.user)
                 .where(reservation.user.eq(user))
                 .orderBy(reservation.resStartDate.desc(), reservation.resStartTime.desc())
+                .offset(8L * (page - 1))
+                .limit(8)
                 .fetch();
     }
 

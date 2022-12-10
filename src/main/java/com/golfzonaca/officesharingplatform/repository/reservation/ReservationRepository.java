@@ -14,7 +14,7 @@ import java.util.Optional;
 public interface ReservationRepository {
     Reservation save(Reservation reservation);
 
-    List<Reservation> findAllByUser(User user);
+    List<Reservation> findAllByUserWithPagination(User user, Integer page);
 
     Optional<Reservation> findInDateByPlaceIdAndRoomTypeAndDate(Long placeId, RoomType roomType, LocalTime date);
 
