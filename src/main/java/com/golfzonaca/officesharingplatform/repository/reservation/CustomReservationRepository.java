@@ -28,8 +28,8 @@ public class CustomReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public List<Reservation> findAllByUserWithPagination(User user, Integer page) {
-        return queryReservationRepository.findAllByUserWithPagination(user, page);
+    public List<Reservation> findAllByUserWithPagination(User user, Integer page, LocalDate date) {
+        return queryReservationRepository.findAllByUserWithPagination(user, page, date);
     }
 
     @Override
@@ -85,6 +85,11 @@ public class CustomReservationRepository implements ReservationRepository {
     @Override
     public List<Reservation> findAllLimit(ReservationSearchCond cond, Integer maxNum) {
         return queryReservationRepository.findAllLimit(cond, maxNum);
+    }
+
+    @Override
+    public List<Reservation> findByUserAndDate(User user, LocalDate date) {
+        return queryReservationRepository.findByUserAndDate(user, date);
     }
 
 }
