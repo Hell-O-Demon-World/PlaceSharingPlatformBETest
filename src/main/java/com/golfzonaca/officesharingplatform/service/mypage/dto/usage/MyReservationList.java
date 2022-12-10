@@ -13,6 +13,7 @@ public class MyReservationList {
     private String reservationEndDate;
     private String reservationEndTime;
     private String usageStatus;
-    private String ratingStatus;
+    private Boolean ratingStatus;
+    private String ratingStatusDescription;
 
 }

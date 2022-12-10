@@ -9,10 +9,10 @@ public interface MyPageService {
 
     void cancelByOrderAndUserId(Integer order, Long userId);
 
-    Map<String, JsonObject> getResView(long userId);
+    Map<String, JsonObject> getResView(long userId, Integer page);
 
-    Map<String, JsonObject> getUsageDetail(Long userId, long reservationId);
+    Map<String, JsonObject> getResDetailView(Long userId, long reservationId);
 
-    Map<String, JsonObject> getMyCommentMap(Long userId, Integer page);
+    Map<String, JsonObject> getCommentView(Long userId, Integer page);
 
 }

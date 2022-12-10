@@ -15,7 +15,6 @@ import com.golfzonaca.officesharingplatform.service.mypage.dto.usage.MyReservati
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,9 +32,10 @@ public class JpaMyPageService implements MyPageService {
 
     @Override
     public Map<String, JsonObject> getOverView(Long userId) {
-        Gson gson = new Gson();
-        Map<String, JsonObject> overViewMap = getMyDataMap(userId, gson);
-//        getReservationAtNow
+        User user = userRepository.findById(userId);
+        Map<String, JsonObject> overViewMap = processingUserData(user);
+        putReservationAtNow(overViewMap, user);
+//        putRecentReservations(overViewMap, user);
         //현재 시간 기준으로 이용중인 내역
         //일주일 이내 예약된 내역 (시간 오름차순, 최대 7개)
         return overViewMap;
@@ -48,91 +48,103 @@ public class JpaMyPageService implements MyPageService {
     }
 
     @Override
-    public Map<String, JsonObject> getResView(long userId) {
-        //예약내역에서 나노초 제거
-        //시간, 분, 초 가 1자리인 경우, 0N으로 표기
-        Gson gson = new Gson();
-        Map<String, JsonObject> myResMap = getMyDataMap(userId, gson);
-        putReservationData(userId, gson, myResMap);
+    public Map<String, JsonObject> getResView(long userId, Integer page) {
+        User user = userRepository.findById(userId);
+        Map<String, JsonObject> myResMap = processingUserData(user);
+        putReservationData(user, myResMap);
         return myResMap;
     }
 
     @Override
-    public Map<String, JsonObject> getUsageDetail(Long userId, long reservationId) {
-        Gson gson = new Gson();
-        Map<String, JsonObject> usageDetail = getMyDataMap(userId, gson);
-        MyReservationDetail myReservationDetail = getMyReservationDetail(userId, reservationId);
-        List<MyPaymentDetail> myPaymentDetail = getMyPaymentDetail(userId, reservationId);
-
-        usageDetail.put("resData", gson.toJsonTree(myReservationDetail).getAsJsonObject());
-        for (int i = 0; i < myPaymentDetail.size(); i++) {
-            MyPaymentDetail paymentDetail = myPaymentDetail.get(i);
-            usageDetail.put("payData" + i, gson.toJsonTree(paymentDetail).getAsJsonObject());
-        }
+    public Map<String, JsonObject> getResDetailView(Long userId, long reservationId) {
+        User user = userRepository.findById(userId);
+        Map<String, JsonObject> usageDetail = processingUserData(user);
+        putResDetailData(user, reservationId, usageDetail);
+        putPaymentDetailData(user, reservationId, usageDetail);
         return usageDetail;
     }
 
     @Override
-    public Map<String, JsonObject> getMyCommentMap(Long userId, Integer page) {
-        Gson gson = new Gson();
-        Map<String, JsonObject> myCommentMap = getMyDataMap(userId, gson);
+    public Map<String, JsonObject> getCommentView(Long userId, Integer page) {
         User user = userRepository.findById(userId);
-        List<Comment> commentList = commentRepository.findAllByUser(user, page);
+        Map<String, JsonObject> myCommentMap = processingUserData(user);
+        putCommentData(page, user, myCommentMap);
+        return myCommentMap;
+    }
 
-//        List<Comment> commentList = user.getCommentList();
+    private void putResDetailData(User user, long reservationId, Map<String, JsonObject> usageDetail) {
+        Gson gson = new Gson();
+        MyReservationDetail myReservationDetail = getMyReservationDetail(user, reservationId);
+        usageDetail.put("resData", gson.toJsonTree(myReservationDetail).getAsJsonObject());
+    }
+
+    private void putPaymentDetailData(User user, long reservationId, Map<String, JsonObject> usageDetail) {
+        Gson gson = new Gson();
+        List<MyPaymentDetail> myPaymentDetail = getMyPaymentDetail(user, reservationId);
+        for (int i = 0; i < myPaymentDetail.size(); i++) {
+            MyPaymentDetail paymentDetail = myPaymentDetail.get(i);
+            usageDetail.put("payData" + i, gson.toJsonTree(paymentDetail).getAsJsonObject());
+        }
+    }
+
+    private Map<String, JsonObject> processingUserData(User user) {
+        Gson gson = new Gson();
+        Map<String, JsonObject> myDataMap = new LinkedHashMap<>();
+        JsonObject userData = gson.toJsonTree(getUserData(user)).getAsJsonObject();
+        myDataMap.put("userData", userData);
+        return myDataMap;
+    }
+
+    private Map<String, JsonObject> processingReservationData(User user) {
+        Gson gson = new Gson();
+        Map<String, JsonObject> myUsage = new LinkedHashMap<>();
+        for (Reservation reservation : reservationRepository.findAllByUser(user)) {
+            UsageStatus usageStatus = getUsageStatus(reservation);
+            RatingStatus ratingStatus = getRatingStatus(reservation, usageStatus);
+            JsonObject myReservationViewData = gson.toJsonTree(MyReservationList.builder().productType(reservation.getRoom().getRoomKind().getRoomType().getDescription()).placeName(reservation.getRoom().getPlace().getPlaceName()).reservationCompletedDate(reservation.getResCompleted().toLocalDate().toString()).reservationCompletedTime(reservation.getResCompleted().toLocalTime().toString()).reservationStartDate(reservation.getResStartDate().toString()).reservationStartTime(reservation.getResStartTime().toString()).reservationEndDate(reservation.getResEndDate().toString()).reservationEndTime(reservation.getResEndTime().toString()).usageStatus(usageStatus.getDescription())
+                    .ratingStatus(ratingStatus.equals(RatingStatus.WRITABLE))
+                    .ratingStatusDescription(ratingStatus.getDescription()).build()).getAsJsonObject();
+            myUsage.put(String.valueOf(reservation.getId()), myReservationViewData);
+        }
+        return myUsage;
+    }
+
+    private void putReservationAtNow(Map<String, JsonObject> overViewMap, User user) {
+        Gson gson = new Gson();
+        Map<String, JsonObject> resMap = processingReservationData(user);
+//        resMap.
+
+    }
+
+    private void putReservationData(User user, Map<String, JsonObject> myResMap) {
+        Gson gson = new Gson();
+        Map<String, JsonObject> myUsage = processingReservationData(user);
+        myResMap.put("reservationData", gson.toJsonTree(myUsage).getAsJsonObject());
+    }
+
+    private void putCommentData(Integer page, User user, Map<String, JsonObject> myCommentMap) {
+        Gson gson = new Gson();
+        List<Comment> commentList = commentRepository.findAllByUser(user, page);
         for (int i = 0; i < commentList.size(); i++) {
             Comment comment = commentList.get(i);
             MyCommentData myCommentData = new MyCommentData(comment.getRating().getReservation().getRoom().getPlace().getPlaceName(), comment.getRating().getReservation().getRoom().getRoomKind().getRoomType().getDescription(), comment.getText(), comment.getDateTime().toLocalDate().toString(), comment.getDateTime().toLocalTime().toString());
             myCommentMap.put(String.valueOf(i), gson.toJsonTree(myCommentData).getAsJsonObject());
         }
-        return myCommentMap;
     }
 
-
-    @NotNull
-    private Map<String, JsonObject> getMyDataMap(Long userId, Gson gson) {
-        Map<String, JsonObject> myDataMap = new LinkedHashMap<>();
-        JsonObject userData = gson.toJsonTree(getUserData(userId)).getAsJsonObject();
-        myDataMap.put("userData", userData);
-        return myDataMap;
+    private UserData getUserData(User user) {
+        Mileage mileage = user.getMileage();
+        List<Reservation> findReservation = reservationRepository.findAllByUser(user);
+        return UserData.builder().userName(user.getUsername()).joinDate(user.getJoinDate().toLocalDate().toString()).mileagePoint(mileage.getPoint()).totalReviewNumber(findReservation.size()).build();
     }
 
-    private UserData getUserData(Long userId) {
-        User findUser = userRepository.findById(userId);
-        Mileage mileage = findUser.getMileage();
-        List<Reservation> findReservation = reservationRepository.findAllByUserId(userId);
-        return UserData.builder().userName(findUser.getUsername()).joinDate(findUser.getJoinDate().toLocalDate().toString()).mileagePoint(mileage.getPoint()).totalReviewNumber(findReservation.size()).build();
-    }
-
-    private void putReservationData(long userId, Gson gson, Map<String, JsonObject> myResMap) {
-        User user = userRepository.findById(userId);
-        Map<String, JsonObject> myUsage = new LinkedHashMap<>();
-        for (Reservation reservation : user.getReservationList()) {
-            String usageStatus = getUsageStatus(reservation);
-            String ratingStatus = getRatingStatus(reservation, usageStatus);
-            JsonObject myReservationViewData = gson.toJsonTree(MyReservationList.builder()
-                    .productType(reservation.getRoom().getRoomKind().getRoomType().getDescription())
-                    .placeName(reservation.getRoom().getPlace().getPlaceName())
-                    .reservationCompletedDate(reservation.getResCompleted().toLocalDate().toString())
-                    .reservationCompletedTime(reservation.getResCompleted().toLocalTime().toString())
-                    .reservationStartDate(reservation.getResStartDate().toString())
-                    .reservationStartTime(reservation.getResStartTime().toString())
-                    .reservationEndDate(reservation.getResEndDate().toString())
-                    .reservationEndTime(reservation.getResEndTime().toString())
-                    .usageStatus(usageStatus).ratingStatus(ratingStatus)
-                    .build()).getAsJsonObject();
-            myUsage.put(String.valueOf(reservation.getId()), myReservationViewData);
-        }
-        myResMap.put("reservationData", gson.toJsonTree(myUsage).getAsJsonObject());
-    }
-
-    private MyReservationDetail getMyReservationDetail(Long userId, long reservationId) {
-        Reservation reservation = reservationInfoValidation(userId, reservationId);
+    private MyReservationDetail getMyReservationDetail(User user, long reservationId) {
+        Reservation reservation = reservationInfoValidation(user, reservationId);
         return new MyReservationDetail(reservation.getRoom().getPlace().getPlaceName(), reservation.getRoom().getRoomKind().getRoomType().getDescription(), reservation.getResCompleted().toString(), LocalDateTime.of(reservation.getResStartDate(), reservation.getResStartTime()).toString(), LocalDateTime.of(reservation.getResEndDate(), reservation.getResEndTime()).toString(), reservation.getStatus().toString(), String.valueOf(Optional.ofNullable(reservation.getRating()).isEmpty()));
     }
 
-    private List<MyPaymentDetail> getMyPaymentDetail(Long userId, long reservationId) {
-        Reservation reservation = reservationInfoValidation(userId, reservationId);
+    private List<MyPaymentDetail> getMyPaymentDetail(User user, long reservationId) {
+        Reservation reservation = reservationInfoValidation(user, reservationId);
         List<MyPaymentDetail> paymentDetails = new LinkedList<>();
         for (Payment payment : reservation.getPaymentList()) {
             paymentDetails.add(new MyPaymentDetail(LocalDateTime.of(payment.getPayDate(), payment.getPayTime()).toString(), payment.getPrice(), payment.getPayMileage(), payment.getPayWay().toString(), payment.getSavedMileage(), payment.getType().toString(), payment.getPg().toString()));
@@ -140,28 +152,20 @@ public class JpaMyPageService implements MyPageService {
         return paymentDetails;
     }
 
-    private Reservation reservationInfoValidation(Long userId, Long reservationId) {
-        Reservation reservation = reservationRepository.findById(reservationId);
-        if (reservation.getUser() != userRepository.findById(userId)) {
-            throw new NoSuchElementException("회원정보와 예약정보가 불일치합니다.");
-        }
-        return reservation;
-    }
-
-    private String getUsageStatus(Reservation reservation) {
-        String usageState = null;
+    private UsageStatus getUsageStatus(Reservation reservation) {
+        UsageStatus usageState = null;
         if (reservation.getStatus().equals(ReservationStatus.CANCELED)) {
-            usageState = UsageStatus.CANCELED.getDescription();
+            usageState = UsageStatus.CANCELED;
         } else if (reservation.getStatus().equals(ReservationStatus.PROGRESSING)) {
-            usageState = UsageStatus.UNFIXED.getDescription();
+            usageState = UsageStatus.UNFIXED;
         } else if (reservation.getStatus().equals(ReservationStatus.COMPLETED)) {
             if (LocalDateTime.of(reservation.getResStartDate(), reservation.getResStartTime()).isAfter(LocalDateTime.now())) {
-                usageState = UsageStatus.BEFORE.getDescription();
+                usageState = UsageStatus.BEFORE;
             } else if (LocalDateTime.of(reservation.getResStartDate(), reservation.getResStartTime()).isBefore(LocalDateTime.now()) || LocalDateTime.of(reservation.getResStartDate(), reservation.getResStartTime()).isEqual(LocalDateTime.now())) {
                 if (LocalDateTime.of(reservation.getResEndDate(), reservation.getResEndTime()).isAfter(LocalDateTime.now())) {
-                    usageState = UsageStatus.NOW.getDescription();
+                    usageState = UsageStatus.NOW;
                 } else {
-                    usageState = UsageStatus.AFTER.getDescription();
+                    usageState = UsageStatus.AFTER;
                 }
             }
         }
@@ -171,15 +175,23 @@ public class JpaMyPageService implements MyPageService {
         return usageState;
     }
 
-    private String getRatingStatus(Reservation reservation, String usageStatus) {
-        String ratingStatus = RatingStatus.YET.getDescription();
-        if (usageStatus.equals(UsageStatus.AFTER.getDescription())) {
+    private RatingStatus getRatingStatus(Reservation reservation, UsageStatus usageStatus) {
+        RatingStatus ratingStatus = RatingStatus.YET;
+        if (usageStatus.equals(UsageStatus.AFTER)) {
             if (reservation.getRating() == null) {
-                ratingStatus = RatingStatus.WRITABLE.getDescription();
+                ratingStatus = RatingStatus.WRITABLE;
             } else {
-                ratingStatus = RatingStatus.WRITTEN.getDescription();
+                ratingStatus = RatingStatus.WRITTEN;
             }
         }
         return ratingStatus;
+    }
+
+    private Reservation reservationInfoValidation(User user, Long reservationId) {
+        Reservation reservation = reservationRepository.findById(reservationId);
+        if (reservation.getUser() != user) {
+            throw new NoSuchElementException("회원정보와 예약정보가 불일치합니다.");
+        }
+        return reservation;
     }
 }
