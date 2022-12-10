@@ -1,4 +1,4 @@
-package com.golfzonaca.officesharingplatform.domain;
+package com.golfzonaca.officesharingplatform.web.payment.dto.kakaopay;
 
 public class CompanyId {
 

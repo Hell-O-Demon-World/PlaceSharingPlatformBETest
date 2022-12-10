@@ -1,4 +1,4 @@
-package com.golfzonaca.officesharingplatform.domain.payment;
+package com.golfzonaca.officesharingplatform.web.payment.dto.kakaopay;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class Amount {
+public class CanceledAmount {
 
     private Integer total;
     private Integer taxFree;

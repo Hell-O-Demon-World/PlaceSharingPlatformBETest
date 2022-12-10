@@ -1,4 +1,4 @@
-package com.golfzonaca.officesharingplatform.domain.payment;
+package com.golfzonaca.officesharingplatform.web.payment.dto.kakaopay;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -12,13 +12,17 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class KakaoPayApprovalRequest {
+public class KakaoPayReadyRequest {
 
     private String cid;
-    private String tid;
     private String partnerOrderId;
     private String partnerUserId;
-    private String pgToken;
-    private String payload;
-//    private Integer totalAmount;
+    private String itemName;
+    private Integer quantity;
+    private Integer totalAmount;
+    private Integer taxFreeAmount;
+    private Integer vatAmount;
+    private String approvalUrl;
+    private String cancelUrl;
+    private String failUrl;
 }

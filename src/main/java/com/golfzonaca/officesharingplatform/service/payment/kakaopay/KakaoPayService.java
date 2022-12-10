@@ -2,15 +2,13 @@ package com.golfzonaca.officesharingplatform.service.payment.kakaopay;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.golfzonaca.officesharingplatform.domain.*;
-import com.golfzonaca.officesharingplatform.domain.payment.*;
 import com.golfzonaca.officesharingplatform.domain.type.*;
-import com.golfzonaca.officesharingplatform.repository.mileage.MileageRepository;
 import com.golfzonaca.officesharingplatform.repository.payment.PaymentRepository;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
 import com.golfzonaca.officesharingplatform.repository.user.UserRepository;
 import com.golfzonaca.officesharingplatform.service.payment.PaymentValidation;
 import com.golfzonaca.officesharingplatform.service.refund.RefundService;
-import com.golfzonaca.officesharingplatform.service.refund.SpringJpaRefundService;
+import com.golfzonaca.officesharingplatform.web.payment.dto.kakaopay.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
@@ -38,7 +36,6 @@ public class KakaoPayService {
 
     private final ReservationRepository reservationRepository;
     private final PaymentRepository paymentRepository;
-    private final MileageRepository mileageRepository;
     private final UserRepository userRepository;
     private final RefundService refundService;
 
@@ -194,7 +191,7 @@ public class KakaoPayService {
                 .type(PayType.valueOf(payType))
                 .apiCode(apiCode)
                 .pg(PG.KAKAOPAY)
-                .payStatus(PaymentStatus.PROGRESSING) //TODO : DB 바뀜에 따라 바뀌어 질 예정
+                .payStatus(PaymentStatus.PROGRESSING)
                 .build();
     }
 }
