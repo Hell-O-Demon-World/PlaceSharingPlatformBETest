@@ -2,13 +2,13 @@ package com.golfzonaca.officesharingplatform.service.payment.kakaopay;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.golfzonaca.officesharingplatform.domain.CompanyId;
 import com.golfzonaca.officesharingplatform.domain.Payment;
 import com.golfzonaca.officesharingplatform.domain.Refund;
 import com.golfzonaca.officesharingplatform.domain.Reservation;
-import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayApprovalRequest;
-import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayCancelRequest;
-import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayReadyRequest;
+import com.golfzonaca.officesharingplatform.web.payment.dto.kakaopay.CompanyId;
+import com.golfzonaca.officesharingplatform.web.payment.dto.kakaopay.KakaoPayApprovalRequest;
+import com.golfzonaca.officesharingplatform.web.payment.dto.kakaopay.KakaoPayCancelRequest;
+import com.golfzonaca.officesharingplatform.web.payment.dto.kakaopay.KakaoPayReadyRequest;
 import com.golfzonaca.officesharingplatform.domain.type.PayType;
 import com.golfzonaca.officesharingplatform.domain.type.PayWay;
 import lombok.RequiredArgsConstructor;
