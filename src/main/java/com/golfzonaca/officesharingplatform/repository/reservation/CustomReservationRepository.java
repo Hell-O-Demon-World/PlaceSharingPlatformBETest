@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,8 +30,8 @@ public class CustomReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public List<Reservation> findAllByUserId(Long userId) {
-        return jpaReservationRepository.findAllById(Collections.singleton(userId));
+    public List<Reservation> findAllByUser(User user) {
+        return queryReservationRepository.findAllByUser(user);
     }
 
     @Override

@@ -116,6 +116,16 @@ public class QueryReservationRepository {
                 .fetch();
     }
 
+    public List<Reservation> findAllByUser(User user) {
+        return query
+                .selectFrom(reservation)
+                .innerJoin(reservation.user)
+                .where(reservation.user.eq(user))
+                .orderBy(reservation.resStartDate.desc(), reservation.resStartTime.desc())
+                .fetch();
+    }
+
+
     public Optional<Reservation> findByUserAndRoom(User user, Room room) {
         if (user != null && room != null) {
             return Optional.ofNullable(query
@@ -259,6 +269,4 @@ public class QueryReservationRepository {
         }
         return null;
     }
-
-
 }
