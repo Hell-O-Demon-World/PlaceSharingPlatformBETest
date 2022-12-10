@@ -142,6 +142,7 @@ public class JpaMyPageService implements MyPageService {
     private void putCommentData(Integer page, User user, Map<String, JsonObject> myCommentMap) {
         Gson gson = new Gson();
         List<Comment> commentList = commentRepository.findAllByUser(user, page);
+        myCommentMap.put("paginationData", gson.toJsonTree(Map.of("maxPage", commentList.size() / 8 + 1)).getAsJsonObject());
         for (int i = 0; i < commentList.size(); i++) {
             Comment comment = commentList.get(i);
             MyCommentData myCommentData = new MyCommentData(comment.getRating().getReservation().getRoom().getPlace().getPlaceName(), comment.getRating().getReservation().getRoom().getRoomKind().getRoomType().getDescription(), comment.getText(), comment.getDateTime().toLocalDate().toString(), comment.getDateTime().toLocalTime().toString());
