@@ -54,7 +54,6 @@ public class ReservationController {
 
         Place place = placeService.findById(placeId);
         User user = userService.findById(userId);
-        RoomType roomType = RoomType.getRoomType(processReservationData.getSelectedType());
         reservationRequestValidation.validation(user, place, processReservationData);
 
         return reservationService.saveReservation(user, place, processReservationData);
