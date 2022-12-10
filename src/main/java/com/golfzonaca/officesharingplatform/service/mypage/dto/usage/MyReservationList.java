@@ -4,6 +4,7 @@ import lombok.Builder;
 
 @Builder
 public class MyReservationList {
+    private long reservationId;
     private String productType;
     private String placeName;
     private String reservationCompletedDate;
