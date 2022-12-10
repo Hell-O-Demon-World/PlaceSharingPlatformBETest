@@ -97,6 +97,7 @@ public class JpaMyPageService implements MyPageService {
     private void putReservationData(User user, Map<String, JsonObject> myResMap, Integer page) {
         Gson gson = new Gson();
         Map<String, JsonObject> myUsage = processingReservationData(user, page);
+        myResMap.put("paginationData", gson.toJsonTree(Map.of("maxPage", user.getReservationList().size() / 8 + 1)).getAsJsonObject());
         myResMap.put("reservationData", gson.toJsonTree(myUsage).getAsJsonObject());
     }
 
@@ -111,7 +112,6 @@ public class JpaMyPageService implements MyPageService {
     private Map<String, JsonObject> processingReservationData(User user, Integer page) {
         Gson gson = new Gson();
         Map<String, JsonObject> myUsage = new LinkedHashMap<>();
-        myUsage.put("paginationData", gson.toJsonTree(Map.of("maxPage", user.getReservationList().size() / 8 + 1)).getAsJsonObject());
         for (Reservation reservation : reservationRepository.findAllByUserWithPagination(user, page)) {
             UsageStatus usageStatus = getUsageStatus(reservation);
             RatingStatus ratingStatus = getRatingStatus(reservation, usageStatus);
