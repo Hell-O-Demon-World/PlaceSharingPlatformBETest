@@ -2,6 +2,7 @@ package com.golfzonaca.officesharingplatform.repository.comment;
 
 import com.golfzonaca.officesharingplatform.domain.Comment;
 import com.golfzonaca.officesharingplatform.domain.Rating;
+import com.golfzonaca.officesharingplatform.domain.User;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +26,13 @@ public class QueryCommentRepository {
         return query
                 .selectFrom(comment)
                 .where(comment.rating.eq(rating))
+                .fetch();
+    }
+
+    public List<Comment> findAllByUser(User user, Integer page) {
+        return query
+                .selectFrom(comment)
+                .where(comment.writer.eq(user))
                 .fetch();
     }
 }

@@ -4,15 +4,18 @@ import com.golfzonaca.officesharingplatform.domain.*;
 import com.golfzonaca.officesharingplatform.domain.type.RatingStatus;
 import com.golfzonaca.officesharingplatform.domain.type.ReservationStatus;
 import com.golfzonaca.officesharingplatform.domain.type.UsageStatus;
+import com.golfzonaca.officesharingplatform.repository.comment.CommentRepository;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationSearchCond;
 import com.golfzonaca.officesharingplatform.repository.user.UserRepository;
-import com.golfzonaca.officesharingplatform.service.mypage.dto.MyPaymentDetail;
-import com.golfzonaca.officesharingplatform.service.mypage.dto.MyReservationDetail;
-import com.golfzonaca.officesharingplatform.service.mypage.dto.MyReservationList;
+import com.golfzonaca.officesharingplatform.service.mypage.dto.comment.MyCommentData;
+import com.golfzonaca.officesharingplatform.service.mypage.dto.usage.MyPaymentDetail;
+import com.golfzonaca.officesharingplatform.service.mypage.dto.usage.MyReservationDetail;
+import com.golfzonaca.officesharingplatform.service.mypage.dto.usage.MyReservationList;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +28,7 @@ import java.util.*;
 public class JpaMyPageService implements MyPageService {
     private final UserRepository userRepository;
     private final ReservationRepository reservationRepository;
+    private final CommentRepository commentRepository;
 
     @Override
     public UserData getUserData(Long userId) {
@@ -41,37 +45,59 @@ public class JpaMyPageService implements MyPageService {
     }
 
     @Override
-    public Map<String, JsonObject> getMyReservation(long userId) {
+    public Map<String, JsonObject> getUsageList(long userId) {
         Gson gson = new Gson();
-        Map<String, JsonObject> myReservationList = new LinkedHashMap<>();
+        Map<String, JsonObject> myUsageMap = getMyDataMap(userId, gson);
         User user = userRepository.findById(userId);
-        JsonObject userData = gson.toJsonTree(getUserData(userId)).getAsJsonObject();
-        myReservationList.put("userData", userData);
         List<Reservation> reservationList = user.getReservationList();
 
-        for (int i = 0; i < reservationList.size(); i++) {
-            Reservation reservation = reservationList.get(i);
+        for (Reservation reservation : reservationList) {
             String usageStatus = getUsageStatus(reservation);
             String ratingStatus = getRatingStatus(reservation, usageStatus);
-            JsonObject myReservationViewData = gson.toJsonTree(MyReservationList.builder().productType(reservation.getRoom().getRoomKind().getRoomType().getDescription()).placeName(reservation.getRoom().getPlace().getPlaceName()).reservationCompletedDateTime(reservation.getResCompleted()).reservationStartDateTime(LocalDateTime.of(reservation.getResStartDate(), reservation.getResStartTime())).reservationEndDateTime(LocalDateTime.of(reservation.getResEndDate(), reservation.getResEndTime())).usageStatus(usageStatus).ratingStatus(ratingStatus).build()).getAsJsonObject();
-            myReservationList.put(String.valueOf(i), myReservationViewData);
+            JsonObject myReservationViewData = gson.toJsonTree(MyReservationList.builder().productType(reservation.getRoom().getRoomKind().getRoomType().getDescription()).placeName(reservation.getRoom().getPlace().getPlaceName()).reservationCompletedDate(reservation.getResCompleted().toLocalDate()).reservationCompletedTime(reservation.getResCompleted().toLocalTime()).reservationStartDate(reservation.getResStartDate()).reservationStartTime(reservation.getResStartTime()).reservationEndDate(reservation.getResEndDate()).reservationEndTime(reservation.getResEndTime()).usageStatus(usageStatus).ratingStatus(ratingStatus).build()).getAsJsonObject();
+            myUsageMap.put(String.valueOf(reservation.getId()), myReservationViewData);
         }
-        return myReservationList;
+        return myUsageMap;
     }
 
     @Override
     public Map<String, JsonObject> getUsageDetail(Long userId, long reservationId) {
+        Gson gson = new Gson();
+        Map<String, JsonObject> usageDetail = getMyDataMap(userId, gson);
         MyReservationDetail myReservationDetail = getMyReservationDetail(userId, reservationId);
         List<MyPaymentDetail> myPaymentDetail = getMyPaymentDetail(userId, reservationId);
 
-        Gson gson = new Gson();
-        Map<String, JsonObject> usageDetail = new LinkedHashMap<>();
         usageDetail.put("resData", gson.toJsonTree(myReservationDetail).getAsJsonObject());
         for (int i = 0; i < myPaymentDetail.size(); i++) {
             MyPaymentDetail paymentDetail = myPaymentDetail.get(i);
             usageDetail.put("payData" + i, gson.toJsonTree(paymentDetail).getAsJsonObject());
         }
         return usageDetail;
+    }
+
+    @Override
+    public Map<String, JsonObject> getMyCommentMap(Long userId, Integer page) {
+        Gson gson = new Gson();
+        Map<String, JsonObject> myCommentMap = getMyDataMap(userId, gson);
+        User user = userRepository.findById(userId);
+        List<Comment> comments = commentRepository.findAllByUser(user, page);
+
+        List<Comment> commentList = user.getCommentList();
+        for (int i = 0; i < commentList.size(); i++) {
+            Comment comment = commentList.get(i);
+            MyCommentData myCommentData = new MyCommentData(comment.getRating().getReservation().getRoom().getPlace().getPlaceName(), comment.getRating().getReservation().getRoom().getRoomKind().getRoomType().getDescription(), comment.getText(), comment.getDateTime().toLocalDate().toString(), comment.getDateTime().toLocalTime().toString());
+            myCommentMap.put(String.valueOf(i), gson.toJsonTree(myCommentData).getAsJsonObject());
+        }
+        return myCommentMap;
+    }
+
+    @NotNull
+    private Map<String, JsonObject> getMyDataMap(Long userId, Gson gson) {
+        Map<String, JsonObject> myDataMap = new LinkedHashMap<>();
+        UserData user = getUserData(userId);
+        JsonObject userData = gson.toJsonTree(user).getAsJsonObject();
+        myDataMap.put("userData", userData);
+        return myDataMap;
     }
 
     private MyReservationDetail getMyReservationDetail(Long userId, long reservationId) {

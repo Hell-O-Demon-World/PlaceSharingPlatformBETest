@@ -2,6 +2,7 @@ package com.golfzonaca.officesharingplatform.repository.comment;
 
 import com.golfzonaca.officesharingplatform.domain.Comment;
 import com.golfzonaca.officesharingplatform.domain.Rating;
+import com.golfzonaca.officesharingplatform.domain.User;
 import com.golfzonaca.officesharingplatform.web.comment.dto.CommentData;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -43,4 +44,10 @@ public class SpringJpaDslCommentRepository implements CommentRepository {
     public void delete(Comment comment) {
         jpaRepository.delete(comment);
     }
+
+    @Override
+    public List<Comment> findAllByUser(User user, Integer page) {
+        return queryRepository.findAllByUser(user, page);
+    }
+
 }
