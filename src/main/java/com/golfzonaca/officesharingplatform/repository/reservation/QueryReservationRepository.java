@@ -116,17 +116,25 @@ public class QueryReservationRepository {
                 .fetch();
     }
 
-    public List<Reservation> findAllByUserWithPagination(User user, Integer page) {
+    public List<Reservation> findAllByUserWithPagination(User user, Integer page, LocalDate date) {
         return query
                 .selectFrom(reservation)
                 .innerJoin(reservation.user)
-                .where(reservation.user.eq(user))
+                .where(reservation.user.eq(user), startDateGoe(date))
                 .orderBy(reservation.resStartDate.desc(), reservation.resStartTime.desc())
                 .offset(8L * (page - 1))
                 .limit(8)
                 .fetch();
     }
 
+    public List<Reservation> findByUserAndDate(User user, LocalDate date) {
+        return query
+                .selectFrom(reservation)
+                .innerJoin(reservation.user)
+                .where(reservation.user.eq(user), startDateEquals(date))
+                .orderBy(reservation.resStartTime.asc())
+                .fetch();
+    }
 
     public Optional<Reservation> findByUserAndRoom(User user, Room room) {
         if (user != null && room != null) {
@@ -148,6 +156,13 @@ public class QueryReservationRepository {
     private BooleanExpression PlaceEquals(Place place) {
         if (place != null) {
             return reservation.room.place.eq(place);
+        }
+        return null;
+    }
+
+    private BooleanExpression startDateGoe(LocalDate date) {
+        if (date != null) {
+            return reservation.resStartDate.goe(date);
         }
         return null;
     }

@@ -14,7 +14,7 @@ import java.util.Optional;
 public interface ReservationRepository {
     Reservation save(Reservation reservation);
 
-    List<Reservation> findAllByUserWithPagination(User user, Integer page);
+    List<Reservation> findAllByUserWithPagination(User user, Integer page, LocalDate date);
 
     Optional<Reservation> findInDateByPlaceIdAndRoomTypeAndDate(Long placeId, RoomType roomType, LocalTime date);
 
@@ -36,4 +36,5 @@ public interface ReservationRepository {
 
     List<Reservation> findAllLimit(ReservationSearchCond cond, Integer maxNum);
 
+    List<Reservation> findByUserAndDate(User user, LocalDate date);
 }
