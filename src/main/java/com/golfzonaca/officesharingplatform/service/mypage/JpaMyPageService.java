@@ -35,7 +35,7 @@ public class JpaMyPageService implements MyPageService {
         User findUser = userRepository.findById(userId);
         Mileage mileage = findUser.getMileage();
         List<Reservation> findReservation = reservationRepository.findAllByUserId(userId);
-        return UserData.builder().userName(findUser.getUsername()).joinDate(findUser.getJoinDate()).mileagePoint(mileage.getPoint()).totalReviewNumber(findReservation.size()).build();
+        return UserData.builder().userName(findUser.getUsername()).joinDate(findUser.getJoinDate().toLocalDate().toString()).mileagePoint(mileage.getPoint()).totalReviewNumber(findReservation.size()).build();
     }
 
     @Override
@@ -80,9 +80,9 @@ public class JpaMyPageService implements MyPageService {
         Gson gson = new Gson();
         Map<String, JsonObject> myCommentMap = getMyDataMap(userId, gson);
         User user = userRepository.findById(userId);
-        List<Comment> comments = commentRepository.findAllByUser(user, page);
+        List<Comment> commentList = commentRepository.findAllByUser(user, page);
 
-        List<Comment> commentList = user.getCommentList();
+//        List<Comment> commentList = user.getCommentList();
         for (int i = 0; i < commentList.size(); i++) {
             Comment comment = commentList.get(i);
             MyCommentData myCommentData = new MyCommentData(comment.getRating().getReservation().getRoom().getPlace().getPlaceName(), comment.getRating().getReservation().getRoom().getRoomKind().getRoomType().getDescription(), comment.getText(), comment.getDateTime().toLocalDate().toString(), comment.getDateTime().toLocalTime().toString());

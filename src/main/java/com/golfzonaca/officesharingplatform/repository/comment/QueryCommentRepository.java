@@ -33,6 +33,9 @@ public class QueryCommentRepository {
         return query
                 .selectFrom(comment)
                 .where(comment.writer.eq(user))
+                .orderBy(comment.dateTime.desc())
+                .offset(8L * (page - 1))
+                .limit(8)
                 .fetch();
     }
 }
