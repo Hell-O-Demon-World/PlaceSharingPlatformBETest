@@ -18,4 +18,6 @@ public interface MyPageService {
     Map<String, JsonObject> getCommentDataByReview(Long ratingId, Integer commentpage);
 
     Map<String, JsonObject> getCommentViewData(Long userId, Integer page);
+
+    Map<String, JsonObject> getEditUserInfo(Long userId);
 }

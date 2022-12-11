@@ -50,7 +50,12 @@ public class MyPageController {
     }
 
 
-//    @GetMapping("/edit")
+    @GetMapping("/edit")
+    public Map<String, JsonObject> editUserInfo(@TokenUserId Long userId) {
+        return myPageService.getEditUserInfo(userId);
+    }
+
+//    @PostMapping("/edit")
 //    public EditUserForm editUser(@TokenUserId Long userId) {
 //
 //        return
