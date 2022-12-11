@@ -2,6 +2,7 @@ package com.golfzonaca.officesharingplatform.web.mypage;
 
 import com.golfzonaca.officesharingplatform.annotation.TokenUserId;
 import com.golfzonaca.officesharingplatform.service.mypage.MyPageService;
+import com.golfzonaca.officesharingplatform.web.mypage.dto.EditUserInfo;
 import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -55,10 +56,12 @@ public class MyPageController {
         return myPageService.getEditUserInfo(userId);
     }
 
-//    @PostMapping("/edit")
-//    public EditUserForm editUser(@TokenUserId Long userId) {
-//
-//        return
-//    }
-
+    @PostMapping("/edit")
+    public void editUser(@TokenUserId Long userId, @RequestBody EditUserInfo editUserInfo) {
+        String password = editUserInfo.getPassword();
+        String tel = editUserInfo.getTel();
+        String job = editUserInfo.getJob();
+        Map<String, Boolean> preferType = editUserInfo.getPreferType();
+        myPageService.updateUserInfo(userId, password, tel, job, preferType);
+    }
 }

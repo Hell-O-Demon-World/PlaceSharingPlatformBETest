@@ -87,4 +87,16 @@ public class User {
     public void updateDate(LocalDateTime joinDate) {
         this.joinDate = joinDate;
     }
+
+    public void updatePhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void updateJob(String job) {
+        this.job = job;
+    }
+
+    public void updateUserPlace(String userPlace) {
+        this.userPlace = userPlace;
+    }
 }
