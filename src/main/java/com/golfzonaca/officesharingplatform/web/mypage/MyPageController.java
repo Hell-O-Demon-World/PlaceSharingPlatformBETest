@@ -16,17 +16,17 @@ public class MyPageController {
 
     @GetMapping
     public Map<String, JsonObject> overView(@TokenUserId Long userId) {
-        return myPageService.getOverView(userId);
+        return myPageService.getOverViewData(userId);
     }
 
     @GetMapping("/usage")
     public Map<String, JsonObject> resHistory(@TokenUserId Long userId, @RequestParam Integer page) {
-        return myPageService.getResView(userId, page);
+        return myPageService.getResViewData(userId, page);
     }
 
     @GetMapping("/{reservationId}")
     public Map<String, JsonObject> resDetail(@TokenUserId Long userId, @PathVariable long reservationId) {
-        return myPageService.getResDetailView(userId, reservationId);
+        return myPageService.getResDetailViewData(userId, reservationId);
     }
 
     @PostMapping("/cancel")
@@ -34,9 +34,14 @@ public class MyPageController {
         myPageService.cancelByOrderAndUserId(reservationId, userId);
     }
 
+    @GetMapping("/review")
+    public Map<String, JsonObject> reviewHistory(@TokenUserId Long userId, @RequestParam Integer reviewpage) {
+        return myPageService.getReviewData(userId, reviewpage);
+    }
+
     @GetMapping("/comment")
     public Map<String, JsonObject> commentHistory(@TokenUserId Long userId, @RequestParam Integer page) {
-        return myPageService.getCommentView(userId, page);
+        return myPageService.getCommentViewData(userId, page);
     }
 
 
