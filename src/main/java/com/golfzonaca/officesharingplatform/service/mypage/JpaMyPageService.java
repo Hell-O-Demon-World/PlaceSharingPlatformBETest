@@ -5,16 +5,21 @@ import com.golfzonaca.officesharingplatform.domain.type.RatingStatus;
 import com.golfzonaca.officesharingplatform.domain.type.ReservationStatus;
 import com.golfzonaca.officesharingplatform.domain.type.UsageStatus;
 import com.golfzonaca.officesharingplatform.repository.comment.CommentRepository;
+import com.golfzonaca.officesharingplatform.repository.rating.RatingRepository;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationSearchCond;
 import com.golfzonaca.officesharingplatform.repository.user.UserRepository;
+import com.golfzonaca.officesharingplatform.service.mypage.dto.comment.CommentDataByRating;
 import com.golfzonaca.officesharingplatform.service.mypage.dto.comment.MyCommentData;
+import com.golfzonaca.officesharingplatform.service.mypage.dto.edituserinfo.EditUserInfo;
+import com.golfzonaca.officesharingplatform.service.mypage.dto.rating.RatingData;
 import com.golfzonaca.officesharingplatform.service.mypage.dto.usage.MyPaymentDetail;
 import com.golfzonaca.officesharingplatform.service.mypage.dto.usage.MyReservationDetail;
 import com.golfzonaca.officesharingplatform.service.mypage.dto.usage.MyReservationList;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,10 +35,11 @@ public class JpaMyPageService implements MyPageService {
     private final UserRepository userRepository;
     private final ReservationRepository reservationRepository;
     private final CommentRepository commentRepository;
+    private final RatingRepository ratingRepository;
 
 
     @Override
-    public Map<String, JsonObject> getOverView(Long userId) {
+    public Map<String, JsonObject> getOverViewData(Long userId) {
         User user = userRepository.findById(userId);
         Map<String, JsonObject> overViewMap = processingUserData(user);
         putReservationAtNow(overViewMap, user);
@@ -48,7 +54,7 @@ public class JpaMyPageService implements MyPageService {
     }
 
     @Override
-    public Map<String, JsonObject> getResView(long userId, Integer page) {
+    public Map<String, JsonObject> getResViewData(long userId, Integer page) {
         User user = userRepository.findById(userId);
         Map<String, JsonObject> myResMap = processingUserData(user);
         putReservationData(user, myResMap, page);
@@ -56,7 +62,7 @@ public class JpaMyPageService implements MyPageService {
     }
 
     @Override
-    public Map<String, JsonObject> getResDetailView(Long userId, long reservationId) {
+    public Map<String, JsonObject> getResDetailViewData(Long userId, long reservationId) {
         User user = userRepository.findById(userId);
         Map<String, JsonObject> usageDetail = processingUserData(user);
         putResDetailData(user, reservationId, usageDetail);
@@ -65,11 +71,41 @@ public class JpaMyPageService implements MyPageService {
     }
 
     @Override
-    public Map<String, JsonObject> getCommentView(Long userId, Integer page) {
+    public Map<String, JsonObject> getReviewData(Long userId, Integer page) {
+        User user = userRepository.findById(userId);
+        Map<String, JsonObject> reviewMap = processingUserData(user);
+        putReviewData(user, reviewMap, page);
+        return reviewMap;
+    }
+
+    @Override
+    public Map<String, JsonObject> getCommentDataByReview(Long ratingId, Integer commentpage) {
+        Rating rating = ratingRepository.findById(ratingId);
+        return putCommentDataByRating(rating, commentpage);
+    }
+
+    @Override
+    public Map<String, JsonObject> getCommentViewData(Long userId, Integer page) {
         User user = userRepository.findById(userId);
         Map<String, JsonObject> myCommentMap = processingUserData(user);
         putCommentData(page, user, myCommentMap);
         return myCommentMap;
+    }
+
+    @Override
+    public Map<String, JsonObject> getEditUserInfo(Long userId) {
+        User user = userRepository.findById(userId);
+        Map<String, JsonObject> editUserInfoMap = processingUserData(user);
+        putUserInfoData(user, editUserInfoMap);
+        return editUserInfoMap;
+    }
+
+    private void putUserInfoData(User user, Map<String, JsonObject> editUserInfoMap) {
+        Gson gson = new Gson();
+        Map<String, Boolean> preferType = new LinkedHashMap<>();
+        String userPlace = user.getUserPlace();
+
+        editUserInfoMap.put("userInfoData", gson.toJsonTree(new EditUserInfo(user.getPhoneNumber(), user.getJob(), preferType)).getAsJsonObject());
     }
 
     private void putReservationAtNow(Map<String, JsonObject> overViewMap, User user) {
@@ -81,7 +117,7 @@ public class JpaMyPageService implements MyPageService {
 
     private void putRecentReservations(Map<String, JsonObject> overViewMap, User user) {
         Gson gson = new Gson();
-        Map<String, JsonObject> recentResMap = processingAllReservationData(user, 1, LocalDate.now());
+        Map<String, JsonObject> recentResMap = processingRecentReservationData(user, LocalDate.now());
         overViewMap.put("recentResData", gson.toJsonTree(recentResMap).getAsJsonObject());
     }
 
@@ -102,9 +138,18 @@ public class JpaMyPageService implements MyPageService {
 
     private void putReservationData(User user, Map<String, JsonObject> myResMap, Integer page) {
         Gson gson = new Gson();
-        Map<String, JsonObject> myUsage = processingAllReservationData(user, page, null);
+        Map<String, JsonObject> myUsage = processingAllReservationData(user, page);
         myResMap.put("paginationData", gson.toJsonTree(Map.of("maxPage", user.getReservationList().size() / 8 + 1)).getAsJsonObject());
         myResMap.put("reservationData", gson.toJsonTree(myUsage).getAsJsonObject());
+    }
+
+    private Map<String, JsonObject> putCommentDataByRating(Rating rating, Integer commentpage) {
+        Gson gson = new Gson();
+        Map<String, JsonObject> commentDataMap = new LinkedHashMap<>();
+        commentDataMap.put("paginationData", gson.toJsonTree(Map.of("maxPage", rating.getCommentList().size() / 8 + 1)).getAsJsonObject());
+        Map<String, JsonObject> commentData = processingCommentDataByRating(rating, commentpage);
+        commentDataMap.put("commentData", gson.toJsonTree(commentData).getAsJsonObject());
+        return commentDataMap;
     }
 
     private Map<String, JsonObject> processingUserData(User user) {
@@ -118,20 +163,9 @@ public class JpaMyPageService implements MyPageService {
     private Map<String, JsonObject> processingCurrentReservationData(User user) {
         Gson gson = new Gson();
         Map<String, JsonObject> myUsage = new LinkedHashMap<>();
-        for (Reservation reservation : reservationRepository.findByUserAndDateTime(user, LocalDate.now(), LocalTime.now())) {
-            UsageStatus usageStatus = getUsageStatus(reservation);
-            RatingStatus ratingStatus = getRatingStatus(reservation, usageStatus);
-            JsonObject myReservationViewData = gson.toJsonTree(MyReservationList.builder().productType(reservation.getRoom().getRoomKind().getRoomType().getDescription()).placeName(reservation.getRoom().getPlace().getPlaceName()).reservationCompletedDate(reservation.getResCompleted().toLocalDate().toString()).reservationCompletedTime(reservation.getResCompleted().toLocalTime().toString()).reservationStartDate(reservation.getResStartDate().toString()).reservationStartTime(reservation.getResStartTime().toString()).reservationEndDate(reservation.getResEndDate().toString()).reservationEndTime(reservation.getResEndTime().toString()).usageStatus(usageStatus.getDescription()).ratingStatus(ratingStatus.equals(RatingStatus.WRITABLE)).ratingStatusDescription(ratingStatus.getDescription()).build()).getAsJsonObject();
-            myUsage.put(String.valueOf(reservation.getId()), myReservationViewData);
-        }
-        return myUsage;
-    }
-
-    private Map<String, JsonObject> processingAllReservationData(User user, Integer page, LocalDate date) {
-        Gson gson = new Gson();
-        Map<String, JsonObject> myUsage = new LinkedHashMap<>();
-        for (int i = 0; i < reservationRepository.findAllByUserWithPagination(user, page, date).size(); i++) {
-            Reservation reservation = reservationRepository.findAllByUserWithPagination(user, page, date).get(i);
+        List<Reservation> reservationList = reservationRepository.findByUserAndDateTime(user, LocalDate.now(), LocalTime.now());
+        for (int i = 0; i < reservationList.size(); i++) {
+            Reservation reservation = reservationList.get(i);
             UsageStatus usageStatus = getUsageStatus(reservation);
             RatingStatus ratingStatus = getRatingStatus(reservation, usageStatus);
             JsonObject myReservationViewData = gson.toJsonTree(MyReservationList.builder().reservationId(reservation.getId()).productType(reservation.getRoom().getRoomKind().getRoomType().getDescription()).placeName(reservation.getRoom().getPlace().getPlaceName()).reservationCompletedDate(reservation.getResCompleted().toLocalDate().toString()).reservationCompletedTime(reservation.getResCompleted().toLocalTime().toString()).reservationStartDate(reservation.getResStartDate().toString()).reservationStartTime(reservation.getResStartTime().toString()).reservationEndDate(reservation.getResEndDate().toString()).reservationEndTime(reservation.getResEndTime().toString()).usageStatus(usageStatus.getDescription()).ratingStatus(ratingStatus.equals(RatingStatus.WRITABLE)).ratingStatusDescription(ratingStatus.getDescription()).build()).getAsJsonObject();
@@ -140,22 +174,74 @@ public class JpaMyPageService implements MyPageService {
         return myUsage;
     }
 
+    private Map<String, JsonObject> processingRecentReservationData(User user, LocalDate date) {
+        Gson gson = new Gson();
+        Map<String, JsonObject> myUsage = new LinkedHashMap<>();
+        for (int i = 0; i < reservationRepository.findRecentDataByUserWithPagination(user, 1, date).size(); i++) {
+            Reservation reservation = reservationRepository.findRecentDataByUserWithPagination(user, 1, date).get(i);
+            UsageStatus usageStatus = getUsageStatus(reservation);
+            RatingStatus ratingStatus = getRatingStatus(reservation, usageStatus);
+            JsonObject myReservationViewData = gson.toJsonTree(MyReservationList.builder().reservationId(reservation.getId()).productType(reservation.getRoom().getRoomKind().getRoomType().getDescription()).placeName(reservation.getRoom().getPlace().getPlaceName()).reservationCompletedDate(reservation.getResCompleted().toLocalDate().toString()).reservationCompletedTime(reservation.getResCompleted().toLocalTime().toString()).reservationStartDate(reservation.getResStartDate().toString()).reservationStartTime(reservation.getResStartTime().toString()).reservationEndDate(reservation.getResEndDate().toString()).reservationEndTime(reservation.getResEndTime().toString()).usageStatus(usageStatus.getDescription()).ratingStatus(ratingStatus.equals(RatingStatus.WRITABLE)).ratingStatusDescription(ratingStatus.getDescription()).build()).getAsJsonObject();
+            myUsage.put(String.valueOf(i), myReservationViewData);
+        }
+        return myUsage;
+    }
+
+    private Map<String, JsonObject> processingAllReservationData(User user, Integer page) {
+        Gson gson = new Gson();
+        Map<String, JsonObject> myUsage = new LinkedHashMap<>();
+        for (int i = 0; i < reservationRepository.findAllByUserWithPagination(user, page).size(); i++) {
+            Reservation reservation = reservationRepository.findAllByUserWithPagination(user, page).get(i);
+            UsageStatus usageStatus = getUsageStatus(reservation);
+            RatingStatus ratingStatus = getRatingStatus(reservation, usageStatus);
+            JsonObject myReservationViewData = gson.toJsonTree(MyReservationList.builder().reservationId(reservation.getId()).productType(reservation.getRoom().getRoomKind().getRoomType().getDescription()).placeName(reservation.getRoom().getPlace().getPlaceName()).reservationCompletedDate(reservation.getResCompleted().toLocalDate().toString()).reservationCompletedTime(reservation.getResCompleted().toLocalTime().toString()).reservationStartDate(reservation.getResStartDate().toString()).reservationStartTime(reservation.getResStartTime().toString()).reservationEndDate(reservation.getResEndDate().toString()).reservationEndTime(reservation.getResEndTime().toString()).usageStatus(usageStatus.getDescription()).ratingStatus(ratingStatus.equals(RatingStatus.WRITABLE)).ratingStatusDescription(ratingStatus.getDescription()).build()).getAsJsonObject();
+            myUsage.put(String.valueOf(i), myReservationViewData);
+        }
+        return myUsage;
+    }
+
+    @NotNull
+    private Map<String, JsonObject> processingCommentDataByRating(Rating rating, Integer commentpage) {
+        Gson gson = new Gson();
+        Map<String, JsonObject> commentData = new LinkedHashMap<>();
+        for (int i = 0; i < commentRepository.findAllByRating(rating, commentpage).size(); i++) {
+            Comment comment = commentRepository.findAllByRating(rating, commentpage).get(i);
+            commentData.put(String.valueOf(i), gson.toJsonTree(new CommentDataByRating(processingUserIdentification(comment.getWriter()), comment.getText(), comment.getDateTime().toLocalDate().toString(), comment.getDateTime().toLocalTime().toString())).getAsJsonObject());
+        }
+        return commentData;
+    }
+
+    private void putReviewData(User user, Map<String, JsonObject> reviewMap, Integer page) {
+        Gson gson = new Gson();
+        List<Rating> ratingList = ratingRepository.findAllByUser(user, page);
+        reviewMap.put("paginationData", gson.toJsonTree(Map.of("maxPage", ratingList.size() / 8 + 1)).getAsJsonObject());
+        for (int i = 0; i < ratingList.size(); i++) {
+            Rating rating = ratingList.get(i);
+            JsonObject myRatingData = gson.toJsonTree(new RatingData(rating.getReservation().getRoom().getPlace().getPlaceName(), rating.getReservation().getRoom().getRoomKind().getRoomType().getDescription(), rating.getReservation().getResStartDate().toString(), rating.getReservation().getResEndDate().toString(), rating.getReservation().getResStartTime().toString(), rating.getReservation().getResEndTime().toString(), String.valueOf(rating.getId()), rating.getRatingTime().toLocalDate().toString(), rating.getRatingTime().toLocalTime().toString(), String.valueOf(rating.getRatingScore()), rating.getRatingReview(), String.valueOf(rating.getCommentList().size()))).getAsJsonObject();
+            reviewMap.put(String.valueOf(i), myRatingData);
+        }
+    }
+
     private void putCommentData(Integer page, User user, Map<String, JsonObject> myCommentMap) {
         Gson gson = new Gson();
         List<Comment> commentList = commentRepository.findAllByUser(user, page);
         myCommentMap.put("paginationData", gson.toJsonTree(Map.of("maxPage", commentList.size() / 8 + 1)).getAsJsonObject());
+        Map<String, JsonObject> commentDataMap = new LinkedHashMap<>();
         for (int i = 0; i < commentList.size(); i++) {
             Comment comment = commentList.get(i);
             MyCommentData myCommentData = new MyCommentData(comment.getRating().getReservation().getRoom().getPlace().getPlaceName(), comment.getRating().getReservation().getRoom().getRoomKind().getRoomType().getDescription(), comment.getText(), comment.getDateTime().toLocalDate().toString(), comment.getDateTime().toLocalTime().toString());
-            myCommentMap.put(String.valueOf(i), gson.toJsonTree(myCommentData).getAsJsonObject());
+            commentDataMap.put(String.valueOf(i), gson.toJsonTree(myCommentData).getAsJsonObject());
         }
+        myCommentMap.put("commentData", gson.toJsonTree(commentDataMap).getAsJsonObject());
     }
 
     private UserData getUserData(User user) {
         Mileage mileage = user.getMileage();
         int totalReviewQuantity = 0;
         for (Reservation reservation : user.getReservationList()) {
-            if (Optional.ofNullable(reservation.getRating()).isPresent()) totalReviewQuantity++;
+            if (Optional.ofNullable(reservation.getRating()).isPresent()) {
+                totalReviewQuantity++;
+            }
         }
         return UserData.builder().userName(user.getUsername()).joinDate(user.getJoinDate().toLocalDate().toString()).mileagePoint(mileage.getPoint()).totalReviewNumber(totalReviewQuantity).build();
     }
@@ -215,5 +301,20 @@ public class JpaMyPageService implements MyPageService {
             throw new NoSuchElementException("회원정보와 예약정보가 불일치합니다.");
         }
         return reservation;
+    }
+
+    private String processingUserIdentification(User user) {
+        String username = user.getUsername();
+        String email = user.getEmail();
+        int startMailDomain = email.lastIndexOf("@");
+        String mailId = email.substring(0, startMailDomain);
+        String mailDomain = email.substring(startMailDomain + 1);
+        if (mailId.length() <= 4) {
+            mailId = mailId + "***";
+        } else {
+            mailId = mailId.substring(0, 3) + "***";
+        }
+        mailDomain = mailDomain.charAt(0) + "*****";
+        return username + "(" + mailId + mailDomain + ")";
     }
 }

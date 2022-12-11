@@ -21,11 +21,13 @@ public class QueryCommentRepository {
         this.query = new JPAQueryFactory(em);
     }
 
-    public List<Comment> findAllByRating(Rating rating) {
-
+    public List<Comment> findAllByRating(Rating rating, Integer commentpage) {
         return query
                 .selectFrom(comment)
                 .where(comment.rating.eq(rating))
+                .orderBy(comment.dateTime.desc())
+                .offset(8L * (commentpage - 1))
+                .limit(8)
                 .fetch();
     }
 
