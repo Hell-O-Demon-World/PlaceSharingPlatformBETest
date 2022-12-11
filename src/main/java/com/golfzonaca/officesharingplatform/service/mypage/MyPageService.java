@@ -20,4 +20,6 @@ public interface MyPageService {
     Map<String, JsonObject> getCommentViewData(Long userId, Integer page);
 
     Map<String, JsonObject> getEditUserInfo(Long userId);
+
+    void updateUserInfo(Long userId, String password, String tel, String job, Map<String, Boolean> preferType);
 }

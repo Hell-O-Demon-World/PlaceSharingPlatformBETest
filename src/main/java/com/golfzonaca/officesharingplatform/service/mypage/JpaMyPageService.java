@@ -20,8 +20,10 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -36,7 +38,7 @@ public class JpaMyPageService implements MyPageService {
     private final ReservationRepository reservationRepository;
     private final CommentRepository commentRepository;
     private final RatingRepository ratingRepository;
-
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
     public Map<String, JsonObject> getOverViewData(Long userId) {
@@ -100,11 +102,34 @@ public class JpaMyPageService implements MyPageService {
         return editUserInfoMap;
     }
 
+    @Override
+    public void updateUserInfo(Long userId, String password, String tel, String job, Map<String, Boolean> preferType) {
+        User user = userRepository.findById(userId);
+        if (StringUtils.hasText(password)) {
+            user.updatePassword(bCryptPasswordEncoder.encode(password));
+        }
+        if (StringUtils.hasText(tel)) {
+            user.updatePhoneNumber(tel);
+        }
+        if (StringUtils.hasText(job)) {
+            user.updateJob(job);
+        }
+        if (!preferType.isEmpty()) {
+            user.updateUserPlace(processingPreferType(preferType));
+        }
+    }
+
+    private String processingPreferType(Map<String, Boolean> preferType) {
+        String userPreferType = "";
+        for (String roomType : preferType.keySet()) {
+            userPreferType = userPreferType + roomType + ":" + preferType.get(roomType) + "&";
+        }
+        return userPreferType.substring(0, userPreferType.lastIndexOf("&"));
+    }
+
     private void putUserInfoData(User user, Map<String, JsonObject> editUserInfoMap) {
         Gson gson = new Gson();
-        Map<String, Boolean> preferType = new LinkedHashMap<>();
-        String userPlace = user.getUserPlace();
-
+        Map<String, Boolean> preferType = processingPreferType(user);
         editUserInfoMap.put("userInfoData", gson.toJsonTree(new EditUserInfo(user.getPhoneNumber(), user.getJob(), preferType)).getAsJsonObject());
     }
 
@@ -209,6 +234,27 @@ public class JpaMyPageService implements MyPageService {
             commentData.put(String.valueOf(i), gson.toJsonTree(new CommentDataByRating(processingUserIdentification(comment.getWriter()), comment.getText(), comment.getDateTime().toLocalDate().toString(), comment.getDateTime().toLocalTime().toString())).getAsJsonObject());
         }
         return commentData;
+    }
+
+    @NotNull
+    private Map<String, Boolean> processingPreferType(User user) {
+        Map<String, Boolean> preferType = new LinkedHashMap<>();
+        String userPlace = user.getUserPlace();
+        while (userPlace.contains(":")) {
+            int infoSplitPoint = userPlace.indexOf(":");
+            String key = userPlace.substring(0, infoSplitPoint);
+            userPlace = userPlace.substring(infoSplitPoint + 1);
+            int separatePoint = userPlace.indexOf("&");
+            String value;
+            if (separatePoint == -1) {
+                value = userPlace;
+            } else {
+                value = userPlace.substring(0, separatePoint);
+            }
+            userPlace = userPlace.substring(separatePoint + 1);
+            preferType.put(key, Boolean.parseBoolean(value));
+        }
+        return preferType;
     }
 
     private void putReviewData(User user, Map<String, JsonObject> reviewMap, Integer page) {
