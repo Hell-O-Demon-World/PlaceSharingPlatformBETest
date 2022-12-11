@@ -16,6 +16,7 @@ import com.golfzonaca.officesharingplatform.service.reservation.validation.Reser
 import com.golfzonaca.officesharingplatform.web.formatter.TimeFormatter;
 import com.golfzonaca.officesharingplatform.web.reservation.dto.process.ProcessReservationData;
 import com.golfzonaca.officesharingplatform.web.reservation.dto.response.ReservationResponseData;
+import com.golfzonaca.officesharingplatform.web.reservation.form.ReservationResponseForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -260,9 +261,7 @@ public class JpaReservationService implements ReservationService {
     }
 
     @Override
-    public Map<String, Object> saveReservation(User user, Place place, ProcessReservationData data) {
-        Map<String, Object> result = new LinkedHashMap<>();
-
+    public Reservation saveReservation(User user, Place place, ProcessReservationData data) {
         LocalTime startTime = data.getStartTime();
         LocalTime endTime = data.getEndTime();
         LocalDate date = data.getStartDate();
@@ -272,10 +271,8 @@ public class JpaReservationService implements ReservationService {
         Room resultRoom = getResultRoom(place, startTime, endTime, date, selectedType);
         // TODO: Need to change status of reservation when user choose pay method
         Reservation reservation = new Reservation(user, resultRoom, LocalDateTime.now(), date, startTime, date, endTime, ReservationStatus.COMPLETED);
-        Reservation save = Optional.ofNullable(reservationRepository.save(reservation)).orElseThrow(() -> new DuplicatedReservationException("ReservationError::: 예약 실패"));
 
-        result.put("reservationId", save.getId().toString());
-        return result;
+        return Optional.ofNullable(reservationRepository.save(reservation)).orElseThrow(() -> new DuplicatedReservationException("ReservationError::: 예약 실패"));
     }
 
     private Room getResultRoom(Place place, LocalTime startLocalTime, LocalTime endLocalTime, LocalDate date, RoomType selectedType) {
