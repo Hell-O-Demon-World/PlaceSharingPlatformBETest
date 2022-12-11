@@ -30,8 +30,13 @@ public class CustomReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public List<Reservation> findAllByUserWithPagination(User user, Integer page, LocalDate date) {
-        return queryReservationRepository.findAllByUserWithPagination(user, page, date);
+    public List<Reservation> findRecentDataByUserWithPagination(User user, Integer page, LocalDate date) {
+        return queryReservationRepository.findRecentDataByUserWithPagination(user, page, date);
+    }
+
+    @Override
+    public List<Reservation> findAllByUserWithPagination(User user, Integer page) {
+        return queryReservationRepository.findAllByUserWithPagination(user, page);
     }
 
     @Override

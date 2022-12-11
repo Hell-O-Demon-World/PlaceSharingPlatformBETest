@@ -5,14 +5,19 @@ import com.google.gson.JsonObject;
 import java.util.Map;
 
 public interface MyPageService {
-    Map<String, JsonObject> getOverView(Long userId);
+    Map<String, JsonObject> getOverViewData(Long userId);
 
     void cancelByOrderAndUserId(Integer order, Long userId);
 
-    Map<String, JsonObject> getResView(long userId, Integer page);
+    Map<String, JsonObject> getResViewData(long userId, Integer page);
 
-    Map<String, JsonObject> getResDetailView(Long userId, long reservationId);
+    Map<String, JsonObject> getResDetailViewData(Long userId, long reservationId);
 
-    Map<String, JsonObject> getCommentView(Long userId, Integer page);
+    Map<String, JsonObject> getReviewData(Long userId, Integer reviewpage);
 
+    Map<String, JsonObject> getCommentDataByReview(Long ratingId, Integer commentpage);
+
+    Map<String, JsonObject> getCommentViewData(Long userId, Integer page);
+
+    Map<String, JsonObject> getEditUserInfo(Long userId);
 }
