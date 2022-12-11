@@ -62,8 +62,11 @@ public class ReservationController {
                 .reservationId(reservation.getId())
                 .roomType(reservation.getRoom().getRoomKind().getRoomType())
                 .placeName(reservation.getRoom().getPlace().getPlaceName())
-                .reservationStartTime(LocalDateTime.of(reservation.getResStartDate(), reservation.getResStartTime()))
-                .reservationEndTime(LocalDateTime.of(reservation.getResEndDate(), reservation.getResEndTime()))
+                .reservationStartDate(reservation.getResStartDate())
+                .reservationStartTime(reservation.getResStartTime())
+                .reservationStartDate(reservation.getResEndDate())
+                .reservationEndTime(reservation.getResEndTime())
+                .price(reservation.getRoom().getRoomKind().getPrice())
                 .totalMileage(user.getMileage().getPoint())
                 .build();
     }

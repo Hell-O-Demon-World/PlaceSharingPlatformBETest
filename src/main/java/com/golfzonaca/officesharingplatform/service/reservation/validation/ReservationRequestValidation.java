@@ -166,7 +166,7 @@ public class ReservationRequestValidation {
 
     public void validSelectedDate(LocalDate startDate, LocalDate endDate) {
         if (startDate.isBefore(endDate)) {
-            throw new InvalidDateException();
+            throw new InvalidDateException("InvalidDateException::: 종료시간이 시작시간보다 빠릅니다.");
         }
     }
 

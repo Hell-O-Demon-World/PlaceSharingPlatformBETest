@@ -6,7 +6,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Getter
 @AllArgsConstructor
@@ -16,8 +18,10 @@ public class ReservationResponseForm {
     private Long reservationId;
     private RoomType roomType;
     private String placeName;
-    private LocalDateTime reservationStartTime;
-    private LocalDateTime reservationEndTime;
-    private Long price;
+    private LocalDate reservationStartDate;
+    private LocalTime reservationStartTime;
+    private LocalDate reservationEndDate;
+    private LocalTime reservationEndTime;
+    private Integer price;
     private Long totalMileage;
 }
