@@ -3,6 +3,7 @@ package com.golfzonaca.officesharingplatform.web.reservation;
 import com.golfzonaca.officesharingplatform.annotation.TokenUserId;
 import com.golfzonaca.officesharingplatform.domain.Place;
 import com.golfzonaca.officesharingplatform.domain.Reservation;
+import com.golfzonaca.officesharingplatform.domain.RoomImage;
 import com.golfzonaca.officesharingplatform.domain.User;
 import com.golfzonaca.officesharingplatform.domain.type.RoomType;
 import com.golfzonaca.officesharingplatform.service.place.PlaceService;
@@ -20,6 +21,11 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.temporal.ChronoUnit;
+import java.util.LinkedList;
 import java.util.List;
 
 @Slf4j
@@ -56,17 +62,9 @@ public class ReservationController {
         User user = userService.findById(userId);
         reservationRequestValidation.validation(user, place, processReservationData);
         Reservation reservation = reservationService.saveReservation(user, place, processReservationData);
-        return ReservationResponseForm.builder()
-                .reservationId(reservation.getId())
-                .roomType(reservation.getRoom().getRoomKind().getRoomType())
-                .placeName(reservation.getRoom().getPlace().getPlaceName())
-                .reservationStartDate(reservation.getResStartDate().toString())
-                .reservationStartTime(reservation.getResStartTime().toString())
-                .reservationEndDate(reservation.getResEndDate().toString())
-                .reservationEndTime(reservation.getResEndTime().toString())
-                .price(reservation.getRoom().getRoomKind().getPrice())
-                .totalMileage(user.getMileage().getPoint())
-                .build();
+        ReservationResponseForm reservationResponseForm = new ReservationResponseForm();
+        reservationResponseForm.toEntity(reservation, user);
+        return reservationResponseForm;
     }
 
     private ProcessReservationData getProcessReservationData(ResRequestData resRequestData) {
