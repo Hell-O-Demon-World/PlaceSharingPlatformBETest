@@ -56,16 +56,16 @@ public class ReservationController {
         ProcessReservationData processReservationData = getProcessReservationData(resRequestData);
         Place place = placeService.findById(placeId);
         User user = userService.findById(userId);
-        reservationRequestValidation.validation(user, place, processReservationData);
+//        reservationRequestValidation.validation(user, place, processReservationData);
         Reservation reservation = reservationService.saveReservation(user, place, processReservationData);
         return ReservationResponseForm.builder()
                 .reservationId(reservation.getId())
                 .roomType(reservation.getRoom().getRoomKind().getRoomType())
                 .placeName(reservation.getRoom().getPlace().getPlaceName())
-                .reservationStartDate(reservation.getResStartDate())
-                .reservationStartTime(reservation.getResStartTime())
-                .reservationStartDate(reservation.getResEndDate())
-                .reservationEndTime(reservation.getResEndTime())
+                .reservationStartDate(reservation.getResStartDate().toString())
+                .reservationStartTime(reservation.getResStartTime().toString())
+                .reservationStartDate(reservation.getResEndDate().toString())
+                .reservationEndTime(reservation.getResEndTime().toString())
                 .price(reservation.getRoom().getRoomKind().getPrice())
                 .totalMileage(user.getMileage().getPoint())
                 .build();

@@ -18,10 +18,10 @@ public class ReservationResponseForm {
     private Long reservationId;
     private RoomType roomType;
     private String placeName;
-    private LocalDate reservationStartDate;
-    private LocalTime reservationStartTime;
-    private LocalDate reservationEndDate;
-    private LocalTime reservationEndTime;
+    private String reservationStartDate;
+    private String reservationStartTime;
+    private String reservationEndDate;
+    private String reservationEndTime;
     private Integer price;
     private Long totalMileage;
 }
