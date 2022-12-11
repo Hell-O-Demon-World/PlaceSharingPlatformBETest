@@ -54,7 +54,7 @@ public class ReservationRequestValidation {
         validPastOfDateTime(LocalDateTime.of(data.getStartDate(), data.getStartTime()), LocalDateTime.of(data.getStartDate(), data.getEndTime()));
         validDuplicatedResForSameUser(user, place, data.getStartDate(), data.getStartTime(), data.getStartDate(), data.getEndTime());
         validRestRoomForSelectedPlaceAndDateTime(place, roomType, data.getStartDate(), data.getStartTime(), data.getStartDate(), data.getEndTime());
-        validSelectedDate(data.getStartDate(), data.getEndDate());
+        validSelectedDate(LocalDateTime.of(data.getStartDate(), data.getStartTime()), LocalDateTime.of(data.getEndDate(), data.getEndTime()));
     }
 
     private void validDuplicatedResStartAndEndTime(ProcessReservationData data) {
@@ -164,8 +164,8 @@ public class ReservationRequestValidation {
         }
     }
 
-    public void validSelectedDate(LocalDate startDate, LocalDate endDate) {
-        if (startDate.isBefore(endDate)) {
+    public void validSelectedDate(LocalDateTime startDate, LocalDateTime endDate) {
+        if (startDate.isAfter(endDate)) {
             throw new InvalidDateException("InvalidDateException::: 종료시간이 시작시간보다 빠릅니다.");
         }
     }
