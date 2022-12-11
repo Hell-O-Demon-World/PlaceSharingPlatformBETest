@@ -20,11 +20,11 @@ import java.util.List;
 @NoArgsConstructor
 public class ReservationResponseForm {
     private Long reservationId;
-    private String roomType;
+    private String productType;
     private String placeName;
     private List<String> placeImgUrl;
     private Integer totalReview;
-    private Float currentRate;
+    private Float averageRate;
     private String reservationStartDate;
     private String reservationStartTime;
     private String reservationEndDate;
@@ -36,12 +36,13 @@ public class ReservationResponseForm {
     public void toEntity(Reservation savedReservation, User user, List<RatingDto> placeRating) {
         Long totalPrice = getTotalPrice(savedReservation);
         List<RoomImage> roomImages = savedReservation.getRoom().getPlace().getRoomImages();
-        List<String> urls = getUrls(roomImages);
+        RoomType roomType = savedReservation.getRoom().getRoomKind().getRoomType();
+        List<String> urls = getUrls(roomImages, roomType);
         this.reservationId = savedReservation.getId();
-        this.roomType = savedReservation.getRoom().getRoomKind().getRoomType().getDescription();
+        this.productType = roomType.getDescription();
         this.placeName = savedReservation.getRoom().getPlace().getPlaceName();
         this.placeImgUrl = urls;
-        this.currentRate = savedReservation.getRoom().getPlace().getRatePoint().getRatingPoint();
+        this.averageRate = savedReservation.getRoom().getPlace().getRatePoint().getRatingPoint();
         this.totalReview = placeRating.size();
         this.reservationStartDate = savedReservation.getResStartDate().toString();
         this.reservationStartTime = savedReservation.getResStartTime().toString();
@@ -52,10 +53,12 @@ public class ReservationResponseForm {
         this.totalMileage = user.getMileage().getPoint();
     }
 
-    private List<String> getUrls(List<RoomImage> roomImages) {
+    private List<String> getUrls(List<RoomImage> roomImages, RoomType roomType) {
         List<String> urls = new LinkedList<>();
         for (RoomImage roomImage : roomImages) {
-            urls.add(roomImage.getSavedPath());
+            if (roomImage.getRoomKind().getRoomType().equals(roomType)) {
+                urls.add(roomImage.getSavedPath());
+            }
         }
         return urls;
     }

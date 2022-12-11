@@ -50,7 +50,6 @@ public class ReservationRequestValidation {
         validBusinessDay(place, data.getStartDate());
         validDuplicatedResStartAndEndTime(data);
         validResTimeBetweenPlaceOpeningTime(place, data.getStartTime(), data.getEndTime());
-        validStartTimeBeforeEndTime(data.getStartTime(), data.getEndTime());
         validPastOfDateTime(LocalDateTime.of(data.getStartDate(), data.getStartTime()), LocalDateTime.of(data.getStartDate(), data.getEndTime()));
         validDuplicatedResForSameUser(user, place, data.getStartDate(), data.getStartTime(), data.getStartDate(), data.getEndTime());
         validRestRoomForSelectedPlaceAndDateTime(place, roomType, data.getStartDate(), data.getStartTime(), data.getStartDate(), data.getEndTime());
