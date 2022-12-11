@@ -2,6 +2,7 @@ package com.golfzonaca.officesharingplatform.web.reservation;
 
 import com.golfzonaca.officesharingplatform.annotation.TokenUserId;
 import com.golfzonaca.officesharingplatform.domain.Place;
+import com.golfzonaca.officesharingplatform.domain.Reservation;
 import com.golfzonaca.officesharingplatform.domain.User;
 import com.golfzonaca.officesharingplatform.domain.type.RoomType;
 import com.golfzonaca.officesharingplatform.service.place.PlaceService;
@@ -12,6 +13,7 @@ import com.golfzonaca.officesharingplatform.web.formatter.TimeFormatter;
 import com.golfzonaca.officesharingplatform.web.reservation.dto.process.ProcessReservationData;
 import com.golfzonaca.officesharingplatform.web.reservation.dto.request.ResRequestData;
 import com.golfzonaca.officesharingplatform.web.reservation.dto.response.ReservationResponseData;
+import com.golfzonaca.officesharingplatform.web.reservation.form.ReservationResponseForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -19,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @RestController
@@ -49,14 +50,23 @@ public class ReservationController {
     }
 
     @PostMapping("places/{placeId}/book")
-    public Map book(@TokenUserId Long userId, @PathVariable Long placeId, @Validated @RequestBody ResRequestData resRequestData) {
+    public ReservationResponseForm book(@TokenUserId Long userId, @PathVariable Long placeId, @Validated @RequestBody ResRequestData resRequestData) {
         ProcessReservationData processReservationData = getProcessReservationData(resRequestData);
-
         Place place = placeService.findById(placeId);
         User user = userService.findById(userId);
         reservationRequestValidation.validation(user, place, processReservationData);
-
-        return reservationService.saveReservation(user, place, processReservationData);
+        Reservation reservation = reservationService.saveReservation(user, place, processReservationData);
+        return ReservationResponseForm.builder()
+                .reservationId(reservation.getId())
+                .roomType(reservation.getRoom().getRoomKind().getRoomType())
+                .placeName(reservation.getRoom().getPlace().getPlaceName())
+                .reservationStartDate(reservation.getResStartDate().toString())
+                .reservationStartTime(reservation.getResStartTime().toString())
+                .reservationEndDate(reservation.getResEndDate().toString())
+                .reservationEndTime(reservation.getResEndTime().toString())
+                .price(reservation.getRoom().getRoomKind().getPrice())
+                .totalMileage(user.getMileage().getPoint())
+                .build();
     }
 
     private ProcessReservationData getProcessReservationData(ResRequestData resRequestData) {
