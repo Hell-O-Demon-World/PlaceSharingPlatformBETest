@@ -20,9 +20,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @RestController
@@ -56,7 +54,7 @@ public class ReservationController {
         ProcessReservationData processReservationData = getProcessReservationData(resRequestData);
         Place place = placeService.findById(placeId);
         User user = userService.findById(userId);
-//        reservationRequestValidation.validation(user, place, processReservationData);
+        reservationRequestValidation.validation(user, place, processReservationData);
         Reservation reservation = reservationService.saveReservation(user, place, processReservationData);
         return ReservationResponseForm.builder()
                 .reservationId(reservation.getId())
@@ -64,7 +62,7 @@ public class ReservationController {
                 .placeName(reservation.getRoom().getPlace().getPlaceName())
                 .reservationStartDate(reservation.getResStartDate().toString())
                 .reservationStartTime(reservation.getResStartTime().toString())
-                .reservationStartDate(reservation.getResEndDate().toString())
+                .reservationEndDate(reservation.getResEndDate().toString())
                 .reservationEndTime(reservation.getResEndTime().toString())
                 .price(reservation.getRoom().getRoomKind().getPrice())
                 .totalMileage(user.getMileage().getPoint())
