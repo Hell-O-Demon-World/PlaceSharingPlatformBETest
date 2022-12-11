@@ -3,7 +3,6 @@ package com.golfzonaca.officesharingplatform.web.reservation;
 import com.golfzonaca.officesharingplatform.annotation.TokenUserId;
 import com.golfzonaca.officesharingplatform.domain.Place;
 import com.golfzonaca.officesharingplatform.domain.Reservation;
-import com.golfzonaca.officesharingplatform.domain.RoomImage;
 import com.golfzonaca.officesharingplatform.domain.User;
 import com.golfzonaca.officesharingplatform.domain.type.RoomType;
 import com.golfzonaca.officesharingplatform.service.place.JpaPlaceService;
@@ -23,11 +22,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.Period;
-import java.time.temporal.ChronoUnit;
-import java.util.LinkedList;
 import java.util.List;
 
 @Slf4j
