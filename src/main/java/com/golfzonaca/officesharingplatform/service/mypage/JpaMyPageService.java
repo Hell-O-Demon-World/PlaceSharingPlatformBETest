@@ -102,9 +102,7 @@ public class JpaMyPageService implements MyPageService {
 
     private void putUserInfoData(User user, Map<String, JsonObject> editUserInfoMap) {
         Gson gson = new Gson();
-        Map<String, Boolean> preferType = new LinkedHashMap<>();
-        String userPlace = user.getUserPlace();
-
+        Map<String, Boolean> preferType = processingPreferType(user);
         editUserInfoMap.put("userInfoData", gson.toJsonTree(new EditUserInfo(user.getPhoneNumber(), user.getJob(), preferType)).getAsJsonObject());
     }
 
@@ -209,6 +207,27 @@ public class JpaMyPageService implements MyPageService {
             commentData.put(String.valueOf(i), gson.toJsonTree(new CommentDataByRating(processingUserIdentification(comment.getWriter()), comment.getText(), comment.getDateTime().toLocalDate().toString(), comment.getDateTime().toLocalTime().toString())).getAsJsonObject());
         }
         return commentData;
+    }
+
+    @NotNull
+    private Map<String, Boolean> processingPreferType(User user) {
+        Map<String, Boolean> preferType = new LinkedHashMap<>();
+        String userPlace = user.getUserPlace();
+        while (userPlace.contains(":")) {
+            int infoSplitPoint = userPlace.indexOf(":");
+            String key = userPlace.substring(0, infoSplitPoint);
+            userPlace = userPlace.substring(infoSplitPoint + 1);
+            int separatePoint = userPlace.indexOf("&");
+            String value;
+            if (separatePoint == -1) {
+                value = userPlace;
+            } else {
+                value = userPlace.substring(0, separatePoint);
+            }
+            userPlace = userPlace.substring(separatePoint + 1);
+            preferType.put(key, Boolean.parseBoolean(value));
+        }
+        return preferType;
     }
 
     private void putReviewData(User user, Map<String, JsonObject> reviewMap, Integer page) {
