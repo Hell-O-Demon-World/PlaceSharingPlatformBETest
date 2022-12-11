@@ -167,7 +167,7 @@ public class JpaPlaceService implements PlaceService {
         return mainPlaceData;
     }
 
-    private List<RatingDto> getPlaceRating(Place place) {
+    public List<RatingDto> getPlaceRating(Place place) {
         List<RatingDto> ratingList = new LinkedList<>();
         for (Room room : place.getRooms()) {
             for (Reservation reservation : room.getReservationList()) {

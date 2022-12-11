@@ -265,12 +265,12 @@ public class JpaReservationService implements ReservationService {
         LocalTime startTime = data.getStartTime();
         LocalTime endTime = data.getEndTime();
         LocalDate date = data.getStartDate();
+        LocalDate endDate = data.getEndDate();
         RoomType selectedType = RoomType.getRoomType(data.getSelectedType());
-
 
         Room resultRoom = getResultRoom(place, startTime, endTime, date, selectedType);
         // TODO: Need to change status of reservation when user choose pay method
-        Reservation reservation = new Reservation(user, resultRoom, LocalDateTime.now(), date, startTime, date, endTime, ReservationStatus.COMPLETED);
+        Reservation reservation = new Reservation(user, resultRoom, LocalDateTime.now(), date, startTime, endDate, endTime, ReservationStatus.COMPLETED);
 
         return Optional.ofNullable(reservationRepository.save(reservation)).orElseThrow(() -> new DuplicatedReservationException("ReservationError::: 예약 실패"));
     }

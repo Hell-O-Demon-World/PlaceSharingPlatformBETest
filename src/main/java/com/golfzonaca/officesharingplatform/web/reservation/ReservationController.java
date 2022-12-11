@@ -5,7 +5,9 @@ import com.golfzonaca.officesharingplatform.domain.Place;
 import com.golfzonaca.officesharingplatform.domain.Reservation;
 import com.golfzonaca.officesharingplatform.domain.User;
 import com.golfzonaca.officesharingplatform.domain.type.RoomType;
+import com.golfzonaca.officesharingplatform.service.place.JpaPlaceService;
 import com.golfzonaca.officesharingplatform.service.place.PlaceService;
+import com.golfzonaca.officesharingplatform.service.place.dto.response.RatingDto;
 import com.golfzonaca.officesharingplatform.service.reservation.ReservationService;
 import com.golfzonaca.officesharingplatform.service.reservation.validation.ReservationRequestValidation;
 import com.golfzonaca.officesharingplatform.service.user.UserService;
@@ -30,6 +32,7 @@ public class ReservationController {
     private final PlaceService placeService;
     private final UserService userService;
     private final ReservationRequestValidation reservationRequestValidation;
+    private final JpaPlaceService jpaPlaceService;
 
     @GetMapping("places/{placeId}/type/{typeName}/date/{inputDate}")
     public List<ReservationResponseData> selectedRoomType(@PathVariable Long placeId, @PathVariable String typeName, @PathVariable String inputDate) throws IOException {
@@ -56,17 +59,10 @@ public class ReservationController {
         User user = userService.findById(userId);
         reservationRequestValidation.validation(user, place, processReservationData);
         Reservation reservation = reservationService.saveReservation(user, place, processReservationData);
-        return ReservationResponseForm.builder()
-                .reservationId(reservation.getId())
-                .roomType(reservation.getRoom().getRoomKind().getRoomType())
-                .placeName(reservation.getRoom().getPlace().getPlaceName())
-                .reservationStartDate(reservation.getResStartDate().toString())
-                .reservationStartTime(reservation.getResStartTime().toString())
-                .reservationEndDate(reservation.getResEndDate().toString())
-                .reservationEndTime(reservation.getResEndTime().toString())
-                .price(reservation.getRoom().getRoomKind().getPrice())
-                .totalMileage(user.getMileage().getPoint())
-                .build();
+        ReservationResponseForm reservationResponseForm = new ReservationResponseForm();
+        List<RatingDto> placeRating = jpaPlaceService.getPlaceRating(reservation.getRoom().getPlace());
+        reservationResponseForm.toEntity(reservation, user, placeRating);
+        return reservationResponseForm;
     }
 
     private ProcessReservationData getProcessReservationData(ResRequestData resRequestData) {
