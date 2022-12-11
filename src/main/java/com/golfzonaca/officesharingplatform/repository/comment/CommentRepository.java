@@ -12,7 +12,7 @@ public interface CommentRepository {
 
     Comment findById(long commentId);
 
-    List<Comment> findAllByRating(Rating rating);
+    List<Comment> findAllByRating(Rating rating, Integer commentpage);
 
     void update(Comment comment, CommentData data);
 

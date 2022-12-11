@@ -9,6 +9,7 @@ import com.golfzonaca.officesharingplatform.repository.rating.RatingRepository;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationSearchCond;
 import com.golfzonaca.officesharingplatform.repository.user.UserRepository;
+import com.golfzonaca.officesharingplatform.service.mypage.dto.comment.CommentDataByRating;
 import com.golfzonaca.officesharingplatform.service.mypage.dto.comment.MyCommentData;
 import com.golfzonaca.officesharingplatform.service.mypage.dto.rating.RatingData;
 import com.golfzonaca.officesharingplatform.service.mypage.dto.usage.MyPaymentDetail;
@@ -17,6 +18,7 @@ import com.golfzonaca.officesharingplatform.service.mypage.dto.usage.MyReservati
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -76,6 +78,12 @@ public class JpaMyPageService implements MyPageService {
     }
 
     @Override
+    public Map<String, JsonObject> getCommentDataByReview(Long ratingId, Integer commentpage) {
+        Rating rating = ratingRepository.findById(ratingId);
+        return putCommentDataByRating(rating, commentpage);
+    }
+
+    @Override
     public Map<String, JsonObject> getCommentViewData(Long userId, Integer page) {
         User user = userRepository.findById(userId);
         Map<String, JsonObject> myCommentMap = processingUserData(user);
@@ -118,6 +126,15 @@ public class JpaMyPageService implements MyPageService {
         myResMap.put("reservationData", gson.toJsonTree(myUsage).getAsJsonObject());
     }
 
+    private Map<String, JsonObject> putCommentDataByRating(Rating rating, Integer commentpage) {
+        Gson gson = new Gson();
+        Map<String, JsonObject> commentDataMap = new LinkedHashMap<>();
+        commentDataMap.put("paginationData", gson.toJsonTree(Map.of("maxPage", rating.getCommentList().size() / 8 + 1)).getAsJsonObject());
+        Map<String, JsonObject> commentData = processingCommentDataByRating(rating, commentpage);
+        commentDataMap.put("commentData", gson.toJsonTree(commentData).getAsJsonObject());
+        return commentDataMap;
+    }
+
     private Map<String, JsonObject> processingUserData(User user) {
         Gson gson = new Gson();
         Map<String, JsonObject> myDataMap = new LinkedHashMap<>();
@@ -153,6 +170,17 @@ public class JpaMyPageService implements MyPageService {
         return myUsage;
     }
 
+    @NotNull
+    private Map<String, JsonObject> processingCommentDataByRating(Rating rating, Integer commentpage) {
+        Gson gson = new Gson();
+        Map<String, JsonObject> commentData = new LinkedHashMap<>();
+        for (int i = 0; i < commentRepository.findAllByRating(rating, commentpage).size(); i++) {
+            Comment comment = commentRepository.findAllByRating(rating, commentpage).get(i);
+            commentData.put(String.valueOf(i), gson.toJsonTree(new CommentDataByRating(processingUserIdentification(comment.getWriter()), comment.getText(), comment.getDateTime().toLocalDate().toString(), comment.getDateTime().toLocalTime().toString())).getAsJsonObject());
+        }
+        return commentData;
+    }
+
     private void putReviewData(User user, Map<String, JsonObject> reviewMap, Integer page) {
         Gson gson = new Gson();
         List<Rating> ratingList = ratingRepository.findAllByUser(user, page);
@@ -164,23 +192,26 @@ public class JpaMyPageService implements MyPageService {
         }
     }
 
-
     private void putCommentData(Integer page, User user, Map<String, JsonObject> myCommentMap) {
         Gson gson = new Gson();
         List<Comment> commentList = commentRepository.findAllByUser(user, page);
         myCommentMap.put("paginationData", gson.toJsonTree(Map.of("maxPage", commentList.size() / 8 + 1)).getAsJsonObject());
+        Map<String, JsonObject> commentDataMap = new LinkedHashMap<>();
         for (int i = 0; i < commentList.size(); i++) {
             Comment comment = commentList.get(i);
             MyCommentData myCommentData = new MyCommentData(comment.getRating().getReservation().getRoom().getPlace().getPlaceName(), comment.getRating().getReservation().getRoom().getRoomKind().getRoomType().getDescription(), comment.getText(), comment.getDateTime().toLocalDate().toString(), comment.getDateTime().toLocalTime().toString());
-            myCommentMap.put(String.valueOf(i), gson.toJsonTree(myCommentData).getAsJsonObject());
+            commentDataMap.put(String.valueOf(i), gson.toJsonTree(myCommentData).getAsJsonObject());
         }
+        myCommentMap.put("commentData", gson.toJsonTree(commentDataMap).getAsJsonObject());
     }
 
     private UserData getUserData(User user) {
         Mileage mileage = user.getMileage();
         int totalReviewQuantity = 0;
         for (Reservation reservation : user.getReservationList()) {
-            if (Optional.ofNullable(reservation.getRating()).isPresent()) totalReviewQuantity++;
+            if (Optional.ofNullable(reservation.getRating()).isPresent()) {
+                totalReviewQuantity++;
+            }
         }
         return UserData.builder().userName(user.getUsername()).joinDate(user.getJoinDate().toLocalDate().toString()).mileagePoint(mileage.getPoint()).totalReviewNumber(totalReviewQuantity).build();
     }
@@ -240,5 +271,20 @@ public class JpaMyPageService implements MyPageService {
             throw new NoSuchElementException("회원정보와 예약정보가 불일치합니다.");
         }
         return reservation;
+    }
+
+    private String processingUserIdentification(User user) {
+        String username = user.getUsername();
+        String email = user.getEmail();
+        int startMailDomain = email.lastIndexOf("@");
+        String mailId = email.substring(0, startMailDomain);
+        String mailDomain = email.substring(startMailDomain + 1);
+        if (mailId.length() <= 4) {
+            mailId = mailId + "***";
+        } else {
+            mailId = mailId.substring(0, 3) + "***";
+        }
+        mailDomain = mailDomain.charAt(0) + "*****";
+        return username + "(" + mailId + mailDomain + ")";
     }
 }

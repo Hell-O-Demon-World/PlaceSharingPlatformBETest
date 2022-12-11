@@ -9,7 +9,7 @@ public interface CommentService {
 
     void save(Long userId, Long ratingId, CommentData data);
 
-    List<Comment> findAllByRatingId(long ratingId);
+    List<Comment> findAllByRatingId(long ratingId, Integer commentpage);
 
     void update(long commentId, CommentData data);
 
