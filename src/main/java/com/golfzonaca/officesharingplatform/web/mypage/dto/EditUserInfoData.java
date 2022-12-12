@@ -6,7 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Getter
-public class EditUserInfo {
+public class EditUserInfoData {
     private String password;
     private String tel;
     private String job;

@@ -5,6 +5,7 @@ import com.golfzonaca.officesharingplatform.domain.type.RatingStatus;
 import com.golfzonaca.officesharingplatform.domain.type.ReservationStatus;
 import com.golfzonaca.officesharingplatform.domain.type.UsageStatus;
 import com.golfzonaca.officesharingplatform.repository.comment.CommentRepository;
+import com.golfzonaca.officesharingplatform.repository.inquiry.InquiryRepository;
 import com.golfzonaca.officesharingplatform.repository.rating.RatingRepository;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationSearchCond;
@@ -12,6 +13,9 @@ import com.golfzonaca.officesharingplatform.repository.user.UserRepository;
 import com.golfzonaca.officesharingplatform.service.mypage.dto.comment.CommentDataByRating;
 import com.golfzonaca.officesharingplatform.service.mypage.dto.comment.MyCommentData;
 import com.golfzonaca.officesharingplatform.service.mypage.dto.edituserinfo.EditUserInfo;
+import com.golfzonaca.officesharingplatform.service.mypage.dto.qna.AnswerData;
+import com.golfzonaca.officesharingplatform.service.mypage.dto.qna.QnAData;
+import com.golfzonaca.officesharingplatform.service.mypage.dto.qna.QuestionData;
 import com.golfzonaca.officesharingplatform.service.mypage.dto.rating.RatingData;
 import com.golfzonaca.officesharingplatform.service.mypage.dto.usage.MyPaymentDetail;
 import com.golfzonaca.officesharingplatform.service.mypage.dto.usage.MyReservationDetail;
@@ -38,6 +42,7 @@ public class JpaMyPageService implements MyPageService {
     private final ReservationRepository reservationRepository;
     private final CommentRepository commentRepository;
     private final RatingRepository ratingRepository;
+    private final InquiryRepository inquiryRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
@@ -95,6 +100,14 @@ public class JpaMyPageService implements MyPageService {
     }
 
     @Override
+    public Map<String, JsonObject> getQnAViewData(Long userId, Integer page) {
+        User user = userRepository.findById(userId);
+        Map<String, JsonObject> myQnAMap = processingUserData(user);
+        putQnAData(user, myQnAMap, page);
+        return myQnAMap;
+    }
+
+    @Override
     public Map<String, JsonObject> getEditUserInfo(Long userId) {
         User user = userRepository.findById(userId);
         Map<String, JsonObject> editUserInfoMap = processingUserData(user);
@@ -119,12 +132,9 @@ public class JpaMyPageService implements MyPageService {
         }
     }
 
-    private String processingPreferType(Map<String, Boolean> preferType) {
-        String userPreferType = "";
-        for (String roomType : preferType.keySet()) {
-            userPreferType = userPreferType + roomType + ":" + preferType.get(roomType) + "&";
-        }
-        return userPreferType.substring(0, userPreferType.lastIndexOf("&"));
+    @Override
+    public void saveInquiry(Long userId, String title, String question) {
+        inquiryRepository.save(new Inquiry(userRepository.findById(userId), title, question, LocalDateTime.now()));
     }
 
     private void putUserInfoData(User user, Map<String, JsonObject> editUserInfoMap) {
@@ -175,6 +185,29 @@ public class JpaMyPageService implements MyPageService {
         Map<String, JsonObject> commentData = processingCommentDataByRating(rating, commentpage);
         commentDataMap.put("commentData", gson.toJsonTree(commentData).getAsJsonObject());
         return commentDataMap;
+    }
+
+    private void putQnAData(User user, Map<String, JsonObject> myInquiryMap, Integer page) {
+        Gson gson = new Gson();
+        Map<String, JsonObject> qnaMap = processingQnAData(user, page);
+        myInquiryMap.put("paginationData", gson.toJsonTree(Map.of("maxPage", user.getInquiryList().size() / 8 + 1)).getAsJsonObject());
+        myInquiryMap.put("qnaData", gson.toJsonTree(qnaMap).getAsJsonObject());
+    }
+
+    private Map<String, JsonObject> processingQnAData(User user, Integer page) {
+        Gson gson = new Gson();
+        Map<String, JsonObject> qnaMap = new LinkedHashMap<>();
+        List<Inquiry> inquiryList = inquiryRepository.findAllByUserWithPagination(user, page);
+        for (int i = 0; i < inquiryList.size(); i++) {
+            Inquiry inquiry = inquiryList.get(i);
+            AnswerData answerData = new AnswerData("");
+            if (inquiry.getAnswer() != null) {
+                answerData.setAnswerContext(inquiry.getAnswer().getAnswer());
+            }
+            QnAData qnAData = new QnAData(new QuestionData(inquiry.getId(), inquiry.getTitle(), inquiry.getContent(), inquiry.getDateTime().toLocalDate().toString(), inquiry.getDateTime().toLocalTime().toString(), inquiry.getInquiryStatus().getStatus()), answerData);
+            qnaMap.put(String.valueOf(i), gson.toJsonTree(qnAData).getAsJsonObject());
+        }
+        return qnaMap;
     }
 
     private Map<String, JsonObject> processingUserData(User user) {
@@ -255,6 +288,14 @@ public class JpaMyPageService implements MyPageService {
             preferType.put(key, Boolean.parseBoolean(value));
         }
         return preferType;
+    }
+
+    private String processingPreferType(Map<String, Boolean> preferType) {
+        String userPreferType = "";
+        for (String roomType : preferType.keySet()) {
+            userPreferType = userPreferType + roomType + ":" + preferType.get(roomType) + "&";
+        }
+        return userPreferType.substring(0, userPreferType.lastIndexOf("&"));
     }
 
     private void putReviewData(User user, Map<String, JsonObject> reviewMap, Integer page) {

@@ -2,7 +2,8 @@ package com.golfzonaca.officesharingplatform.web.mypage;
 
 import com.golfzonaca.officesharingplatform.annotation.TokenUserId;
 import com.golfzonaca.officesharingplatform.service.mypage.MyPageService;
-import com.golfzonaca.officesharingplatform.web.mypage.dto.EditUserInfo;
+import com.golfzonaca.officesharingplatform.web.mypage.dto.EditUserInfoData;
+import com.golfzonaca.officesharingplatform.web.mypage.dto.SaveInquiryData;
 import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -50,6 +51,16 @@ public class MyPageController {
         return myPageService.getCommentViewData(userId, page);
     }
 
+    @GetMapping("/qna")
+    public Map<String, JsonObject> inquiryHistory(@TokenUserId Long userId, @RequestParam Integer page) {
+        return myPageService.getQnAViewData(userId, page);
+    }
+
+    @PostMapping("/qna")
+    public void saveInquiry(@TokenUserId Long userId, @RequestBody SaveInquiryData inquiry) {
+        myPageService.saveInquiry(userId, inquiry.getTitle(), inquiry.getQuestion());
+    }
+
 
     @GetMapping("/edit")
     public Map<String, JsonObject> editUserInfo(@TokenUserId Long userId) {
@@ -57,11 +68,11 @@ public class MyPageController {
     }
 
     @PostMapping("/edit")
-    public void editUser(@TokenUserId Long userId, @RequestBody EditUserInfo editUserInfo) {
-        String password = editUserInfo.getPassword();
-        String tel = editUserInfo.getTel();
-        String job = editUserInfo.getJob();
-        Map<String, Boolean> preferType = editUserInfo.getPreferType();
+    public void editUser(@TokenUserId Long userId, @RequestBody EditUserInfoData editUserInfoData) {
+        String password = editUserInfoData.getPassword();
+        String tel = editUserInfoData.getTel();
+        String job = editUserInfoData.getJob();
+        Map<String, Boolean> preferType = editUserInfoData.getPreferType();
         myPageService.updateUserInfo(userId, password, tel, job, preferType);
     }
 }
