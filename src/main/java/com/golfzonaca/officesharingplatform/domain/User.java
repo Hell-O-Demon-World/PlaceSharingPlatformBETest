@@ -43,6 +43,12 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Reservation> reservationList = new LinkedList<>();
 
+    @OneToMany(mappedBy = "writer")
+    private List<Comment> commentList = new LinkedList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<Inquiry> inquiryList = new LinkedList<>();
+
     public User(Long id) {
         this.id = id;
     }
@@ -72,5 +78,17 @@ public class User {
 
     public void updateDate(LocalDateTime joinDate) {
         this.joinDate = joinDate;
+    }
+
+    public void updatePhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void updateJob(String job) {
+        this.job = job;
+    }
+
+    public void updateUserPlace(String userPlace) {
+        this.userPlace = userPlace;
     }
 }

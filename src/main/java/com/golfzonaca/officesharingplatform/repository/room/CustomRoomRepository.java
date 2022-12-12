@@ -5,6 +5,7 @@ import com.golfzonaca.officesharingplatform.domain.Room;
 import com.golfzonaca.officesharingplatform.domain.type.RoomType;
 import com.golfzonaca.officesharingplatform.exception.NonExistedRoomException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,6 +54,7 @@ public class CustomRoomRepository implements RoomRepository {
         return queryRoomRepository.findRoomByPlaceAndRoomKind(place, selectedType);
     }
 
+    @Cacheable(cacheNames = "roomDataByPlaceAndType", sync = true, key = "#placeId+'&'+#selectedType")
     @Override
     public List<Room> findRoomByPlaceIdAndRoomType(Long placeId, RoomType selectedType) {
         return queryRoomRepository.findAllByPlaceIdAndRoomType(placeId, selectedType);

@@ -2,6 +2,7 @@ package com.golfzonaca.officesharingplatform.repository.comment;
 
 import com.golfzonaca.officesharingplatform.domain.Comment;
 import com.golfzonaca.officesharingplatform.domain.Rating;
+import com.golfzonaca.officesharingplatform.domain.User;
 import com.golfzonaca.officesharingplatform.web.comment.dto.CommentData;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -30,8 +31,8 @@ public class SpringJpaDslCommentRepository implements CommentRepository {
     }
 
     @Override
-    public List<Comment> findAllByRating(Rating rating) {
-        return queryRepository.findAllByRating(rating);
+    public List<Comment> findAllByRating(Rating rating, Integer commentpage) {
+        return queryRepository.findAllByRating(rating, commentpage);
     }
 
     @Override
@@ -43,4 +44,15 @@ public class SpringJpaDslCommentRepository implements CommentRepository {
     public void delete(Comment comment) {
         jpaRepository.delete(comment);
     }
+
+    @Override
+    public Long countByUser(User user) {
+        return queryRepository.countByUser(user);
+    }
+
+    @Override
+    public List<Comment> findAllByUserWithPagination(User user, Integer page) {
+        return queryRepository.findAllByUser(user, page);
+    }
+
 }

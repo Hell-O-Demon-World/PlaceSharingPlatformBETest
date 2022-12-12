@@ -21,8 +21,8 @@ public class CommentController {
     }
 
     @GetMapping("/{ratingId}/comment")
-    public String findComment(@PathVariable long ratingId) {
-        commentService.findAllByRatingId(ratingId);
+    public String findComment(@PathVariable long ratingId, @RequestParam Integer commentpage) {
+        commentService.findAllByRatingId(ratingId, commentpage);
         return "ok";
     }
 

@@ -15,7 +15,7 @@ title OfficeSharingPlatform
 
     section 공통
     환경 설정(Git)             :chap1, 11-16, 1d
-    개발 및 리팩토링             :chap2, 11-16, 12-11
+    개발 및 리팩토링             :chap2, 11-16, 12-14
 
     section 오령기
     Spring Jpa, QueryDsl 적용 (Main Platform)                     : chap1, 11-16, 3d
@@ -35,22 +35,24 @@ title OfficeSharingPlatform
     KakaoPay 환불        : chap4, 11-29, 3d
     
     section 이동훈
-    Spring Jpa, QueryDsl 적용 (Main Platform)         : chap1, 11-16, 4d
-    Search & Filter (Main Platform)                  : chap2, 11-20, 2d
-    Reservation Part.1 & 3 (Main Platform)           : chap3, 11-22, 2d
-    Custom Validator & Anntation 추가 (Main Platform) : chap4, 11-23, 1d
-    Comment, Rating, Inquiry (Main Platform)         : chap5, 11-24, 2d
-    Spring Jpa, QueryDsl 적용 (Back Office)           : chap6, 11-26, 1d
-    예약 제외 설정 추가 (Back Office)                     : chap7, 11-27, 1d
-    예약 관리 대시보드 추가 (Back Office)                  : chap8, 11-27, 1d
-    수익금 조회 추가 (Back Office)                       : chap9, 11-28, 1d
-    공간 상세 정보 조회 (Main Platform)                   : chap10, 11-29, 1d
-    Filter 수정 (Main Platform)                       : chap11, 11-30, 1d
-    Exception 처리 (Main Platform)                    : chap12, 11-30, 1d
-    이미지 업로드 추가 (Back Office)                      : chap13, 12-01, 2d
-    공간 상세 정보와 Reservation Part.1 통합               : chap14, 12-03, 2d
-    마이페이지  - 예약 내역 조회                            : chap15, 12-07, 2d
-    Spring Cache (CaffeineCache) 도입                 : chap16, 12-08, 1d
+    Spring Jpa, QueryDsl 적용 (Main Platform)                                : chap1, 11-16, 4d
+    Search & Filter (Main Platform)                                         : chap2, 11-20, 2d
+    Reservation Part.1 & 3 (Main Platform)                                  : chap3, 11-22, 2d
+    Custom Validator & Anntation 추가 (Main Platform)                        : chap4, 11-23, 1d
+    Comment, Rating, Inquiry (Main Platform)                                : chap5, 11-24, 2d
+    Spring Jpa, QueryDsl 적용 (Back Office)                                  : chap6, 11-26, 1d
+    예약 제외 설정 추가 (Back Office)                                            : chap7, 11-27, 1d
+    예약 관리 대시보드 추가 (Back Office)                                         : chap8, 11-27, 1d
+    수익금 조회 추가 (Back Office)                                              : chap9, 11-28, 1d
+    공간 상세 정보 조회 (Main Platform)                                          : chap10, 11-29, 1d
+    Filter 수정 (Main Platform)                                              : chap11, 11-30, 1d
+    Exception 처리 (Main Platform)                                           : chap12, 11-30, 1d
+    이미지 업로드 추가 (Back Office)                                             : chap13, 12-01, 2d
+    공간 상세 정보와 Reservation Part.1 통합 (Main Platform)                      : chap14, 12-03, 2d
+    마이페이지  - 예약 내역 조회 (Main Platform)                                   : chap15, 12-07, 2d
+    Spring Cache (CaffeineCache) 도입 (Main Platform)                         : chap16, 12-08, 2d
+    마이페이지 - 조회(오버뷰, 후기, 댓글), 수정(회원정보) (Main Platform)                : chap17, 12-10, 3d
+    Place Details - 후기 & 댓글 Pagination, 부가 정보(맛집, 카페) (Main Platform)   : chap18, 12-12, 1d
 
 
 ```

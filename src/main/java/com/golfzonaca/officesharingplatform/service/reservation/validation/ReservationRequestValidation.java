@@ -46,14 +46,20 @@ public class ReservationRequestValidation {
     }
 
     public void validation(User user, Place place, ProcessReservationData data) {
-        RoomType roomType = RoomType.getRoomType(data.getSelectedType());
+        RoomType roomType = RoomType.getRoomType(data.getSelectedType().toUpperCase());
         validBusinessDay(place, data.getStartDate());
+        validDuplicatedResStartAndEndTime(data);
         validResTimeBetweenPlaceOpeningTime(place, data.getStartTime(), data.getEndTime());
-        validStartTimeBeforeEndTime(data.getStartTime(), data.getEndTime());
         validPastOfDateTime(LocalDateTime.of(data.getStartDate(), data.getStartTime()), LocalDateTime.of(data.getStartDate(), data.getEndTime()));
         validDuplicatedResForSameUser(user, place, data.getStartDate(), data.getStartTime(), data.getStartDate(), data.getEndTime());
         validRestRoomForSelectedPlaceAndDateTime(place, roomType, data.getStartDate(), data.getStartTime(), data.getStartDate(), data.getEndTime());
-        validSelectedDate(data.getStartDate(), data.getEndDate());
+        validSelectedDate(LocalDateTime.of(data.getStartDate(), data.getStartTime()), LocalDateTime.of(data.getEndDate(), data.getEndTime()), roomType);
+    }
+
+    private void validDuplicatedResStartAndEndTime(ProcessReservationData data) {
+        if (data.getStartTime().equals(data.getEndTime())) {
+            throw new DuplicatedReservationException("DuplicatedReservationException::: 시작시간과 종료시간이 같습니다.");
+        }
     }
 
     private void validBusinessTime(Place place, LocalTime time) {
@@ -157,9 +163,14 @@ public class ReservationRequestValidation {
         }
     }
 
-    public void validSelectedDate(LocalDate startDate, LocalDate endDate) {
-        if (startDate.isBefore(endDate)) {
-            throw new InvalidDateException();
+    public void validSelectedDate(LocalDateTime startDate, LocalDateTime endDate, RoomType roomType) {
+        if (startDate.isAfter(endDate)) {
+            throw new InvalidDateException("InvalidDateException::: 종료시간이 시작시간보다 빠릅니다.");
+        }
+        if (roomType.name().contains("OFFICE")) {
+            if (startDate.getYear() == endDate.getYear() && startDate.getMonth() == endDate.getMonth() && startDate.getDayOfMonth() == endDate.getDayOfMonth()) {
+                throw new InvalidDateException("InvalidDateException::: 예약 기간을 하루 이상 입력해주세요");
+            }
         }
     }
 

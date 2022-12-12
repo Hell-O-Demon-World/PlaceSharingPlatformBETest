@@ -6,12 +6,13 @@ import com.golfzonaca.officesharingplatform.domain.User;
 import com.golfzonaca.officesharingplatform.domain.type.RoomType;
 import com.golfzonaca.officesharingplatform.exception.NonExistedReservationException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,14 +23,20 @@ public class CustomReservationRepository implements ReservationRepository {
     private final SpringDataJpaReservationRepository jpaReservationRepository;
     private final QueryReservationRepository queryReservationRepository;
 
+    @CacheEvict(cacheNames = "resDataByPlaceAndTypeAndDate", allEntries = true)
     @Override
     public Reservation save(Reservation reservation) {
         return jpaReservationRepository.save(reservation);
     }
 
     @Override
-    public List<Reservation> findAllByUserId(Long userId) {
-        return jpaReservationRepository.findAllById(Collections.singleton(userId));
+    public List<Reservation> findRecentDataByUserWithPagination(User user, Integer page, LocalDate date) {
+        return queryReservationRepository.findRecentDataByUserWithPagination(user, page, date);
+    }
+
+    @Override
+    public List<Reservation> findAllByUserWithPagination(User user, Integer page) {
+        return queryReservationRepository.findAllByUserWithPagination(user, page);
     }
 
     @Override
@@ -61,6 +68,7 @@ public class CustomReservationRepository implements ReservationRepository {
         return queryReservationRepository.findResByRoomKindAndDateTime(selectedType, startDate, startTime, endDate, endTime);
     }
 
+    @Cacheable(cacheNames = "resDataByPlaceAndTypeAndDate", sync = true, key = "#placeId+'&'+#roomType+'&'+#date")
     @Override
     public List<Reservation> findAllByPlaceIdAndRoomTypeAndDate(Long placeId, RoomType roomType, LocalDate date) {
         return queryReservationRepository.findAllByPlaceIdAndRoomTypeAndDate(placeId, roomType, date);
@@ -84,6 +92,11 @@ public class CustomReservationRepository implements ReservationRepository {
     @Override
     public List<Reservation> findAllLimit(ReservationSearchCond cond, Integer maxNum) {
         return queryReservationRepository.findAllLimit(cond, maxNum);
+    }
+
+    @Override
+    public List<Reservation> findByUserAndDateTime(User user, LocalDate date, LocalTime time) {
+        return queryReservationRepository.findByUserAndDateTime(user, date, time);
     }
 
 }

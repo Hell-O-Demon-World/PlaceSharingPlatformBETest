@@ -32,7 +32,7 @@ public class Inquiry {
     private LocalDateTime dateTime;
 
     @OneToOne(mappedBy = "inquiry")
-    private Answer anwer;
+    private Answer answer;
 
     @OneToOne(mappedBy = "inquiry")
     private InquiryStatus inquiryStatus;

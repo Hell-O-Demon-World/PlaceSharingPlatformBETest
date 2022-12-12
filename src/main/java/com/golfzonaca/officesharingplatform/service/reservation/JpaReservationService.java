@@ -16,6 +16,7 @@ import com.golfzonaca.officesharingplatform.service.reservation.validation.Reser
 import com.golfzonaca.officesharingplatform.web.formatter.TimeFormatter;
 import com.golfzonaca.officesharingplatform.web.reservation.dto.process.ProcessReservationData;
 import com.golfzonaca.officesharingplatform.web.reservation.dto.response.ReservationResponseData;
+import com.golfzonaca.officesharingplatform.web.reservation.form.ReservationResponseForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -42,11 +43,11 @@ public class JpaReservationService implements ReservationService {
     public List<ReservationResponseData> getReservationResponseData(Place findPlace, RoomType roomType, String inputDate) throws IOException {
         LocalDateTime selectedStartDateTime = LocalDateTime.of(TimeFormatter.toLocalDate(inputDate), LocalTime.now());
         LocalDateTime selectedEndDateTime = LocalDateTime.of(TimeFormatter.toLocalDate(inputDate).plusYears(1), LocalTime.of(23, 59));
-
         return getTotalDayData(findPlace, roomType, selectedStartDateTime, selectedEndDateTime);
     }
 
     private List<ReservationResponseData> getTotalDayData(Place findPlace, RoomType roomType, LocalDateTime startDateTime, LocalDateTime endDateTime) throws IOException {
+
         List<ReservationResponseData> resultList = new ArrayList<>();
         String[] openDays = findPlace.getOpenDays().split(", ");
         int startYear = startDateTime.getYear();
@@ -260,22 +261,18 @@ public class JpaReservationService implements ReservationService {
     }
 
     @Override
-    public Map<String, Object> saveReservation(User user, Place place, ProcessReservationData data) {
-        Map<String, Object> result = new LinkedHashMap<>();
-
+    public Reservation saveReservation(User user, Place place, ProcessReservationData data) {
         LocalTime startTime = data.getStartTime();
         LocalTime endTime = data.getEndTime();
         LocalDate date = data.getStartDate();
+        LocalDate endDate = data.getEndDate();
         RoomType selectedType = RoomType.getRoomType(data.getSelectedType());
-
 
         Room resultRoom = getResultRoom(place, startTime, endTime, date, selectedType);
         // TODO: Need to change status of reservation when user choose pay method
-        Reservation reservation = new Reservation(user, resultRoom, LocalDateTime.now(), date, startTime, date, endTime, ReservationStatus.COMPLETED);
-        Reservation save = Optional.ofNullable(reservationRepository.save(reservation)).orElseThrow(() -> new DuplicatedReservationException("ReservationError::: 예약 실패"));
+        Reservation reservation = new Reservation(user, resultRoom, LocalDateTime.now(), date, startTime, endDate, endTime, ReservationStatus.COMPLETED);
 
-        result.put("reservationId", save.getId().toString());
-        return result;
+        return Optional.ofNullable(reservationRepository.save(reservation)).orElseThrow(() -> new DuplicatedReservationException("ReservationError::: 예약 실패"));
     }
 
     private Room getResultRoom(Place place, LocalTime startLocalTime, LocalTime endLocalTime, LocalDate date, RoomType selectedType) {

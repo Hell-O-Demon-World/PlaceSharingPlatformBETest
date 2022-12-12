@@ -1,6 +1,7 @@
 package com.golfzonaca.officesharingplatform.service.reservation;
 
 import com.golfzonaca.officesharingplatform.domain.Place;
+import com.golfzonaca.officesharingplatform.domain.Reservation;
 import com.golfzonaca.officesharingplatform.domain.User;
 import com.golfzonaca.officesharingplatform.domain.type.RoomType;
 import com.golfzonaca.officesharingplatform.web.reservation.dto.process.ProcessReservationData;
@@ -19,6 +20,6 @@ public interface ReservationService {
 
     List<Integer> findAvailableTimes(Long placeId, RoomType selectedType, LocalDate date, LocalTime startTime);
 
-    Map<String, Object> saveReservation(User user, Place place, ProcessReservationData data);
+    Reservation saveReservation(User user, Place place, ProcessReservationData data);
 
 }

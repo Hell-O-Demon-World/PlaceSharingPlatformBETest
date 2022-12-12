@@ -1,9 +1,8 @@
 package com.golfzonaca.officesharingplatform.web.payment;
 
 import com.golfzonaca.officesharingplatform.annotation.TokenUserId;
-import com.golfzonaca.officesharingplatform.domain.User;
-import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayApprovalResponse;
-import com.golfzonaca.officesharingplatform.domain.payment.KakaoPayCancelResponse;
+import com.golfzonaca.officesharingplatform.web.payment.dto.kakaopay.KakaoPayApprovalResponse;
+import com.golfzonaca.officesharingplatform.web.payment.dto.kakaopay.KakaoPayCancelResponse;
 import com.golfzonaca.officesharingplatform.service.payment.kakaopay.KakaoPayService;
 import com.golfzonaca.officesharingplatform.web.payment.dto.CancelInfo;
 import com.golfzonaca.officesharingplatform.web.payment.dto.PaymentInfo;

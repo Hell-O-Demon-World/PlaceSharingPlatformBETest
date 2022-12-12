@@ -1,7 +1,7 @@
 package com.golfzonaca.officesharingplatform.repository.inquiry;
 
 import com.golfzonaca.officesharingplatform.domain.Inquiry;
-import com.golfzonaca.officesharingplatform.web.inquiry.dto.InquiryData;
+import com.golfzonaca.officesharingplatform.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,8 +17,8 @@ public class CustomInquiryRepository implements InquiryRepository {
     private final QueryInquiryRepository queryInquiryRepository;
 
     @Override
-    public void save(Inquiry inquiry) {
-        jpaInquiryRepository.save(inquiry);
+    public Inquiry save(Inquiry inquiry) {
+        return jpaInquiryRepository.save(inquiry);
     }
 
     @Override
@@ -27,18 +27,8 @@ public class CustomInquiryRepository implements InquiryRepository {
     }
 
     @Override
-    public void update(Inquiry inquiry, InquiryData data) {
-        inquiry.UpdateInquiry(data.getTitle(), data.getQuestion());
-    }
-
-    @Override
-    public void delete(Inquiry inquiry) {
-        jpaInquiryRepository.delete(inquiry);
-    }
-
-    @Override
-    public List<Inquiry> findByUserIdWithPagination(Long userId, long page, long quantity) {
-        return queryInquiryRepository.findByUserIdWithPagination(userId, page, quantity);
+    public List<Inquiry> findAllByUserWithPagination(User user, Integer page) {
+        return queryInquiryRepository.findByUserWithPagination(user, page);
     }
 
 }

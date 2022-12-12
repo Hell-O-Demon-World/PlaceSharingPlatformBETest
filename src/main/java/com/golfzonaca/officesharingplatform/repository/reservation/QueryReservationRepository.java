@@ -116,6 +116,37 @@ public class QueryReservationRepository {
                 .fetch();
     }
 
+    public List<Reservation> findRecentDataByUserWithPagination(User user, Integer page, LocalDate date) {
+        return query
+                .selectFrom(reservation)
+                .innerJoin(reservation.user)
+                .where(reservation.user.eq(user), startDateGoe(date))
+                .orderBy(reservation.resStartDate.asc(), reservation.resStartTime.asc())
+                .offset(8L * (page - 1))
+                .limit(8)
+                .fetch();
+    }
+
+    public List<Reservation> findAllByUserWithPagination(User user, Integer page) {
+        return query
+                .selectFrom(reservation)
+                .innerJoin(reservation.user)
+                .where(reservation.user.eq(user))
+                .orderBy(reservation.resStartDate.desc(), reservation.resStartTime.desc())
+                .offset(8L * (page - 1))
+                .limit(8)
+                .fetch();
+    }
+
+    public List<Reservation> findByUserAndDateTime(User user, LocalDate date, LocalTime time) {
+        return query
+                .selectFrom(reservation)
+                .innerJoin(reservation.user)
+                .where(reservation.user.eq(user), startDateEquals(date), startTimeLoe(time), endTimeGt(time))
+                .orderBy(reservation.resStartTime.asc())
+                .fetch();
+    }
+
     public Optional<Reservation> findByUserAndRoom(User user, Room room) {
         if (user != null && room != null) {
             return Optional.ofNullable(query
@@ -136,6 +167,13 @@ public class QueryReservationRepository {
     private BooleanExpression PlaceEquals(Place place) {
         if (place != null) {
             return reservation.room.place.eq(place);
+        }
+        return null;
+    }
+
+    private BooleanExpression startDateGoe(LocalDate date) {
+        if (date != null) {
+            return reservation.resStartDate.goe(date);
         }
         return null;
     }
@@ -259,6 +297,4 @@ public class QueryReservationRepository {
         }
         return null;
     }
-
-
 }

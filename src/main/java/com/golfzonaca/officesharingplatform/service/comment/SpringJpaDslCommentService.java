@@ -32,8 +32,8 @@ public class SpringJpaDslCommentService implements CommentService {
     }
 
     @Override
-    public List<Comment> findAllByRatingId(long ratingId) {
-        return commentRepository.findAllByRating(ratingRepository.findById(ratingId));
+    public List<Comment> findAllByRatingId(long ratingId, Integer page) {
+        return commentRepository.findAllByRating(ratingRepository.findById(ratingId), page);
     }
 
     @Override

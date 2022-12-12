@@ -1,6 +1,5 @@
 package com.golfzonaca.officesharingplatform.service.place.dto;
 
-import com.golfzonaca.officesharingplatform.service.place.dto.response.RatingDto;
 import com.golfzonaca.officesharingplatform.service.place.dto.response.RoomTypeResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,5 +25,4 @@ public class PlaceDetailsInfo {
     private String placeOpenTime;
     private String placeCloseTime;
     RoomTypeResponse roomTypeResponse;
-    private List<RatingDto> ratingList;
 }
