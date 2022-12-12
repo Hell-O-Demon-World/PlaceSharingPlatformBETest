@@ -17,8 +17,8 @@ public class CustomInquiryRepository implements InquiryRepository {
     private final QueryInquiryRepository queryInquiryRepository;
 
     @Override
-    public void save(Inquiry inquiry) {
-        jpaInquiryRepository.save(inquiry);
+    public Inquiry save(Inquiry inquiry) {
+        return jpaInquiryRepository.save(inquiry);
     }
 
     @Override

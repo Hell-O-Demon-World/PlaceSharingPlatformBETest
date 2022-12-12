@@ -6,9 +6,9 @@ import com.golfzonaca.officesharingplatform.domain.User;
 import java.util.List;
 
 public interface InquiryRepository {
-    void save(Inquiry inquiry);
+    Inquiry save(Inquiry inquiry);
 
     Inquiry findById(long inquiryId);
-    
+
     List<Inquiry> findAllByUserWithPagination(User user, Integer page);
 }

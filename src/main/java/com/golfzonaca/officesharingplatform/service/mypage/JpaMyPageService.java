@@ -6,6 +6,7 @@ import com.golfzonaca.officesharingplatform.domain.type.ReservationStatus;
 import com.golfzonaca.officesharingplatform.domain.type.UsageStatus;
 import com.golfzonaca.officesharingplatform.repository.comment.CommentRepository;
 import com.golfzonaca.officesharingplatform.repository.inquiry.InquiryRepository;
+import com.golfzonaca.officesharingplatform.repository.inquirystatus.InquiryStatusRepository;
 import com.golfzonaca.officesharingplatform.repository.rating.RatingRepository;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationSearchCond;
@@ -43,6 +44,7 @@ public class JpaMyPageService implements MyPageService {
     private final CommentRepository commentRepository;
     private final RatingRepository ratingRepository;
     private final InquiryRepository inquiryRepository;
+    private final InquiryStatusRepository inquiryStatusRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
@@ -134,7 +136,8 @@ public class JpaMyPageService implements MyPageService {
 
     @Override
     public void saveInquiry(Long userId, String title, String question) {
-        inquiryRepository.save(new Inquiry(userRepository.findById(userId), title, question, LocalDateTime.now()));
+        Inquiry inquiry = inquiryRepository.save(new Inquiry(userRepository.findById(userId), title, question, LocalDateTime.now()));
+        inquiryStatusRepository.save(new InquiryStatus(inquiry, false));
     }
 
     private void putUserInfoData(User user, Map<String, JsonObject> editUserInfoMap) {
