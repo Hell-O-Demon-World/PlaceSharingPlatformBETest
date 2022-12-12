@@ -197,6 +197,14 @@ public class JpaMyPageService implements MyPageService {
         myInquiryMap.put("qnaData", gson.toJsonTree(qnaMap).getAsJsonObject());
     }
 
+    private void putReviewData(User user, Map<String, JsonObject> reviewMap, Integer page) {
+        Gson gson = new Gson();
+        List<Rating> ratingList = ratingRepository.findAllByUserWithPagination(user, page);
+        reviewMap.put("paginationData", gson.toJsonTree(Map.of("maxPage", ratingRepository.countByUser(user) / 8 + 1)).getAsJsonObject());
+        Map<String, JsonObject> reviewData = processingReviewData(ratingList);
+        reviewMap.put("reviewData", gson.toJsonTree(reviewData).getAsJsonObject());
+    }
+
     private Map<String, JsonObject> processingQnAData(User user, Integer page) {
         Gson gson = new Gson();
         Map<String, JsonObject> qnaMap = new LinkedHashMap<>();
@@ -301,15 +309,16 @@ public class JpaMyPageService implements MyPageService {
         return userPreferType.substring(0, userPreferType.lastIndexOf("&"));
     }
 
-    private void putReviewData(User user, Map<String, JsonObject> reviewMap, Integer page) {
+    @NotNull
+    private Map<String, JsonObject> processingReviewData(List<Rating> ratingList) {
         Gson gson = new Gson();
-        List<Rating> ratingList = ratingRepository.findAllByUserWithPagination(user, page);
-        reviewMap.put("paginationData", gson.toJsonTree(Map.of("maxPage", ratingRepository.countByUser(user) / 8 + 1)).getAsJsonObject());
+        Map<String, JsonObject> reviewData = new LinkedHashMap<>();
         for (int i = 0; i < ratingList.size(); i++) {
             Rating rating = ratingList.get(i);
             JsonObject myRatingData = gson.toJsonTree(new RatingData(rating.getReservation().getRoom().getPlace().getPlaceName(), rating.getReservation().getRoom().getRoomKind().getRoomType().getDescription(), rating.getReservation().getResStartDate().toString(), rating.getReservation().getResEndDate().toString(), rating.getReservation().getResStartTime().toString(), rating.getReservation().getResEndTime().toString(), String.valueOf(rating.getId()), rating.getRatingTime().toLocalDate().toString(), rating.getRatingTime().toLocalTime().toString(), String.valueOf(rating.getRatingScore()), rating.getRatingReview(), String.valueOf(rating.getCommentList().size()))).getAsJsonObject();
-            reviewMap.put(String.valueOf(i), myRatingData);
+            reviewData.put(String.valueOf(i), myRatingData);
         }
+        return reviewData;
     }
 
     private void putCommentData(Integer page, User user, Map<String, JsonObject> myCommentMap) {
