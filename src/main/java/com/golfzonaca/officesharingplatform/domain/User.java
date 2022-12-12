@@ -17,40 +17,29 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Column(name = "USER_NAME", nullable = false)
     private String username;
-
     @Column(name = "USER_MAIL", nullable = false, unique = true)
     private String email;
-
     @Column(name = "USER_PW", nullable = false)
     private String password;
-
     @Column(name = "USER_TEL", nullable = false)
     private String phoneNumber;
-
     @Column(name = "USER_JOB", nullable = false)
     private String job;
-
     @Column(name = "PREFER_TYPE", nullable = false)
     private String userPlace;
-
     @Column(name = "JOIN_DATE", nullable = false)
     private LocalDateTime joinDate;
-
     @OneToOne
     @JoinColumn(name = "MILEAGE_ID")
     private Mileage mileage;
-
     @ManyToOne
     @JoinColumn(name = "ROLE_ID")
     private Role role;
-
     @OneToMany(mappedBy = "user")
     private List<Reservation> reservationList = new LinkedList<>();
 

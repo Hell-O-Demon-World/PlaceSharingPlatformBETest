@@ -25,7 +25,7 @@ public class PaymentValidation {
         if (reservationTime.isBefore(now)) {
             for (Payment payment : reservation.getPaymentList()) {
 
-                if (payment.getType().equals(PayType.FULLPAYMENT) || payment.getType().equals(PayType.BALANCE)) {
+                if (payment.getType().equals(PayType.FULL_PAYMENT) || payment.getType().equals(PayType.BALANCE)) {
                     availableCancelTarget.add(payment);
                 }
             }
@@ -56,7 +56,7 @@ public class PaymentValidation {
     public void validPairByRoomType(String payType, String payWay, RoomType roomType) {
         // DESK,MEETINGROOM이면 PrePayment, POSTPAYMENT 둘다 가능
         if (roomType.toString().contains("OFFICE")) {
-            if (payWay.equals(PayWay.POSTPAYMENT.toString()) && payType.equals(PayType.FULLPAYMENT.toString())) {
+            if (payWay.equals(PayWay.POSTPAYMENT.toString()) && payType.equals(PayType.FULL_PAYMENT.toString())) {
 
             } else {
                 throw new NoSuchElementException("오피스 타입에 지원되지 않는 결제 방식과 타입입니다.");
@@ -65,7 +65,7 @@ public class PaymentValidation {
 
             if (payWay.equals(PayWay.PREPAYMENT.toString()) && payType.equals(PayType.DEPOSIT.toString())) {
 
-            } else if (payWay.equals(PayWay.PREPAYMENT.toString()) && payType.equals(PayType.FULLPAYMENT.toString())) {
+            } else if (payWay.equals(PayWay.PREPAYMENT.toString()) && payType.equals(PayType.FULL_PAYMENT.toString())) {
 
             } else if (payWay.equals(PayWay.POSTPAYMENT.toString()) && payType.equals(PayType.BALANCE.toString())) {
 

@@ -51,7 +51,7 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/mypage", "/auth/refresh").hasRole("USER")
+                .antMatchers("/mypage/**", "/auth/refresh").hasRole("USER")
                 .and()
                 .addFilterAt(jsonIdPwAuthenticationProcessingFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthenticationFilter, JsonIdPwAuthenticationProcessingFilter.class)

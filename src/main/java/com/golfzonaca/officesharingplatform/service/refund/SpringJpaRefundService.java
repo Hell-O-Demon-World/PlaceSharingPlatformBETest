@@ -28,7 +28,7 @@ public class SpringJpaRefundService implements RefundService {
 
             int calculateRefund = (int) (payment.getPrice());
 
-            if (payment.getType().equals(PayType.FULLPAYMENT)) {
+            if (payment.getType().equals(PayType.FULL_PAYMENT)) {
                 calculateRefund = (int) (payment.getPrice() * 0.8);
             }
             Refund refund = Refund.builder()

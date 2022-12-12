@@ -121,7 +121,77 @@ create table role
 create table mileage
 (
     ID    bigint unsigned auto_increment primary key,
-    POINT bigint unsigned not null
+    POINT bigint unsigned not null,
+    LATEST_UPDATE_DATE datetime not null
+) DEFAULT CHARACTER SET = 'utf8'
+  COLLATE = 'utf8_general_ci';
+
+create table mileage_event_update
+(
+    ID    bigint unsigned auto_increment primary key,
+    MILEAGE_UPDATE_ID bigint unsigned not null,
+    UPDATE_POINT bigint unsigned not null,
+    INCREASE_REASON varchar(50) not null,
+    constraint FK_MILEAGE_TO_MILEAGE_EVENT_UPDATE_1
+        foreign key (MILEAGE_UPDATE_ID) references mileage_update_history (ID)
+            on update cascade on delete cascade
+) DEFAULT CHARACTER SET = 'utf8'
+  COLLATE = 'utf8_general_ci';
+
+create table mileage_expired_history
+(
+    ID    bigint unsigned auto_increment primary key,
+    TRANSACTION_USAGE_HISTORY_ID bigint unsigned not null,
+    MILEAGE_UPDATE_ID bigint unsigned not null,
+    CURRENT_POINT bigint unsigned not null,
+    UPDATE_DATE datetime not null ,
+    constraint FK_MILEAGE_TRANSACTION_USAGE_TO_MILEAGE_EXPIRED_1
+        foreign key (TRANSACTION_USAGE_HISTORY_ID) references mileage_transaction_usage_history (ID)
+            on update cascade on delete cascade,
+    constraint FK_MILEAGE_TO_MILEAGE_UPDATE_HISTORY_1
+        foreign key (MILEAGE_UPDATE_ID) references mileage_update_history (ID)
+            on update cascade on delete cascade
+) DEFAULT CHARACTER SET = 'utf8'
+  COLLATE = 'utf8_general_ci';
+
+create table mileage_payment_update
+(
+    ID    bigint unsigned auto_increment primary key,
+    MILEAGE_UPDATE_ID bigint unsigned not null,
+    PAYMENT_ID bigint unsigned not null,
+    UPDATE_POINT bigint unsigned not null,
+    UPDATE_REASON enum('FULL_PAYMENT', 'REFUND', 'USE_MILEAGE') not null,
+    constraint FK_MILEAGE_TO_PAYMENT_1
+        foreign key (PAYMENT_ID) references payment (ID)
+            on update cascade on delete cascade,
+    constraint FK_MILEAGE_UPDATE_TO_MILEAGE_PAYMENT_UPDATE_1
+        foreign key (MILEAGE_UPDATE_ID) references mileage_update_history (ID)
+            on update cascade on delete cascade
+) DEFAULT CHARACTER SET = 'utf8'
+  COLLATE = 'utf8_general_ci';
+
+create table mileage_transaction_usage_history
+(
+    ID    bigint unsigned auto_increment primary key,
+    MILEAGE_PAYMENT_UPDATE_ID bigint unsigned not null,
+    POINT bigint unsigned not null,
+    constraint FK_MILEAGE_PAYMENT_UPDATE_TO_MILEAGE_TRANSACTION_USAGE_1
+        foreign key (MILEAGE_PAYMENT_UPDATE_ID) references mileage_payment_update (ID)
+            on update cascade on delete cascade
+) DEFAULT CHARACTER SET = 'utf8'
+  COLLATE = 'utf8_general_ci';
+
+create table mileage_update_history
+(
+    ID    bigint unsigned auto_increment primary key,
+    MILEAGE_ID bigint unsigned not null,
+    UPDATE_POINT bigint unsigned not null,
+    STATUS_TYPE ENUM('NEW_MEMBER', 'EARNING', 'USE', 'EXPIRATION') not null,
+    UPDATE_DATE datetime not null,
+    EXPIRE_DATE datetime not null,
+    constraint FK_MILEAGE_TO_MILEAGE_UPDATE_1
+        foreign key (MILEAGE_ID) references mileage (ID)
+            on update cascade on delete cascade
 ) DEFAULT CHARACTER SET = 'utf8'
   COLLATE = 'utf8_general_ci';
 
