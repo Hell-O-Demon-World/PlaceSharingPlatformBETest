@@ -37,13 +37,13 @@ public class MyPageController {
     }
 
     @GetMapping("/review")
-    public Map<String, JsonObject> reviewHistory(@TokenUserId Long userId, @RequestParam Integer reviewpage) {
-        return myPageService.getReviewData(userId, reviewpage);
+    public Map<String, JsonObject> reviewHistory(@TokenUserId Long userId, @RequestParam Integer page) {
+        return myPageService.getReviewData(userId, page);
     }
 
     @GetMapping("/review/{ratingId}")
-    public Map<String, JsonObject> commentDataByReview(@PathVariable Long ratingId, @RequestParam Integer commentpage) {
-        return myPageService.getCommentDataByReview(ratingId, commentpage);
+    public Map<String, JsonObject> commentDataByReview(@PathVariable Long ratingId, @RequestParam Integer page) {
+        return myPageService.getCommentDataByReview(ratingId, page);
     }
 
     @GetMapping("/comment")

@@ -13,9 +13,9 @@ public interface MyPageService {
 
     Map<String, JsonObject> getResDetailViewData(Long userId, long reservationId);
 
-    Map<String, JsonObject> getReviewData(Long userId, Integer reviewpage);
+    Map<String, JsonObject> getReviewData(Long userId, Integer page);
 
-    Map<String, JsonObject> getCommentDataByReview(Long ratingId, Integer commentpage);
+    Map<String, JsonObject> getCommentDataByReview(Long ratingId, Integer page);
 
     Map<String, JsonObject> getCommentViewData(Long userId, Integer page);
 
