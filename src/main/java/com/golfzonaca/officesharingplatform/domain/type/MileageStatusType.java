@@ -1,13 +1,11 @@
 package com.golfzonaca.officesharingplatform.domain.type;
 
-public enum PayType {
-    DEPOSIT("보증금"), BALANCE("잔금"), FULL_PAYMENT("전체 결제");
+public enum MileageStatusType {
+    NEW_MEMBER("신규회원") ,EARNING("적립"), USE("사용"), EXPIRATION("만료");
     private final String description;
-
-    PayType(String description) {
+    MileageStatusType(String description) {
         this.description = description;
     }
-
     public String getDescription() {
         return description;
     }
