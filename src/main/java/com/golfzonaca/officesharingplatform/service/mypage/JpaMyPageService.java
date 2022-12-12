@@ -88,9 +88,9 @@ public class JpaMyPageService implements MyPageService {
     }
 
     @Override
-    public Map<String, JsonObject> getCommentDataByReview(Long ratingId, Integer commentpage) {
+    public Map<String, JsonObject> getCommentDataByReview(Long ratingId, Integer page) {
         Rating rating = ratingRepository.findById(ratingId);
-        return putCommentDataByRating(rating, commentpage);
+        return putCommentDataByRating(rating, page);
     }
 
     @Override
@@ -181,11 +181,11 @@ public class JpaMyPageService implements MyPageService {
         myResMap.put("reservationData", gson.toJsonTree(myUsage).getAsJsonObject());
     }
 
-    private Map<String, JsonObject> putCommentDataByRating(Rating rating, Integer commentpage) {
+    private Map<String, JsonObject> putCommentDataByRating(Rating rating, Integer page) {
         Gson gson = new Gson();
         Map<String, JsonObject> commentDataMap = new LinkedHashMap<>();
         commentDataMap.put("paginationData", gson.toJsonTree(Map.of("maxPage", rating.getCommentList().size() / 8 + 1)).getAsJsonObject());
-        Map<String, JsonObject> commentData = processingCommentDataByRating(rating, commentpage);
+        Map<String, JsonObject> commentData = processingCommentDataByRating(rating, page);
         commentDataMap.put("commentData", gson.toJsonTree(commentData).getAsJsonObject());
         return commentDataMap;
     }

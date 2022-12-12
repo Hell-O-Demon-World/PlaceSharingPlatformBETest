@@ -2,7 +2,9 @@ package com.golfzonaca.officesharingplatform.service.place;
 
 import com.golfzonaca.officesharingplatform.domain.*;
 import com.golfzonaca.officesharingplatform.domain.type.RoomType;
+import com.golfzonaca.officesharingplatform.repository.comment.CommentRepository;
 import com.golfzonaca.officesharingplatform.repository.place.PlaceRepository;
+import com.golfzonaca.officesharingplatform.repository.rating.RatingRepository;
 import com.golfzonaca.officesharingplatform.repository.roomkind.RoomKindRepository;
 import com.golfzonaca.officesharingplatform.service.place.dto.PlaceDetailsInfo;
 import com.golfzonaca.officesharingplatform.service.place.dto.PlaceListDto;
@@ -12,6 +14,7 @@ import com.golfzonaca.officesharingplatform.service.place.dto.response.roomtype.
 import com.golfzonaca.officesharingplatform.service.place.dto.response.roomtype.MeetingRoom;
 import com.golfzonaca.officesharingplatform.service.place.dto.response.roomtype.Office;
 import com.golfzonaca.officesharingplatform.web.formatter.TimeFormatter;
+import com.google.gson.JsonObject;
 import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -26,6 +29,8 @@ import java.util.*;
 public class JpaPlaceService implements PlaceService {
     private final PlaceRepository placeRepository;
     private final RoomKindRepository roomKindRepository;
+    private final RatingRepository ratingRepository;
+    private final CommentRepository commentRepository;
 
     @Override
     public List<Place> findAllPlaces() {
@@ -97,6 +102,20 @@ public class JpaPlaceService implements PlaceService {
                 findRoom(placeId),
                 ratingList
         );
+    }
+
+    @Override
+    public Map<String, JsonObject> getReviewData(Long placeId, long page) {
+        Place place = placeRepository.findById(placeId);
+//        ratingRepository.count
+        List<Rating> ratingList = ratingRepository.findAllByPlace(place, page);
+        return null;
+    }
+
+    @Override
+    public Map<String, JsonObject> getCommentData(Long reviewId, long page) {
+//        comment
+        return null;
     }
 
     private RoomTypeResponse findRoom(long placeId) {

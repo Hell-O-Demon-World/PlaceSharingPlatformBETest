@@ -1,5 +1,6 @@
 package com.golfzonaca.officesharingplatform.repository.rating;
 
+import com.golfzonaca.officesharingplatform.domain.Place;
 import com.golfzonaca.officesharingplatform.domain.Rating;
 import com.golfzonaca.officesharingplatform.domain.User;
 import com.golfzonaca.officesharingplatform.exception.NonExistedRatingException;
@@ -45,5 +46,10 @@ public class SpringJpaDslRatingRepository implements RatingRepository {
     @Override
     public List<Rating> findAllByUserWithPagination(User user, Integer page) {
         return queryRepository.findAllByUserWithPagination(user, page);
+    }
+
+    @Override
+    public List<Rating> findAllByPlace(Place place, long page) {
+        return queryRepository.findAllByPlace(place, page);
     }
 }
