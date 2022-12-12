@@ -99,16 +99,18 @@ public class JpaPlaceService implements PlaceService {
                 excludeOpenDays(stringToList(place.getOpenDays())),
                 place.getPlaceStart().toString(),
                 place.getPlaceEnd().toString(),
-                findRoom(placeId),
-                ratingList
+                findRoom(placeId)
         );
     }
 
     @Override
     public Map<String, JsonObject> getReviewData(Long placeId, long page) {
         Place place = placeRepository.findById(placeId);
-//        ratingRepository.count
+//        Map<String, JsonObject> reviewData = processingReviewData(place);
+//        ratingRepository.countByPlace(place);
+
         List<Rating> ratingList = ratingRepository.findAllByPlace(place, page);
+//        return reviewData;
         return null;
     }
 
@@ -191,22 +193,12 @@ public class JpaPlaceService implements PlaceService {
         for (Room room : place.getRooms()) {
             for (Reservation reservation : room.getReservationList()) {
                 if (reservation.getRating() != null) {
-                    List<String> comment = getComment(reservation.getRating());
-                    ratingList.add(new RatingDto(String.valueOf(reservation.getRating().getId()), String.valueOf(reservation.getRating().getRatingScore()), reservation.getUser().getUsername(), reservation.getRating().getRatingTime().toString(), reservation.getRoom().getRoomKind().getRoomType().toString(), reservation.getRating().getRatingReview(), comment));
+                    ratingList.add(new RatingDto(String.valueOf(reservation.getRating().getId()), String.valueOf(reservation.getRating().getRatingScore()), reservation.getUser().getUsername(), reservation.getRating().getRatingTime().toLocalDate().toString(), reservation.getRating().getRatingTime().toLocalTime().toString(), reservation.getRoom().getRoomKind().getRoomType().toString(), reservation.getRating().getRatingReview(), String.valueOf(reservation.getRating().getCommentList().size())));
                 }
             }
         }
         return ratingList;
     }
-
-    private List<String> getComment(Rating rating) {
-        List<String> commentList = new LinkedList<>();
-        for (Comment comment : rating.getCommentList()) {
-            commentList.add(comment.getText());
-        }
-        return commentList;
-    }
-
 
     @NotNull
     private List<String> getImagesPath(Place place) {

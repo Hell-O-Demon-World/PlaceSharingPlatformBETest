@@ -5,9 +5,9 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class RatingData {
     private String placeName;
-    private String RoomType;
-    private String ResStartDate;
-    private String ResEndDate;
+    private String roomType;
+    private String resStartDate;
+    private String resEndDate;
     private String resStartTime;
     private String resEndTime;
     private String ratingId;
