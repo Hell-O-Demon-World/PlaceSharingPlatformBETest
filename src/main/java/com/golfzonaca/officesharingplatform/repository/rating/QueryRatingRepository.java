@@ -20,7 +20,16 @@ public class QueryRatingRepository {
         this.query = new JPAQueryFactory(em);
     }
 
-    public List<Rating> findAllByUser(User user, Integer page) {
+    public Long countByUser(User user) {
+        return query
+                .select(rating.count())
+                .from(rating)
+                .where(rating.reservation.user.eq(user))
+                .orderBy(rating.ratingTime.desc())
+                .fetchOne();
+    }
+
+    public List<Rating> findAllByUserWithPagination(User user, Integer page) {
         return query
                 .selectFrom(rating)
                 .where(rating.reservation.user.eq(user))

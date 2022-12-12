@@ -46,7 +46,12 @@ public class SpringJpaDslCommentRepository implements CommentRepository {
     }
 
     @Override
-    public List<Comment> findAllByUser(User user, Integer page) {
+    public Long countByUser(User user) {
+        return queryRepository.countByUser(user);
+    }
+
+    @Override
+    public List<Comment> findAllByUserWithPagination(User user, Integer page) {
         return queryRepository.findAllByUser(user, page);
     }
 

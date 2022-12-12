@@ -38,7 +38,12 @@ public class SpringJpaDslRatingRepository implements RatingRepository {
     }
 
     @Override
-    public List<Rating> findAllByUser(User user, Integer page) {
-        return queryRepository.findAllByUser(user, page);
+    public Long countByUser(User user) {
+        return queryRepository.countByUser(user);
+    }
+
+    @Override
+    public List<Rating> findAllByUserWithPagination(User user, Integer page) {
+        return queryRepository.findAllByUserWithPagination(user, page);
     }
 }

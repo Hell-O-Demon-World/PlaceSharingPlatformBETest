@@ -15,5 +15,7 @@ public interface RatingRepository {
 
     void delete(Rating rating);
 
-    List<Rating> findAllByUser(User user, Integer page);
+    Long countByUser(User user);
+
+    List<Rating> findAllByUserWithPagination(User user, Integer page);
 }

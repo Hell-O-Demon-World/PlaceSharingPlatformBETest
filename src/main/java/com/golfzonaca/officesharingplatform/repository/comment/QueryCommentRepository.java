@@ -31,6 +31,15 @@ public class QueryCommentRepository {
                 .fetch();
     }
 
+    public Long countByUser(User user) {
+        return query
+                .select(comment.count())
+                .from(comment)
+                .where(comment.writer.eq(user))
+                .orderBy(comment.dateTime.desc())
+                .fetchOne();
+    }
+
     public List<Comment> findAllByUser(User user, Integer page) {
         return query
                 .selectFrom(comment)

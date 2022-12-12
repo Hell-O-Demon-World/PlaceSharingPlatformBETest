@@ -18,5 +18,7 @@ public interface CommentRepository {
 
     void delete(Comment comment);
 
-    List<Comment> findAllByUser(User user, Integer page);
+    Long countByUser(User user);
+
+    List<Comment> findAllByUserWithPagination(User user, Integer page);
 }

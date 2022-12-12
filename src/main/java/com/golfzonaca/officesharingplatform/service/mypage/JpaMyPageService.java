@@ -303,8 +303,8 @@ public class JpaMyPageService implements MyPageService {
 
     private void putReviewData(User user, Map<String, JsonObject> reviewMap, Integer page) {
         Gson gson = new Gson();
-        List<Rating> ratingList = ratingRepository.findAllByUser(user, page);
-        reviewMap.put("paginationData", gson.toJsonTree(Map.of("maxPage", ratingRepository.findAllByUser(user, 1).size() / 8 + 1)).getAsJsonObject());
+        List<Rating> ratingList = ratingRepository.findAllByUserWithPagination(user, page);
+        reviewMap.put("paginationData", gson.toJsonTree(Map.of("maxPage", ratingRepository.countByUser(user) / 8 + 1)).getAsJsonObject());
         for (int i = 0; i < ratingList.size(); i++) {
             Rating rating = ratingList.get(i);
             JsonObject myRatingData = gson.toJsonTree(new RatingData(rating.getReservation().getRoom().getPlace().getPlaceName(), rating.getReservation().getRoom().getRoomKind().getRoomType().getDescription(), rating.getReservation().getResStartDate().toString(), rating.getReservation().getResEndDate().toString(), rating.getReservation().getResStartTime().toString(), rating.getReservation().getResEndTime().toString(), String.valueOf(rating.getId()), rating.getRatingTime().toLocalDate().toString(), rating.getRatingTime().toLocalTime().toString(), String.valueOf(rating.getRatingScore()), rating.getRatingReview(), String.valueOf(rating.getCommentList().size()))).getAsJsonObject();
@@ -314,8 +314,8 @@ public class JpaMyPageService implements MyPageService {
 
     private void putCommentData(Integer page, User user, Map<String, JsonObject> myCommentMap) {
         Gson gson = new Gson();
-        List<Comment> commentList = commentRepository.findAllByUser(user, page);
-        myCommentMap.put("paginationData", gson.toJsonTree(Map.of("maxPage", commentRepository.findAllByUser(user, 1).size() / 8 + 1)).getAsJsonObject());
+        List<Comment> commentList = commentRepository.findAllByUserWithPagination(user, page);
+        myCommentMap.put("paginationData", gson.toJsonTree(Map.of("maxPage", commentRepository.countByUser(user) / 8 + 1)).getAsJsonObject());
         Map<String, JsonObject> commentDataMap = new LinkedHashMap<>();
         for (int i = 0; i < commentList.size(); i++) {
             Comment comment = commentList.get(i);
