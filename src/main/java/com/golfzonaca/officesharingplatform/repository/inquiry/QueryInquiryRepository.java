@@ -1,6 +1,7 @@
 package com.golfzonaca.officesharingplatform.repository.inquiry;
 
 import com.golfzonaca.officesharingplatform.domain.Inquiry;
+import com.golfzonaca.officesharingplatform.domain.User;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,12 +21,12 @@ public class QueryInquiryRepository {
         this.query = new JPAQueryFactory(em);
     }
 
-    public List<Inquiry> findByUserIdWithPagination(Long userId, long page, long quantity) {
+    public List<Inquiry> findByUserWithPagination(User user, long page) {
         return query
                 .selectFrom(inquiry)
-                .where(inquiry.user.id.eq(userId))
-                .offset(page)
-                .limit(quantity)
+                .where(inquiry.user.eq(user))
+                .offset(4L * (page - 1))
+                .limit(4)
                 .fetch();
     }
 }

@@ -57,6 +57,9 @@ public class User {
     @OneToMany(mappedBy = "writer")
     private List<Comment> commentList = new LinkedList<>();
 
+    @OneToMany(mappedBy = "user")
+    private List<Inquiry> inquiryList = new LinkedList<>();
+
     public User(Long id) {
         this.id = id;
     }

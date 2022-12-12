@@ -1,7 +1,6 @@
 package com.golfzonaca.officesharingplatform.repository.answer;
 
 import com.golfzonaca.officesharingplatform.domain.Answer;
-import com.golfzonaca.officesharingplatform.web.inquiry.dto.AnswerData;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,11 +22,6 @@ public class SpringJpaDslAnswerRepository implements AnswerRepository {
     @Override
     public Optional<Answer> findById(long answerId) {
         return jpaRepository.findById(answerId);
-    }
-
-    @Override
-    public void update(Answer answer, AnswerData data) {
-        answer.updateAnswer(data.getAnswer());
     }
 
     @Override
