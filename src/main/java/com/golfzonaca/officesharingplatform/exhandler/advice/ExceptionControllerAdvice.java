@@ -85,6 +85,13 @@ public class ExceptionControllerAdvice {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(NonExistedUserTelException.class)
+    public ErrorResult nonExistedUser(NonExistedUserTelException e) {
+        log.error("[exceptionHandle] ex", e);
+        return new ErrorResult("BAD", e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(NonExistedPlaceException.class)
     public ErrorResult illegalExHandler(NonExistedPlaceException e) {
         log.error("[exceptionHandle] ex", e);
@@ -129,6 +136,13 @@ public class ExceptionControllerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MismatchInfoException.class)
     public ErrorResult invalidUser(MismatchInfoException e) {
+        log.error("[exceptionHandle] ex", e);
+        return new ErrorResult("BAD", e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MisMatchingPasswordException.class)
+    public ErrorResult invalidUser(MisMatchingPasswordException e) {
         log.error("[exceptionHandle] ex", e);
         return new ErrorResult("BAD", e.getMessage());
     }

@@ -1,6 +1,7 @@
 package com.golfzonaca.officesharingplatform.repository.user;
 
 import com.golfzonaca.officesharingplatform.domain.User;
+import com.golfzonaca.officesharingplatform.exception.NonExistedUserException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Repository;
@@ -22,12 +23,12 @@ public class CustomUserRepository implements UserRepository {
 
     @Override
     public User findById(Long id) {
-        return jpaUserRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("UserNotFoundException::: 찾을 수 없는 유저입니다."));
+        return jpaUserRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("UserNotFoundException::: 존재하지 않는 회원입니다."));
     }
 
     @Override
     public User findByMailLike(String email) {
-        return jpaUserRepository.findByEmailLike(email).orElseThrow(()-> new UsernameNotFoundException("UsernameNotFoundException::: 사용하지 않는 메일입니다."));
+        return jpaUserRepository.findByEmailLike(email).orElseThrow(() -> new UsernameNotFoundException("UsernameNotFoundException::: 존재하지 않는 메일입니다."));
     }
 
     @Override
@@ -41,11 +42,6 @@ public class CustomUserRepository implements UserRepository {
     }
 
     @Override
-    public Integer countContainByEmail(String email) {
-        return jpaUserRepository.countContainByMail(email);
-    }
-
-    @Override
     public List<User> findAll() {
         return jpaUserRepository.findAll();
     }
@@ -56,7 +52,7 @@ public class CustomUserRepository implements UserRepository {
     }
 
     @Override
-    public Boolean validateUserByUserId(Long userId) {
-        return queryUserRepository.isContainById(userId).isEmpty();
+    public void delete(Long userId) {
+        jpaUserRepository.deleteById(userId);
     }
 }

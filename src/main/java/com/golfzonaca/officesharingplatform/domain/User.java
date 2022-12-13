@@ -91,4 +91,8 @@ public class User {
     public void updateUserPlace(String userPlace) {
         this.userPlace = userPlace;
     }
+
+    public void changePassword(String newPassword) {
+        this.password = newPassword;
+    }
 }

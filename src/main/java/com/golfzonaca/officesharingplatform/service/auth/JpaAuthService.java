@@ -30,11 +30,11 @@ public class JpaAuthService implements AuthService {
     private final UserRepository userRepository;
     private final MileageService mileageService;
     private final RoleRepository roleRepository;
-    private final PasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+    private final PasswordEncoder bCryptPasswordEncoder;
 
     @Override
-    public boolean isAvailableEmail(String email) {
-        return userRepository.isUniqueEmail(email);
+    public String findUserMailLikeMail(String email) {
+        return userRepository.findByMailLike(email).getEmail();
     }
 
     @Override
@@ -66,5 +66,11 @@ public class JpaAuthService implements AuthService {
         simpleMailMessage.setSubject(emailForm.getTitle());
         simpleMailMessage.setText(emailForm.getMessage());
         javaMailSender.send(simpleMailMessage);
+    }
+
+    @Override
+    public void createNewPassword(String email, String newPassword) {
+        User findUser = userRepository.findByMailLike(email);
+        findUser.changePassword(bCryptPasswordEncoder.encode(newPassword));
     }
 }

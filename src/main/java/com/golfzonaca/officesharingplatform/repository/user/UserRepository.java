@@ -17,11 +17,9 @@ public interface UserRepository {
 
     Boolean isUniqueEmail(String email);
 
-    Integer countContainByEmail(String email);
-
     List<User> findAll();
 
     List<User> findAll(UserSearchCond cond);
 
-    Boolean validateUserByUserId(Long userId);
+    void delete(Long userId);
 }
