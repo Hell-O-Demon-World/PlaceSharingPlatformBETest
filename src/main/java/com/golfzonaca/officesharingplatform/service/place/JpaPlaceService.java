@@ -144,7 +144,7 @@ public class JpaPlaceService implements PlaceService {
         params.put("category_group_code", code);
         params.put("x", lng);
         params.put("y", lat);
-        params.put("radius", 1000);
+        params.put("radius", 500);
         params.put("size", 5);
 
         Object object = restTemplate.exchange(url, HttpMethod.GET, request, Object.class, params).getBody();
