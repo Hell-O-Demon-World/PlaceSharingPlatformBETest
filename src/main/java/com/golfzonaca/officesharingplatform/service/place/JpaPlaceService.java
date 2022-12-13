@@ -3,6 +3,7 @@ package com.golfzonaca.officesharingplatform.service.place;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.golfzonaca.officesharingplatform.domain.*;
 import com.golfzonaca.officesharingplatform.domain.type.RoomType;
+import com.golfzonaca.officesharingplatform.domain.type.kakaoapi.MapCategoryGroupCode;
 import com.golfzonaca.officesharingplatform.repository.comment.CommentRepository;
 import com.golfzonaca.officesharingplatform.repository.place.PlaceRepository;
 import com.golfzonaca.officesharingplatform.repository.rating.RatingRepository;
@@ -11,8 +12,6 @@ import com.golfzonaca.officesharingplatform.service.place.dto.comment.CommentDto
 import com.golfzonaca.officesharingplatform.service.place.dto.place.PlaceListDto;
 import com.golfzonaca.officesharingplatform.service.place.dto.place.PlaceMainInfo;
 import com.golfzonaca.officesharingplatform.service.place.dto.place.PlaceSubInfo;
-import com.golfzonaca.officesharingplatform.service.place.dto.place.kakao.KakaoMapSearchPlaceInfo;
-import com.golfzonaca.officesharingplatform.service.place.dto.place.kakao.KakaoMapSearchResponse;
 import com.golfzonaca.officesharingplatform.service.place.dto.rating.RatingDto;
 import com.golfzonaca.officesharingplatform.service.place.dto.roomtype.Desk;
 import com.golfzonaca.officesharingplatform.service.place.dto.roomtype.MeetingRoom;
@@ -25,7 +24,10 @@ import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -95,15 +97,31 @@ public class JpaPlaceService implements PlaceService {
         Map<String, JsonObject> placeInfo = new LinkedHashMap<>();
         PlaceMainInfo placeMainInfo = getPlaceMainInfo(placeId);
         placeInfo.put("placeMainInfo", gson.toJsonTree(placeMainInfo).getAsJsonObject());
-        PlaceSubInfo placeSubInfo = getInfoNearPlace(lng, lat);
+        Map<String, JsonObject> placeSubInfo = getInfoNearPlace(lng, lat);
+        if (placeSubInfo.isEmpty()) {
+            placeSubInfo.put("NoSuchData", gson.toJsonTree(Map.of("PlaceCoordinateError", "주변 데이터 로딩에 실패하였습니다.")).getAsJsonObject());
+        }
         placeInfo.put("placeSubInfo", gson.toJsonTree(placeSubInfo).getAsJsonObject());
         return placeInfo;
     }
 
-    private PlaceSubInfo getInfoNearPlace(Double lng, Double lat) {
+    private Map<String, JsonObject> getInfoNearPlace(Double lng, Double lat) {
         if (lng == 0 && lat == 0) {
-            return null;
+            return new LinkedHashMap<>();
         }
+        Gson gson = new Gson();
+        Map<String, JsonObject> placeSubInfoData = new LinkedHashMap<>();
+        for (MapCategoryGroupCode category : MapCategoryGroupCode.values()) {
+            Map<String, JsonObject> infoDataForCategory = getSubInfoForCategory(lng, lat, category.getCode());
+            placeSubInfoData.put(category.toString().toLowerCase() + "Data", gson.toJsonTree(infoDataForCategory).getAsJsonObject());
+        }
+        return placeSubInfoData;
+    }
+
+    @NotNull
+    private Map<String, JsonObject> getSubInfoForCategory(Double lng, Double lat, String code) {
+        Gson gson = new Gson();
+
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
@@ -123,30 +141,24 @@ public class JpaPlaceService implements PlaceService {
         HttpEntity<Object> request = new HttpEntity<>(headers);
 
         Map<String, Object> params = new HashMap<>();
-        params.put("category_group_code", "FD6");
-        params.put("x", 127.054597367919);
-        params.put("y", 37.5233959825056);
+        params.put("category_group_code", code);
+        params.put("x", lng);
+        params.put("y", lat);
         params.put("radius", 1000);
         params.put("size", 5);
 
         Object object = restTemplate.exchange(url, HttpMethod.GET, request, Object.class, params).getBody();
-        System.out.println("object = " + object);
         ObjectMapper objectMapper = new ObjectMapper();
         Map map = objectMapper.convertValue(object, Map.class);
-        List<Object> documents = (List<Object>) map.get("documents");
-        for (int i = 0; i < documents.size(); i++) {
-            Object o = documents.get(i);
-            Map map1 = objectMapper.convertValue(o, Map.class);
-            System.out.println("map1 = " + map1);
-            for (int j = 0; j < map1.size(); j++) {
-                System.out.println("map1.document = " + map1.get("address_name"));
-                System.out.println("map1.get(\"category_group_code\") = " + map1.get("category_group_code"));
-            }
+        List<Object> elements = (List<Object>) map.get("documents");
+
+        Map<String, JsonObject> placeSubInfoList = new LinkedHashMap<>();
+        for (int i = 0; i < elements.size(); i++) {
+            Map documents = objectMapper.convertValue(elements.get(i), Map.class);
+            PlaceSubInfo placeSubInfo = new PlaceSubInfo(documents.get("place_name").toString(), documents.get("road_address_name").toString(), documents.get("phone").toString(), documents.get("distance").toString());
+            placeSubInfoList.put(String.valueOf(i), gson.toJsonTree(placeSubInfo).getAsJsonObject());
         }
-        Map<String, String> map1 = objectMapper.convertValue(documents, Map.class);
-        Object meta = map.get("meta");
-        System.out.println("map = " + map);
-        return new PlaceSubInfo();
+        return placeSubInfoList;
     }
 
     @NotNull
@@ -227,7 +239,7 @@ public class JpaPlaceService implements PlaceService {
 
             List<String> images = new LinkedList<>();
             for (RoomImage roomImage : place.getRoomImages()) {
-                if (roomImage.getRoomKind().getRoomType().equals(roomType)) {
+                if (roomImage.getRoomKind().getRoomType().toString().contains(roomType)) {
                     images.add(roomImage.getSavedPath());
                 }
             }
