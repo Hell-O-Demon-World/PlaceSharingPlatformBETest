@@ -1,11 +1,7 @@
-package com.golfzonaca.officesharingplatform.service.place.dto.response;
+package com.golfzonaca.officesharingplatform.service.place.dto.roomtype;
 
-import com.golfzonaca.officesharingplatform.service.place.dto.response.roomtype.Desk;
-import com.golfzonaca.officesharingplatform.service.place.dto.response.roomtype.MeetingRoom;
-import com.golfzonaca.officesharingplatform.service.place.dto.response.roomtype.Office;
 import lombok.Getter;
 
-import java.util.List;
 import java.util.SortedSet;
 
 @Getter

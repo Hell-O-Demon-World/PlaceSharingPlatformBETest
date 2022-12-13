@@ -1,14 +1,11 @@
 package com.golfzonaca.officesharingplatform.web.place;
 
 import com.golfzonaca.officesharingplatform.service.place.PlaceService;
-import com.golfzonaca.officesharingplatform.service.place.dto.PlaceDetailsInfo;
+import com.golfzonaca.officesharingplatform.web.place.dto.PlaceCoordinate;
 import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -18,9 +15,9 @@ import java.util.Map;
 public class PlaceController {
     private final PlaceService placeService;
 
-    @GetMapping("places/{placeId}")
-    public PlaceDetailsInfo placeDetailsInfo(@PathVariable long placeId) {
-        return placeService.getPlaceDetailsInfo(placeId);
+    @PostMapping("places/{placeId}")
+    public Map<String, JsonObject> placeDetailsInfo(@PathVariable long placeId, @RequestBody PlaceCoordinate placeCoordinate) {
+        return placeService.getPlaceInfo(placeId, placeCoordinate.getLng(), placeCoordinate.getLat());
     }
 
     @GetMapping("places/{placeId}/review")

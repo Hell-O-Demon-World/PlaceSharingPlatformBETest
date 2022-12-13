@@ -1,6 +1,6 @@
-package com.golfzonaca.officesharingplatform.service.place.dto;
+package com.golfzonaca.officesharingplatform.service.place.dto.place;
 
-import com.golfzonaca.officesharingplatform.service.place.dto.response.RoomTypeResponse;
+import com.golfzonaca.officesharingplatform.service.place.dto.roomtype.RoomTypeResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -8,7 +8,7 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class PlaceDetailsInfo {
+public class PlaceMainInfo {
     private String placeId;
     private String placeName;
     private String placePostalCode;

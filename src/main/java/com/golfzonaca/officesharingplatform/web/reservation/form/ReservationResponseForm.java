@@ -4,7 +4,7 @@ import com.golfzonaca.officesharingplatform.domain.Reservation;
 import com.golfzonaca.officesharingplatform.domain.RoomImage;
 import com.golfzonaca.officesharingplatform.domain.User;
 import com.golfzonaca.officesharingplatform.domain.type.RoomType;
-import com.golfzonaca.officesharingplatform.service.place.dto.response.RatingDto;
+import com.golfzonaca.officesharingplatform.service.place.dto.rating.RatingDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

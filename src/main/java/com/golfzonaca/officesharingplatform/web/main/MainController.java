@@ -1,7 +1,7 @@
 package com.golfzonaca.officesharingplatform.web.main;
 
 import com.golfzonaca.officesharingplatform.service.place.PlaceService;
-import com.golfzonaca.officesharingplatform.service.place.dto.PlaceListDto;
+import com.golfzonaca.officesharingplatform.service.place.dto.place.PlaceListDto;
 import com.golfzonaca.officesharingplatform.service.search.SearchService;
 import com.golfzonaca.officesharingplatform.web.main.dto.request.RequestFilterData;
 import com.golfzonaca.officesharingplatform.web.main.dto.request.RequestSearchData;

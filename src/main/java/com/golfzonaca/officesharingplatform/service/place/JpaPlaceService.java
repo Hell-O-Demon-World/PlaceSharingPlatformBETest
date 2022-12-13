@@ -6,21 +6,27 @@ import com.golfzonaca.officesharingplatform.repository.comment.CommentRepository
 import com.golfzonaca.officesharingplatform.repository.place.PlaceRepository;
 import com.golfzonaca.officesharingplatform.repository.rating.RatingRepository;
 import com.golfzonaca.officesharingplatform.repository.roomkind.RoomKindRepository;
-import com.golfzonaca.officesharingplatform.service.place.dto.PlaceDetailsInfo;
-import com.golfzonaca.officesharingplatform.service.place.dto.PlaceListDto;
-import com.golfzonaca.officesharingplatform.service.place.dto.response.CommentDto;
-import com.golfzonaca.officesharingplatform.service.place.dto.response.RatingDto;
-import com.golfzonaca.officesharingplatform.service.place.dto.response.RoomTypeResponse;
-import com.golfzonaca.officesharingplatform.service.place.dto.response.roomtype.Desk;
-import com.golfzonaca.officesharingplatform.service.place.dto.response.roomtype.MeetingRoom;
-import com.golfzonaca.officesharingplatform.service.place.dto.response.roomtype.Office;
+import com.golfzonaca.officesharingplatform.service.place.dto.comment.CommentDto;
+import com.golfzonaca.officesharingplatform.service.place.dto.place.PlaceListDto;
+import com.golfzonaca.officesharingplatform.service.place.dto.place.PlaceMainInfo;
+import com.golfzonaca.officesharingplatform.service.place.dto.place.PlaceSubInfo;
+import com.golfzonaca.officesharingplatform.service.place.dto.place.kakao.KakaoMapSearchResponse;
+import com.golfzonaca.officesharingplatform.service.place.dto.rating.RatingDto;
+import com.golfzonaca.officesharingplatform.service.place.dto.roomtype.Desk;
+import com.golfzonaca.officesharingplatform.service.place.dto.roomtype.MeetingRoom;
+import com.golfzonaca.officesharingplatform.service.place.dto.roomtype.Office;
+import com.golfzonaca.officesharingplatform.service.place.dto.roomtype.RoomTypeResponse;
 import com.golfzonaca.officesharingplatform.web.formatter.TimeFormatter;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -33,6 +39,9 @@ public class JpaPlaceService implements PlaceService {
     private final RoomKindRepository roomKindRepository;
     private final RatingRepository ratingRepository;
     private final CommentRepository commentRepository;
+
+    @Value("${kakao.map.apiKey}")
+    private String kakaoMapApiKey;
 
     @Override
     public List<Place> findAllPlaces() {
@@ -67,8 +76,7 @@ public class JpaPlaceService implements PlaceService {
         if (Objects.requireNonNull(end).getHour() - Objects.requireNonNull(start).getHour() == 0) {
             return true;
         }
-        return localStartTime.isAfter(Objects.requireNonNull(start))
-                && localStartTime.isBefore(Objects.requireNonNull(end));
+        return localStartTime.isAfter(Objects.requireNonNull(start)) && localStartTime.isBefore(Objects.requireNonNull(end));
     }
 
     @Override
@@ -80,29 +88,54 @@ public class JpaPlaceService implements PlaceService {
     }
 
     @Override
-    public PlaceDetailsInfo getPlaceDetailsInfo(long placeId) {
+    public Map<String, JsonObject> getPlaceInfo(long placeId, Double lng, Double lat) {
+        Gson gson = new Gson();
+        Map<String, JsonObject> placeInfo = new LinkedHashMap<>();
+        PlaceMainInfo placeMainInfo = getPlaceMainInfo(placeId);
+        placeInfo.put("placeMainInfo", gson.toJsonTree(placeMainInfo).getAsJsonObject());
+        PlaceSubInfo placeSubInfo = getInfoNearPlace(lng, lat);
+        placeInfo.put("placeSubInfo", gson.toJsonTree(placeSubInfo).getAsJsonObject());
+        return placeInfo;
+    }
+
+    private PlaceSubInfo getInfoNearPlace(Double lng, Double lat) {
+        if (lng == 0 && lat == 0) {
+            return null;
+        }
+        RestTemplate restTemplate = new RestTemplate();
+
+        HttpHeaders headers = new HttpHeaders();
+        String url = UriComponentsBuilder.fromHttpUrl("https://dapi.kakao.com/v2/local/search/category.json")
+                .queryParam("category_group_code", "{category_group_code}")
+                .queryParam("x", "{x}")
+                .queryParam("y", "{y}")
+                .queryParam("radius", "{radius}")
+                .queryParam("size", "{size}")
+                .encode()
+                .toUriString();
+
+        headers.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
+        headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE + ";charset=UTF-8");
+        headers.set("AUTHORIZATION", kakaoMapApiKey);
+
+        HttpEntity<Object> request = new HttpEntity<>(headers);
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("category_group_code", "FD6");
+        params.put("x", 127.054597367919);
+        params.put("y", 37.5233959825056);
+        params.put("radius", 1000);
+        params.put("size", 5);
+        ResponseEntity<KakaoMapSearchResponse> response = restTemplate.exchange(url, HttpMethod.GET, request, KakaoMapSearchResponse.class, params);
+        return new PlaceSubInfo();
+    }
+
+    @NotNull
+    private PlaceMainInfo getPlaceMainInfo(long placeId) {
         Place place = placeRepository.findById(placeId);
         List<String> imagesPath = getImagesPath(place);
         List<RatingDto> ratingList = getPlaceRating(place);
-
-        return new PlaceDetailsInfo(
-                place.getId().toString(),
-                place.getPlaceName(),
-                place.getAddress().getPostalCode(),
-                place.getAddress().getAddress(),
-                stringToList(place.getPlaceAddInfo()),
-                imagesPath,
-                String.valueOf(place.getRatePoint().getRatingPoint()),
-                String.valueOf(ratingList.size()),
-                getQuantityByRoomType(place, "DESK"),
-                getQuantityByRoomType(place, "MEETINGROOM"),
-                getQuantityByRoomType(place, "OFFICE"),
-                place.getDescription(),
-                excludeOpenDays(stringToList(place.getOpenDays())),
-                place.getPlaceStart().toString(),
-                place.getPlaceEnd().toString(),
-                findRoom(placeId)
-        );
+        return new PlaceMainInfo(place.getId().toString(), place.getPlaceName(), place.getAddress().getPostalCode(), place.getAddress().getAddress(), stringToList(place.getPlaceAddInfo()), imagesPath, String.valueOf(place.getRatePoint().getRatingPoint()), String.valueOf(ratingList.size()), getQuantityByRoomType(place, "DESK"), getQuantityByRoomType(place, "MEETINGROOM"), getQuantityByRoomType(place, "OFFICE"), place.getDescription(), excludeOpenDays(stringToList(place.getOpenDays())), place.getPlaceStart().toString(), place.getPlaceEnd().toString(), findRoom(placeId));
     }
 
     @Override

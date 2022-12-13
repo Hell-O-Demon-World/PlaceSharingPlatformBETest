@@ -1,4 +1,4 @@
-package com.golfzonaca.officesharingplatform.service.place.dto.response;
+package com.golfzonaca.officesharingplatform.service.place.dto.rating;
 
 import lombok.AllArgsConstructor;
 

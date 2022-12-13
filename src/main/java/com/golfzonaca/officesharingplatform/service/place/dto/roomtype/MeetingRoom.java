@@ -1,4 +1,4 @@
-package com.golfzonaca.officesharingplatform.service.place.dto.response.roomtype;
+package com.golfzonaca.officesharingplatform.service.place.dto.roomtype;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

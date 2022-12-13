@@ -7,7 +7,7 @@ import com.golfzonaca.officesharingplatform.domain.User;
 import com.golfzonaca.officesharingplatform.domain.type.RoomType;
 import com.golfzonaca.officesharingplatform.service.place.JpaPlaceService;
 import com.golfzonaca.officesharingplatform.service.place.PlaceService;
-import com.golfzonaca.officesharingplatform.service.place.dto.response.RatingDto;
+import com.golfzonaca.officesharingplatform.service.place.dto.rating.RatingDto;
 import com.golfzonaca.officesharingplatform.service.reservation.ReservationService;
 import com.golfzonaca.officesharingplatform.service.reservation.validation.ReservationRequestValidation;
 import com.golfzonaca.officesharingplatform.service.user.UserService;
