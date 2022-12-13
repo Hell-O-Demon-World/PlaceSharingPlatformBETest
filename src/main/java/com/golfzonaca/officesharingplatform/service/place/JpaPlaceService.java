@@ -1,5 +1,6 @@
 package com.golfzonaca.officesharingplatform.service.place;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.golfzonaca.officesharingplatform.domain.*;
 import com.golfzonaca.officesharingplatform.domain.type.RoomType;
 import com.golfzonaca.officesharingplatform.repository.comment.CommentRepository;
@@ -10,6 +11,7 @@ import com.golfzonaca.officesharingplatform.service.place.dto.comment.CommentDto
 import com.golfzonaca.officesharingplatform.service.place.dto.place.PlaceListDto;
 import com.golfzonaca.officesharingplatform.service.place.dto.place.PlaceMainInfo;
 import com.golfzonaca.officesharingplatform.service.place.dto.place.PlaceSubInfo;
+import com.golfzonaca.officesharingplatform.service.place.dto.place.kakao.KakaoMapSearchPlaceInfo;
 import com.golfzonaca.officesharingplatform.service.place.dto.place.kakao.KakaoMapSearchResponse;
 import com.golfzonaca.officesharingplatform.service.place.dto.rating.RatingDto;
 import com.golfzonaca.officesharingplatform.service.place.dto.roomtype.Desk;
@@ -126,7 +128,24 @@ public class JpaPlaceService implements PlaceService {
         params.put("y", 37.5233959825056);
         params.put("radius", 1000);
         params.put("size", 5);
-        ResponseEntity<KakaoMapSearchResponse> response = restTemplate.exchange(url, HttpMethod.GET, request, KakaoMapSearchResponse.class, params);
+
+        Object object = restTemplate.exchange(url, HttpMethod.GET, request, Object.class, params).getBody();
+        System.out.println("object = " + object);
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map map = objectMapper.convertValue(object, Map.class);
+        List<Object> documents = (List<Object>) map.get("documents");
+        for (int i = 0; i < documents.size(); i++) {
+            Object o = documents.get(i);
+            Map map1 = objectMapper.convertValue(o, Map.class);
+            System.out.println("map1 = " + map1);
+            for (int j = 0; j < map1.size(); j++) {
+                System.out.println("map1.document = " + map1.get("address_name"));
+                System.out.println("map1.get(\"category_group_code\") = " + map1.get("category_group_code"));
+            }
+        }
+        Map<String, String> map1 = objectMapper.convertValue(documents, Map.class);
+        Object meta = map.get("meta");
+        System.out.println("map = " + map);
         return new PlaceSubInfo();
     }
 
