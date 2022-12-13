@@ -32,7 +32,7 @@ public class SpringJpaDslCommentRepository implements CommentRepository {
 
     @Override
     public List<Comment> findAllByRating(Rating rating, Integer commentpage) {
-        return queryRepository.findAllByRating(rating, commentpage);
+        return queryRepository.findAllByRatingWithPagination(rating, commentpage);
     }
 
     @Override
@@ -53,6 +53,11 @@ public class SpringJpaDslCommentRepository implements CommentRepository {
     @Override
     public List<Comment> findAllByUserWithPagination(User user, Integer page) {
         return queryRepository.findAllByUser(user, page);
+    }
+
+    @Override
+    public List<Comment> findAllByRatingWithPagination(Rating rating, Integer page) {
+        return queryRepository.findAllByRatingWithPagination(rating, page);
     }
 
 }

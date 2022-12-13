@@ -21,7 +21,7 @@ public class QueryCommentRepository {
         this.query = new JPAQueryFactory(em);
     }
 
-    public List<Comment> findAllByRating(Rating rating, Integer page) {
+    public List<Comment> findAllByRatingWithPagination(Rating rating, Integer page) {
         return query
                 .selectFrom(comment)
                 .where(comment.rating.eq(rating))

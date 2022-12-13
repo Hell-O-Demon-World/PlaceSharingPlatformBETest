@@ -8,6 +8,7 @@ import com.golfzonaca.officesharingplatform.repository.rating.RatingRepository;
 import com.golfzonaca.officesharingplatform.repository.roomkind.RoomKindRepository;
 import com.golfzonaca.officesharingplatform.service.place.dto.PlaceDetailsInfo;
 import com.golfzonaca.officesharingplatform.service.place.dto.PlaceListDto;
+import com.golfzonaca.officesharingplatform.service.place.dto.response.CommentDto;
 import com.golfzonaca.officesharingplatform.service.place.dto.response.RatingDto;
 import com.golfzonaca.officesharingplatform.service.place.dto.response.RoomTypeResponse;
 import com.golfzonaca.officesharingplatform.service.place.dto.response.roomtype.Desk;
@@ -131,7 +132,27 @@ public class JpaPlaceService implements PlaceService {
 
     @Override
     public Map<String, JsonObject> getCommentData(Long reviewId, Integer page) {
-        return null;
+        Gson gson = new Gson();
+        Rating rating = ratingRepository.findById(reviewId);
+        if (rating.getCommentList().size() == 0) {
+            throw new NoSuchElementException("현재 선택하신 리뷰는 댓글이 존재하지 않습니다.");
+        }
+        Map<String, JsonObject> commentData = new LinkedHashMap<>();
+        commentData.put("paginationData", gson.toJsonTree(Map.of("maxPage", rating.getCommentList().size() / 8 + 1)).getAsJsonObject());
+        commentData.put("commentData", gson.toJsonTree(processingCommentData(rating, page)).getAsJsonObject());
+        return commentData;
+    }
+
+    private Map<String, JsonObject> processingCommentData(Rating rating, Integer page) {
+        Gson gson = new Gson();
+        Map<String, JsonObject> commentData = new LinkedHashMap<>();
+        List<Comment> commentList = commentRepository.findAllByRatingWithPagination(rating, page);
+        for (int i = 0; i < commentList.size(); i++) {
+            Comment comment = commentList.get(i);
+            JsonObject myCommentData = gson.toJsonTree(new CommentDto(processingUserIdentification(comment.getWriter()), comment.getText(), comment.getDateTime().toLocalDate().toString(), comment.getDateTime().toLocalTime().toString())).getAsJsonObject();
+            commentData.put(String.valueOf(i), myCommentData);
+        }
+        return commentData;
     }
 
     private RoomTypeResponse findRoom(long placeId) {
@@ -258,5 +279,20 @@ public class JpaPlaceService implements PlaceService {
                 }
             }
         }
+    }
+
+    private String processingUserIdentification(User user) {
+        String username = user.getUsername();
+        String email = user.getEmail();
+        int startMailDomain = email.lastIndexOf("@");
+        String mailId = email.substring(0, startMailDomain);
+        String mailDomain = email.substring(startMailDomain + 1);
+        if (mailId.length() <= 4) {
+            mailId = mailId + "***";
+        } else {
+            mailId = mailId.substring(0, 3) + "***";
+        }
+        mailDomain = mailDomain.charAt(0) + "*****";
+        return username + "(" + mailId + mailDomain + ")";
     }
 }

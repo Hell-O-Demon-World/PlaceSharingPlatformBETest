@@ -21,4 +21,6 @@ public interface CommentRepository {
     Long countByUser(User user);
 
     List<Comment> findAllByUserWithPagination(User user, Integer page);
+
+    List<Comment> findAllByRatingWithPagination(Rating rating, Integer page);
 }
