@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @Transactional
@@ -54,5 +55,20 @@ public class CustomUserRepository implements UserRepository {
     @Override
     public void delete(Long userId) {
         jpaUserRepository.deleteById(userId);
+    }
+
+    @Override
+    public Boolean isExistName(String name) {
+        return queryUserRepository.findByNameLike(name).isPresent();
+    }
+
+    @Override
+    public User findByNameAndTelLike(String name, String tel) {
+        return queryUserRepository.findByNameAndTelLike(name, tel).orElseThrow(()->new NonExistedUserException("조건에 일치하는 유저가 없습니다."));
+    }
+
+    @Override
+    public User findByMailAndTel(String email, String tel) {
+        return queryUserRepository.findByMailAndTel(email, tel).orElseThrow(()->new NonExistedUserException("조건에 일치하는 유저가 없습니다."));
     }
 }

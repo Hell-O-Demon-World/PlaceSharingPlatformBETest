@@ -90,7 +90,25 @@ public class QueryUserRepository {
 
     public Optional<User> findByTelLike(String phoneNumber) {
         return Optional.ofNullable(query.selectFrom(user)
-                .where(user.phoneNumber.eq(phoneNumber))
+                .where(user.phoneNumber.like(phoneNumber))
+                .fetchFirst());
+    }
+
+    public Optional<User> findByNameLike(String name) {
+        return Optional.ofNullable(query.selectFrom(user)
+                .where(user.username.like(name))
+                .fetchFirst());
+    }
+
+    public Optional<User> findByNameAndTelLike(String name, String tel) {
+        return Optional.ofNullable(query.selectFrom(user)
+                .where(user.username.like(name).and(user.phoneNumber.like(tel)))
+                .fetchFirst());
+    }
+
+    public Optional<User> findByMailAndTel(String email, String tel) {
+        return Optional.ofNullable(query.selectFrom(user)
+                .where(user.email.like(email).and(user.phoneNumber.like(tel)))
                 .fetchFirst());
     }
 }

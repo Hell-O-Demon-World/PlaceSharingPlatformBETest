@@ -1,10 +1,8 @@
 package com.golfzonaca.officesharingplatform.service.auth;
 
 import com.golfzonaca.officesharingplatform.domain.Mileage;
-import com.golfzonaca.officesharingplatform.domain.MileageUpdate;
 import com.golfzonaca.officesharingplatform.domain.Role;
 import com.golfzonaca.officesharingplatform.domain.User;
-import com.golfzonaca.officesharingplatform.domain.type.MileageStatusType;
 import com.golfzonaca.officesharingplatform.domain.type.RoleType;
 import com.golfzonaca.officesharingplatform.repository.role.RoleRepository;
 import com.golfzonaca.officesharingplatform.repository.user.UserRepository;
@@ -15,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,8 +30,9 @@ public class JpaAuthService implements AuthService {
     private final PasswordEncoder bCryptPasswordEncoder;
 
     @Override
-    public String findUserMailLikeMail(String email) {
-        return userRepository.findByMailLike(email).getEmail();
+    public String findUserEmail(String name, String tel) {
+
+        return userRepository.findByNameAndTelLike(name, tel).getEmail();
     }
 
     @Override

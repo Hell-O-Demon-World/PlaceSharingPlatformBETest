@@ -8,7 +8,6 @@ import com.golfzonaca.officesharingplatform.web.main.dto.request.*;
 import com.golfzonaca.officesharingplatform.web.main.validation.MainPageValidation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -55,11 +54,12 @@ public class MainController {
     }
 
     @PostMapping("/findUserId")
-    public Map<String, String> findUserEmailId(@RequestBody @Validated RequestMailForm emailForm, BindingResult bindingResult) {
-        mainPageValidation.validationBindingResult(bindingResult);
+    public Map<String, String> findUserEmailId(@RequestBody @Validated RequestFindIdForm findIdForm, BindingResult bindingResult) {
         Map<String, String> resultMap = new HashMap<>();
-        String email = emailForm.getEmail();
-        resultMap.put("findUserMail", authService.findUserMailLikeMail(email));
+        String name = findIdForm.getName();
+        String tel = findIdForm.getTel();
+        mainPageValidation.validationBindingResult(name, tel, bindingResult);
+        resultMap.put("findUserMail", authService.findUserEmail(name, tel));
         return resultMap;
     }
 

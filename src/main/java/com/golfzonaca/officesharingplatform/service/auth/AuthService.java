@@ -9,7 +9,7 @@ import java.security.NoSuchAlgorithmException;
 
 public interface AuthService {
 
-    String findUserMailLikeMail(String email);
+    String findUserEmail(String name, String tel);
     void join(User user);
     boolean isAvailableTelNum(String phoneNumber);
     void sendMail(EmailForm emailForm) throws NoSuchAlgorithmException, UnsupportedEncodingException;

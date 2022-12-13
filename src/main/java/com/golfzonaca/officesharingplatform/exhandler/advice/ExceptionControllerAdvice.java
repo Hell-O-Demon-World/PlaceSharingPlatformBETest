@@ -113,6 +113,13 @@ public class ExceptionControllerAdvice {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(NonExistedUserNameException.class)
+    public ErrorResult illegalExHandler(NonExistedUserNameException e) {
+        log.error("[exceptionHandle] ex", e);
+        return new ErrorResult("BAD", e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(NonExistedRoomKindException.class)
     public ErrorResult illegalExHandler(NonExistedRoomKindException e) {
         log.error("[exceptionHandle] ex", e);
