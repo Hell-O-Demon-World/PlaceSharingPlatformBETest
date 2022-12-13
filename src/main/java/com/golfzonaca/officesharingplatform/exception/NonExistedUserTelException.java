@@ -5,11 +5,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.NoSuchElementException;
 
-@ResponseStatus(code = HttpStatus.BAD_REQUEST, reason = "error.user")
-public class InvalidPhoneNumException extends NoSuchElementException {
-    public InvalidPhoneNumException() {
+@ResponseStatus(code = HttpStatus.UNAUTHORIZED, reason = "error.user")
+public class NonExistedUserTelException extends NoSuchElementException {
+    public NonExistedUserTelException() {
     }
-    public InvalidPhoneNumException(String msg) {
+
+    public NonExistedUserTelException(String msg) {
         super(msg);
     }
 }

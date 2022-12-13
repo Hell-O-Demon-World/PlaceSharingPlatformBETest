@@ -6,6 +6,7 @@ import com.golfzonaca.officesharingplatform.domain.type.*;
 import com.golfzonaca.officesharingplatform.repository.payment.PaymentRepository;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
 import com.golfzonaca.officesharingplatform.repository.user.UserRepository;
+import com.golfzonaca.officesharingplatform.service.mileage.MileageService;
 import com.golfzonaca.officesharingplatform.service.payment.PaymentValidation;
 import com.golfzonaca.officesharingplatform.service.refund.RefundService;
 import com.golfzonaca.officesharingplatform.web.payment.dto.kakaopay.*;
@@ -36,6 +37,7 @@ public class KakaoPayService {
 
     private final ReservationRepository reservationRepository;
     private final PaymentRepository paymentRepository;
+    private final MileageService mileageService;
     private final UserRepository userRepository;
     private final RefundService refundService;
 
@@ -68,14 +70,18 @@ public class KakaoPayService {
 
         KakaoPayUtility kakaoPayUtility = new KakaoPayUtility();
         Payment payment = paymentRepository.findById(paymentId);
+        if (payment.getPayMileage() > 0) {
+            mileageService.payingMileage(payment);
+        }
 
         HttpHeaders httpHeaders = kakaoPayUtility.makeHttpHeader();
         KakaoPayApprovalRequest body = kakaoPayUtility.makeRequestBodyForApprove(payment, pgToken);
         HttpEntity<MultiValueMap<String, String>> requestApprovalEntity = new HttpEntity<>(kakaoPayUtility.multiValueMapConverter(new ObjectMapper(), body), httpHeaders);
 
         KakaoPayApprovalResponse kakaoPayApprovalResponse = sendKakaoPayApprovalRequest(HOST, requestApprovalEntity);
-        Mileage mileage = payment.getReservation().getUser().getMileage();
-        mileage.addPoint(payment.getSavedMileage());
+        if (PayType.FULL_PAYMENT.equals(payment.getType())) {
+            mileageService.savingFullPaymentMileage(payment);
+        }
         payment.updatePayStatus(PaymentStatus.COMPLETED);
 
         return kakaoPayApprovalResponse;
@@ -125,13 +131,13 @@ public class KakaoPayService {
     }
 
     public void restoreUserMileage(User user, List<Payment> findPayment) {
-
-        Mileage getUserMileage = user.getMileage();
+        Mileage userMileage = user.getMileage();
 
         for (Payment payment : findPayment) {
-            getUserMileage.addPoint(payment.getPayMileage());
-            getUserMileage.minusPoint(payment.getSavedMileage());
+            userMileage.addPoint(payment.getPayMileage());
+            mileageService.recoveryMileage(userMileage, payment);
         }
+
     }
 
     public KakaoPayReadyResponse sendKakaoPayReadyRequest(String host, HttpEntity<MultiValueMap<String, String>> body) {

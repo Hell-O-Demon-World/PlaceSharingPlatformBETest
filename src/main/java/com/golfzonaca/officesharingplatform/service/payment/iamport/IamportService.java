@@ -8,6 +8,7 @@ import com.golfzonaca.officesharingplatform.domain.type.*;
 import com.golfzonaca.officesharingplatform.repository.payment.PaymentRepository;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
 import com.golfzonaca.officesharingplatform.repository.user.UserRepository;
+import com.golfzonaca.officesharingplatform.service.mileage.MileageService;
 import com.golfzonaca.officesharingplatform.service.payment.kakaopay.KakaoPayUtility;
 import com.golfzonaca.officesharingplatform.service.refund.RefundService;
 import com.golfzonaca.officesharingplatform.web.payment.form.NicePayRequestForm;
@@ -33,6 +34,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
+
 @RequiredArgsConstructor
 @Transactional
 @Service
@@ -41,6 +43,7 @@ public class IamportService {
     private final ReservationRepository reservationRepository;
     private final UserRepository userRepository;
     private final RefundService refundService;
+    private final MileageService mileageService;
     private final PaymentRepository paymentRepository;
 
     @Value("${iamport.api.apiKey}")
@@ -50,9 +53,7 @@ public class IamportService {
     private String apiSecret;
 
     public IamportResponse<Payment> requestNicePay(Long userId, NicePayRequestForm nicePayRequestForm) throws IamportResponseException, IOException {
-
         IamportClient iamportClient = new IamportClient(apiKey, apiSecret);
-
         Reservation findReservation = reservationRepository.findById(nicePayRequestForm.getReservationId());
 
         int totalAmount = calculateTotalAmount(findReservation,
@@ -72,8 +73,13 @@ public class IamportService {
 
         com.golfzonaca.officesharingplatform.domain.Payment payment = processingPaymentData(findReservation, nicePayRequestForm.getPayWay(), nicePayRequestForm.getPayType(), nicePayRequestForm.getPayMileage(), mid);
         com.golfzonaca.officesharingplatform.domain.Payment paymentSave = paymentRepository.save(payment);
-
+        if (payment.getPayMileage() > 0) {
+            mileageService.payingMileage(paymentSave);
+        }
         IamportResponse<Payment> iamportResponse = iamportClient.onetimePayment(onetimePaymentData);
+        if (PayType.FULL_PAYMENT.equals(payment.getType())) {
+            mileageService.savingFullPaymentMileage(payment);
+        }
         paymentSave.updatePayStatus(PaymentStatus.COMPLETED);
 
 
@@ -123,7 +129,7 @@ public class IamportService {
 
         for (com.golfzonaca.officesharingplatform.domain.Payment payment : findPayment) {
             getUserMileage.addPoint(payment.getPayMileage());
-            getUserMileage.minusPoint(payment.getSavedMileage());
+            mileageService.recoveryMileage(getUserMileage, payment);
         }
     }
 
@@ -186,7 +192,7 @@ public class IamportService {
 
     public long calculateMileage(Integer totalAmount, String payWay, String payType) {
 
-        if (payWay.equals(PayWay.PREPAYMENT.toString()) && payType.equals(PayType.FULLPAYMENT.toString())) {
+        if (payWay.equals(PayWay.PREPAYMENT.toString()) && payType.equals(PayType.FULL_PAYMENT.toString())) {
             return (long) (totalAmount * 0.05);
         } else {
             return 0;

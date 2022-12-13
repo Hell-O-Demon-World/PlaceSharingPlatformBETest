@@ -1,36 +1,38 @@
 package com.golfzonaca.officesharingplatform.web.main;
 
+import com.golfzonaca.officesharingplatform.service.auth.AuthService;
 import com.golfzonaca.officesharingplatform.service.place.PlaceService;
 import com.golfzonaca.officesharingplatform.service.place.dto.place.PlaceListDto;
 import com.golfzonaca.officesharingplatform.service.search.SearchService;
-import com.golfzonaca.officesharingplatform.web.main.dto.request.RequestFilterData;
-import com.golfzonaca.officesharingplatform.web.main.dto.request.RequestSearchData;
+import com.golfzonaca.officesharingplatform.web.main.dto.request.*;
+import com.golfzonaca.officesharingplatform.web.main.validation.MainPageValidation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("main")
 public class MainController {
-
+    private final MainPageValidation mainPageValidation;
     private final PlaceService placeService;
     private final SearchService searchService;
+    private final AuthService authService;
 
-
-    @GetMapping("/main")
+    @GetMapping()
     public Map<Integer, PlaceListDto> allPlace() {
         return placeService.processingMainPlaceData(placeService.findAllPlaces());
     }
 
-    @PostMapping("/main/search")
+    @PostMapping("/search")
     public Map<Integer, PlaceListDto> searchPlaces(@RequestBody @Validated RequestSearchData requestSearchData, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new IllegalArgumentException("검색어를 입력해주시기 바랍니다.");
@@ -41,7 +43,7 @@ public class MainController {
         return placeService.processingMainPlaceData(searchService.findPlaces(requestSearchData));
     }
 
-    @PostMapping("/main/filter")
+    @PostMapping("/filter")
     public Map<Integer, PlaceListDto> filterPlaces(@RequestBody @Validated RequestFilterData requestFilterData, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new IllegalArgumentException("필터 조건을 하나 이상 선택해주시기 바랍니다.");
@@ -50,5 +52,39 @@ public class MainController {
             return placeService.processingMainPlaceData(placeService.findAllPlaces());
         }
         return placeService.processingMainPlaceData(searchService.filterPlaces(requestFilterData.getDay(), requestFilterData.getStartTime(), requestFilterData.getEndTime(), requestFilterData.getCity(), requestFilterData.getSubCity(), requestFilterData.getType()));
+    }
+
+    @PostMapping("/findUserId")
+    public Map<String, String> findUserEmailId(@RequestBody @Validated RequestMailForm emailForm, BindingResult bindingResult) {
+        mainPageValidation.validationBindingResult(bindingResult);
+        Map<String, String> resultMap = new HashMap<>();
+        String email = emailForm.getEmail();
+        resultMap.put("findUserMail", authService.findUserMailLikeMail(email));
+        return resultMap;
+    }
+
+    @PostMapping("/pre-check")
+    public Map<String, String> checkingIdAndPw(@RequestBody @Validated PwPreCheckForm pwPreCheckForm, BindingResult bindingResult) {
+        Map<String, String> resultMap = new LinkedHashMap<>();
+        String email = pwPreCheckForm.getEmail();
+        String tel = pwPreCheckForm.getTel();
+        mainPageValidation.validationEmailTelBindingResult(email, tel, bindingResult);
+        resultMap.put("email", email);
+        resultMap.put("tel", tel);
+        resultMap.put("msg", "확인 완료!");
+        return resultMap;
+    }
+
+    @PostMapping("/findPw")
+    public Map<String, String> findPassword(@RequestBody @Validated PwCheckForm pwPreCheckForm, BindingResult bindingResult) {
+        Map<String, String> resultMap = new HashMap<>();
+        String pw = pwPreCheckForm.getPassword();
+        String pw2 = pwPreCheckForm.getCheckPassword();
+        String email = pwPreCheckForm.getEmail();
+        String tel = pwPreCheckForm.getTel();
+        mainPageValidation.validationEmailTelBindingResult(email, tel, pw, pw2, bindingResult);
+        authService.createNewPassword(email, pw);
+        resultMap.put("msg", "비밀번호 수정 완료!");
+        return resultMap;
     }
 }
