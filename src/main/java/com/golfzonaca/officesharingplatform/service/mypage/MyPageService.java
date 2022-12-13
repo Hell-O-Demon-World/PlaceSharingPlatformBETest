@@ -7,7 +7,7 @@ import java.util.Map;
 public interface MyPageService {
     Map<String, JsonObject> getOverViewData(Long userId);
 
-    void cancelByOrderAndUserId(Integer order, Long userId);
+    void cancelByReservationAndUserId(Long reservationId, Long userId);
 
     Map<String, JsonObject> getResViewData(long userId, Integer page);
 
@@ -26,4 +26,6 @@ public interface MyPageService {
     void updateUserInfo(Long userId, String password, String tel, String job, Map<String, Boolean> preferType);
 
     void saveInquiry(Long userId, String title, String question);
+
+    void leaveMembership(Long userId);
 }

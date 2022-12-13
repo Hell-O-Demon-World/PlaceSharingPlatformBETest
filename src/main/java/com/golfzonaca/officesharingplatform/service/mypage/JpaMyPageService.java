@@ -4,6 +4,7 @@ import com.golfzonaca.officesharingplatform.domain.*;
 import com.golfzonaca.officesharingplatform.domain.type.RatingStatus;
 import com.golfzonaca.officesharingplatform.domain.type.ReservationStatus;
 import com.golfzonaca.officesharingplatform.domain.type.UsageStatus;
+import com.golfzonaca.officesharingplatform.exception.NonExistedReservationException;
 import com.golfzonaca.officesharingplatform.repository.comment.CommentRepository;
 import com.golfzonaca.officesharingplatform.repository.inquiry.InquiryRepository;
 import com.golfzonaca.officesharingplatform.repository.inquirystatus.InquiryStatusRepository;
@@ -24,6 +25,7 @@ import com.golfzonaca.officesharingplatform.service.mypage.dto.usage.MyReservati
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -35,6 +37,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -57,9 +60,15 @@ public class JpaMyPageService implements MyPageService {
     }
 
     @Override
-    public void cancelByOrderAndUserId(Integer order, Long userId) {
-        List<Reservation> reservationList = reservationRepository.findAllLimit(ReservationSearchCond.builder().userId(userId).build(), order + 1);
-        reservationRepository.deleteById(reservationList.get(order).getId());
+    public void cancelByReservationAndUserId(Long reservationId, Long userId) {
+        Reservation findReservation = reservationRepository.findById(reservationId);
+        Long targetUserID = findReservation.getUser().getId();
+        if (targetUserID.equals(userId)) {
+            reservationRepository.deleteById(findReservation.getId());
+        } else {
+            log.error("token 정보가 해당 예약 정보와 일치하지 않습니다.");
+            throw new NonExistedReservationException("");
+        }
     }
 
     @Override
@@ -138,6 +147,12 @@ public class JpaMyPageService implements MyPageService {
     public void saveInquiry(Long userId, String title, String question) {
         Inquiry inquiry = inquiryRepository.save(new Inquiry(userRepository.findById(userId), title, question, LocalDateTime.now()));
         inquiryStatusRepository.save(new InquiryStatus(inquiry, false));
+    }
+
+    @Override
+    public void leaveMembership(Long userId) {
+        User findUser = userRepository.findById(userId);
+        userRepository.delete(findUser.getId());
     }
 
     private void putUserInfoData(User user, Map<String, JsonObject> editUserInfoMap) {

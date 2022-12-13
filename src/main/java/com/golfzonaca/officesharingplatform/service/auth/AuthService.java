@@ -9,9 +9,10 @@ import java.security.NoSuchAlgorithmException;
 
 public interface AuthService {
 
-    boolean isAvailableEmail(String email);
+    String findUserMailLikeMail(String email);
     void join(User user);
     boolean isAvailableTelNum(String phoneNumber);
     void sendMail(EmailForm emailForm) throws NoSuchAlgorithmException, UnsupportedEncodingException;
 
+    void createNewPassword(String email, String newPassword);
 }

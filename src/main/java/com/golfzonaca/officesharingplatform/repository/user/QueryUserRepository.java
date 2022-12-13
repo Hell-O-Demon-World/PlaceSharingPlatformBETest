@@ -27,7 +27,7 @@ public class QueryUserRepository {
         return Optional.ofNullable(query
                 .select(user)
                 .from(user)
-                .where(user.email.like(email))
+                .where(user.email.eq(email))
                 .fetchFirst());
     }
 
