@@ -4,10 +4,7 @@ import com.golfzonaca.officesharingplatform.service.auth.AuthService;
 import com.golfzonaca.officesharingplatform.service.place.PlaceService;
 import com.golfzonaca.officesharingplatform.service.place.dto.PlaceListDto;
 import com.golfzonaca.officesharingplatform.service.search.SearchService;
-import com.golfzonaca.officesharingplatform.web.main.dto.request.PwPreCheckForm;
-import com.golfzonaca.officesharingplatform.web.main.dto.request.RequestFilterData;
-import com.golfzonaca.officesharingplatform.web.main.dto.request.RequestMailForm;
-import com.golfzonaca.officesharingplatform.web.main.dto.request.RequestSearchData;
+import com.golfzonaca.officesharingplatform.web.main.dto.request.*;
 import com.golfzonaca.officesharingplatform.web.main.validation.MainPageValidation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -79,7 +76,7 @@ public class MainController {
     }
 
     @PostMapping("/findPw")
-    public Map<String, String> findPassword(@RequestBody @Validated PwPreCheckForm pwPreCheckForm, BindingResult bindingResult) {
+    public Map<String, String> findPassword(@RequestBody @Validated PwCheckForm pwPreCheckForm, BindingResult bindingResult) {
         Map<String, String> resultMap = new HashMap<>();
         String pw = pwPreCheckForm.getPassword();
         String pw2 = pwPreCheckForm.getCheckPassword();
