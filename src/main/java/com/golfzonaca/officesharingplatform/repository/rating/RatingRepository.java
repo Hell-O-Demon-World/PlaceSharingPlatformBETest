@@ -20,5 +20,7 @@ public interface RatingRepository {
 
     List<Rating> findAllByUserWithPagination(User user, Integer page);
 
-    List<Rating> findAllByPlace(Place place, long page);
+    Integer countByPlace(Place place);
+
+    List<Rating> findAllByPlaceWithPagination(Place place, Integer page);
 }

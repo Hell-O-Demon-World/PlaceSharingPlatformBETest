@@ -14,6 +14,7 @@ import com.golfzonaca.officesharingplatform.service.place.dto.response.roomtype.
 import com.golfzonaca.officesharingplatform.service.place.dto.response.roomtype.MeetingRoom;
 import com.golfzonaca.officesharingplatform.service.place.dto.response.roomtype.Office;
 import com.golfzonaca.officesharingplatform.web.formatter.TimeFormatter;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
@@ -104,19 +105,32 @@ public class JpaPlaceService implements PlaceService {
     }
 
     @Override
-    public Map<String, JsonObject> getReviewData(Long placeId, long page) {
+    public Map<String, JsonObject> getReviewData(Long placeId, Integer page) {
+        Gson gson = new Gson();
         Place place = placeRepository.findById(placeId);
-//        Map<String, JsonObject> reviewData = processingReviewData(place);
-//        ratingRepository.countByPlace(place);
+        if (getPlaceRating(place).size() == 0) {
+            throw new NoSuchElementException("현재 선택하신 Place의 리뷰는 존재하지 않습니다.");
+        }
+        Map<String, JsonObject> reviewData = new LinkedHashMap<>();
+        reviewData.put("paginationData", gson.toJsonTree(Map.of("maxPage", ratingRepository.countByPlace(place) / 4 + 1)).getAsJsonObject());
+        reviewData.put("reviewData", gson.toJsonTree(processingReviewData(place, page)).getAsJsonObject());
+        return reviewData;
+    }
 
-        List<Rating> ratingList = ratingRepository.findAllByPlace(place, page);
-//        return reviewData;
-        return null;
+    private Map<String, JsonObject> processingReviewData(Place place, Integer page) {
+        Gson gson = new Gson();
+        Map<String, JsonObject> reviewData = new LinkedHashMap<>();
+        List<Rating> ratingList = ratingRepository.findAllByPlaceWithPagination(place, page);
+        for (int i = 0; i < ratingList.size(); i++) {
+            Rating rating = ratingList.get(i);
+            JsonObject myRatingData = gson.toJsonTree(new RatingDto(rating.getId(), String.valueOf(rating.getRatingScore()), rating.getReservation().getUser().getUsername(), rating.getRatingTime().toLocalDate().toString(), rating.getRatingTime().toLocalTime().toString(), rating.getReservation().getRoom().getRoomKind().getRoomType().getDescription(), rating.getRatingReview(), String.valueOf(rating.getCommentList().size()))).getAsJsonObject();
+            reviewData.put(String.valueOf(i), myRatingData);
+        }
+        return reviewData;
     }
 
     @Override
-    public Map<String, JsonObject> getCommentData(Long reviewId, long page) {
-//        comment
+    public Map<String, JsonObject> getCommentData(Long reviewId, Integer page) {
         return null;
     }
 
@@ -193,7 +207,7 @@ public class JpaPlaceService implements PlaceService {
         for (Room room : place.getRooms()) {
             for (Reservation reservation : room.getReservationList()) {
                 if (reservation.getRating() != null) {
-                    ratingList.add(new RatingDto(String.valueOf(reservation.getRating().getId()), String.valueOf(reservation.getRating().getRatingScore()), reservation.getUser().getUsername(), reservation.getRating().getRatingTime().toLocalDate().toString(), reservation.getRating().getRatingTime().toLocalTime().toString(), reservation.getRoom().getRoomKind().getRoomType().toString(), reservation.getRating().getRatingReview(), String.valueOf(reservation.getRating().getCommentList().size())));
+                    ratingList.add(new RatingDto(reservation.getRating().getId(), String.valueOf(reservation.getRating().getRatingScore()), reservation.getUser().getUsername(), reservation.getRating().getRatingTime().toLocalDate().toString(), reservation.getRating().getRatingTime().toLocalTime().toString(), reservation.getRoom().getRoomKind().getRoomType().toString(), reservation.getRating().getRatingReview(), String.valueOf(reservation.getRating().getCommentList().size())));
                 }
             }
         }

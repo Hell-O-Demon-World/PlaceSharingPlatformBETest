@@ -23,7 +23,7 @@ public interface PlaceService {
 
     PlaceDetailsInfo getPlaceDetailsInfo(long placeId);
 
-    Map<String, JsonObject> getReviewData(Long placeId, long page);
+    Map<String, JsonObject> getReviewData(Long placeId, Integer page);
 
-    Map<String, JsonObject> getCommentData(Long reviewId, long page);
+    Map<String, JsonObject> getCommentData(Long reviewId, Integer page);
 }

@@ -16,7 +16,7 @@ public class RatingController {
 
     private final RatingService ratingService;
 
-    @PostMapping("/{reservationId}/rating/add")
+    @PostMapping("/rating/new/{reservationId}")
     public String saveRating(@TokenUserId Long userId, @PathVariable Long reservationId, @Validated @RequestBody RatingSaveData ratingSaveData, BindingResult bindingResult) {
         Float ratingScore = ratingSaveData.getRatingScore();
         String ratingReview = ratingSaveData.getRatingReview();

@@ -49,7 +49,12 @@ public class SpringJpaDslRatingRepository implements RatingRepository {
     }
 
     @Override
-    public List<Rating> findAllByPlace(Place place, long page) {
-        return queryRepository.findAllByPlace(place, page);
+    public Integer countByPlace(Place place) {
+        return jpaRepository.countByPlace(place.getId()).size();
+    }
+
+    @Override
+    public List<Rating> findAllByPlaceWithPagination(Place place, Integer page) {
+        return jpaRepository.findAllByPlaceWithPagination(place.getId(), page);
     }
 }

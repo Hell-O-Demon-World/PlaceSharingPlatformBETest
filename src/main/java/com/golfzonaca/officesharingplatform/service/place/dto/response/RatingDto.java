@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public class RatingDto {
-    private String ratingId;
+    private Long ratingId;
     private String ratingScore;
     private String ratingWriter;
     private String writeDate;

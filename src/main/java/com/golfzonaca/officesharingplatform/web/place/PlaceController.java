@@ -24,12 +24,12 @@ public class PlaceController {
     }
 
     @GetMapping("places/{placeId}/review")
-    public Map<String, JsonObject> reviewData(@PathVariable Long placeId, @RequestParam long page) {
+    public Map<String, JsonObject> reviewData(@PathVariable Long placeId, @RequestParam Integer page) {
         return placeService.getReviewData(placeId, page);
     }
 
     @GetMapping("places/{placeId}/{reviewId}")
-    public Map<String, JsonObject> commentData(@PathVariable Long placeId, @PathVariable Long reviewId, @RequestParam long page) {
+    public Map<String, JsonObject> commentData(@PathVariable Long placeId, @PathVariable Long reviewId, @RequestParam Integer page) {
         return placeService.getCommentData(reviewId, page);
     }
 }
