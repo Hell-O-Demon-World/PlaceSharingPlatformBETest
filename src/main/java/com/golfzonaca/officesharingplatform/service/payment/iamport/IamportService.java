@@ -180,22 +180,4 @@ public class IamportService {
             return (int) (payPrice * 0.8);
         }
     }
-
-
-    public Integer calculateTaxFreeAmount(Integer totalAmount) {
-        return (totalAmount) * 10 / 11;
-    }
-
-    public Integer calculateVatAmount(Integer totalAmount) {
-        return totalAmount / 11;
-    }
-
-    public long calculateMileage(Integer totalAmount, String payWay, String payType) {
-
-        if (payWay.equals(PayWay.PREPAYMENT.toString()) && payType.equals(PayType.FULL_PAYMENT.toString())) {
-            return (long) (totalAmount * 0.05);
-        } else {
-            return 0;
-        }
-    }
 }
