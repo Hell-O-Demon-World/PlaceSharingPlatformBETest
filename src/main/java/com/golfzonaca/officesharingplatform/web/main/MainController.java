@@ -53,7 +53,7 @@ public class MainController {
         return placeService.processingMainPlaceData(searchService.filterPlaces(requestFilterData.getDay(), requestFilterData.getStartTime(), requestFilterData.getEndTime(), requestFilterData.getCity(), requestFilterData.getSubCity(), requestFilterData.getType()));
     }
 
-    @PostMapping("/findUserId")
+    @PostMapping("/findemail")
     public Map<String, String> findUserEmailId(@RequestBody @Validated RequestFindIdForm findIdForm, BindingResult bindingResult) {
         Map<String, String> resultMap = new HashMap<>();
         String name = findIdForm.getName();
@@ -63,7 +63,7 @@ public class MainController {
         return resultMap;
     }
 
-    @PostMapping("/pre-check")
+    @PostMapping("/precheck")
     public Map<String, String> checkingIdAndPw(@RequestBody @Validated PwPreCheckForm pwPreCheckForm, BindingResult bindingResult) {
         Map<String, String> resultMap = new LinkedHashMap<>();
         String email = pwPreCheckForm.getEmail();
@@ -75,7 +75,7 @@ public class MainController {
         return resultMap;
     }
 
-    @PostMapping("/findPw")
+    @PostMapping("/findpw")
     public Map<String, String> findPassword(@RequestBody @Validated PwCheckForm pwPreCheckForm, BindingResult bindingResult) {
         Map<String, String> resultMap = new HashMap<>();
         String pw = pwPreCheckForm.getPassword();

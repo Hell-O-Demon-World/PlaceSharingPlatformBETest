@@ -45,8 +45,6 @@ public class JwtSuccessHandler implements AuthenticationSuccessHandler {
 
     private Jwt createRefreshJwt(Long userId) {
         RefreshToken refreshToken = new RefreshToken();
-        System.out.println("userId = " + userId);
-        System.out.println("refreshTokenService.existToken(userId) = " + refreshTokenService.existToken(userId));
         if (refreshTokenService.existToken(userId)) {
             refreshToken = refreshTokenService.getRefreshToken(userId);
         }

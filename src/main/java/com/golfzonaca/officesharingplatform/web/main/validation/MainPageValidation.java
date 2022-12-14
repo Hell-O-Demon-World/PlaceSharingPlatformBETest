@@ -1,5 +1,6 @@
 package com.golfzonaca.officesharingplatform.web.main.validation;
 
+import com.golfzonaca.officesharingplatform.domain.User;
 import com.golfzonaca.officesharingplatform.exception.MisMatchingPasswordException;
 import com.golfzonaca.officesharingplatform.exception.NonExistedUserException;
 import com.golfzonaca.officesharingplatform.exception.NonExistedUserTelException;
@@ -7,6 +8,7 @@ import com.golfzonaca.officesharingplatform.repository.user.UserRepository;
 import com.golfzonaca.officesharingplatform.exception.NonExistedUserNameException;
 import com.golfzonaca.officesharingplatform.web.validation.RequestValidation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 
@@ -17,6 +19,7 @@ public class MainPageValidation {
     private static final String NON_EXIST_USER_MESSAGE = "가입되지 않은 이름 입니다.";
     private static final String NON_EMAIL_MESSAGE = "존재하지 않는 회원 입니다.";
     private static final String NON_TEL_MESSAGE = "핸드폰 번호를 잘못 입력하셨습니다.";
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final RequestValidation requestValidation;
     private final UserRepository userRepository;
 
@@ -38,11 +41,20 @@ public class MainPageValidation {
     }
 
     public void validationEmailTelBindingResult(String email, String tel, String pw, String pw2, BindingResult bindingResult) {
+        validPwAndPw2(pw, pw2);
+        validPw(email, pw);
         requestValidation.bindingResultCheck(bindingResult);
         validEmail(email);
         validTel(tel);
         validEmailAndTel(email, tel);
-        validPwAndPw2(pw, pw2);
+    }
+
+    private void validPw(String email, String pw) {
+        User findUser = userRepository.findByMailLike(email);
+        String findPw = findUser.getPassword();
+        if (bCryptPasswordEncoder.matches(pw, findPw)) {
+            throw new MisMatchingPasswordException("이전 비밀번호는 사용하실 수 없습니다.");
+        }
     }
 
     private void validPwAndPw2(String pw, String pw2) {
