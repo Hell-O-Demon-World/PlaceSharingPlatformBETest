@@ -74,6 +74,7 @@ public class KakaoPayService {
             mileageService.payingMileage(payment);
         }
 
+        payment.updatePayStatus(PaymentStatus.COMPLETED);
         HttpHeaders httpHeaders = kakaoPayUtility.makeHttpHeader();
         KakaoPayApprovalRequest body = kakaoPayUtility.makeRequestBodyForApprove(payment, pgToken);
         HttpEntity<MultiValueMap<String, String>> requestApprovalEntity = new HttpEntity<>(kakaoPayUtility.multiValueMapConverter(new ObjectMapper(), body), httpHeaders);
@@ -82,7 +83,6 @@ public class KakaoPayService {
         if (PayType.FULL_PAYMENT.equals(payment.getType())) {
             mileageService.savingFullPaymentMileage(payment);
         }
-        payment.updatePayStatus(PaymentStatus.COMPLETED);
 
         return kakaoPayApprovalResponse;
     }
