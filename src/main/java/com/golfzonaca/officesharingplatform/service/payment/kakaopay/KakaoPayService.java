@@ -12,6 +12,7 @@ import com.golfzonaca.officesharingplatform.service.refund.RefundService;
 import com.golfzonaca.officesharingplatform.web.payment.dto.kakaopay.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,9 @@ public class KakaoPayService {
 
     private static final String HOST = "https://kapi.kakao.com/";
 
+    @Value("${kakaoPay.api.apiKey}")
+    private String kakaoPayApiKey;
+
     private final ReservationRepository reservationRepository;
     private final PaymentRepository paymentRepository;
     private final MileageService mileageService;
@@ -53,7 +57,7 @@ public class KakaoPayService {
         paymentValidation.validUserForReservation(user, reservation);
 
         KakaoPayUtility kakaoPayUtility = new KakaoPayUtility();
-        HttpHeaders header = kakaoPayUtility.makeHttpHeader();
+        HttpHeaders header = kakaoPayUtility.makeHttpHeader(kakaoPayApiKey);
 
         Payment payment = processingPaymentData(reservation, payWay, payType, payMileage, "");
         paymentRepository.save(payment);
@@ -75,7 +79,7 @@ public class KakaoPayService {
         }
 
         payment.updatePayStatus(PaymentStatus.COMPLETED);
-        HttpHeaders httpHeaders = kakaoPayUtility.makeHttpHeader();
+        HttpHeaders httpHeaders = kakaoPayUtility.makeHttpHeader(kakaoPayApiKey);
         KakaoPayApprovalRequest body = kakaoPayUtility.makeRequestBodyForApprove(payment, pgToken);
         HttpEntity<MultiValueMap<String, String>> requestApprovalEntity = new HttpEntity<>(kakaoPayUtility.multiValueMapConverter(new ObjectMapper(), body), httpHeaders);
 
@@ -119,7 +123,7 @@ public class KakaoPayService {
         List<KakaoPayCancelResponse> cancelResult = new LinkedList<>();
 
         for (Refund refund : refunds) { // 검증이 끝나면 취소요청하기
-            HttpHeaders httpHeaders = kakaoPayUtility.makeHttpHeader();
+            HttpHeaders httpHeaders = kakaoPayUtility.makeHttpHeader(kakaoPayApiKey);
 
             KakaoPayCancelRequest kakaoPayCancelRequest = kakaoPayUtility.makeRequestBodyForCancel(refund);
 

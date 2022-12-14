@@ -38,6 +38,7 @@ public class JpaMileageRepository implements MileageRepository {
     public MileagePaymentUpdate save(MileagePaymentUpdate mileagePaymentUpdate) {
         return jpaMileagePaymentRepository.save(mileagePaymentUpdate);
     }
+
     @Override
     public MileageTransactionUsage save(MileageTransactionUsage mileageTransactionUsage) {
         return jpaMileageTransactionUsageRepository.save(mileageTransactionUsage);
@@ -50,28 +51,34 @@ public class JpaMileageRepository implements MileageRepository {
 
     @Override
     public Mileage findByID(Long id) {
-        return jpaMileageRepository.findById(id).orElseThrow(()-> new NonExistedMileageException("NonExistedMileageException::: 마일리지가 존재하지 않습니다."));
+        return jpaMileageRepository.findById(id).orElseThrow(() -> new NonExistedMileageException("NonExistedMileageException::: 마일리지가 존재하지 않습니다."));
     }
+
     @Override
     public MileagePaymentUpdate findMileageByPayment(Payment payment) {
-        return queryDslMileagePaymentUpdateRepository.findFirstMileageByPayment(payment).orElseThrow(()->new RuntimeException("No MileagePaymentUpdate"));
+        return queryDslMileagePaymentUpdateRepository.findFirstMileageByPayment(payment).orElseThrow(() -> new RuntimeException("No MileagePaymentUpdate"));
     }
+
     @Override
     public List<MileageTransactionUsage> findTransactionUsageMileageByPaymentMileage(MileagePaymentUpdate mileagePaymentUpdate) {
         return queryDslMileagePaymentUpdateRepository.findTransactionUsageMileageByPaymentMileage(mileagePaymentUpdate);
     }
+
     @Override
     public MileageExpiredHistory findExpiredMileage(MileageTransactionUsage mileageTransactionUsage) {
         return jpaMileageExpiredRepository.findFirstByMileageTransactionUsage(mileageTransactionUsage);
     }
+
     @Override
     public Mileage findByUser(User user) {
-        return jpaMileageRepository.findById(user.getId()).orElseThrow(()->new NonExistedMileageException("NonExistedMileageException:: 마일리지가 존재하지 않습니다."));
+        return jpaMileageRepository.findById(user.getId()).orElseThrow(() -> new NonExistedMileageException("NonExistedMileageException:: 마일리지가 존재하지 않습니다."));
     }
+
     @Override
     public List<MileageUpdate> findMileageUpdateAll() {
         return jpaMileageUpdateRepository.findAll();
     }
+
     @Override
     public List<MileageUpdate> findMileageUpdateAllLikeUserAndExpireDate(Mileage mileage, LocalDateTime localDateTime) {
         return queryDslMileageUpdateRepository.findMileageUpdateAllLikeUserAndExpireDate(mileage, localDateTime);

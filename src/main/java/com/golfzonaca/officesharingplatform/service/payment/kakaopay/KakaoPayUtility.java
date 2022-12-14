@@ -5,13 +5,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.golfzonaca.officesharingplatform.domain.Payment;
 import com.golfzonaca.officesharingplatform.domain.Refund;
 import com.golfzonaca.officesharingplatform.domain.Reservation;
+import com.golfzonaca.officesharingplatform.domain.type.PayType;
+import com.golfzonaca.officesharingplatform.domain.type.PayWay;
 import com.golfzonaca.officesharingplatform.web.payment.dto.kakaopay.CompanyId;
 import com.golfzonaca.officesharingplatform.web.payment.dto.kakaopay.KakaoPayApprovalRequest;
 import com.golfzonaca.officesharingplatform.web.payment.dto.kakaopay.KakaoPayCancelRequest;
 import com.golfzonaca.officesharingplatform.web.payment.dto.kakaopay.KakaoPayReadyRequest;
-import com.golfzonaca.officesharingplatform.domain.type.PayType;
-import com.golfzonaca.officesharingplatform.domain.type.PayWay;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -22,7 +21,6 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Map;
 
-@RequiredArgsConstructor
 @Slf4j
 public class KakaoPayUtility {
 
@@ -67,12 +65,11 @@ public class KakaoPayUtility {
         }
     }
 
-    public HttpHeaders makeHttpHeader() {
-
+    public HttpHeaders makeHttpHeader(String kakaoPayApiKey) {
         HttpHeaders headers = new HttpHeaders();
 
         headers.add(HttpHeaders.HOST, "https://kapi.kakao.com/");
-        headers.add(HttpHeaders.AUTHORIZATION, "KakaoAK a8e95d70e35d823f1171ddaa015b53c4");
+        headers.add(HttpHeaders.AUTHORIZATION, kakaoPayApiKey);
         headers.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE + ";charset=UTF-8");
         return headers;
