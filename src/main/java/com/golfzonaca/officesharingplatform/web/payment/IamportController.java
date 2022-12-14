@@ -4,9 +4,11 @@ import com.golfzonaca.officesharingplatform.annotation.TokenUserId;
 import com.golfzonaca.officesharingplatform.service.payment.iamport.IamportService;
 import com.golfzonaca.officesharingplatform.web.payment.dto.CancelInfo;
 import com.golfzonaca.officesharingplatform.web.payment.form.NicePayRequestForm;
+import com.golfzonaca.officesharingplatform.web.payment.form.NicePaySubscribeRequestForm;
 import com.siot.IamportRestClient.exception.IamportResponseException;
 import com.siot.IamportRestClient.response.IamportResponse;
 import com.siot.IamportRestClient.response.Payment;
+import com.siot.IamportRestClient.response.Schedule;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,5 +34,10 @@ public class IamportController {
     public List<IamportResponse<Payment>> nicepayCancel(@TokenUserId Long userId, @RequestBody CancelInfo cancelInfo) throws IamportResponseException, IOException {
         long reservationId = cancelInfo.getReservationId();
         return iamportService.nicePayCancel(userId, reservationId);
+    }
+
+    @PostMapping("/nicepaysubscribe")
+    public IamportResponse<List<Schedule>> nicePaySubscribe(@TokenUserId Long userId, @RequestBody NicePaySubscribeRequestForm nicePaySubscribeRequestForm) throws IamportResponseException, IOException {
+        return iamportService.requestNicePaySubscribe(userId, nicePaySubscribeRequestForm);
     }
 }

@@ -12,13 +12,13 @@ import com.golfzonaca.officesharingplatform.service.mileage.MileageService;
 import com.golfzonaca.officesharingplatform.service.payment.kakaopay.KakaoPayUtility;
 import com.golfzonaca.officesharingplatform.service.refund.RefundService;
 import com.golfzonaca.officesharingplatform.web.payment.form.NicePayRequestForm;
+import com.golfzonaca.officesharingplatform.web.payment.form.NicePaySubscribeRequestForm;
 import com.siot.IamportRestClient.IamportClient;
 import com.siot.IamportRestClient.exception.IamportResponseException;
-import com.siot.IamportRestClient.request.CancelData;
-import com.siot.IamportRestClient.request.CardInfo;
-import com.siot.IamportRestClient.request.OnetimePaymentData;
+import com.siot.IamportRestClient.request.*;
 import com.siot.IamportRestClient.response.IamportResponse;
 import com.siot.IamportRestClient.response.Payment;
+import com.siot.IamportRestClient.response.Schedule;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -26,10 +26,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
@@ -118,8 +120,6 @@ public class IamportService {
             refund.updateRefundStatus(true);
             refund.getPayment().updatePayStatus(PaymentStatus.CANCELED);
         }
-
-
         return refundResult;
     }
 
@@ -134,7 +134,7 @@ public class IamportService {
     }
 
     public String createMerchantUid() {
-        return ("N" + UUID.randomUUID().toString().replaceAll("-", "")).substring(0, 19);
+        return ("N" + UUID.randomUUID().toString().replaceAll("-", "")).substring(0, 20);
     }
 
     private com.golfzonaca.officesharingplatform.domain.Payment processingPaymentData(Reservation reservation, String payWay, String payType, long payMileage, String apiCode) {
@@ -180,4 +180,36 @@ public class IamportService {
             return (int) (payPrice * 0.8);
         }
     }
+
+    public IamportResponse<List<Schedule>> requestNicePaySubscribe(Long userId, NicePaySubscribeRequestForm nicePaySubscribeRequestForm) throws IamportResponseException, IOException {
+
+        IamportClient iamportClient = new IamportClient(apiKey, apiSecret);
+        Reservation findReservation = reservationRepository.findById(nicePaySubscribeRequestForm.getReservationId());
+        List<com.golfzonaca.officesharingplatform.domain.Payment> payments = paymentRepository.findByReservationId(findReservation.getId());
+
+        ScheduleEntry scheduleEntry = null;
+
+        for (com.golfzonaca.officesharingplatform.domain.Payment payment : payments) {
+            if (payment.getReservation().getId().equals(findReservation.getId())) {
+                if (payment.getType().equals(PayType.DEPOSIT)) {
+                    LocalDateTime paymentDateTime = LocalDateTime.of(payment.getPayDate(), payment.getPayTime()).plusHours(1);
+                    long scheduleAt = (Timestamp.valueOf(paymentDateTime).getTime());
+                    Date time = new Date(scheduleAt);
+                    long calculateTotalAmount = calculateTotalAmount(findReservation, String.valueOf(payment.getPayWay()), String.valueOf(payment.getType()), payment.getPayMileage());
+                    long calculatedAmount = calculateTotalAmount - payment.getPrice();
+                    scheduleEntry = new ScheduleEntry(payment.getApiCode(), time, new BigDecimal(calculatedAmount));
+                }
+            }
+        }
+
+        ScheduleData scheduleData = new ScheduleData(createCustomerUid());
+        scheduleData.addSchedule(scheduleEntry);
+
+        return iamportClient.subscribeSchedule(scheduleData);
+    }
+
+    public String createCustomerUid() {
+        return ("N" + UUID.randomUUID().toString().replaceAll("-", "")).substring(0, 20);
+    }
+
 }
