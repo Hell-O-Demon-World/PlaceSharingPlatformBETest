@@ -1,6 +1,7 @@
 package com.golfzonaca.officesharingplatform.domain;
 
 
+import com.golfzonaca.officesharingplatform.domain.type.FixStatus;
 import com.golfzonaca.officesharingplatform.domain.type.ReservationStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -52,13 +53,17 @@ public class Reservation {
     @Enumerated(EnumType.STRING)
     private ReservationStatus status;
 
+    @Column(name = "FIX_STATUS", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private FixStatus fixStatus;
+
     @OneToOne(mappedBy = "reservation")
     private Rating rating;
 
     @OneToMany(mappedBy = "reservation")
     private List<Payment> paymentList = new LinkedList<>();
 
-    public Reservation(User user, Room room, LocalDateTime resCompleted, LocalDate resStartDate, LocalTime resStartTime, LocalDate resEndDate, LocalTime resEndTime, ReservationStatus status) {
+    public Reservation(User user, Room room, LocalDateTime resCompleted, LocalDate resStartDate, LocalTime resStartTime, LocalDate resEndDate, LocalTime resEndTime, ReservationStatus status, FixStatus fixStatus) {
         this.user = user;
         this.room = room;
         this.resCompleted = resCompleted;
@@ -67,6 +72,7 @@ public class Reservation {
         this.resEndDate = resEndDate;
         this.resEndTime = resEndTime;
         this.status = status;
+        this.fixStatus = fixStatus;
     }
 
     public Reservation toEntity() {
