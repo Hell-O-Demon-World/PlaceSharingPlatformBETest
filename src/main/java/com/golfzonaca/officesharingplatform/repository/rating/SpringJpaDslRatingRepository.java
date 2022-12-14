@@ -55,6 +55,6 @@ public class SpringJpaDslRatingRepository implements RatingRepository {
 
     @Override
     public List<Rating> findAllByPlaceWithPagination(Place place, Integer page) {
-        return jpaRepository.findAllByPlaceWithPagination(place.getId(), page);
+        return jpaRepository.findAllByPlaceWithPagination(place.getId(), page - 1);
     }
 }

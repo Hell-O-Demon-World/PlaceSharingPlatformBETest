@@ -12,7 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 @Entity
-@Table(name = "mileage_update")
+@Table(name = "mileage_update_history")
 @NoArgsConstructor
 @Getter
 @AllArgsConstructor
@@ -35,13 +35,16 @@ public class MileageUpdate {
     //양방향 매핑
     @OneToMany(mappedBy = "mileageUpdate")
     private List<MileageExpiredHistory> mileageExpiredUpdateList = new LinkedList<>();
+
     @Builder
-    public MileageUpdate(Mileage mileage, LocalDateTime updateDate, LocalDateTime expireDate, MileageStatusType statusType) {
+    public MileageUpdate(Mileage mileage, Long updatePoint, LocalDateTime updateDate, LocalDateTime expireDate, MileageStatusType statusType) {
         this.mileage = mileage;
+        this.updatePoint = updatePoint;
         this.updateDate = updateDate;
         this.expireDate = expireDate;
         this.statusType = statusType;
     }
+
     public Long minusPoint(Long point) {
         this.updatePoint -= point;
         return updatePoint;

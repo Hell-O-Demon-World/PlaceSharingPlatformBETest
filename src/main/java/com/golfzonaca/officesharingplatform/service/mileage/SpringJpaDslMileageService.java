@@ -18,6 +18,7 @@ import java.util.List;
 public class SpringJpaDslMileageService implements MileageService {
     private final MileageRepository mileageRepository;
     private final static long INITIAL_POINT = 0;
+
     @Override
     public Mileage join() {
         Mileage mileage = new Mileage(INITIAL_POINT);
@@ -38,7 +39,7 @@ public class SpringJpaDslMileageService implements MileageService {
         MileageUpdate mileageUpdate = MileageUpdate.builder()
                 .mileage(mileage)
                 .statusType(MileageStatusType.EARNING)
-                .updateDate( MileageSupporter.currentDateTime())
+                .updateDate(MileageSupporter.currentDateTime())
                 .expireDate(MileageSupporter.expiredDateTime())
                 .build();
         mileageRepository.save(mileageUpdate);
@@ -85,6 +86,7 @@ public class SpringJpaDslMileageService implements MileageService {
         mileage.addPoint(totalPlusPoint);
         mileageRepository.save(mileage);
     }
+
     @Override
     public void payingMileage(Payment payment) {
         User user = payment.getReservation().getUser();
@@ -93,6 +95,7 @@ public class SpringJpaDslMileageService implements MileageService {
         MileageUpdate mileageUpdate = MileageUpdate.builder()
                 .mileage(findMileage)
                 .statusType(MileageStatusType.USE)
+                .updatePoint(payment.getSavedMileage())
                 .updateDate(MileageSupporter.currentDateTime())
                 .expireDate(MileageSupporter.expiredDateTime())
                 .build();
