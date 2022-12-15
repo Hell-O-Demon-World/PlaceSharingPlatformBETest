@@ -11,4 +11,6 @@ public interface SpringJpaMileageUpdateRepository extends JpaRepository<MileageU
     MileageUpdate save(MileageUpdate mileageUpdate);
 
     List<MileageUpdate> findMileageUpdatesByMileageAndExpireDateIsAfter(Mileage mileage, LocalDate localDate);
+
+    List<MileageUpdate> findAllByMileage(Mileage mileage);
 }

@@ -2,6 +2,7 @@ package com.golfzonaca.officesharingplatform.repository.mileage.querydsl;
 
 import com.golfzonaca.officesharingplatform.domain.MileagePaymentUpdate;
 import com.golfzonaca.officesharingplatform.domain.MileageTransactionUsage;
+import com.golfzonaca.officesharingplatform.domain.MileageUpdate;
 import com.golfzonaca.officesharingplatform.domain.Payment;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
@@ -34,5 +35,12 @@ public class QueryDslMileagePaymentUpdateRepository {
                 .innerJoin(mileageTransactionUsage.mileagePaymentUpdate)
                 .where(mileageTransactionUsage.mileagePaymentUpdate.id.eq(mileagePaymentUpdate.getId()))
                 .fetch();
+    }
+
+    public MileagePaymentUpdate findFirstMileageByUpdate(MileageUpdate mileageUpdate) {
+        return query.selectFrom(mileagePaymentUpdate)
+                .innerJoin(mileagePaymentUpdate.mileageUpdate)
+                .where(mileagePaymentUpdate.mileageUpdate.id.eq(mileageUpdate.getId()))
+                .fetchFirst();
     }
 }
