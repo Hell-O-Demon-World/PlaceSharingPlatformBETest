@@ -36,7 +36,7 @@ public class KakaoPayService {
 
     private static final String HOST = "https://kapi.kakao.com/";
 
-    @Value("${kakaoPay.api.apiKey}")
+    @Value("${kakao.pay.apiKey}")
     private String kakaoPayApiKey;
 
     private final ReservationRepository reservationRepository;
@@ -111,7 +111,7 @@ public class KakaoPayService {
             refund.updateRefundStatus(true);
             refund.getPayment().updatePayStatus(PaymentStatus.CANCELED);
         }
-        reservation.updateStatus(ReservationStatus.CANCELED);
+        reservation.updateStatus(ReservationStatus.CANCELED, FixStatus.CANCELED);
 
         return kakaoPayCancelResponses;
     }

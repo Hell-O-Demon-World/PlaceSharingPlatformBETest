@@ -19,4 +19,9 @@ public class NicePayRequestForm {
     private String cvc;
     private Integer card_quota;
     private String pg;
+
+    public void changePayTypeAndPayWay(String payType, String payWay) {
+        this.payType = payType;
+        this.payWay = payWay;
+    }
 }

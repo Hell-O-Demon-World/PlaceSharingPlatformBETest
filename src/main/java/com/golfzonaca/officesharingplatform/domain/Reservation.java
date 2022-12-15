@@ -86,7 +86,8 @@ public class Reservation {
         this.resEndTime = resEndTime;
     }
 
-    public void updateStatus(ReservationStatus status) {
+    public void updateStatus(ReservationStatus status, FixStatus fixStatus) {
         this.status = status;
+        this.fixStatus = fixStatus;
     }
 }
