@@ -48,7 +48,7 @@ public class QueryPlaceRepository {
                 .selectFrom(place)
                 .join(place.rooms, room)
                 .join(room.roomKind, roomKind)
-                .where(likeAddress(Optional.ofNullable(filterData.getCity())), likeAddress(Optional.ofNullable(filterData.getSubCity())), likeDay(Optional.ofNullable(filterData.getDay())), beforeStartTime(Optional.ofNullable(filterData.getStartTime())), afterEndTime(Optional.ofNullable(filterData.getEndTime())), likeRoomTypeCategory(Optional.ofNullable(filterData.getRoomTypeList())))
+                .where(likeCityOrSubCity(Optional.ofNullable(filterData.getCity()), Optional.ofNullable(filterData.getSubCity())), likeDay(Optional.ofNullable(filterData.getDay())), beforeStartTime(Optional.ofNullable(filterData.getStartTime())), afterEndTime(Optional.ofNullable(filterData.getEndTime())), likeRoomTypeCategory(Optional.ofNullable(filterData.getRoomTypeList())))
                 .groupBy(place)
                 .fetch();
     }
@@ -78,6 +78,15 @@ public class QueryPlaceRepository {
     private BooleanExpression likeAddress(Optional<String> address) {
         if (address.isPresent()) {
             return place.address.address.contains(address.get());
+        }
+        return null;
+    }
+
+    private BooleanExpression likeCityOrSubCity(Optional<String> city, Optional<String> subCity) {
+        if (city.isPresent() && subCity.isEmpty()) {
+            return place.address.address.contains(city.get());
+        } else if (city.isPresent() && subCity.isPresent()) {
+            return place.address.address.contains(subCity.get());
         }
         return null;
     }

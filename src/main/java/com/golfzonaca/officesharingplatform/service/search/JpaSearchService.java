@@ -43,6 +43,10 @@ public class JpaSearchService implements SearchService {
             filterData.setCity(city.substring(0, 2));
         }
 
+        if (!subCity.equals("0")) {
+            filterData.setSubCity(subCity);
+        }
+
         if (!typeCategory.equals("0")) {
             List<RoomType> roomTypeList = new LinkedList<>();
             for (RoomType roomType : RoomType.values()) {
