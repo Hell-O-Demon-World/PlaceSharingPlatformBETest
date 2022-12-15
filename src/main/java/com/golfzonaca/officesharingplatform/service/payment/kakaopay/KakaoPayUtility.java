@@ -91,7 +91,7 @@ public class KakaoPayUtility {
                 .totalAmount(totalAmount)
                 .taxFreeAmount(calculateTaxFreeAmount(totalAmount))
                 .vatAmount(calculateVatAmount(totalAmount))
-                .approvalUrl("http://localhost:8080/payment/" + payment.getId() + "/kakaopayapprove")
+                .approvalUrl("http://localhost:3000/mypage/usage")
                 .cancelUrl("http://localhost:8080/payment/kakaopaycancel")
                 .failUrl("http://localhost:8080/kakaopaysuccessfail")
                 .build();
