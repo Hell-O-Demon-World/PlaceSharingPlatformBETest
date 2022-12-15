@@ -21,14 +21,24 @@ public class Address {
     @Column(name = "POSTALCODE", nullable = false, length = 5)
     private String postalCode;
 
+    @Column(name = "longitude")
+    private Double longitude;
+
+    @Column(name = "latitude")
+    private Double latitude;
+
     @Builder
-    public Address(String address, String postalCode) {
+    public Address(String address, String postalCode, Double longitude, Double latitude) {
         this.address = address;
         this.postalCode = postalCode;
+        this.longitude = longitude;
+        this.latitude = latitude;
     }
 
-    public void updateAddress(String postalCode, String address) {
+    public void updateAddress(String postalCode, String address, Double longitude, Double latitude) {
         this.postalCode = postalCode;
         this.address = address;
+        this.longitude = longitude;
+        this.latitude = latitude;
     }
 }
