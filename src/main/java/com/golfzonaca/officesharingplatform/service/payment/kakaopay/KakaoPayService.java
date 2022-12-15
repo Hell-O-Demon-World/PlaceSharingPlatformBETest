@@ -33,18 +33,15 @@ import java.util.List;
 @Transactional
 @RequiredArgsConstructor
 public class KakaoPayService {
-
     private static final String HOST = "https://kapi.kakao.com/";
-
-    @Value("${kakaoPay.api.apiKey}")
-    private String kakaoPayApiKey;
-
     private final ReservationRepository reservationRepository;
     private final PaymentRepository paymentRepository;
     private final MileageService mileageService;
     private final UserRepository userRepository;
     private final RefundService refundService;
 
+    @Value("${kakao.pay.apiKey}")
+    private String kakaoPayApiKey;
     public String kakaoPayReadyRequest(Long userId, long reservationId, String payWay, String payType, long payMileage) {
 
         Reservation reservation = reservationRepository.findById(reservationId);

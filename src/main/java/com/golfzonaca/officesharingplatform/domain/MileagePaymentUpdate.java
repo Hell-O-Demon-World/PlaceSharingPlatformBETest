@@ -20,13 +20,14 @@ public class MileagePaymentUpdate {
     @Column(name = "UPDATE_POINT")
     private Long updatePoint;
     @Column(name = "UPDATE_REASON")
+    @Enumerated(EnumType.STRING)
     private MileagePaymentReason paymentReason;
     @ManyToOne
     @JoinColumn(name = "MILEAGE_UPDATE_ID")
-    MileageUpdate mileageUpdate;
+    private MileageUpdate mileageUpdate;
     @OneToOne
     @JoinColumn(name = "PAYMENT_ID")
-    Payment payment;
+    private Payment payment;
     @Builder
     public MileagePaymentUpdate(Long updatePoint, MileagePaymentReason paymentReason, MileageUpdate mileageUpdate, Payment payment) {
         this.updatePoint = updatePoint;

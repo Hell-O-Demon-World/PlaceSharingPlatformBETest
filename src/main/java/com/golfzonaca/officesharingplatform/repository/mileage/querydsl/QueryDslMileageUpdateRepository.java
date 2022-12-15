@@ -22,8 +22,11 @@ public class QueryDslMileageUpdateRepository {
     }
 
     public List<MileageUpdate> findMileageUpdateAllLikeUserAndExpireDate(Mileage mileage, LocalDateTime currentLocalDateTime) {
-        return query.selectFrom(mileageUpdate)
-                .where(mileageUpdate.mileage.eq(mileage), mileageUpdate.expireDate.after(currentLocalDateTime))
+        Long mileageId = mileage.getId();
+        return query
+                .selectFrom(mileageUpdate)
+                .where(mileageUpdate.mileage.id.eq(mileageId)
+                        .and(mileageUpdate.expireDate.after(currentLocalDateTime)))
                 .fetch();
     }
 }
