@@ -92,12 +92,12 @@ public class JpaPlaceService implements PlaceService {
     }
 
     @Override
-    public Map<String, JsonObject> getPlaceInfo(long placeId, Double lng, Double lat) {
+    public Map<String, JsonObject> getPlaceInfo(long placeId) {
         Gson gson = new Gson();
         Map<String, JsonObject> placeInfo = new LinkedHashMap<>();
         PlaceMainInfo placeMainInfo = getPlaceMainInfo(placeId);
         placeInfo.put("placeMainInfo", gson.toJsonTree(placeMainInfo).getAsJsonObject());
-        Map<String, JsonObject> placeSubInfo = getInfoNearPlace(lng, lat);
+        Map<String, JsonObject> placeSubInfo = getInfoNearPlace(placeRepository.findById(placeId).getAddress().getLongitude(), placeRepository.findById(placeId).getAddress().getLatitude());
         if (placeSubInfo.isEmpty()) {
             placeSubInfo.put("NoSuchData", gson.toJsonTree(Map.of("PlaceCoordinateError", "주변 데이터 로딩에 실패하였습니다.")).getAsJsonObject());
         }

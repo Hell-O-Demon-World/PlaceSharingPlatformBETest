@@ -1,7 +1,6 @@
 package com.golfzonaca.officesharingplatform.web.place;
 
 import com.golfzonaca.officesharingplatform.service.place.PlaceService;
-import com.golfzonaca.officesharingplatform.web.place.dto.PlaceCoordinate;
 import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,8 +19,7 @@ public class PlaceController {
 
     @GetMapping("places/{placeId}")
     public Map<String, JsonObject> placeDetailsInfo(@PathVariable long placeId) {
-        PlaceCoordinate placeCoordinate = new PlaceCoordinate(127.054597367919, 37.5233959825056);
-        return placeService.getPlaceInfo(placeId, placeCoordinate.getLng(), placeCoordinate.getLat());
+        return placeService.getPlaceInfo(placeId);
     }
 
     @GetMapping("places/{placeId}/review")
