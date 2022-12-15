@@ -103,15 +103,18 @@ public class KakaoPayService {
 
         restoreUserMileage(user, findPayment);
 
-        List<Refund> refunds = refundService.processingRefundData(findPayment);
+        List<Refund> refundList = new LinkedList<>();
+        for (Payment payment : findPayment) {
+            Refund refund = refundService.processingRefundData(payment);
+            refundList.add(refund);
+        }
+        List<KakaoPayCancelResponse> kakaoPayCancelResponses = kakaoPayCancelRequest(refundList);
 
-        List<KakaoPayCancelResponse> kakaoPayCancelResponses = kakaoPayCancelRequest(refunds);
-
-        for (Refund refund : refunds) {
+        for (Refund refund : refundList) {
             refund.updateRefundStatus(true);
             refund.getPayment().updatePayStatus(PaymentStatus.CANCELED);
         }
-        reservation.updateStatus(ReservationStatus.CANCELED, FixStatus.CANCELED);
+        reservation.updateAllStatus(ReservationStatus.CANCELED, FixStatus.CANCELED);
 
         return kakaoPayCancelResponses;
     }
