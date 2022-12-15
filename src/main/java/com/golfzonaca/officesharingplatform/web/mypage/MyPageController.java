@@ -100,8 +100,8 @@ public class MyPageController {
     }
 
     @GetMapping("/mileage")
-    public Map<String, JsonObject> mileageHistory(@TokenUserId Long userId, @RequestBody PageNationInfoForm infoForm) {
+    public Map<String, JsonObject> mileageHistory(@TokenUserId Long userId, @RequestParam Integer page) {
         mypageRequestValidation.validationUser(userId);
-        return myPageService.getMileageHistory(userId, infoForm.getPage(), infoForm.getItems());
+        return myPageService.getMileageHistory(userId, Long.parseLong(String.valueOf(page)), 8L);
     }
 }
