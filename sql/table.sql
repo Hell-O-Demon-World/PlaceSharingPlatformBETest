@@ -160,7 +160,7 @@ create table mileage_payment_update
     MILEAGE_UPDATE_ID bigint unsigned not null,
     PAYMENT_ID bigint unsigned not null,
     UPDATE_POINT bigint unsigned not null,
-    UPDATE_REASON enum('FULL_PAYMENT', 'REFUND', 'USE_MILEAGE') not null,
+    UPDATE_REASON ENUM('FULL_PAYMENT', 'REFUND', 'USE_MILEAGE') not null,
     constraint FK_MILEAGE_TO_PAYMENT_1
         foreign key (PAYMENT_ID) references payment (ID)
             on update cascade on delete cascade,
