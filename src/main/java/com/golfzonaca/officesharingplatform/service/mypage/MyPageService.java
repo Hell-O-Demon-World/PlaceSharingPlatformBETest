@@ -30,5 +30,5 @@ public interface MyPageService {
 
     void leaveMembership(Long userId);
 
-    Map<String, JsonArray> getMileageHistory(Long userId);
+    Map<String, JsonObject> getMileageHistory(Long userId, Long page, Long items);
 }
