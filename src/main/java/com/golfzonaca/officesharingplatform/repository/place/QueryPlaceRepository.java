@@ -2,6 +2,7 @@ package com.golfzonaca.officesharingplatform.repository.place;
 
 import com.golfzonaca.officesharingplatform.domain.Place;
 import com.golfzonaca.officesharingplatform.domain.type.RoomType;
+import com.golfzonaca.officesharingplatform.repository.place.dto.FilterData;
 import com.golfzonaca.officesharingplatform.web.main.dto.request.RequestSearchData;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -36,18 +37,18 @@ public class QueryPlaceRepository {
                 .selectFrom(place)
                 .innerJoin(place.rooms, room)
                 .innerJoin(room.roomKind, roomKind)
-                .where(likeName(searchWord).or(likeAddress(searchWord)))
+                .where(likeName(searchWord).or(likeAddress(Optional.of(searchWord))))
                 .groupBy(place)
                 .fetch();
     }
 
-    public List<Place> filterPlaces(String day, LocalTime startTime, LocalTime endTime, String city, String subCity, List<RoomType> typeList) {
+    public List<Place> filterPlaces(FilterData filterData) {
 
         return query
                 .selectFrom(place)
                 .join(place.rooms, room)
                 .join(room.roomKind, roomKind)
-                .where(likeAddress(city), likeAddress(subCity), likeDay(day), beforeStartTime(startTime), afterEndTime(endTime), likeRoomTypeCategory(typeList))
+                .where(likeAddress(Optional.ofNullable(filterData.getCity())), likeAddress(Optional.ofNullable(filterData.getSubCity())), likeDay(Optional.ofNullable(filterData.getDay())), beforeStartTime(Optional.ofNullable(filterData.getStartTime())), afterEndTime(Optional.ofNullable(filterData.getEndTime())), likeRoomTypeCategory(Optional.ofNullable(filterData.getRoomTypeList())))
                 .groupBy(place)
                 .fetch();
     }
@@ -74,41 +75,37 @@ public class QueryPlaceRepository {
         return null;
     }
 
-    private BooleanExpression likeAddress(String address) {
-        if (StringUtils.hasText(address)) {
-            return place.address.address.contains(address);
+    private BooleanExpression likeAddress(Optional<String> address) {
+        if (address.isPresent()) {
+            return place.address.address.contains(address.get());
         }
         return null;
     }
 
-    private BooleanExpression likeDay(String day) {
-        if (StringUtils.hasText(day)) {
-            return place.openDays.contains(day);
+    private BooleanExpression likeDay(Optional<String> day) {
+        if (day.isPresent()) {
+            return place.openDays.contains(day.get());
         }
         return null;
     }
 
-    private BooleanExpression beforeStartTime(LocalTime startTime) {
-        if (startTime != null) {
-            if (StringUtils.hasText(startTime.toString())) {
-                return place.placeStart.loe(startTime);
-            }
+    private BooleanExpression beforeStartTime(Optional<LocalTime> startTime) {
+        if (startTime.isPresent()) {
+            return place.placeStart.loe(startTime.get());
         }
         return null;
     }
 
-    private BooleanExpression afterEndTime(LocalTime endTime) {
-        if (endTime != null) {
-            if (StringUtils.hasText(endTime.toString())) {
-                return place.placeEnd.goe(endTime);
-            }
+    private BooleanExpression afterEndTime(Optional<LocalTime> endTime) {
+        if (endTime.isPresent()) {
+            return place.placeEnd.goe(endTime.get());
         }
         return null;
     }
 
-    private BooleanExpression likeRoomTypeCategory(List<RoomType> roomType) {
-        if (!roomType.isEmpty()) {
-            return room.roomKind.roomType.in(roomType);
+    private BooleanExpression likeRoomTypeCategory(Optional<List<RoomType>> roomType) {
+        if (roomType.isPresent()) {
+            return room.roomKind.roomType.in(roomType.get());
         }
         return null;
     }
