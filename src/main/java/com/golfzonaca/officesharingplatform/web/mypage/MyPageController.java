@@ -5,6 +5,7 @@ import com.golfzonaca.officesharingplatform.service.mypage.MyPageService;
 import com.golfzonaca.officesharingplatform.web.mypage.dto.EditUserInfoData;
 import com.golfzonaca.officesharingplatform.web.mypage.dto.SaveInquiryData;
 import com.golfzonaca.officesharingplatform.web.mypage.validation.MypageRequestValidation;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.BindingResult;
@@ -95,5 +96,11 @@ public class MyPageController {
     public void withdrawalMember(@TokenUserId Long userId) {
         mypageRequestValidation.validationUser(userId);
         myPageService.leaveMembership(userId);
+    }
+
+    @GetMapping("/mileage")
+    public Map<String, JsonArray> mileageHistory(@TokenUserId Long userId) {
+        mypageRequestValidation.validationUser(userId);
+        return myPageService.getMileageHistory(userId);
     }
 }

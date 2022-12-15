@@ -84,4 +84,13 @@ public class JpaMileageRepository implements MileageRepository {
         return queryDslMileageUpdateRepository.findMileageUpdateAllLikeUserAndExpireDate(mileage, localDateTime);
     }
 
+    @Override
+    public List<MileageUpdate> findAllMileageUpdateByMileage(Mileage mileage) {
+        return jpaMileageUpdateRepository.findAllByMileage(mileage);
+    }
+
+    @Override
+    public MileagePaymentUpdate findMileagePaymentByMileageUpdate(MileageUpdate mileageUpdate) {
+        return queryDslMileagePaymentUpdateRepository.findFirstMileageByUpdate(mileageUpdate);
+    }
 }

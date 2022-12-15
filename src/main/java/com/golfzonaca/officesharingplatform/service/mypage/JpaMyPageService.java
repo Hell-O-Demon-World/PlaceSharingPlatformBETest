@@ -1,20 +1,19 @@
 package com.golfzonaca.officesharingplatform.service.mypage;
 
 import com.golfzonaca.officesharingplatform.domain.*;
-import com.golfzonaca.officesharingplatform.domain.type.RatingStatus;
-import com.golfzonaca.officesharingplatform.domain.type.ReservationStatus;
-import com.golfzonaca.officesharingplatform.domain.type.UsageStatus;
+import com.golfzonaca.officesharingplatform.domain.type.*;
 import com.golfzonaca.officesharingplatform.exception.NonExistedReservationException;
 import com.golfzonaca.officesharingplatform.repository.comment.CommentRepository;
 import com.golfzonaca.officesharingplatform.repository.inquiry.InquiryRepository;
 import com.golfzonaca.officesharingplatform.repository.inquirystatus.InquiryStatusRepository;
+import com.golfzonaca.officesharingplatform.repository.mileage.MileageRepository;
 import com.golfzonaca.officesharingplatform.repository.rating.RatingRepository;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
-import com.golfzonaca.officesharingplatform.repository.reservation.ReservationSearchCond;
 import com.golfzonaca.officesharingplatform.repository.user.UserRepository;
 import com.golfzonaca.officesharingplatform.service.mypage.dto.comment.CommentDataByRating;
 import com.golfzonaca.officesharingplatform.service.mypage.dto.comment.MyCommentData;
 import com.golfzonaca.officesharingplatform.service.mypage.dto.edituserinfo.EditUserInfo;
+import com.golfzonaca.officesharingplatform.service.mypage.dto.mileage.MileageHistoryDto;
 import com.golfzonaca.officesharingplatform.service.mypage.dto.qna.AnswerData;
 import com.golfzonaca.officesharingplatform.service.mypage.dto.qna.QnAData;
 import com.golfzonaca.officesharingplatform.service.mypage.dto.qna.QuestionData;
@@ -23,6 +22,7 @@ import com.golfzonaca.officesharingplatform.service.mypage.dto.usage.MyPaymentDe
 import com.golfzonaca.officesharingplatform.service.mypage.dto.usage.MyReservationDetail;
 import com.golfzonaca.officesharingplatform.service.mypage.dto.usage.MyReservationList;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,6 +48,7 @@ public class JpaMyPageService implements MyPageService {
     private final RatingRepository ratingRepository;
     private final InquiryRepository inquiryRepository;
     private final InquiryStatusRepository inquiryStatusRepository;
+    private final MileageRepository mileageRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
@@ -153,6 +154,50 @@ public class JpaMyPageService implements MyPageService {
     public void leaveMembership(Long userId) {
         User findUser = userRepository.findById(userId);
         userRepository.delete(findUser.getId());
+    }
+
+    @Override
+    public Map<String, JsonArray> getMileageHistory(Long userId) {
+        Map<String, JsonArray> result = new LinkedHashMap<>();
+        Gson gson = new Gson();
+        User findUser = userRepository.findById(userId);
+        Mileage findMileage = findUser.getMileage();
+        List<MileageUpdate> mileageUpdateList = mileageRepository.findAllMileageUpdateByMileage(findMileage);
+        List<MileageHistoryDto> resultMileageHistoryDto = new ArrayList<>();
+        for (MileageUpdate mileageUpdate : mileageUpdateList) {
+            Gson gson2 = new Gson();
+            MileageStatusType historyStatus = mileageUpdate.getStatusType();
+            String info = getInfo(historyStatus, mileageUpdate);
+            Long updatePoint = mileageUpdate.getUpdatePoint();
+            LocalDateTime updateDate = mileageUpdate.getUpdateDate();
+            String issuer = getIssuer(historyStatus, mileageUpdate);
+
+            MileageHistoryDto mileageHistoryDto = new MileageHistoryDto(historyStatus, updatePoint, info, issuer, updateDate);
+            resultMileageHistoryDto.add(mileageHistoryDto);
+        }
+        result.put("mileageData", gson.toJsonTree(resultMileageHistoryDto).getAsJsonArray());
+        return result;
+    }
+
+    private String getIssuer(MileageStatusType historyStatus, MileageUpdate mileageUpdate) {
+        if (historyStatus.equals(MileageStatusType.NEW_MEMBER)) {
+            return "OFFICESHARINGPLATFORM";
+        } else if (historyStatus.equals(MileageStatusType.EXPIRATION)) {
+            return "OFFICESHARINGPLATFORM";
+        } else {
+            MileagePaymentUpdate findMileagePayment = mileageRepository.findMileagePaymentByMileageUpdate(mileageUpdate);
+            return findMileagePayment.getPayment().getReservation().getRoom().getPlace().getPlaceName();
+        }
+    }
+
+    private String getInfo(MileageStatusType historyStatus, MileageUpdate mileageUpdate) {
+        if (historyStatus.equals(MileageStatusType.NEW_MEMBER)) {
+            return "신규회원";
+        } else if (historyStatus.equals(MileageStatusType.EXPIRATION)) {
+            return "유효기간 만료";
+        } else {
+            return mileageRepository.findMileagePaymentByMileageUpdate(mileageUpdate).getPaymentReason().getDescription();
+        }
     }
 
     private void putUserInfoData(User user, Map<String, JsonObject> editUserInfoMap) {

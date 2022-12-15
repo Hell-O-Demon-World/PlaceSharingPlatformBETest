@@ -19,4 +19,7 @@ public interface MileageRepository {
     List<MileageUpdate> findMileageUpdateAll();
     List<MileageUpdate> findMileageUpdateAllLikeUserAndExpireDate(Mileage mileage, LocalDateTime localDateTime);
 
+    List<MileageUpdate> findAllMileageUpdateByMileage(Mileage findMileage);
+
+    MileagePaymentUpdate findMileagePaymentByMileageUpdate(MileageUpdate mileageUpdate);
 }
