@@ -20,7 +20,7 @@ public interface PlaceService {
 
     Map<Integer, PlaceListDto> processingMainPlaceData(List<Place> places);
 
-    Map<String, JsonObject> getPlaceInfo(long placeId, Double lng, Double lat);
+    Map<String, JsonObject> getPlaceInfo(long placeId);
 
     Map<String, JsonObject> getReviewData(Long placeId, Integer page);
 
