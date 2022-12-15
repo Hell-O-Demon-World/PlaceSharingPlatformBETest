@@ -3,6 +3,7 @@ package com.golfzonaca.officesharingplatform.web.mypage;
 import com.golfzonaca.officesharingplatform.annotation.TokenUserId;
 import com.golfzonaca.officesharingplatform.service.mypage.MyPageService;
 import com.golfzonaca.officesharingplatform.web.mypage.dto.EditUserInfoData;
+import com.golfzonaca.officesharingplatform.web.mypage.dto.PageNationInfoForm;
 import com.golfzonaca.officesharingplatform.web.mypage.dto.SaveInquiryData;
 import com.golfzonaca.officesharingplatform.web.mypage.validation.MypageRequestValidation;
 import com.google.gson.JsonArray;
@@ -99,8 +100,8 @@ public class MyPageController {
     }
 
     @GetMapping("/mileage")
-    public Map<String, JsonArray> mileageHistory(@TokenUserId Long userId) {
+    public Map<String, JsonObject> mileageHistory(@TokenUserId Long userId, @RequestBody PageNationInfoForm infoForm) {
         mypageRequestValidation.validationUser(userId);
-        return myPageService.getMileageHistory(userId);
+        return myPageService.getMileageHistory(userId, infoForm.getPage(), infoForm.getItems());
     }
 }

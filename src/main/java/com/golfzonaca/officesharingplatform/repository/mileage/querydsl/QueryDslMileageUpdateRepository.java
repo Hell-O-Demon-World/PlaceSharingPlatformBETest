@@ -1,8 +1,6 @@
 package com.golfzonaca.officesharingplatform.repository.mileage.querydsl;
 
-import com.golfzonaca.officesharingplatform.domain.Mileage;
-import com.golfzonaca.officesharingplatform.domain.MileageTransactionUsage;
-import com.golfzonaca.officesharingplatform.domain.MileageUpdate;
+import com.golfzonaca.officesharingplatform.domain.*;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
 
@@ -11,6 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.golfzonaca.officesharingplatform.domain.QInquiry.inquiry;
 import static com.golfzonaca.officesharingplatform.domain.QMileageUpdate.mileageUpdate;
 
 @Repository
@@ -27,6 +26,16 @@ public class QueryDslMileageUpdateRepository {
                 .selectFrom(mileageUpdate)
                 .where(mileageUpdate.mileage.id.eq(mileageId)
                         .and(mileageUpdate.expireDate.after(currentLocalDateTime)))
+                .fetch();
+    }
+
+    public List<MileageUpdate> findByMileageWithPagination(Mileage mileage, long page, long items) {
+        return query
+                .selectFrom(mileageUpdate)
+                .where(mileageUpdate.mileage.eq(mileage))
+                .orderBy(mileageUpdate.updateDate.desc())
+                .offset(items * (page - 1))
+                .limit(items)
                 .fetch();
     }
 }

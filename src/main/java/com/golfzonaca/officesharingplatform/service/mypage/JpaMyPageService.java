@@ -22,7 +22,6 @@ import com.golfzonaca.officesharingplatform.service.mypage.dto.usage.MyPaymentDe
 import com.golfzonaca.officesharingplatform.service.mypage.dto.usage.MyReservationDetail;
 import com.golfzonaca.officesharingplatform.service.mypage.dto.usage.MyReservationList;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -100,7 +99,7 @@ public class JpaMyPageService implements MyPageService {
     @Override
     public Map<String, JsonObject> getCommentDataByReview(Long ratingId, Integer page) {
         Rating rating = ratingRepository.findById(ratingId);
-        return putCommentDataByRating(rating, page);
+        return processingCommentDataByRating(rating, page);
     }
 
     @Override
@@ -157,25 +156,46 @@ public class JpaMyPageService implements MyPageService {
     }
 
     @Override
-    public Map<String, JsonArray> getMileageHistory(Long userId) {
-        Map<String, JsonArray> result = new LinkedHashMap<>();
-        Gson gson = new Gson();
+    public Map<String, JsonObject> getMileageHistory(Long userId, Long page, Long items) {
         User findUser = userRepository.findById(userId);
-        Mileage findMileage = findUser.getMileage();
-        List<MileageUpdate> mileageUpdateList = mileageRepository.findAllMileageUpdateByMileage(findMileage);
-        List<MileageHistoryDto> resultMileageHistoryDto = new ArrayList<>();
-        for (MileageUpdate mileageUpdate : mileageUpdateList) {
-            Gson gson2 = new Gson();
-            MileageStatusType historyStatus = mileageUpdate.getStatusType();
-            String info = getInfo(historyStatus, mileageUpdate);
-            Long updatePoint = mileageUpdate.getUpdatePoint();
-            LocalDateTime updateDate = mileageUpdate.getUpdateDate();
-            String issuer = getIssuer(historyStatus, mileageUpdate);
 
-            MileageHistoryDto mileageHistoryDto = new MileageHistoryDto(historyStatus, updatePoint, info, issuer, updateDate);
-            resultMileageHistoryDto.add(mileageHistoryDto);
+        return putMileageData(findUser, page, items);
+    }
+
+    private Map<Long, JsonObject> getMileageHistoryDtoMap(List<MileageUpdate> mileageUpdateList) {
+        Map<Long, JsonObject> result = new LinkedHashMap<>();
+        Gson gson = new Gson();
+
+        long count = 0;
+        for (MileageUpdate mileageUpdate : mileageUpdateList) {
+            MileageHistoryDto mileageHistoryDto = getMileageHistoryDto(mileageUpdate);
+            result.put(count, gson.toJsonTree(mileageHistoryDto).getAsJsonObject());
+            count++;
         }
-        result.put("mileageData", gson.toJsonTree(resultMileageHistoryDto).getAsJsonArray());
+        return result;
+    }
+
+    private MileageHistoryDto getMileageHistoryDto(MileageUpdate mileageUpdate) {
+        MileageStatusType historyStatus = mileageUpdate.getStatusType();
+        String info = getInfo(historyStatus, mileageUpdate);
+        Long updatePoint = mileageUpdate.getUpdatePoint();
+        LocalDateTime updateDate = mileageUpdate.getUpdateDate();
+        String issuer = getIssuer(historyStatus, mileageUpdate);
+
+        return new MileageHistoryDto(historyStatus, updatePoint, info, issuer, updateDate);
+    }
+
+    private List<MileageUpdate> getMileageUpdateList(User user, Long page, Long items) {
+        Mileage findMileage = user.getMileage();
+        return mileageRepository.findAllMileageUpdateByMileage(findMileage, page, items);
+    }
+
+    private Map<String, JsonObject> putMileageData(User user, Long page, Long items) {
+        List<MileageUpdate> mileageUpdateList = getMileageUpdateList(user, page, items);
+        Map<Long, JsonObject> mileageHistoryDtoMap = getMileageHistoryDtoMap(mileageUpdateList);
+        Gson gson = new Gson();
+        Map<String, JsonObject> result = processingUserData(user);
+        result.put("mileageData", gson.toJsonTree(mileageHistoryDtoMap).getAsJsonObject());
         return result;
     }
 
@@ -239,15 +259,6 @@ public class JpaMyPageService implements MyPageService {
         Map<String, JsonObject> myUsage = processingAllReservationData(user, page);
         myResMap.put("paginationData", gson.toJsonTree(Map.of("maxPage", user.getReservationList().size() / 8 + 1)).getAsJsonObject());
         myResMap.put("reservationData", gson.toJsonTree(myUsage).getAsJsonObject());
-    }
-
-    private Map<String, JsonObject> putCommentDataByRating(Rating rating, Integer page) {
-        Gson gson = new Gson();
-        Map<String, JsonObject> commentDataMap = new LinkedHashMap<>();
-        commentDataMap.put("paginationData", gson.toJsonTree(Map.of("maxPage", rating.getCommentList().size() / 8 + 1)).getAsJsonObject());
-        Map<String, JsonObject> commentData = processingCommentDataByRating(rating, page);
-        commentDataMap.put("commentData", gson.toJsonTree(commentData).getAsJsonObject());
-        return commentDataMap;
     }
 
     private void putQnAData(User user, Map<String, JsonObject> myInquiryMap, Integer page) {

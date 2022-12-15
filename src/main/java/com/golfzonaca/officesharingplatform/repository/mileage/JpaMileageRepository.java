@@ -85,8 +85,8 @@ public class JpaMileageRepository implements MileageRepository {
     }
 
     @Override
-    public List<MileageUpdate> findAllMileageUpdateByMileage(Mileage mileage) {
-        return jpaMileageUpdateRepository.findAllByMileage(mileage);
+    public List<MileageUpdate> findAllMileageUpdateByMileage(Mileage mileage, Long page, Long items) {
+        return queryDslMileageUpdateRepository.findByMileageWithPagination(mileage, page, items);
     }
 
     @Override
