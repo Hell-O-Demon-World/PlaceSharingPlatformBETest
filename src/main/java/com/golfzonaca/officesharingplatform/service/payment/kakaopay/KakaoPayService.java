@@ -56,7 +56,7 @@ public class KakaoPayService {
         KakaoPayUtility kakaoPayUtility = new KakaoPayUtility();
         HttpHeaders header = kakaoPayUtility.makeHttpHeader(kakaoPayApiKey);
 
-        Payment payment = processingPaymentData(reservation, payWay, payType, payMileage, "");
+        Payment payment = processingPaymentData(reservation, payWay, payType, payMileage);
         paymentRepository.save(payment);
 
         KakaoPayReadyRequest kakaoPayReadyRequest = kakaoPayUtility.makeRequestBodyForReady(payment);
@@ -146,8 +146,7 @@ public class KakaoPayService {
         RestTemplate restTemplate = new RestTemplate();
 
         try {
-            KakaoPayReadyResponse kakaoPayReadyResponse = restTemplate.postForObject(new URI(host + "/v1/payment/ready"), body, KakaoPayReadyResponse.class);
-            return kakaoPayReadyResponse;
+            return restTemplate.postForObject(new URI(host + "/v1/payment/ready"), body, KakaoPayReadyResponse.class);
         } catch (RestClientException | URISyntaxException e) {
             log.error(e.toString());
         }
@@ -159,8 +158,7 @@ public class KakaoPayService {
         RestTemplate restTemplate = new RestTemplate();
 
         try {
-            KakaoPayApprovalResponse kakaoPayApprovalResponse = restTemplate.postForObject(new URI(host + "/v1/payment/approve"), body, KakaoPayApprovalResponse.class);
-            return kakaoPayApprovalResponse;
+            return restTemplate.postForObject(new URI(host + "/v1/payment/approve"), body, KakaoPayApprovalResponse.class);
         } catch (URISyntaxException e) {
             log.error(e.getMessage());
         }
@@ -172,17 +170,14 @@ public class KakaoPayService {
         RestTemplate restTemplate = new RestTemplate();
 
         try {
-            KakaoPayCancelResponse kakaoPayCancelResponse = restTemplate.postForObject(new URI(host + "/v1/payment/cancel"), body, KakaoPayCancelResponse.class);
-
-            return kakaoPayCancelResponse;
+            return restTemplate.postForObject(new URI(host + "/v1/payment/cancel"), body, KakaoPayCancelResponse.class);
         } catch (URISyntaxException e) {
             log.error(e.getMessage());
         }
         return null;
     }
 
-    private Payment processingPaymentData(Reservation reservation, String payWay, String payType, long payMileage, String apiCode) {
-
+    private Payment processingPaymentData(Reservation reservation, String payWay, String payType, long payMileage) {
         KakaoPayUtility kakaoPayUtility = new KakaoPayUtility();
 
         Integer totalAmount = kakaoPayUtility.calculateTotalAmount(reservation, payWay, payType, payMileage);
@@ -196,7 +191,7 @@ public class KakaoPayService {
                 .payWay(PayWay.valueOf(payWay))
                 .savedMileage(kakaoPayUtility.calculateMileage(totalAmount, payWay, payType))
                 .type(PayType.valueOf(payType))
-                .apiCode(apiCode)
+                .apiCode(kakaoPayUtility.getKakaoApiCode())
                 .pg(PG.KAKAOPAY)
                 .payStatus(PaymentStatus.PROGRESSING)
                 .build();
