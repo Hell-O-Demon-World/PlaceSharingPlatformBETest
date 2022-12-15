@@ -46,7 +46,7 @@ public class JpaSearchService implements SearchService {
         if (!typeCategory.equals("0")) {
             List<RoomType> roomTypeList = new LinkedList<>();
             for (RoomType roomType : RoomType.values()) {
-                if (roomType.toString().contains(typeCategory)) {
+                if (roomType.toString().contains(typeCategory.toUpperCase())) {
                     roomTypeList.add(roomType);
                 }
             }
