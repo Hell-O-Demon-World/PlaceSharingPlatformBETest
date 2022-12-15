@@ -30,6 +30,6 @@ public class JpaSearchService implements SearchService {
                 roomTypeList.add(roomType);
             }
         }
-        return placeRepository.filterPlaces(TimeFormatter.toDayOfTheWeek(TimeFormatter.toLocalDate(day)), TimeFormatter.toLocalTime(startTime), TimeFormatter.toLocalTime(endTime), city, subCity, roomTypeList);
+        return placeRepository.filterPlaces(TimeFormatter.toDayOfTheWeek(TimeFormatter.toLocalDate(day)), TimeFormatter.toLocalTime(startTime), TimeFormatter.toLocalTime(endTime), city.substring(0, 2), subCity, roomTypeList);
     }
 }
