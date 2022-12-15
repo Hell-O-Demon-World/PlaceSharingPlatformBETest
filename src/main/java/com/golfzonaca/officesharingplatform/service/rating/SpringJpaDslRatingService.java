@@ -1,9 +1,6 @@
 package com.golfzonaca.officesharingplatform.service.rating;
 
-import com.golfzonaca.officesharingplatform.domain.Place;
-import com.golfzonaca.officesharingplatform.domain.Rating;
-import com.golfzonaca.officesharingplatform.domain.Reservation;
-import com.golfzonaca.officesharingplatform.domain.User;
+import com.golfzonaca.officesharingplatform.domain.*;
 import com.golfzonaca.officesharingplatform.exception.MismatchInfoException;
 import com.golfzonaca.officesharingplatform.repository.ratepoint.RatePointRepository;
 import com.golfzonaca.officesharingplatform.repository.rating.RatingRepository;
@@ -56,7 +53,10 @@ public class SpringJpaDslRatingService implements RatingService {
         if (user != rating.getReservation().getUser()) {
             throw new NoSuchElementException("회원 정보와 예약자 정보가 일치하지 않습니다.");
         }
-        ratePointRepository.update(rating.getReservation().getRoom().getPlace().getRatePoint(), ((rating.getReservation().getRoom().getPlace().getRatePoint().getRatingPoint() * 2 - rating.getRatingScore() + updateData.getRatingScore()) / 2));
+        RatePoint findRatePoint = rating.getReservation().getRoom().getPlace().getRatePoint();
+        float result = (findRatePoint.getRatingPoint() * 2 - rating.getRatingScore() + updateData.getRatingScore()) / 2;
+
+        ratePointRepository.update(findRatePoint, (float) (Math.round(result*10)/10));
         ratingRepository.update(rating, updateData);
     }
 
