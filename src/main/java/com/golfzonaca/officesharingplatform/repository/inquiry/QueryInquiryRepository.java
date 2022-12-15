@@ -26,8 +26,8 @@ public class QueryInquiryRepository {
                 .selectFrom(inquiry)
                 .where(inquiry.user.eq(user))
                 .orderBy(inquiry.dateTime.desc())
-                .offset(4L * (page - 1))
-                .limit(4)
+                .offset(8L * (page - 1))
+                .limit(8)
                 .fetch();
     }
 }
