@@ -25,6 +25,7 @@ public class QueryInquiryRepository {
         return query
                 .selectFrom(inquiry)
                 .where(inquiry.user.eq(user))
+                .orderBy(inquiry.dateTime.desc())
                 .offset(4L * (page - 1))
                 .limit(4)
                 .fetch();
