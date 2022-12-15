@@ -1,17 +1,13 @@
 package com.golfzonaca.officesharingplatform.service.comment;
 
-import com.golfzonaca.officesharingplatform.domain.Comment;
 import com.golfzonaca.officesharingplatform.web.comment.dto.CommentData;
+import com.google.gson.JsonObject;
 
-import java.util.List;
+import java.util.Map;
 
 public interface CommentService {
 
-    void save(Long userId, Long ratingId, CommentData data);
+    Map<String, JsonObject> save(Long userId, Long ratingId, CommentData data);
 
-    List<Comment> findAllByRatingId(long ratingId, Integer page);
-
-    void update(long commentId, CommentData data);
-
-    void delete(long commentId);
+    Map<String, JsonObject> delete(Long userId, long commentId);
 }
