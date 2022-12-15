@@ -30,7 +30,7 @@ public class SpringJpaDslRatingRepository implements RatingRepository {
 
     @Override
     public void update(Rating rating, RatingUpdateData updateData) {
-        rating.UpdateRating(Float.parseFloat(updateData.getRatingScore()), updateData.getRatingReview());
+        rating.UpdateRating(updateData.getRatingScore(), updateData.getRatingReview());
     }
 
     @Override

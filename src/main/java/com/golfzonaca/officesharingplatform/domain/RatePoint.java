@@ -16,15 +16,15 @@ public class RatePoint {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "RATINGPOINT", nullable = false)
-    private float ratingPoint;
+    private Float ratingPoint;
 
     @Builder
     public RatePoint(float ratingPoint) {
-        this.ratingPoint = ratingPoint;
+        this.ratingPoint = (float) (Math.round(ratingPoint * 10) / 10);
     }
 
     public void UpdateRatePoint(float ratingPoint) {
-        this.ratingPoint = ratingPoint;
+        this.ratingPoint =  (float) (Math.round(ratingPoint * 10) / 10);
     }
 
 }

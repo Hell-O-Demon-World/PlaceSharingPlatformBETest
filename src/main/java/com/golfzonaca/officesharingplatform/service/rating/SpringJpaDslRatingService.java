@@ -39,7 +39,8 @@ public class SpringJpaDslRatingService implements RatingService {
         if (place.getRatePoint().getRatingPoint() == 0) {
             ratePointRepository.update(place.getRatePoint(), rate.getRatingScore());
         } else {
-            ratePointRepository.update(place.getRatePoint(), (place.getRatePoint().getRatingPoint() + rate.getRatingScore()) / 2);
+            float resultRatingScore = (float) Math.round(place.getRatePoint().getRatingPoint() + rate.getRatingScore() / 2 * 10) / 10;
+            ratePointRepository.update(place.getRatePoint(), resultRatingScore);
         }
     }
 
@@ -55,7 +56,7 @@ public class SpringJpaDslRatingService implements RatingService {
         if (user != rating.getReservation().getUser()) {
             throw new NoSuchElementException("회원 정보와 예약자 정보가 일치하지 않습니다.");
         }
-        ratePointRepository.update(rating.getReservation().getRoom().getPlace().getRatePoint(), ((rating.getReservation().getRoom().getPlace().getRatePoint().getRatingPoint() * 2 - rating.getRatingScore() + Float.parseFloat(updateData.getRatingScore())) / 2));
+        ratePointRepository.update(rating.getReservation().getRoom().getPlace().getRatePoint(), ((rating.getReservation().getRoom().getPlace().getRatePoint().getRatingPoint() * 2 - rating.getRatingScore() + updateData.getRatingScore()) / 2));
         ratingRepository.update(rating, updateData);
     }
 

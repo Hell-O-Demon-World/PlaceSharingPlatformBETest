@@ -11,7 +11,7 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 public class RatingUpdateData {
     @NotBlank
-    private String RatingScore;
+    private Float RatingScore;
     @NotBlank
     private String RatingReview;
 }

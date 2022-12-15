@@ -23,7 +23,7 @@ public class Rating {
     private Reservation reservation;
 
     @Column(name = "RATING_SCORE", nullable = false)
-    private float ratingScore;
+    private Float ratingScore;
 
     @Column(name = "RATING_REVIEW", nullable = false)
     private String ratingReview;
@@ -35,15 +35,15 @@ public class Rating {
     private List<Comment> commentList = new LinkedList<>();
 
     @Builder
-    public Rating(Reservation reservation, float ratingScore, String ratingReview, LocalDateTime ratingTime) {
+    public Rating(Reservation reservation, Float ratingScore, String ratingReview, LocalDateTime ratingTime) {
         this.reservation = reservation;
-        this.ratingScore = ratingScore;
+        this.ratingScore = (float) (Math.round(ratingScore * 10) / 10);
         this.ratingReview = ratingReview;
         this.ratingTime = ratingTime;
     }
 
-    public void UpdateRating(float ratingScore, String ratingReview) {
-        this.ratingScore = ratingScore;
+    public void UpdateRating(Float ratingScore, String ratingReview) {
+        this.ratingScore = (float) (Math.round(ratingScore * 10) / 10);
         this.ratingReview = ratingReview;
     }
 }

@@ -42,7 +42,7 @@ public class ReservationResponseForm {
         this.productType = roomType.getDescription();
         this.placeName = savedReservation.getRoom().getPlace().getPlaceName();
         this.placeImgUrl = urls;
-        this.averageRate = savedReservation.getRoom().getPlace().getRatePoint().getRatingPoint();
+        this.averageRate = (float) (Math.round(savedReservation.getRoom().getPlace().getRatePoint().getRatingPoint() * 10) / 10);
         this.totalReview = placeRating.size();
         this.reservationStartDate = savedReservation.getResStartDate().toString();
         this.reservationStartTime = savedReservation.getResStartTime().toString();
