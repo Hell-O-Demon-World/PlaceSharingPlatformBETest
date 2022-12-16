@@ -25,7 +25,8 @@ allprojects {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
-
+//    Jasypt
+    implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.4'
 //  Spring Cache 추가
     implementation 'org.springframework.boot:spring-boot-starter-cache'
 
