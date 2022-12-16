@@ -4,14 +4,17 @@ import com.golfzonaca.officesharingplatform.domain.*;
 import com.golfzonaca.officesharingplatform.domain.type.MileagePaymentReason;
 import com.golfzonaca.officesharingplatform.domain.type.MileageStatusType;
 import com.golfzonaca.officesharingplatform.repository.mileage.MileageRepository;
-import com.golfzonaca.officesharingplatform.service.payment.MileageSupporter;
+import com.golfzonaca.officesharingplatform.service.payment.MileageTimeSetter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -23,15 +26,15 @@ public class SpringJpaDslMileageService implements MileageService {
     public Mileage join() {
         Mileage mileage = Mileage.builder()
                 .point(INITIAL_POINT)
-                .latestUpdateDate(MileageSupporter.currentDateTime())
+                .latestUpdateDate(MileageTimeSetter.currentDateTime())
                 .build();
         Mileage saveMileage = mileageRepository.save(mileage);
         MileageUpdate mileageUpdate = MileageUpdate.builder()
                 .mileage(saveMileage)
                 .statusType(MileageStatusType.NEW_MEMBER)
                 .updatePoint(INITIAL_POINT)
-                .updateDate(MileageSupporter.currentDateTime())
-                .expireDate(MileageSupporter.expiredDateTime())
+                .updateDate(MileageTimeSetter.currentDateTime())
+                .expireDate(MileageTimeSetter.expiredDateTime())
                 .build();
         mileageRepository.save(mileageUpdate);
         return mileage;
@@ -39,14 +42,15 @@ public class SpringJpaDslMileageService implements MileageService {
 
     @Override
     public void savingFullPaymentMileage(Payment payment) {
+        log.info("saving mileage...");
         Mileage mileage = payment.getReservation().getUser().getMileage();
         long currentPayMileage = payment.getSavedMileage();
         MileageUpdate mileageUpdate = MileageUpdate.builder()
                 .mileage(mileage)
                 .statusType(MileageStatusType.EARNING)
                 .updatePoint(currentPayMileage)
-                .updateDate(MileageSupporter.currentDateTime())
-                .expireDate(MileageSupporter.expiredDateTime())
+                .updateDate(MileageTimeSetter.currentDateTime())
+                .expireDate(MileageTimeSetter.expiredDateTime())
                 .build();
         MileageUpdate savedMileageUpdate = mileageRepository.save(mileageUpdate);
         MileagePaymentUpdate mileagePaymentUpdate = MileagePaymentUpdate.builder()
@@ -70,10 +74,10 @@ public class SpringJpaDslMileageService implements MileageService {
             long usedPoint = mileageTransactionUsage.getPoint();
 
             expiredMileage.updateCurrentPoint(usedPoint);
-            expiredMileage.updateCurrendDate(MileageSupporter.currentDateTime());
+            expiredMileage.updateCurrendDate(MileageTimeSetter.currentDateTime());
 
             MileageUpdate mileageUpdate = MileageUpdate.builder()
-                    .updateDate(MileageSupporter.currentDateTime())
+                    .updateDate(MileageTimeSetter.currentDateTime())
                     .expireDate(expireDate)
                     .statusType(MileageStatusType.EARNING)
                     .build();
@@ -102,8 +106,8 @@ public class SpringJpaDslMileageService implements MileageService {
                 .mileage(findMileage)
                 .statusType(MileageStatusType.USE)
                 .updatePoint(payment.getSavedMileage())
-                .updateDate(MileageSupporter.currentDateTime())
-                .expireDate(MileageSupporter.expiredDateTime())
+                .updateDate(MileageTimeSetter.currentDateTime())
+                .expireDate(MileageTimeSetter.expiredDateTime())
                 .build();
         MileageUpdate savedUpdateMileage = mileageRepository.save(mileageUpdate);
         MileagePaymentUpdate mileageByPayment = MileagePaymentUpdate.builder()
@@ -114,7 +118,7 @@ public class SpringJpaDslMileageService implements MileageService {
                 .build();
         MileagePaymentUpdate savedPaymentMileage = mileageRepository.save(mileageByPayment);
         
-        List<MileageUpdate> mileageUpdateAll = mileageRepository.findMileageUpdateAllLikeUserAndExpireDate(findMileage, MileageSupporter.currentDateTime());
+        List<MileageUpdate> mileageUpdateAll = mileageRepository.findMileageUpdateAllLikeUserAndExpireDate(findMileage, MileageTimeSetter.currentDateTime());
         long remainMileagePoint = payMileage;
         while (remainMileagePoint > 0) {
             for (MileageUpdate update : mileageUpdateAll) {
@@ -147,7 +151,7 @@ public class SpringJpaDslMileageService implements MileageService {
                 .mileageUpdate(update)
                 .mileageTransactionUsage(savedTransactionUsageMileage)
                 .currentPoint(currentPoint)
-                .updateDate(MileageSupporter.currentDateTime())
+                .updateDate(MileageTimeSetter.currentDateTime())
                 .build();
         mileageRepository.save(mileageExpiredHistory);
     }

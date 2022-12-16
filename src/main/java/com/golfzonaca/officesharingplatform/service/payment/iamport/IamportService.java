@@ -41,7 +41,6 @@ import java.util.UUID;
 public class IamportService {
 
     private final ReservationRepository reservationRepository;
-    private final UserRepository userRepository;
     private final RefundService refundService;
     private final MileageService mileageService;
     private final PaymentRepository paymentRepository;
@@ -116,7 +115,7 @@ public class IamportService {
         }
         IamportResponse<Payment> iamportResponse = iamportClient.onetimePayment(onetimePaymentData);
         if (PayType.FULL_PAYMENT.equals(payment.getType())) {
-            mileageService.savingFullPaymentMileage(payment);
+            mileageService.savingFullPaymentMileage(paymentSave);
         }
         paymentSave.updatePayStatus(PaymentStatus.COMPLETED); // paystatus completed로 업데이트
 
