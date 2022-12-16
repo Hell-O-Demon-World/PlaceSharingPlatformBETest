@@ -64,7 +64,7 @@ public class JpaMyPageService implements MyPageService {
         Reservation findReservation = reservationRepository.findById(reservationId);
         Long targetUserID = findReservation.getUser().getId();
         if (targetUserID.equals(userId)) {
-            reservationRepository.deleteById(findReservation.getId());
+            reservationRepository.delete(findReservation);
         } else {
             log.error("token 정보가 해당 예약 정보와 일치하지 않습니다.");
             throw new NonExistedReservationException("");
@@ -160,6 +160,16 @@ public class JpaMyPageService implements MyPageService {
         User findUser = userRepository.findById(userId);
 
         return putMileageData(findUser, page, items);
+    }
+
+    @Override
+    public void clearPreoccupiedReservation(Long userId) {
+        User user = userRepository.findById(userId);
+        for (Reservation reservation : user.getReservationList()) {
+            if (reservation.getStatus().equals(ReservationStatus.PROGRESSING) && reservation.getFixStatus().equals(FixStatus.UNFIXED)) {
+                reservationRepository.delete(reservation);
+            }
+        }
     }
 
     private Map<Long, JsonObject> getMileageHistoryDtoMap(List<MileageUpdate> mileageUpdateList) {

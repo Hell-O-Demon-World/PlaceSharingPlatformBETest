@@ -15,7 +15,7 @@ title OfficeSharingPlatform
 
     section 공통
     환경 설정(Git)             :chap1, 11-16, 1d
-    개발 및 리팩토링             :chap2, 11-16, 12-14
+    개발 및 리팩토링             :chap2, 11-16, 12-16
 
     section 오령기
     Spring Jpa, QueryDsl 적용 (Main Platform)                     : chap1, 11-16, 3d
@@ -52,7 +52,8 @@ title OfficeSharingPlatform
     마이페이지  - 예약 내역 조회 (Main Platform)                                   : chap15, 12-07, 2d
     Spring Cache (CaffeineCache) 도입 (Main Platform)                         : chap16, 12-08, 2d
     마이페이지 - 조회(오버뷰, 후기, 댓글), 수정(회원정보) (Main Platform)                : chap17, 12-10, 3d
-    Place Details - 후기 & 댓글 Pagination, 부가 정보(맛집, 카페) (Main Platform)   : chap18, 12-12, 1d
-
+    Place Details - 후기 & 댓글 Pagination, 부가 정보(맛집, 카페) (Main Platform)   : chap18, 12-12, 3d
+    문의 & 필터 수정, 정기결제 추가 (Main Platform)                                 : chap19, 12-15, 1d
+    주소 저장 로직 변경 (Admin Page, Back Office)                                : chap20, 12-16, 1d
 
 ```

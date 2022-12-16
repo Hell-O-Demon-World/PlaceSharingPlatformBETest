@@ -1,6 +1,5 @@
 package com.golfzonaca.officesharingplatform.service.mypage;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import java.util.Map;
@@ -31,4 +30,6 @@ public interface MyPageService {
     void leaveMembership(Long userId);
 
     Map<String, JsonObject> getMileageHistory(Long userId, Long page, Long items);
+
+    void clearPreoccupiedReservation(Long userId);
 }

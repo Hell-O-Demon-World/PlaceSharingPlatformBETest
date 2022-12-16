@@ -49,8 +49,8 @@ public class CustomReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public void deleteById(Long reservationId) {
-        jpaReservationRepository.deleteById(reservationId);
+    public void delete(Reservation reservation) {
+        jpaReservationRepository.delete(reservation);
     }
 
     @Override

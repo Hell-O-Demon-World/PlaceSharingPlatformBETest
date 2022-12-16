@@ -23,12 +23,14 @@ public class MyPageController {
     @GetMapping
     public Map<String, JsonObject> overView(@TokenUserId Long userId) {
         mypageRequestValidation.validationUser(userId);
+        myPageService.clearPreoccupiedReservation(userId);
         return myPageService.getOverViewData(userId);
     }
 
     @GetMapping("/usage")
     public Map<String, JsonObject> resHistory(@TokenUserId Long userId, @RequestParam Integer page) {
         mypageRequestValidation.validationUser(userId);
+        myPageService.clearPreoccupiedReservation(userId);
         return myPageService.getResViewData(userId, page);
     }
 
