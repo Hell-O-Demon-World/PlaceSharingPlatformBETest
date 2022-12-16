@@ -24,12 +24,10 @@ public class JwtTokenDecodeResolver implements HandlerMethodArgumentResolver {
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         String authorizationHeader = webRequest.getHeader("Authorization");
-        log.info("Authorization Header ::: " + authorizationHeader);
         if (authorizationHeader == null) {
             throw new Exception("Access Token이 존재하지 않습니다.");
         }
         Long userId = JwtManager.getIdByToken(authorizationHeader);
-
         log.info("Decoded userId is ::: " + userId);
         return userId;
     }
