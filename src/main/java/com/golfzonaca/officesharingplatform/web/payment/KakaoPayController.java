@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 @Slf4j
@@ -31,8 +33,9 @@ public class KakaoPayController {
     }
 
     @GetMapping("/{paymentId}/kakaopayapprove")
-    public KakaoPayApprovalResponse kakaoPayApprove(@PathVariable long paymentId, @RequestParam("pg_token") String pgToken) {
-        return kakaoPayService.kakaoPayApprovalRequest(paymentId, pgToken);
+    public void kakaoPayApprove(@PathVariable long paymentId, @RequestParam("pg_token") String pgToken, HttpServletResponse response) throws IOException {
+        kakaoPayService.kakaoPayApprovalRequest(paymentId, pgToken);
+        response.sendRedirect("http://localhost:3000/mypage/usage");
     }
 
     @PostMapping("/kakaopaycancel")
