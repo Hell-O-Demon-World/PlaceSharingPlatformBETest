@@ -11,7 +11,6 @@ import com.golfzonaca.officesharingplatform.web.payment.dto.kakaopay.CompanyId;
 import com.golfzonaca.officesharingplatform.web.payment.dto.kakaopay.KakaoPayApprovalRequest;
 import com.golfzonaca.officesharingplatform.web.payment.dto.kakaopay.KakaoPayCancelRequest;
 import com.golfzonaca.officesharingplatform.web.payment.dto.kakaopay.KakaoPayReadyRequest;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -29,6 +28,7 @@ public class KakaoPayUtility {
     String getKakaoApiCode() {
         return KAKAO_DEFAULT_API_CODE;
     }
+
     public Integer calculateTotalAmount(Reservation reservation, String payWay, String payType, long payMileage) {
 
         int totalAmount;
@@ -96,7 +96,7 @@ public class KakaoPayUtility {
                 .totalAmount(totalAmount)
                 .taxFreeAmount(calculateTaxFreeAmount(totalAmount))
                 .vatAmount(calculateVatAmount(totalAmount))
-                .approvalUrl("http://localhost:3000/mypage/usage")
+                .approvalUrl("http://localhost:8080/payment/" + payment.getId() + "/kakaopayapprove")
                 .cancelUrl("http://localhost:8080/payment/kakaopaycancel")
                 .failUrl("http://localhost:8080/kakaopaysuccessfail")
                 .build();

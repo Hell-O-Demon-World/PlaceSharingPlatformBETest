@@ -128,6 +128,9 @@ public class IamportService {
         IamportClient iamportClient = new IamportClient(apiKey, apiSecret);
         Reservation findReservation = reservationRepository.findById(nicePayRequestForm.getReservationId());
 
+        String customerUid = createCustomerUid(nicePayRequestForm);
+        ScheduleData scheduleData = new ScheduleData(customerUid);
+
         String merchantUid = createMerchantUid();
 
         Timestamp scheduleAt;
@@ -142,8 +145,7 @@ public class IamportService {
         Integer payPrice = calculateTotalAmount(findReservation, nicePayRequestForm.getPayWay(), nicePayRequestForm.getPayType(), nicePayRequestForm.getPayMileage());
 
         ScheduleEntry scheduleEntry = new ScheduleEntry(merchantUid, scheduleAt, BigDecimal.valueOf(payPrice));
-        String customerUid = createCustomerUid(nicePayRequestForm);
-        ScheduleData scheduleData = new ScheduleData(customerUid);
+
         scheduleData.addSchedule(scheduleEntry);
         com.golfzonaca.officesharingplatform.domain.Payment payment = processingPaymentData(findReservation, nicePayRequestForm.getPayWay(), nicePayRequestForm.getPayType(), nicePayRequestForm.getPayMileage(), merchantUid);
         IamportResponse<List<Schedule>> listIamportResponse = iamportClient.subscribeSchedule(scheduleData);
