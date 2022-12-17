@@ -3,6 +3,7 @@ package com.golfzonaca.officesharingplatform.repository.reservation;
 
 import com.golfzonaca.officesharingplatform.domain.Place;
 import com.golfzonaca.officesharingplatform.domain.Reservation;
+import com.golfzonaca.officesharingplatform.domain.Room;
 import com.golfzonaca.officesharingplatform.domain.User;
 import com.golfzonaca.officesharingplatform.domain.type.RoomType;
 
@@ -39,4 +40,6 @@ public interface ReservationRepository {
     List<Reservation> findAllLimit(ReservationSearchCond cond, Integer maxNum);
 
     List<Reservation> findByUserAndDateTime(User user, LocalDate date, LocalTime time);
+
+    List<Room> findByPlaceAndRoomKindAndStartDateAndEndDate(Place place, RoomType selectedType, LocalDate date, LocalDate endDate);
 }

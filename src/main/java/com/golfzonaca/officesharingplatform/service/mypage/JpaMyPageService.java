@@ -262,11 +262,18 @@ public class JpaMyPageService implements MyPageService {
 
     private Map<String, JsonObject> putMileageData(User user, Long page, Long items) {
         List<MileageUpdate> mileageUpdateList = getMileageUpdateList(user, page, items);
+        Map<String, Integer> mileagePaginationInfo = getMileagePagenationInfo(user.getMileage());
         Map<Long, JsonObject> mileageHistoryDtoMap = getMileageHistoryDtoMap(mileageUpdateList);
         Gson gson = new Gson();
         Map<String, JsonObject> result = processingUserData(user);
+        result.put("paginationData", gson.toJsonTree(mileagePaginationInfo).getAsJsonObject());
         result.put("mileageData", gson.toJsonTree(mileageHistoryDtoMap).getAsJsonObject());
         return result;
+    }
+
+    private Map<String, Integer> getMileagePagenationInfo(Mileage mileage) {
+        List<MileageUpdate> totalMileageUpdateList = mileageRepository.findAllMileageUpdateByMileage(mileage);
+        return Map.of("maxPage", totalMileageUpdateList.size() / 8 + 1);
     }
 
     private String getIssuer(MileageStatusType historyStatus, MileageUpdate mileageUpdate) {
@@ -455,9 +462,9 @@ public class JpaMyPageService implements MyPageService {
     }
 
     private String processingPreferType(Map<String, Boolean> preferType) {
-        String userPreferType = "";
+        StringBuilder userPreferType = new StringBuilder();
         for (String roomType : preferType.keySet()) {
-            userPreferType = userPreferType + roomType + ":" + preferType.get(roomType) + "&";
+            userPreferType.append(roomType).append(":").append(preferType.get(roomType)).append("&");
         }
         return userPreferType.substring(0, userPreferType.lastIndexOf("&"));
     }
