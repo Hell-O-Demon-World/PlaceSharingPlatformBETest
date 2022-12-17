@@ -3,6 +3,7 @@ package com.golfzonaca.officesharingplatform.web.mypage;
 import com.golfzonaca.officesharingplatform.annotation.TokenUserId;
 import com.golfzonaca.officesharingplatform.service.mypage.MyPageService;
 import com.golfzonaca.officesharingplatform.web.mypage.dto.EditUserInfoData;
+import com.golfzonaca.officesharingplatform.web.mypage.dto.ReservationCancelForm;
 import com.golfzonaca.officesharingplatform.web.mypage.dto.SaveInquiryData;
 import com.golfzonaca.officesharingplatform.web.mypage.validation.MypageRequestValidation;
 import com.google.gson.JsonObject;
@@ -41,9 +42,9 @@ public class MyPageController {
     }
 
     @PostMapping("/cancel")
-    public void cancelReservation(@TokenUserId Long userId, @RequestParam Long reservationId) {
-        mypageRequestValidation.validationReservation(userId, reservationId);
-        myPageService.cancelByReservationAndUserId(reservationId, userId);
+    public void cancelReservation(@TokenUserId Long userId, @RequestBody ReservationCancelForm reservationCancelForm) {
+        mypageRequestValidation.validationReservation(userId, reservationCancelForm.getReservationId());
+        myPageService.cancelByReservationAndUserId(reservationCancelForm.getReservationId(), userId);
     }
 
     @GetMapping("/review")
