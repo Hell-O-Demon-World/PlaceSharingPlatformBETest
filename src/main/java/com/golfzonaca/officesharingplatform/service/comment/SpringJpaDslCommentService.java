@@ -62,8 +62,8 @@ public class SpringJpaDslCommentService implements CommentService {
     private Map<String, JsonObject> processingCommentDataByRating(Rating rating, Integer commentpage) {
         Gson gson = new Gson();
         Map<String, JsonObject> commentData = new LinkedHashMap<>();
-        for (int i = 0; i < commentRepository.findAllByRating(rating, commentpage).size(); i++) {
-            Comment comment = commentRepository.findAllByRating(rating, commentpage).get(i);
+        for (int i = 0; i < commentRepository.findAllByRatingWithPagination(rating, commentpage).size(); i++) {
+            Comment comment = commentRepository.findAllByRatingWithPagination(rating, commentpage).get(i);
             CommentDto src = new CommentDto(processingUserIdentification(comment.getWriter()), comment.getText(), comment.getDateTime().toLocalDate().toString(), comment.getDateTime().toLocalTime().toString());
             if (i == 0) {
                 src.processingWrittenTime(comment.getDateTime().toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")));

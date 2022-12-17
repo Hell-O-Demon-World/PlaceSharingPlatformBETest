@@ -31,8 +31,8 @@ public class SpringJpaDslCommentRepository implements CommentRepository {
     }
 
     @Override
-    public List<Comment> findAllByRating(Rating rating, Integer commentpage) {
-        return queryRepository.findAllByRatingWithPagination(rating, commentpage);
+    public List<Comment> findAllByRating(Rating rating) {
+        return queryRepository.findAllByRating(rating);
     }
 
     @Override

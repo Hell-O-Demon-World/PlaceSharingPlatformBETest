@@ -4,7 +4,8 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public class MyPaymentDetail {
-    private String payDateTime;
+    private String payDate;
+    private String payTime;
     private long payPrice;
     private long payMileage;
     private String payWay;
