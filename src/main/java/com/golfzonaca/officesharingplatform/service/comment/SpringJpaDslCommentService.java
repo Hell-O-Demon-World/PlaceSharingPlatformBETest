@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -63,7 +64,11 @@ public class SpringJpaDslCommentService implements CommentService {
         Map<String, JsonObject> commentData = new LinkedHashMap<>();
         for (int i = 0; i < commentRepository.findAllByRating(rating, commentpage).size(); i++) {
             Comment comment = commentRepository.findAllByRating(rating, commentpage).get(i);
-            commentData.put(String.valueOf(i), gson.toJsonTree(new CommentDto(processingUserIdentification(comment.getWriter()), comment.getText(), comment.getDateTime().toLocalDate().toString(), comment.getDateTime().toLocalTime().toString())).getAsJsonObject());
+            CommentDto src = new CommentDto(processingUserIdentification(comment.getWriter()), comment.getText(), comment.getDateTime().toLocalDate().toString(), comment.getDateTime().toLocalTime().toString());
+            if (i == 0) {
+                src.processingWrittenTime(comment.getDateTime().toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")));
+            }
+            commentData.put(String.valueOf(i), gson.toJsonTree(src).getAsJsonObject());
         }
         return commentData;
     }
