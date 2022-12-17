@@ -11,4 +11,5 @@ public class MyPaymentDetail {
     private long savedMileage;
     private String payType;
     private String pg;
+    private String receipt;
 }

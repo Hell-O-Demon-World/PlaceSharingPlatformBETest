@@ -435,7 +435,7 @@ public class JpaMyPageService implements MyPageService {
         Reservation reservation = reservationInfoValidation(user, reservationId);
         List<MyPaymentDetail> paymentDetails = new LinkedList<>();
         for (Payment payment : reservation.getPaymentList()) {
-            paymentDetails.add(new MyPaymentDetail(LocalDateTime.of(payment.getPayDate(), payment.getPayTime()).toString(), payment.getPrice(), payment.getPayMileage(), payment.getPayWay().toString(), payment.getSavedMileage(), payment.getType().toString(), payment.getPg().toString()));
+            paymentDetails.add(new MyPaymentDetail(LocalDateTime.of(payment.getPayDate(), payment.getPayTime()).toString(), payment.getPrice(), payment.getPayMileage(), payment.getPayWay().toString(), payment.getSavedMileage(), payment.getType().toString(), payment.getPg().toString(), payment.getReceipt()));
         }
         return paymentDetails;
     }
