@@ -9,6 +9,4 @@ public class MyRefundDetail {
     private String refundDate;
     private String refundTime;
     private Long refundPrice;
-    private Long refundMileage;
-    private Long recallMileage;
 }

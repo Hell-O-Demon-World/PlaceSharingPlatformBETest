@@ -178,7 +178,7 @@ public class IamportService {
 
         unscheduleData.addMerchantUid(merchantUid);
         IamportResponse<List<Schedule>> listIamportResponse = iamportClient.unsubscribeSchedule(unscheduleData);
-        payment.updatePayStatus(PaymentStatus.CANCELED);
+        paymentRepository.delete(payment);
         return listIamportResponse;
     }
 

@@ -7,6 +7,7 @@ import com.golfzonaca.officesharingplatform.repository.comment.CommentRepository
 import com.golfzonaca.officesharingplatform.repository.inquiry.InquiryRepository;
 import com.golfzonaca.officesharingplatform.repository.inquirystatus.InquiryStatusRepository;
 import com.golfzonaca.officesharingplatform.repository.mileage.MileageRepository;
+import com.golfzonaca.officesharingplatform.repository.payment.PaymentRepository;
 import com.golfzonaca.officesharingplatform.repository.rating.RatingRepository;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
 import com.golfzonaca.officesharingplatform.repository.user.UserRepository;
@@ -48,6 +49,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Slf4j
@@ -62,6 +64,7 @@ public class JpaMyPageService implements MyPageService {
     private final InquiryRepository inquiryRepository;
     private final InquiryStatusRepository inquiryStatusRepository;
     private final MileageRepository mileageRepository;
+    private final PaymentRepository paymentRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Value("${iamport.api.apiKey}")
@@ -104,8 +107,7 @@ public class JpaMyPageService implements MyPageService {
         User user = userRepository.findById(userId);
         Map<String, JsonObject> usageDetail = processingUserData(user);
         putResDetailData(user, reservationId, usageDetail);
-        putPaymentDetailData(user, reservationId, usageDetail);
-        putRefundDetailData(user, reservationId, usageDetail);
+        putPaymentAndRefundDetailData(user, reservationId, usageDetail);
         return usageDetail;
     }
 
@@ -203,10 +205,7 @@ public class JpaMyPageService implements MyPageService {
             RestTemplate restTemplate = new RestTemplate();
 
             HttpHeaders headers = new HttpHeaders();
-            String url = UriComponentsBuilder.fromHttpUrl("https://api.iamport.kr/subscribe/customers/" + customerUid + "/payments")
-                    .queryParam("page", "{page}")
-                    .encode()
-                    .toUriString();
+            String url = UriComponentsBuilder.fromHttpUrl("https://api.iamport.kr/subscribe/customers/" + customerUid + "/payments").queryParam("page", "{page}").encode().toUriString();
 
             headers.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
             headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE + ";charset=UTF-8");
@@ -322,22 +321,10 @@ public class JpaMyPageService implements MyPageService {
         usageDetail.put("resData", gson.toJsonTree(myReservationDetail).getAsJsonObject());
     }
 
-    private void putPaymentDetailData(User user, long reservationId, Map<String, JsonObject> usageDetail) {
+    private void putPaymentAndRefundDetailData(User user, long reservationId, Map<String, JsonObject> usageDetail) {
         Gson gson = new Gson();
-        List<MyPaymentDetail> myPaymentDetail = getMyPaymentDetail(user, reservationId);
-        for (int i = 0; i < myPaymentDetail.size(); i++) {
-            MyPaymentDetail paymentDetail = myPaymentDetail.get(i);
-            usageDetail.put("payData" + i, gson.toJsonTree(paymentDetail).getAsJsonObject());
-        }
-    }
-
-    private void putRefundDetailData(User user, long reservationId, Map<String, JsonObject> usageDetail) {
-        Gson gson = new Gson();
-        List<MyRefundDetail> myRefundDetailList = getMyRefundDetail(user, reservationId);
-        for (int i = 0; i < myRefundDetailList.size(); i++) {
-            MyRefundDetail myRefundDetail = myRefundDetailList.get(i);
-            usageDetail.put("refundData" + i, gson.toJsonTree(myRefundDetail).getAsJsonObject());
-        }
+        Map<String, JsonObject> myPaymentAndRefundDetail = getMyPaymentAndRefundDetail(user, reservationId);
+        usageDetail.put("payData", gson.toJsonTree(myPaymentAndRefundDetail).getAsJsonObject());
     }
 
     private void putReservationData(User user, Map<String, JsonObject> myResMap, Integer page) {
@@ -507,7 +494,19 @@ public class JpaMyPageService implements MyPageService {
 
     private MyReservationDetail getMyReservationDetail(User user, long reservationId) {
         Reservation reservation = reservationInfoValidation(user, reservationId);
-        MyReservationDetail reservationDetail = new MyReservationDetail(reservation.getRoom().getPlace().getPlaceName(), reservation.getRoom().getRoomKind().getRoomType().getDescription(), reservation.getResCompleted().toLocalDate().toString(), reservation.getResCompleted().toLocalTime().toString(), reservation.getResStartDate().toString(), reservation.getResStartTime().toString(), reservation.getResEndDate().toString(), reservation.getResEndTime().toString(), reservation.getStatus().getDescription());
+        long totalPrice;
+        if (reservation.getRoom().getRoomKind().getRoomType().toString().contains("OFFICE")) {
+            totalPrice = reservation.getRoom().getRoomKind().getPrice() * (ChronoUnit.DAYS.between(reservation.getResStartDate(), reservation.getResEndDate()));
+        } else {
+            totalPrice = reservation.getRoom().getRoomKind().getPrice() * (ChronoUnit.HOURS.between(LocalDateTime.of(reservation.getResStartDate(), reservation.getResStartTime()), LocalDateTime.of(reservation.getResEndDate(), reservation.getResEndTime())));
+        }
+        double savedMileage = 0;
+        for (Payment payment : reservation.getPaymentList()) {
+            if (payment.getPayWay().equals(PayWay.PREPAYMENT) && payment.getType().equals(PayType.FULL_PAYMENT)) {
+                savedMileage = totalPrice * 0.05;
+            }
+        }
+        MyReservationDetail reservationDetail = new MyReservationDetail(reservation.getRoom().getPlace().getPlaceName(), reservation.getRoom().getRoomKind().getRoomType().getDescription(), reservation.getResCompleted().toLocalDate().toString(), reservation.getResCompleted().toLocalTime().toString(), reservation.getResStartDate().toString(), reservation.getResStartTime().toString(), reservation.getResEndDate().toString(), reservation.getResEndTime().toString(), reservation.getStatus().getDescription(), totalPrice, savedMileage);
         if (reservation.getStatus() == ReservationStatus.CANCELED && reservation.getFixStatus() == FixStatus.CANCELED) {
             reservationDetail.addIsAvailableReview(false);
         } else if (Optional.ofNullable(reservation.getRating()).isEmpty()) {
@@ -516,30 +515,20 @@ public class JpaMyPageService implements MyPageService {
         return reservationDetail;
     }
 
-    private List<MyPaymentDetail> getMyPaymentDetail(User user, long reservationId) {
-        Reservation reservation = reservationInfoValidation(user, reservationId);
-        List<MyPaymentDetail> paymentDetails = new LinkedList<>();
-        for (Payment payment : reservation.getPaymentList()) {
-            paymentDetails.add(new MyPaymentDetail(payment.getPayDate().toString(), payment.getPayTime().toString(), payment.getPrice(), payment.getPayMileage(), payment.getPayWay().toString(), payment.getSavedMileage(), payment.getType().toString(), payment.getPg().toString(), payment.getReceipt()));
-        }
-        return paymentDetails;
-    }
-
-    private List<MyRefundDetail> getMyRefundDetail(User user, long reservationId) {
-        Reservation reservation = reservationInfoValidation(user, reservationId);
-        List<MyRefundDetail> myRefundDetailList = new LinkedList<>();
-        for (Payment payment : reservation.getPaymentList()) {
+    private Map<String, JsonObject> getMyPaymentAndRefundDetail(User user, long reservationId) {
+        Gson gson = new Gson();
+        Map<String, JsonObject> myPaymentAndRefundDetailData = new LinkedHashMap<>();
+        List<Payment> paymentList = paymentRepository.findByReservationId(reservationId);
+        for (int i = 0; i < paymentList.size(); i++) {
+            Map<String, JsonObject> myPaymentAndRefundDetail = new LinkedHashMap<>();
+            Payment payment = paymentList.get(i);
+            myPaymentAndRefundDetail.put("payment", gson.toJsonTree(new MyPaymentDetail(payment.getPayDate().toString(), payment.getPayTime().toString(), payment.getPrice(), payment.getPayMileage(), payment.getType().getDescription(), payment.getReceipt())).getAsJsonObject());
             if (Optional.ofNullable(payment.getRefund()).isPresent()) {
-                MyRefundDetail myRefundDetail = MyRefundDetail.builder()
-                        .refundDate(payment.getRefund().getRefundDateTime().toLocalDate().toString())
-                        .refundTime(payment.getRefund().getRefundDateTime().toLocalTime().toString())
-                        .refundPrice(payment.getRefund().getRefundPrice())
-                        .refundMileage(payment.getRefund().getRefundMileage())
-                        .recallMileage(payment.getRefund().getRecallMileage()).build();
-                myRefundDetailList.add(myRefundDetail);
+                myPaymentAndRefundDetail.put("refund", gson.toJsonTree(new MyRefundDetail(payment.getRefund().getRefundDateTime().toLocalDate().toString(), payment.getRefund().getRefundDateTime().toLocalTime().toString(), payment.getRefund().getRefundPrice())).getAsJsonObject());
             }
+            myPaymentAndRefundDetailData.put(String.valueOf(i), gson.toJsonTree(myPaymentAndRefundDetail).getAsJsonObject());
         }
-        return myRefundDetailList;
+        return myPaymentAndRefundDetailData;
     }
 
     private UsageStatus getUsageStatus(Reservation reservation) {
