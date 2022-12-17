@@ -303,7 +303,8 @@ public class QueryReservationRepository {
         return query.select(reservation.room)
                 .from(reservation)
                 .where(reservation.room.place.eq(place), reservation.room.roomKind.roomType.eq(selectedType),
-                        reservation.resStartDate.between(startDate, endDate).or(reservation.resEndDate.between(startDate, endDate)))
+                        reservation.resStartDate.between(startDate, endDate.minusDays(1)).or(reservation.resEndDate.loe(endDate).and(reservation.resEndDate.gt(startDate))))
+//                .or(reservation.resEndDate.between(startDate, endDate.minusDays(1))))
                 .fetch();
     }
 }
