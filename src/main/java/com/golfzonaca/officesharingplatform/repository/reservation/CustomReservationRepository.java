@@ -50,8 +50,8 @@ public class CustomReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public void deleteById(Long reservationId) {
-        jpaReservationRepository.deleteById(reservationId);
+    public void delete(Reservation reservation) {
+        jpaReservationRepository.delete(reservation);
     }
 
     @Override
@@ -69,7 +69,7 @@ public class CustomReservationRepository implements ReservationRepository {
         return queryReservationRepository.findResByRoomKindAndDateTime(selectedType, startDate, startTime, endDate, endTime);
     }
 
-    @Cacheable(cacheNames = "resDataByPlaceAndTypeAndDate", sync = true, key = "#placeId+'&'+#roomType+'&'+#date")
+    @Cacheable(cacheNames = "resAllDataByPlaceAndTypeAndDate", sync = true, key = "#placeId+'&'+#roomType+'&'+#date")
     @Override
     public List<Reservation> findAllByPlaceIdAndRoomTypeAndDate(Long placeId, RoomType roomType, LocalDate date) {
         return queryReservationRepository.findAllByPlaceIdAndRoomTypeAndDate(placeId, roomType, date);

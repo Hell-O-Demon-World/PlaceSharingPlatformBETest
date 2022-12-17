@@ -43,7 +43,7 @@ public class KakaoPayService {
     private final MileageService mileageService;
     private final UserRepository userRepository;
     private final RefundService refundService;
-    
+
     public String kakaoPayReadyRequest(Long userId, long reservationId, String payWay, String payType, long payMileage) {
 
         Reservation reservation = reservationRepository.findById(reservationId);
@@ -86,7 +86,7 @@ public class KakaoPayService {
         if (PayType.FULL_PAYMENT.equals(payment.getType())) {
             mileageService.savingFullPaymentMileage(payment);
         }
-
+        payment.getReservation().updateAllStatus(ReservationStatus.COMPLETED, FixStatus.UNFIXED);
         return kakaoPayApprovalResponse;
     }
 

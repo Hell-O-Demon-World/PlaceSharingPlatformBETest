@@ -23,6 +23,13 @@ public class ExceptionControllerAdvice {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(InvalidResCancelRequest.class)
+    public ErrorResult illegalExHandler(InvalidResCancelRequest e) {
+        log.error("[exceptionHandle] ex", e);
+        return new ErrorResult("BAD", e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(InvalidDateException.class)
     public ErrorResult illegalExHandler(InvalidDateException e) {
         log.error("[exceptionHandle] ex", e);
@@ -70,6 +77,7 @@ public class ExceptionControllerAdvice {
         log.error("[exceptionHandle] ex", e);
         return new ErrorResult("BAD", e.getMessage());
     }
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(NonExistedMileageException.class)
     public ErrorResult illegalExHandler(NonExistedMileageException e) {
@@ -167,6 +175,7 @@ public class ExceptionControllerAdvice {
         log.error("[exceptionHandle] ex", e);
         return new ErrorResult("BAD", e.getMessage());
     }
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(FailedMatchingCodeException.class)
     public ErrorResult illegalExHandler(FailedMatchingCodeException e) {

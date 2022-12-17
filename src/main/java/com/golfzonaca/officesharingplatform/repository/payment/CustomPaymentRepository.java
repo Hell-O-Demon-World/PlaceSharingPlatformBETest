@@ -1,6 +1,7 @@
 package com.golfzonaca.officesharingplatform.repository.payment;
 
 import com.golfzonaca.officesharingplatform.domain.Payment;
+import com.golfzonaca.officesharingplatform.domain.Reservation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +31,11 @@ public class CustomPaymentRepository implements PaymentRepository {
     @Override
     public Payment findById(long paymentId) {
         return jpaRepository.findById(paymentId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 결제정보입니다."));
+    }
+
+    @Override
+    public List<Payment> findProgressingPaymentByReservation(Reservation reservation) {
+        return queryPaymentRepository.findProgressingPaymentByReservation(reservation);
     }
 
 }

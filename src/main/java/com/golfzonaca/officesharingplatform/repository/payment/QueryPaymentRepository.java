@@ -1,6 +1,8 @@
 package com.golfzonaca.officesharingplatform.repository.payment;
 
 import com.golfzonaca.officesharingplatform.domain.Payment;
+import com.golfzonaca.officesharingplatform.domain.Reservation;
+import com.golfzonaca.officesharingplatform.domain.type.PaymentStatus;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +26,13 @@ public class QueryPaymentRepository {
         return query
                 .selectFrom(payment)
                 .where(payment.reservation.id.eq(reservationId))
+                .fetch();
+    }
+
+    public List<Payment> findProgressingPaymentByReservation(Reservation reservation) {
+        return query
+                .selectFrom(payment)
+                .where(payment.reservation.eq(reservation), payment.payStatus.eq(PaymentStatus.COMPLETED))
                 .fetch();
     }
 }

@@ -49,4 +49,12 @@ public class QueryCommentRepository {
                 .limit(8)
                 .fetch();
     }
+
+    public List<Comment> findAllByRating(Rating rating) {
+        return query
+                .selectFrom(comment)
+                .where(comment.rating.eq(rating))
+                .orderBy(comment.dateTime.desc())
+                .fetch();
+    }
 }

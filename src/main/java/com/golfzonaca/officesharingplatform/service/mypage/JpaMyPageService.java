@@ -64,7 +64,7 @@ public class JpaMyPageService implements MyPageService {
         Reservation findReservation = reservationRepository.findById(reservationId);
         Long targetUserID = findReservation.getUser().getId();
         if (targetUserID.equals(userId)) {
-            reservationRepository.deleteById(findReservation.getId());
+            reservationRepository.delete(findReservation);
         } else {
             log.error("token 정보가 해당 예약 정보와 일치하지 않습니다.");
             throw new NonExistedReservationException("");
@@ -160,6 +160,16 @@ public class JpaMyPageService implements MyPageService {
         User findUser = userRepository.findById(userId);
 
         return putMileageData(findUser, page, items);
+    }
+
+    @Override
+    public void clearPreoccupiedReservation(Long userId) {
+        User user = userRepository.findById(userId);
+        for (Reservation reservation : user.getReservationList()) {
+            if (reservation.getStatus().equals(ReservationStatus.PROGRESSING) && reservation.getFixStatus().equals(FixStatus.UNFIXED)) {
+                reservationRepository.delete(reservation);
+            }
+        }
     }
 
     private Map<Long, JsonObject> getMileageHistoryDtoMap(List<MileageUpdate> mileageUpdateList) {
@@ -344,10 +354,13 @@ public class JpaMyPageService implements MyPageService {
     private Map<String, JsonObject> processingCommentDataByRating(Rating rating, Integer commentpage) {
         Gson gson = new Gson();
         Map<String, JsonObject> commentData = new LinkedHashMap<>();
-        for (int i = 0; i < commentRepository.findAllByRating(rating, commentpage).size(); i++) {
-            Comment comment = commentRepository.findAllByRating(rating, commentpage).get(i);
-            commentData.put(String.valueOf(i), gson.toJsonTree(new CommentDataByRating(processingUserIdentification(comment.getWriter()), comment.getText(), comment.getDateTime().toLocalDate().toString(), comment.getDateTime().toLocalTime().toString())).getAsJsonObject());
+        commentData.put("paginationData", gson.toJsonTree(Map.of("maxPage", commentRepository.findAllByRating(rating).size() / 8 + 1)).getAsJsonObject());
+        Map<String, JsonObject> commentDataMap = new LinkedHashMap<>();
+        for (int i = 0; i < commentRepository.findAllByRatingWithPagination(rating, commentpage).size(); i++) {
+            Comment comment = commentRepository.findAllByRatingWithPagination(rating, commentpage).get(i);
+            commentDataMap.put(String.valueOf(i), gson.toJsonTree(new CommentDataByRating(processingUserIdentification(comment.getWriter()), comment.getText(), comment.getDateTime().toLocalDate().toString(), comment.getDateTime().toLocalTime().toString())).getAsJsonObject());
         }
+        commentData.put("commentData", gson.toJsonTree(commentDataMap).getAsJsonObject());
         return commentData;
     }
 
@@ -418,14 +431,20 @@ public class JpaMyPageService implements MyPageService {
 
     private MyReservationDetail getMyReservationDetail(User user, long reservationId) {
         Reservation reservation = reservationInfoValidation(user, reservationId);
-        return new MyReservationDetail(reservation.getRoom().getPlace().getPlaceName(), reservation.getRoom().getRoomKind().getRoomType().getDescription(), reservation.getResCompleted().toString(), LocalDateTime.of(reservation.getResStartDate(), reservation.getResStartTime()).toString(), LocalDateTime.of(reservation.getResEndDate(), reservation.getResEndTime()).toString(), reservation.getStatus().toString(), String.valueOf(Optional.ofNullable(reservation.getRating()).isEmpty()));
+        MyReservationDetail reservationDetail = new MyReservationDetail(reservation.getRoom().getPlace().getPlaceName(), reservation.getRoom().getRoomKind().getRoomType().getDescription(), reservation.getResCompleted().toLocalDate().toString(), reservation.getResCompleted().toLocalTime().toString(), reservation.getResStartDate().toString(), reservation.getResStartTime().toString(), reservation.getResEndDate().toString(), reservation.getResEndTime().toString(), reservation.getStatus().getDescription());
+        if (reservation.getStatus() == ReservationStatus.CANCELED && reservation.getFixStatus() == FixStatus.CANCELED) {
+            reservationDetail.addIsAvailableReview(false);
+        } else if (Optional.ofNullable(reservation.getRating()).isEmpty()) {
+            reservationDetail.addIsAvailableReview(true);
+        }
+        return reservationDetail;
     }
 
     private List<MyPaymentDetail> getMyPaymentDetail(User user, long reservationId) {
         Reservation reservation = reservationInfoValidation(user, reservationId);
         List<MyPaymentDetail> paymentDetails = new LinkedList<>();
         for (Payment payment : reservation.getPaymentList()) {
-            paymentDetails.add(new MyPaymentDetail(LocalDateTime.of(payment.getPayDate(), payment.getPayTime()).toString(), payment.getPrice(), payment.getPayMileage(), payment.getPayWay().toString(), payment.getSavedMileage(), payment.getType().toString(), payment.getPg().toString()));
+            paymentDetails.add(new MyPaymentDetail(payment.getPayDate().toString(), payment.getPayTime().toString(), payment.getPrice(), payment.getPayMileage(), payment.getPayWay().toString(), payment.getSavedMileage(), payment.getType().toString(), payment.getPg().toString(), payment.getReceipt()));
         }
         return paymentDetails;
     }

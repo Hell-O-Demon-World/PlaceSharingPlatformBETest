@@ -22,9 +22,10 @@ public class SpringJpaRefundService implements RefundService {
 
 
         int calculateRefund = (int) (payment.getPrice());
-
-        if (payment.getType().equals(PayType.FULL_PAYMENT)) {
-            calculateRefund = (int) (payment.getPrice() * 0.8);
+        if (payment.getReservation().getResCompleted().plusHours(1).isBefore(LocalDateTime.now())) {
+            if (payment.getType().equals(PayType.FULL_PAYMENT)) {
+                calculateRefund = (int) (payment.getPrice() * 0.8);
+            }
         }
         Refund refund = Refund.builder()
                 .payment(payment)

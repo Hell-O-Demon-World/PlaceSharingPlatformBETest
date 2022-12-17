@@ -23,7 +23,7 @@ public interface ReservationRepository {
 
     List<Reservation> findResByPlaceIdAndRoomKindId(long roomTypeId, LocalDate resStartDate, LocalDate resEndDate);
 
-    void deleteById(Long reservationId);
+    void delete(Reservation reservation);
 
     List<Reservation> findAll(ReservationSearchCond cond);
 

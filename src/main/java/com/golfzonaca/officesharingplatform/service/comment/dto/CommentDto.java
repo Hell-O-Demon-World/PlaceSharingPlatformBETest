@@ -8,4 +8,8 @@ public class CommentDto {
     private String context;
     private String writtenDate;
     private String writtenTime;
+
+    public void processingWrittenTime(String writtenTime) {
+        this.writtenTime = writtenTime;
+    }
 }

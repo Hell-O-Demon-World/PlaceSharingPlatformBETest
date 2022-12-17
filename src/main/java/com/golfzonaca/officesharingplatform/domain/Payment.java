@@ -60,6 +60,9 @@ public class Payment {
     @Enumerated(EnumType.STRING)
     private PaymentStatus payStatus;
 
+    @Column(name = "RECEIPT")
+    private String receipt;
+
     @Builder
     public Payment(Reservation reservation, LocalDate payDate, LocalTime payTime, long price, long payMileage, PayWay payWay, long savedMileage, PayType type, String apiCode, PG pg, PaymentStatus payStatus) {
         this.reservation = reservation;
@@ -85,5 +88,9 @@ public class Payment {
 
     public void cancelPrice(long price) {
         this.price = price;
+    }
+
+    public void addReceipt(String receipt) {
+        this.receipt = receipt;
     }
 }

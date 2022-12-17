@@ -20,6 +20,7 @@ import java.io.IOException;
 public class IamportController {
 
     private final IamportService iamportService;
+    private final PaymentValidation paymentValidation;
 
     @PostMapping("/nicepay")
     public void nicePay(@TokenUserId Long userId, @RequestBody NicePayRequestForm nicePayRequestForm, HttpServletResponse response) throws IamportResponseException, IOException {
@@ -30,6 +31,7 @@ public class IamportController {
     @PostMapping("/nicpaycancel")
     public void nicepayCancel(@TokenUserId Long userId, @RequestBody CancelInfo cancelInfo, HttpServletResponse response) throws IamportResponseException, IOException {
         long reservationId = cancelInfo.getReservationId();
+        paymentValidation.cancelRequest(reservationId);
         String url = iamportService.nicePayCancel(userId, reservationId);
         response.sendRedirect(url);
     }

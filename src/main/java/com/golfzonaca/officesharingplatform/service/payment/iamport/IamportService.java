@@ -7,7 +7,6 @@ import com.golfzonaca.officesharingplatform.domain.User;
 import com.golfzonaca.officesharingplatform.domain.type.*;
 import com.golfzonaca.officesharingplatform.repository.payment.PaymentRepository;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
-import com.golfzonaca.officesharingplatform.repository.user.UserRepository;
 import com.golfzonaca.officesharingplatform.service.mileage.MileageService;
 import com.golfzonaca.officesharingplatform.service.payment.kakaopay.KakaoPayUtility;
 import com.golfzonaca.officesharingplatform.service.refund.RefundService;
@@ -117,6 +116,7 @@ public class IamportService {
         if (PayType.FULL_PAYMENT.equals(payment.getType())) {
             mileageService.savingFullPaymentMileage(paymentSave);
         }
+        payment.addReceipt(iamportResponse.getResponse().getReceiptUrl());
         paymentSave.updatePayStatus(PaymentStatus.COMPLETED); // paystatus completed로 업데이트
 
         return iamportResponse;
@@ -154,7 +154,7 @@ public class IamportService {
 
     public String nicePayCancel(Long userId, long reservationId) throws IamportResponseException, IOException {
         Reservation reservation = reservationRepository.findById(reservationId);
-        List<com.golfzonaca.officesharingplatform.domain.Payment> paymentList = reservation.getPaymentList();
+        List<com.golfzonaca.officesharingplatform.domain.Payment> paymentList = paymentRepository.findProgressingPaymentByReservation(reservation);
         for (com.golfzonaca.officesharingplatform.domain.Payment payment : paymentList) {
             if (payment.getPayWay().equals(PayWay.PREPAYMENT)) {
                 List<IamportResponse<Payment>> iamportResponses = nicePayCancelOneTime(payment);
@@ -183,17 +183,13 @@ public class IamportService {
     }
 
     public List<IamportResponse<Payment>> nicePayCancelOneTime(com.golfzonaca.officesharingplatform.domain.Payment payment) throws IamportResponseException, IOException {
-
 //        restoreUserMileage(payment);
-
         Refund refunds = refundService.processingRefundData(payment);
-
         List<IamportResponse<Payment>> iamportResponses = refundRequest(refunds);
         return iamportResponses;
     }
 
     public List<IamportResponse<Payment>> refundRequest(Refund refund) throws IamportResponseException, IOException {
-
         IamportClient iamportClient = new IamportClient(apiKey, apiSecret);
 
         List<IamportResponse<Payment>> refundResult = new LinkedList<>();
