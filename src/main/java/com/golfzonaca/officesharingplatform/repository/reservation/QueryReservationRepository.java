@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.golfzonaca.officesharingplatform.domain.QReservation.reservation;
+import static com.golfzonaca.officesharingplatform.domain.QRoom.room;
 
 
 @Slf4j
@@ -296,5 +297,13 @@ public class QueryReservationRepository {
             return QRoom.room.eq(room);
         }
         return null;
+    }
+
+    public List<Room> findAllRoomByPlaceAndRoomKindAndStartDateAndEndDate(Place place, RoomType selectedType, LocalDate startDate, LocalDate endDate) {
+        return query.select(reservation.room)
+                .from(reservation)
+                .where(reservation.room.place.eq(place), reservation.room.roomKind.roomType.eq(selectedType),
+                        reservation.resStartDate.between(startDate, endDate).or(reservation.resEndDate.between(startDate, endDate)))
+                .fetch();
     }
 }

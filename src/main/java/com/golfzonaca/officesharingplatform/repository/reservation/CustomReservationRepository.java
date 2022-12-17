@@ -2,6 +2,7 @@ package com.golfzonaca.officesharingplatform.repository.reservation;
 
 import com.golfzonaca.officesharingplatform.domain.Place;
 import com.golfzonaca.officesharingplatform.domain.Reservation;
+import com.golfzonaca.officesharingplatform.domain.Room;
 import com.golfzonaca.officesharingplatform.domain.User;
 import com.golfzonaca.officesharingplatform.domain.type.RoomType;
 import com.golfzonaca.officesharingplatform.exception.NonExistedReservationException;
@@ -98,6 +99,11 @@ public class CustomReservationRepository implements ReservationRepository {
     @Override
     public List<Reservation> findByUserAndDateTime(User user, LocalDate date, LocalTime time) {
         return queryReservationRepository.findByUserAndDateTime(user, date, time);
+    }
+
+    @Override
+    public List<Room> findByPlaceAndRoomKindAndStartDateAndEndDate(Place place, RoomType selectedType, LocalDate date, LocalDate endDate) {
+        return queryReservationRepository.findAllRoomByPlaceAndRoomKindAndStartDateAndEndDate(place, selectedType, date, endDate);
     }
 
 }

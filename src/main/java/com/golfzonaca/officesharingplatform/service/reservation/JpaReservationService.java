@@ -17,7 +17,6 @@ import com.golfzonaca.officesharingplatform.service.reservation.validation.Reser
 import com.golfzonaca.officesharingplatform.web.formatter.TimeFormatter;
 import com.golfzonaca.officesharingplatform.web.reservation.dto.process.ProcessReservationData;
 import com.golfzonaca.officesharingplatform.web.reservation.dto.response.ReservationResponseData;
-import com.golfzonaca.officesharingplatform.web.reservation.form.ReservationResponseForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -268,12 +267,32 @@ public class JpaReservationService implements ReservationService {
         LocalDate date = data.getStartDate();
         LocalDate endDate = data.getEndDate();
         RoomType selectedType = RoomType.getRoomType(data.getSelectedType());
-
-        Room resultRoom = getResultRoom(place, startTime, endTime, date, selectedType);
+        Room resultRoom;
+        if (selectedType.toString().toUpperCase().contains("OFFICE")) {
+            resultRoom = getResultRoom(place, date, endDate, selectedType);
+        } else {
+            resultRoom = getResultRoom(place, startTime, endTime, date, selectedType);
+        }
         // TODO: Need to change status of reservation when user choose pay method
         Reservation reservation = new Reservation(user, resultRoom, LocalDateTime.now(), date, startTime, endDate, endTime, ReservationStatus.PROGRESSING, FixStatus.UNFIXED);
-
         return Optional.ofNullable(reservationRepository.save(reservation)).orElseThrow(() -> new DuplicatedReservationException("ReservationError::: 예약 실패"));
+
+    }
+
+    private Room getResultRoom(Place place, LocalDate date, LocalDate endDate, RoomType selectedType) {
+        Room resultRoom = new Room();
+        List<Room> roomList = roomRepository.findRoomByPlaceAndRoomKind(place, selectedType);
+        List<Room> findReservation = reservationRepository.findByPlaceAndRoomKindAndStartDateAndEndDate(place, selectedType, date, endDate);
+        Set<Room> findReservationSet = new HashSet<>(findReservation);
+        if (roomList.size() == findReservationSet.size()) {
+            throw new DuplicatedReservationException("ReservationError::: 이미 예약이 있습니다.");
+        }
+        for (Room room : roomList) {
+            if (!findReservationSet.contains(room)) {
+                resultRoom = room;
+            }
+        }
+        return resultRoom;
     }
 
     private Room getResultRoom(Place place, LocalTime startLocalTime, LocalTime endLocalTime, LocalDate date, RoomType selectedType) {
