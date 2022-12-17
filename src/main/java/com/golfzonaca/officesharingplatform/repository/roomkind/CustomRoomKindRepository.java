@@ -24,7 +24,7 @@ public class CustomRoomKindRepository implements RoomKindRepository {
 
     @Override
     public RoomKind findById(Long roomId) {
-        return jpaRoomKindRepository.findById(roomId).get();
+        return jpaRoomKindRepository.findById(roomId).orElseThrow(() -> new NonExistedRoomKindException("NonExistedRoomKindException::: 존재하지 않는 공간유형입니다."));
     }
 
     @Override
@@ -36,5 +36,4 @@ public class CustomRoomKindRepository implements RoomKindRepository {
     public List<RoomKind> findAll() {
         return jpaRoomKindRepository.findAll();
     }
-
 }

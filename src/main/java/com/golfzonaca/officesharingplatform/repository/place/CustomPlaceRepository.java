@@ -23,7 +23,7 @@ public class CustomPlaceRepository implements PlaceRepository {
     public List<Place> findAllPlaces() {
         return jpaRepository.findAll();
     }
-
+    
     @Override
     public Place findById(long id) {
         return jpaRepository.findById(id).orElseThrow(() -> new NonExistedPlaceException("NonExistedPlaceException::: 공간이 존재하지 않습니다."));
