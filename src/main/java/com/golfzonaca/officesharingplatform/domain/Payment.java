@@ -63,6 +63,9 @@ public class Payment {
     @Column(name = "RECEIPT")
     private String receipt;
 
+    @OneToOne(mappedBy = "payment")
+    private Refund refund;
+
     @Builder
     public Payment(Reservation reservation, LocalDate payDate, LocalTime payTime, long price, long payMileage, PayWay payWay, long savedMileage, PayType type, String apiCode, PG pg, PaymentStatus payStatus) {
         this.reservation = reservation;

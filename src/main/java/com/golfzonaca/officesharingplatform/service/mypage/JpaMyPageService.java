@@ -13,24 +13,38 @@ import com.golfzonaca.officesharingplatform.repository.user.UserRepository;
 import com.golfzonaca.officesharingplatform.service.mypage.dto.comment.CommentDataByRating;
 import com.golfzonaca.officesharingplatform.service.mypage.dto.comment.MyCommentData;
 import com.golfzonaca.officesharingplatform.service.mypage.dto.edituserinfo.EditUserInfo;
+import com.golfzonaca.officesharingplatform.service.mypage.dto.iamport.PagedPaymentAnnotation;
+import com.golfzonaca.officesharingplatform.service.mypage.dto.iamport.PaymentAnnotation;
+import com.golfzonaca.officesharingplatform.service.mypage.dto.iamport.PaymentListResponse;
 import com.golfzonaca.officesharingplatform.service.mypage.dto.mileage.MileageHistoryDto;
 import com.golfzonaca.officesharingplatform.service.mypage.dto.qna.AnswerData;
 import com.golfzonaca.officesharingplatform.service.mypage.dto.qna.QnAData;
 import com.golfzonaca.officesharingplatform.service.mypage.dto.qna.QuestionData;
 import com.golfzonaca.officesharingplatform.service.mypage.dto.rating.RatingData;
 import com.golfzonaca.officesharingplatform.service.mypage.dto.usage.MyPaymentDetail;
+import com.golfzonaca.officesharingplatform.service.mypage.dto.usage.MyRefundDetail;
 import com.golfzonaca.officesharingplatform.service.mypage.dto.usage.MyReservationDetail;
 import com.golfzonaca.officesharingplatform.service.mypage.dto.usage.MyReservationList;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.siot.IamportRestClient.IamportClient;
+import com.siot.IamportRestClient.exception.IamportResponseException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -49,6 +63,12 @@ public class JpaMyPageService implements MyPageService {
     private final InquiryStatusRepository inquiryStatusRepository;
     private final MileageRepository mileageRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Value("${iamport.api.apiKey}")
+    private String apiKey;
+
+    @Value("${iamport.api.apiSecret}")
+    private String apiSecret;
 
     @Override
     public Map<String, JsonObject> getOverViewData(Long userId) {
@@ -85,6 +105,7 @@ public class JpaMyPageService implements MyPageService {
         Map<String, JsonObject> usageDetail = processingUserData(user);
         putResDetailData(user, reservationId, usageDetail);
         putPaymentDetailData(user, reservationId, usageDetail);
+        putRefundDetailData(user, reservationId, usageDetail);
         return usageDetail;
     }
 
@@ -169,6 +190,45 @@ public class JpaMyPageService implements MyPageService {
             if (reservation.getStatus().equals(ReservationStatus.PROGRESSING) && reservation.getFixStatus().equals(FixStatus.UNFIXED)) {
                 reservationRepository.delete(reservation);
             }
+        }
+    }
+
+    @Override
+    public void getReceiptForSubscribe(Long userId, long reservationId) {
+        try {
+            IamportClient iamportClient = new IamportClient(apiKey, apiSecret);
+            String accessToken = iamportClient.getAuth().getResponse().getToken();
+            String customerUid = userRepository.findById(userId).getEmail().replace("@", "").replace(".", "") + reservationId;
+
+            RestTemplate restTemplate = new RestTemplate();
+
+            HttpHeaders headers = new HttpHeaders();
+            String url = UriComponentsBuilder.fromHttpUrl("https://api.iamport.kr/subscribe/customers/" + customerUid + "/payments")
+                    .queryParam("page", "{page}")
+                    .encode()
+                    .toUriString();
+
+            headers.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
+            headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE + ";charset=UTF-8");
+            headers.set("Authorization", accessToken);
+            HttpEntity<Object> request = new HttpEntity<>(headers);
+            Map<String, Object> params = new HashMap<>();
+            params.put("page", 1);
+            PaymentListResponse paymentListResponse = restTemplate.exchange(url, HttpMethod.GET, request, PaymentListResponse.class, params).getBody();
+            PagedPaymentAnnotation pagedPaymentAnnotation = paymentListResponse.getResponse().orElseThrow(() -> new NoSuchElementException("예약 결제 정보를 찾을 수 없습니다."));
+            List<PaymentAnnotation> paymentAnnotations = pagedPaymentAnnotation.getList().orElseThrow(() -> new NoSuchElementException("예약 결제 정보를 찾을 수 없습니다."));
+            PaymentAnnotation paymentAnnotation = paymentAnnotations.get(0);
+            String receipt = paymentAnnotation.getReceipt_url().orElse("결제 영수증을 확인할 수 없습니다.");
+
+
+            List<Payment> paymentList = reservationRepository.findById(reservationId).getPaymentList();
+            for (Payment payment : paymentList) {
+                if (payment.getPayWay().equals(PayWay.POSTPAYMENT)) {
+                    payment.addReceipt(receipt);
+                }
+            }
+        } catch (IamportResponseException | IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -264,6 +324,15 @@ public class JpaMyPageService implements MyPageService {
         }
     }
 
+    private void putRefundDetailData(User user, long reservationId, Map<String, JsonObject> usageDetail) {
+        Gson gson = new Gson();
+        List<MyRefundDetail> myRefundDetailList = getMyRefundDetail(user, reservationId);
+        for (int i = 0; i < myRefundDetailList.size(); i++) {
+            MyRefundDetail myRefundDetail = myRefundDetailList.get(i);
+            usageDetail.put("refundData" + i, gson.toJsonTree(myRefundDetail).getAsJsonObject());
+        }
+    }
+
     private void putReservationData(User user, Map<String, JsonObject> myResMap, Integer page) {
         Gson gson = new Gson();
         Map<String, JsonObject> myUsage = processingAllReservationData(user, page);
@@ -351,13 +420,13 @@ public class JpaMyPageService implements MyPageService {
     }
 
     @NotNull
-    private Map<String, JsonObject> processingCommentDataByRating(Rating rating, Integer commentpage) {
+    private Map<String, JsonObject> processingCommentDataByRating(Rating rating, Integer page) {
         Gson gson = new Gson();
         Map<String, JsonObject> commentData = new LinkedHashMap<>();
         commentData.put("paginationData", gson.toJsonTree(Map.of("maxPage", commentRepository.findAllByRating(rating).size() / 8 + 1)).getAsJsonObject());
         Map<String, JsonObject> commentDataMap = new LinkedHashMap<>();
-        for (int i = 0; i < commentRepository.findAllByRatingWithPagination(rating, commentpage).size(); i++) {
-            Comment comment = commentRepository.findAllByRatingWithPagination(rating, commentpage).get(i);
+        for (int i = 0; i < commentRepository.findAllByRatingWithPagination(rating, page).size(); i++) {
+            Comment comment = commentRepository.findAllByRatingWithPagination(rating, page).get(i);
             commentDataMap.put(String.valueOf(i), gson.toJsonTree(new CommentDataByRating(processingUserIdentification(comment.getWriter()), comment.getText(), comment.getDateTime().toLocalDate().toString(), comment.getDateTime().toLocalTime().toString())).getAsJsonObject());
         }
         commentData.put("commentData", gson.toJsonTree(commentDataMap).getAsJsonObject());
@@ -447,6 +516,23 @@ public class JpaMyPageService implements MyPageService {
             paymentDetails.add(new MyPaymentDetail(payment.getPayDate().toString(), payment.getPayTime().toString(), payment.getPrice(), payment.getPayMileage(), payment.getPayWay().toString(), payment.getSavedMileage(), payment.getType().toString(), payment.getPg().toString(), payment.getReceipt()));
         }
         return paymentDetails;
+    }
+
+    private List<MyRefundDetail> getMyRefundDetail(User user, long reservationId) {
+        Reservation reservation = reservationInfoValidation(user, reservationId);
+        List<MyRefundDetail> myRefundDetailList = new LinkedList<>();
+        for (Payment payment : reservation.getPaymentList()) {
+            if (Optional.ofNullable(payment.getRefund()).isPresent()) {
+                MyRefundDetail myRefundDetail = MyRefundDetail.builder()
+                        .refundDate(payment.getRefund().getRefundDateTime().toLocalDate().toString())
+                        .refundTime(payment.getRefund().getRefundDateTime().toLocalTime().toString())
+                        .refundPrice(payment.getRefund().getRefundPrice())
+                        .refundMileage(payment.getRefund().getRefundMileage())
+                        .recallMileage(payment.getRefund().getRecallMileage()).build();
+                myRefundDetailList.add(myRefundDetail);
+            }
+        }
+        return myRefundDetailList;
     }
 
     private UsageStatus getUsageStatus(Reservation reservation) {
