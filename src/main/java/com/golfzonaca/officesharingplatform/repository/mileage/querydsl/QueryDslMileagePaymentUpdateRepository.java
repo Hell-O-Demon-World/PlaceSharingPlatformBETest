@@ -40,7 +40,7 @@ public class QueryDslMileagePaymentUpdateRepository {
     public MileagePaymentUpdate findFirstMileageByUpdate(MileageUpdate mileageUpdate) {
         return query.selectFrom(mileagePaymentUpdate)
                 .innerJoin(mileagePaymentUpdate.mileageUpdate)
-                .where(mileagePaymentUpdate.mileageUpdate.id.eq(mileageUpdate.getId()))
+                .where(mileagePaymentUpdate.mileageUpdate.eq(mileageUpdate))
                 .fetchFirst();
     }
 }
