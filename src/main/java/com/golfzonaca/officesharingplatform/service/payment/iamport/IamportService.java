@@ -125,7 +125,7 @@ public class IamportService {
     public IamportResponse<List<Schedule>> requestNicePaySubscribe(Long userId, NicePayRequestForm nicePayRequestForm) throws IamportResponseException, IOException {
 
         IamportClient iamportClient = new IamportClient(apiKey, apiSecret);
-        Reservation findReservation = reservationRepository.findById(nicePayRequestForm.getReservationId());
+        Reservation reservation = reservationRepository.findById(nicePayRequestForm.getReservationId());
 
         String customerUid = createCustomerUid(nicePayRequestForm);
         ScheduleData scheduleData = new ScheduleData(customerUid);
@@ -133,20 +133,20 @@ public class IamportService {
         String merchantUid = createMerchantUid();
 
         Timestamp scheduleAt;
-        if (findReservation.getRoom().getRoomKind().getRoomType().toString().contains("OFFICE")) {
-            LocalDateTime payScheduledDateTime = LocalDateTime.of(findReservation.getResEndDate(), findReservation.getResEndTime());
+        if (reservation.getRoom().getRoomKind().getRoomType().toString().contains("OFFICE")) {
+            LocalDateTime payScheduledDateTime = LocalDateTime.of(reservation.getResEndDate(), reservation.getResEndTime());
             scheduleAt = Timestamp.valueOf(payScheduledDateTime);
         } else {
-            LocalDateTime payScheduledDateTime = LocalDateTime.of(findReservation.getResStartDate(), findReservation.getResStartTime());
+            LocalDateTime payScheduledDateTime = LocalDateTime.of(reservation.getResStartDate(), reservation.getResStartTime());
             scheduleAt = Timestamp.valueOf(payScheduledDateTime);
         }
 
-        Integer payPrice = calculateTotalAmount(findReservation, nicePayRequestForm.getPayWay(), nicePayRequestForm.getPayType(), nicePayRequestForm.getPayMileage());
+        Integer payPrice = calculateTotalAmount(reservation, nicePayRequestForm.getPayWay(), nicePayRequestForm.getPayType(), nicePayRequestForm.getPayMileage());
 
         ScheduleEntry scheduleEntry = new ScheduleEntry(merchantUid, scheduleAt, BigDecimal.valueOf(payPrice));
-
+        scheduleEntry.setName("OSP " + reservation.getRoom().getRoomKind().getRoomType().getDescription() + " 후불 결제");
         scheduleData.addSchedule(scheduleEntry);
-        com.golfzonaca.officesharingplatform.domain.Payment payment = processingPaymentData(findReservation, nicePayRequestForm.getPayWay(), nicePayRequestForm.getPayType(), nicePayRequestForm.getPayMileage(), merchantUid);
+        com.golfzonaca.officesharingplatform.domain.Payment payment = processingPaymentData(reservation, nicePayRequestForm.getPayWay(), nicePayRequestForm.getPayType(), nicePayRequestForm.getPayMileage(), merchantUid);
         IamportResponse<List<Schedule>> listIamportResponse = iamportClient.subscribeSchedule(scheduleData);
         paymentRepository.save(payment);
         return listIamportResponse;

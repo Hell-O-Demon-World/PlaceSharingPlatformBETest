@@ -32,7 +32,7 @@ public class QueryPaymentRepository {
     public List<Payment> findProgressingPaymentByReservation(Reservation reservation) {
         return query
                 .selectFrom(payment)
-                .where(payment.reservation.eq(reservation), payment.payStatus.eq(PaymentStatus.COMPLETED))
+                .where(payment.reservation.eq(reservation), payment.payStatus.ne(PaymentStatus.CANCELED))
                 .fetch();
     }
 }

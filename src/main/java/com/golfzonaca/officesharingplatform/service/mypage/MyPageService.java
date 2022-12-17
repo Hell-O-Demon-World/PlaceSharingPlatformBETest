@@ -32,4 +32,6 @@ public interface MyPageService {
     Map<String, JsonObject> getMileageHistory(Long userId, Long page, Long items);
 
     void clearPreoccupiedReservation(Long userId);
+
+    void getReceiptForSubscribe(Long userId, long reservationId);
 }
