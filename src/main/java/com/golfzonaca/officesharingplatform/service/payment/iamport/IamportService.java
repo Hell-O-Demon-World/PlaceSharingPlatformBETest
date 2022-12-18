@@ -189,6 +189,7 @@ public class IamportService {
             throw new NonExistedReservationException("");
         }
     }
+
     private IamportResponse<List<Schedule>> nicePayCancelSubscribe(com.golfzonaca.officesharingplatform.domain.Payment payment) throws IamportResponseException, IOException {
         IamportClient iamportClient = new IamportClient(apiKey, apiSecret);
         User user = payment.getReservation().getUser();
@@ -252,7 +253,7 @@ public class IamportService {
                 totalAmount,
                 payMileage,
                 PayWay.valueOf(payWay),
-                kakaoPayUtility.calculateMileage(totalAmount, payWay, payType),
+                kakaoPayUtility.calculateMileage(totalAmount, payMileage, payWay, payType),
                 PayType.valueOf(payType),
                 apiCode,
                 PG.NICEPAY,
