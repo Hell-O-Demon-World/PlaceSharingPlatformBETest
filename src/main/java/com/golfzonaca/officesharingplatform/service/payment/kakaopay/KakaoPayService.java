@@ -197,7 +197,7 @@ public class KakaoPayService {
                 totalAmount,
                 payMileage,
                 PayWay.valueOf(payWay),
-                kakaoPayUtility.calculateMileage(totalAmount, payWay, payType),
+                kakaoPayUtility.calculateMileage(totalAmount, payMileage, payWay, payType),
                 PayType.valueOf(payType),
                 kakaoPayUtility.getKakaoApiCode(),
                 PG.KAKAOPAY,

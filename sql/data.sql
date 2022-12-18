@@ -1,212 +1,66 @@
-INSERT INTO address (ID, ADDRESS, POSTALCODE)
-VALUES (1, '서울 강남구 영동대로 735', '06072');
-INSERT INTO address (ID, ADDRESS, POSTALCODE)
-VALUES (2, '경기 성남시 분당구 성남대로 34 하나프라자 6층', '13637');
-INSERT INTO address (ID, ADDRESS, POSTALCODE)
-VALUES (3, '경기 성남시 분당구 정자일로 95', '13561');
-INSERT INTO address (ID, ADDRESS, POSTALCODE)
-VALUES (4, '제주특별자치도 제주시 첨단로 242', '63309');
-INSERT INTO address (ID, ADDRESS, POSTALCODE)
-VALUES (5, '서울특별시 송파구 송파대로 570', '05510');
-INSERT INTO address (ID, ADDRESS, POSTALCODE)
-VALUES (6, '서울 송파구 위례성대로 2', '05544');
-INSERT INTO address (ID, ADDRESS, POSTALCODE)
-VALUES (7, '서울특별시 구로구 디지털로 30길 28, 609호', '08389');
-INSERT INTO address (ID, ADDRESS, POSTALCODE)
-VALUES (8, '서울 강남구 테헤란로 142 12층', '06236');
-INSERT INTO address (ID, ADDRESS, POSTALCODE)
-VALUES (9, '서울시 송파구 올림픽로 35길 125 삼성SDS', '05510');
-INSERT INTO address (ID, ADDRESS, POSTALCODE)
-VALUES (10, '경기도 성남시 분당구 판교로256번길 7', '13487');
-INSERT INTO address (ID, ADDRESS, POSTALCODE)
-VALUES (11, '경기도 수원시 영통구 삼성로 129 삼성전자공업단지', '16677');
-INSERT INTO address (ID, ADDRESS, POSTALCODE)
-VALUES (12, '서울특별시 강남구 영동대로 735 골프존타워서울', '06072');
-INSERT INTO address (ID, ADDRESS, POSTALCODE)
-VALUES (13, '서울 강남구 영동대로141길 5', '06072');
-INSERT INTO address (ID, ADDRESS, POSTALCODE)
-VALUES (14, '대전 유성구 엑스포로97번길 40', '34125');
-INSERT INTO address (ID, ADDRESS, POSTALCODE)
-VALUES (15, '경기 성남시 분당구 성남대로 34 하나프라자 6층', '13637');
-INSERT INTO address (ID, ADDRESS, POSTALCODE)
-VALUES (16, '경기 성남시 분당구 정자일로 95', '13561');
-INSERT INTO address (ID, ADDRESS, POSTALCODE)
-VALUES (17, '경기 성남시 분당구 정자일로 95', '13561');
-INSERT INTO address (ID, ADDRESS, POSTALCODE)
-VALUES (18, '경기 성남시 분당구 판교역로 166', '13529');
-INSERT INTO address (ID, ADDRESS, POSTALCODE)
-VALUES (19, '제주 제주시 첨단로 216-19', '63309');
-INSERT INTO address (ID, ADDRESS, POSTALCODE)
-VALUES (20, '서울 송파구 송파대로 570 8~26층', '05510');
-INSERT INTO address (ID, ADDRESS, POSTALCODE)
-VALUES (21, '서울 송파구 위례성대로 2', '05544');
-INSERT INTO address (ID, ADDRESS, POSTALCODE)
-VALUES (22, '서울 송파구 올림픽로35다길 42', '05510');
-INSERT INTO address (ID, ADDRESS, POSTALCODE)
-VALUES (23, '서울 구로구 디지털로30길 28', '08389');
-INSERT INTO address (ID, ADDRESS, POSTALCODE)
-VALUES (24, '서울 강남구 테헤란로 142 12층', '06236');
-INSERT INTO address (ID, ADDRESS, POSTALCODE)
-VALUES (25, '서울 송파구 올림픽로35길 125 삼성SDS', '05510');
-INSERT INTO address (ID, ADDRESS, POSTALCODE)
-VALUES (26, '경기 성남시 분당구 판교로256번길 7', '13487');
-INSERT INTO address (ID, ADDRESS, POSTALCODE)
-VALUES (27, '경기 수원시 영통구 삼성로 129 삼성전자공업단지', '16677');
+INSERT INTO address (ID, ADDRESS, POSTALCODE, longitude, latitude)
+VALUES (1, '서울 강남구 영동대로 735', '06072', 127.054597367919, 37.5233959825056);
+INSERT INTO address (ID, ADDRESS, POSTALCODE, longitude, latitude)
+VALUES (2, '경기 성남시 분당구 성남대로 34 하나프라자 6층', '13637', 127.109392969209, 37.3388751402979);
+INSERT INTO address (ID, ADDRESS, POSTALCODE, longitude, latitude)
+VALUES (3, '경기 성남시 분당구 정자일로 95', '13561', 127.105206334597, 37.3588602423595);
+INSERT INTO address (ID, ADDRESS, POSTALCODE, longitude, latitude)
+VALUES (4, '제주특별자치도 제주시 첨단로 242', '63309', 126.57049341667, 33.4506810661721);
+INSERT INTO address (ID, ADDRESS, POSTALCODE, longitude, latitude)
+VALUES (5, '서울특별시 송파구 송파대로 570', '05510', 127.099112358834, 37.5157873297768);
+INSERT INTO address (ID, ADDRESS, POSTALCODE, longitude, latitude)
+VALUES (6, '서울 송파구 위례성대로 2', '05544', 127.112766629856, 37.5169244928047);
+INSERT INTO address (ID, ADDRESS, POSTALCODE, longitude, latitude)
+VALUES (7, '서울특별시 구로구 디지털로 30길 28, 609호', '08389', 126.895281502292, 37.4821079378772);
+INSERT INTO address (ID, ADDRESS, POSTALCODE, longitude, latitude)
+VALUES (8, '서울 강남구 테헤란로 142 12층', '06236', 127.034954751198, 37.4997440471512);
+INSERT INTO address (ID, ADDRESS, POSTALCODE, longitude, latitude)
+VALUES (9, '서울시 송파구 올림픽로 35길 125 삼성SDS', '05510', 127.100467802271, 37.516297774308);
+INSERT INTO address (ID, ADDRESS, POSTALCODE, longitude, latitude)
+VALUES (10, '경기도 성남시 분당구 판교로256번길 7', '13487', 127.103466478297, 37.4020344323437);
+INSERT INTO address (ID, ADDRESS, POSTALCODE, longitude, latitude)
+VALUES (11, '경기도 수원시 영통구 삼성로 129 삼성전자공업단지', '16677', 127.053129481167, 37.257643055151);
+INSERT INTO address (ID, ADDRESS, POSTALCODE, longitude, latitude)
+VALUES (12, '서울특별시 강남구 영동대로 735 골프존타워서울', '06072', 127.054597367919, 37.5233959825056);
+INSERT INTO address (ID, ADDRESS, POSTALCODE, longitude, latitude)
+VALUES (13, '서울 강남구 영동대로141길 5', '06072', 127.054282229039, 37.5232772855408);
+INSERT INTO address (ID, ADDRESS, POSTALCODE, longitude, latitude)
+VALUES (14, '대전 유성구 엑스포로97번길 40', '34125', 127.390466196206, 36.376343373624);
+INSERT INTO address (ID, ADDRESS, POSTALCODE, longitude, latitude)
+VALUES (15, '경기 성남시 분당구 성남대로 34 하나프라자 6층', '13637', 127.109392969209, 37.3388751402979);
+INSERT INTO address (ID, ADDRESS, POSTALCODE, longitude, latitude)
+VALUES (16, '경기 성남시 분당구 정자일로 95', '13561', 127.105206334597, 37.3588602423595);
+INSERT INTO address (ID, ADDRESS, POSTALCODE, longitude, latitude)
+VALUES (17, '경기 성남시 분당구 정자일로 95', '13561', 127.105206334597, 37.3588602423595);
+INSERT INTO address (ID, ADDRESS, POSTALCODE, longitude, latitude)
+VALUES (18, '경기 성남시 분당구 판교역로 166', '13529', 127.110449292622, 37.3952969470752);
+INSERT INTO address (ID, ADDRESS, POSTALCODE, longitude, latitude)
+VALUES (19, '제주 제주시 첨단로 216-19', '63309', 126.57086576965, 33.4524499450878);
+INSERT INTO address (ID, ADDRESS, POSTALCODE, longitude, latitude)
+VALUES (20, '서울 송파구 송파대로 570', '05510', 127.099112358834, 37.5157873297768);
+INSERT INTO address (ID, ADDRESS, POSTALCODE, longitude, latitude)
+VALUES (21, '서울 송파구 위례성대로 2', '05544', 127.112766629856, 37.5169244928047);
+INSERT INTO address (ID, ADDRESS, POSTALCODE, longitude, latitude)
+VALUES (22, '서울 송파구 올림픽로35다길 42', '05510', 127.103068896795, 37.5152535228382);
+INSERT INTO address (ID, ADDRESS, POSTALCODE, longitude, latitude)
+VALUES (23, '서울 구로구 디지털로30길 28', '08389', 126.895281502292, 37.4821079378772);
+INSERT INTO address (ID, ADDRESS, POSTALCODE, longitude, latitude)
+VALUES (24, '서울 강남구 테헤란로 142 12층', '06236', 127.034954751198, 37.4997440471512);
+INSERT INTO address (ID, ADDRESS, POSTALCODE, longitude, latitude)
+VALUES (25, '서울 송파구 올림픽로35길 125 삼성SDS', '05510', 127.100467802271, 37.516297774308);
+INSERT INTO address (ID, ADDRESS, POSTALCODE, longitude, latitude)
+VALUES (26, '경기 성남시 분당구 판교로256번길 7', '13487', 127.103466478297, 37.4020344323437);
+INSERT INTO address (ID, ADDRESS, POSTALCODE, longitude, latitude)
+VALUES (27, '경기 수원시 영통구 삼성로 129 삼성전자공업단지', '16677', 127.053129481167, 37.257643055151);
 
-
-INSERT INTO company (ID, ADDRESS_ID, COMPANY_LOGINID, COMPANY_PW, COMPANY_NAME, COMPANY_TEL,
-                     COMPANY_REGNUM, COMPANY_REPNAME)
-VALUES (1, 1, 'golfzon1234', '$2a$10$jUT1ARxmm38KZ2NfNXbdM.uCaKx1OsbA6QcuzhbeLJQ2YaqeF592K', '(주) 골프존', '1577-4333',
-        '0000-0000', '최덕형, 박강수');
-INSERT INTO company (ID, ADDRESS_ID, COMPANY_LOGINID, COMPANY_PW, COMPANY_NAME, COMPANY_TEL,
-                     COMPANY_REGNUM, COMPANY_REPNAME)
-VALUES (2, 2, 'kosta1234', '$2a$10$9cV3Hrb6QQHyBs0bSBOdeeDDw8eORw1/na8F9i.tyWAzuyBEJ4RaG', '한국소프트웨어기술진흥협회',
-        '031-606-9311', '1111-1111', '이단형, 박준성');
-INSERT INTO company (ID, ADDRESS_ID, COMPANY_LOGINID, COMPANY_PW, COMPANY_NAME, COMPANY_TEL,
-                     COMPANY_REGNUM, COMPANY_REPNAME)
-VALUES (3, 3, 'naver1234', '$2a$10$D1sxdTxuaJuoxnNotsqAi.VxrkyVP6OeuXuzPRnlOn6Sos2HfYwsy', '네이버(주)', '1588-3830',
-        '1234-1234', '최수연');
-INSERT INTO company (ID, ADDRESS_ID, COMPANY_LOGINID, COMPANY_PW, COMPANY_NAME, COMPANY_TEL,
-                     COMPANY_REGNUM, COMPANY_REPNAME)
-VALUES (4, 4, 'kakao1234', '$2a$10$7pR73XX5lGyPq7.n.qdAseG2PxDrDXnYWCBFf10OZibUcgyp76zP.', '(주) 카카오', '1899-1326',
-        '4321-4321', '홍은택');
-INSERT INTO company (ID, ADDRESS_ID, COMPANY_LOGINID, COMPANY_PW, COMPANY_NAME, COMPANY_TEL,
-                     COMPANY_REGNUM, COMPANY_REPNAME)
-VALUES (5, 5, 'coupang1234', '$2a$10$4.o2.jZrgUIfXWu5U4NLS.d6PcEzNVycjrL3DAqzmHUE.zKVB71f2', '쿠팡(주)', '1577-7011',
-        '7890-7890', '강한승, 박대준');
-INSERT INTO company (ID, ADDRESS_ID, COMPANY_LOGINID, COMPANY_PW, COMPANY_NAME, COMPANY_TEL,
-                     COMPANY_REGNUM, COMPANY_REPNAME)
-VALUES (6, 6, 'baemin1234', '$2a$10$xagzKEOmhfQMlC72GrJeqenHN89j/4u1EnDVQrluGGlouvakn6eZO', '(주)우아한형제들', '1600-7001',
-        '5678-5678', '김범준');
-INSERT INTO company (ID, ADDRESS_ID, COMPANY_LOGINID, COMPANY_PW, COMPANY_NAME, COMPANY_TEL,
-                     COMPANY_REGNUM, COMPANY_REPNAME)
-VALUES (7, 7, 'dangguen1234', '$2a$10$bd6advMvkIvlG6l627gTTe4mzTxkv6WDKCUkoVZozJJw6UNxGHSEu', '(주) 당근마켓', '1544-9796',
-        '375-87-00088', '김재현, 김용현');
-INSERT INTO company (ID, ADDRESS_ID, COMPANY_LOGINID, COMPANY_PW, COMPANY_NAME, COMPANY_TEL,
-                     COMPANY_REGNUM, COMPANY_REPNAME)
-VALUES (8, 8, 'toss1234', '$2a$10$qCnbsgDb8JEIi4T80b5He.ezG5D76i545Ljs1p2xXizbQSjuiOhQO', '(주)비바리퍼블리카', '1599-4905',
-        '120-88-01280', '이승건');
-INSERT INTO company (ID, ADDRESS_ID, COMPANY_LOGINID, COMPANY_PW, COMPANY_NAME, COMPANY_TEL,
-                     COMPANY_REGNUM, COMPANY_REPNAME)
-VALUES (9, 9, 'sssds1234', '$2a$10$mqvuVmpJrdNryk6ViDdZNeIY9MfZar8N2dxSx9BdtsT4vxXfj5FuC', '삼성SDS', '02-6155-3114',
-        '4589-2363', '황성우');
-INSERT INTO company (ID, ADDRESS_ID, COMPANY_LOGINID, COMPANY_PW, COMPANY_NAME, COMPANY_TEL,
-                     COMPANY_REGNUM, COMPANY_REPNAME)
-VALUES (10, 10, 'nexon1234', '$2a$10$chjshceBJCr3DczRpt02OedLPeNmSpOyO47E96UvQ8Oio1fiJ6qsS', '(주)넥슨코리아', '1588-7701',
-        '1234-5683', '이정헌');
-INSERT INTO company (ID, ADDRESS_ID, COMPANY_LOGINID, COMPANY_PW, COMPANY_NAME, COMPANY_TEL,
-                     COMPANY_REGNUM, COMPANY_REPNAME)
-VALUES (11, 11, 'sssec1234', '$2a$10$U/khiDEcMvYhy925.Ik5ROW7sAY5SOHSjm3bkzZaFYgxYoU5yIRai', '삼성전자(주)', '02-2255-0114',
-        '3847-8690', '한종희, 경계현');
-
-
-INSERT INTO ratepoint (ID, RATINGPOINT)
-VALUES (1, 3.9);
-INSERT INTO ratepoint (ID, RATINGPOINT)
-VALUES (2, 4);
-INSERT INTO ratepoint (ID, RATINGPOINT)
-VALUES (3, 3.5);
-INSERT INTO ratepoint (ID, RATINGPOINT)
-VALUES (4, 1);
-INSERT INTO ratepoint (ID, RATINGPOINT)
-VALUES (5, 4.7);
-INSERT INTO ratepoint (ID, RATINGPOINT)
-VALUES (6, 0);
-INSERT INTO ratepoint (ID, RATINGPOINT)
-VALUES (7, 5);
-INSERT INTO ratepoint (ID, RATINGPOINT)
-VALUES (8, 0);
-INSERT INTO ratepoint (ID, RATINGPOINT)
-VALUES (9, 0);
-INSERT INTO ratepoint (ID, RATINGPOINT)
-VALUES (10, 0);
-INSERT INTO ratepoint (ID, RATINGPOINT)
-VALUES (11, 0);
-INSERT INTO ratepoint (ID, RATINGPOINT)
-VALUES (12, 0);
-INSERT INTO ratepoint (ID, RATINGPOINT)
-VALUES (13, 0);
-INSERT INTO ratepoint (ID, RATINGPOINT)
-VALUES (14, 0);
-INSERT INTO ratepoint (ID, RATINGPOINT)
-VALUES (15, 0);
-INSERT INTO ratepoint (ID, RATINGPOINT)
-VALUES (16, 0);
-INSERT INTO ratepoint (ID, RATINGPOINT)
-VALUES (21, 0);
-INSERT INTO ratepoint (ID, RATINGPOINT)
-VALUES (22, 0);
-INSERT INTO ratepoint (ID, RATINGPOINT)
-VALUES (24, 0);
-INSERT INTO ratepoint (ID, RATINGPOINT)
-VALUES (25, 0);
-INSERT INTO ratepoint (ID, RATINGPOINT)
-VALUES (26, 0);
-
-INSERT INTO place (ID, COMPANY_ID, ADDRESS_ID, RATEPOINT_ID, PLACE_NAME, PLACE_DESCRIPTION,
-                   PLACE_OPENDAYS, PLACE_START, PLACE_END, PLACE_ADDINFO)
-VALUES (1, 1, 12, 1, '골프존타워서울본관', '골프존타워서울본관입니다.', 'Mon, Tue, Wed, Thu, Fri', '08:00:00', '18:00:00',
-        'Wifi, Coffee, Parking, Monitor');
-INSERT INTO place (ID, COMPANY_ID, ADDRESS_ID, RATEPOINT_ID, PLACE_NAME, PLACE_DESCRIPTION,
-                   PLACE_OPENDAYS, PLACE_START, PLACE_END, PLACE_ADDINFO)
-VALUES (2, 1, 13, 2, '골프존타워서울R&D센터', '골프존타워서울R&D센터입니다.', 'Mon, Tue, Wed, Thu, Fri', '08:00:00', '18:00:00',
-        'Wifi, Coffee, Parking, Monitor');
-INSERT INTO place (ID, COMPANY_ID, ADDRESS_ID, RATEPOINT_ID, PLACE_NAME, PLACE_DESCRIPTION,
-                   PLACE_OPENDAYS, PLACE_START, PLACE_END, PLACE_ADDINFO)
-VALUES (3, 1, 14, 3, '골프존대전신사옥및골프복합문화센터', '골프존대전신사옥및골프복합문화센터입니다.', 'Mon, Tue, Wed, Thu, Fri', '08:00:00', '18:00:00',
-        'Wifi, Coffee, Parking, Monitor');
-INSERT INTO place (ID, COMPANY_ID, ADDRESS_ID, RATEPOINT_ID, PLACE_NAME, PLACE_DESCRIPTION,
-                   PLACE_OPENDAYS, PLACE_START, PLACE_END, PLACE_ADDINFO)
-VALUES (4, 2, 15, 4, 'KOSTA', '오리역 3번 출구 앞 하나프라자 6층에 위치하고 있습니다.', 'Mon, Tue, Wed, Thu, Fri', '08:30:00', '18:00:00',
-        'Wifi');
-INSERT INTO place (ID, COMPANY_ID, ADDRESS_ID, RATEPOINT_ID, PLACE_NAME, PLACE_DESCRIPTION,
-                   PLACE_OPENDAYS, PLACE_START, PLACE_END, PLACE_ADDINFO)
-VALUES (5, 3, 16, 5, 'NAVER', 'NAVER', 'Mon, Tue, Wed, Thu, Fri', '08:00:00', '18:00:00',
-        'Wifi, Coffee, Parking, Monitor');
-INSERT INTO place (ID, COMPANY_ID, ADDRESS_ID, RATEPOINT_ID, PLACE_NAME, PLACE_DESCRIPTION,
-                   PLACE_OPENDAYS, PLACE_START, PLACE_END, PLACE_ADDINFO)
-VALUES (6, 3, 17, 6, 'NAVER 1784', 'NAVER 1784', 'Mon, Tue, Wed, Thu, Fri, Sat, Sun', '00:00:00', '23:00:00',
-        'Wifi, Coffee, Parking, Monitor');
-INSERT INTO place (ID, COMPANY_ID, ADDRESS_ID, RATEPOINT_ID, PLACE_NAME, PLACE_DESCRIPTION,
-                   PLACE_OPENDAYS, PLACE_START, PLACE_END, PLACE_ADDINFO)
-VALUES (7, 4, 18, 7, '카카오 판교아지트', '카카오 판교아지트', 'Mon, Tue, Wed, Thu', '07:00:00', '17:00:00',
-        'Wifi, Coffee, Parking, Monitor');
-INSERT INTO place (ID, COMPANY_ID, ADDRESS_ID, RATEPOINT_ID, PLACE_NAME, PLACE_DESCRIPTION,
-                   PLACE_OPENDAYS, PLACE_START, PLACE_END, PLACE_ADDINFO)
-VALUES (8, 4, 19, 8, '카카오 스페이스닷투', '카카오 스페이스닷투', 'Mon, Tue, Wed, Thu, Fri', '09:00:00', '18:00:00',
-        'Wifi, Coffee, Parking, Monitor');
-INSERT INTO place (ID, COMPANY_ID, ADDRESS_ID, RATEPOINT_ID, PLACE_NAME, PLACE_DESCRIPTION,
-                   PLACE_OPENDAYS, PLACE_START, PLACE_END, PLACE_ADDINFO)
-VALUES (9, 5, 20, 9, '쿠팡', '쿠팡', 'Mon, Tue, Wed, Thu, Fri, Sat, Sun', '00:00:00', '23:00:00',
-        'Wifi, Coffee, Parking, Monitor');
-INSERT INTO place (ID, COMPANY_ID, ADDRESS_ID, RATEPOINT_ID, PLACE_NAME, PLACE_DESCRIPTION,
-                   PLACE_OPENDAYS, PLACE_START, PLACE_END, PLACE_ADDINFO)
-VALUES (10, 6, 21, 10, '우아한형제들', '우아한형제들', 'Mon, Tue, Wed, Thu, Fri, Sat, Sun', '08:00:00', '23:00:00',
-        'Wifi, Coffee, Parking, Monitor');
-INSERT INTO place (ID, COMPANY_ID, ADDRESS_ID, RATEPOINT_ID, PLACE_NAME, PLACE_DESCRIPTION,
-                   PLACE_OPENDAYS, PLACE_START, PLACE_END, PLACE_ADDINFO)
-VALUES (11, 6, 22, 11, '우아한테크코스', '우아한테크코스', 'Mon, Tue, Wed, Thu, Fri', '08:00:00', '22:00:00',
-        'Wifi, Coffee, Parking, Monitor');
-INSERT INTO place (ID, COMPANY_ID, ADDRESS_ID, RATEPOINT_ID, PLACE_NAME, PLACE_DESCRIPTION,
-                   PLACE_OPENDAYS, PLACE_START, PLACE_END, PLACE_ADDINFO)
-VALUES (12, 7, 23, 12, '당근마켓', '당근마켓', 'Mon, Tue, Wed, Thu, Fri, Sat, Sun', '01:00:00', '19:00:00',
-        'Wifi, Coffee, Parking, Monitor');
-INSERT INTO place (ID, COMPANY_ID, ADDRESS_ID, RATEPOINT_ID, PLACE_NAME, PLACE_DESCRIPTION,
-                   PLACE_OPENDAYS, PLACE_START, PLACE_END, PLACE_ADDINFO)
-VALUES (13, 8, 24, 13, '토스', '토스', 'Mon, Tue, Wed, Thu, Fri, Sat, Sun', '01:00:00', '23:00:00',
-        'Wifi, Coffee, Parking, Monitor');
-INSERT INTO place (ID, COMPANY_ID, ADDRESS_ID, RATEPOINT_ID, PLACE_NAME, PLACE_DESCRIPTION,
-                   PLACE_OPENDAYS, PLACE_START, PLACE_END, PLACE_ADDINFO)
-VALUES (14, 9, 25, 14, '삼성SDS', '삼성SDS', 'Mon, Tue, Wed, Thu', '09:00:00', '18:00:00',
-        'Wifi, Coffee, Parking, Monitor');
-INSERT INTO place (ID, COMPANY_ID, ADDRESS_ID, RATEPOINT_ID, PLACE_NAME, PLACE_DESCRIPTION,
-                   PLACE_OPENDAYS, PLACE_START, PLACE_END, PLACE_ADDINFO)
-VALUES (15, 10, 26, 15, '넥슨코리아', '넥슨코리아', 'Mon, Tue, Wed, Thu, Fri, Sat, Sun', '09:00:00', '20:00:00',
-        'Wifi, Coffee, Parking, Monitor');
-INSERT INTO place (ID, COMPANY_ID, ADDRESS_ID, RATEPOINT_ID, PLACE_NAME, PLACE_DESCRIPTION,
-                   PLACE_OPENDAYS, PLACE_START, PLACE_END, PLACE_ADDINFO)
-VALUES (16, 11, 27, 16, '삼성전자', '삼성전자', 'Mon, Tue, Wed, Thu, Fri, Sat, Sun', '09:00:00', '18:00:00',
-        'Wifi, Coffee, Parking, Monitor');
+INSERT INTO role (ID, role)
+VALUES (1, 'ROLE_USER');
+INSERT INTO role (ID, role)
+VALUES (2, 'ROLE_MANAGER');
+INSERT INTO role (ID, role)
+VALUES (3, 'ROLE_REGISTER');
+INSERT INTO role (ID, role)
+VALUES (4, 'ROLE_ADMIN');
 
 INSERT INTO room_kind (ID, ROOM_TYPE, PRICE)
 VALUES (1, 'DESK', '10000');
@@ -227,106 +81,341 @@ VALUES (8, 'OFFICE70', '300000');
 INSERT INTO room_kind (ID, ROOM_TYPE, PRICE)
 VALUES (9, 'OFFICE100', '500000');
 
+INSERT INTO company (ID, ADDRESS_ID, COMPANY_LOGINID, COMPANY_PW, COMPANY_NAME, COMPANY_TEL, COMPANY_REGNUM,
+                     COMPANY_REPNAME)
+VALUES (1, 1, 'golfzon1234', '$2a$10$jUT1ARxmm38KZ2NfNXbdM.uCaKx1OsbA6QcuzhbeLJQ2YaqeF592K', '(주) 골프존', '1577-4333',
+        '0000-0000', '최덕형, 박강수');
+INSERT INTO company (ID, ADDRESS_ID, COMPANY_LOGINID, COMPANY_PW, COMPANY_NAME, COMPANY_TEL, COMPANY_REGNUM,
+                     COMPANY_REPNAME)
+VALUES (2, 2, 'kosta1234', '$2a$10$9cV3Hrb6QQHyBs0bSBOdeeDDw8eORw1/na8F9i.tyWAzuyBEJ4RaG', '한국소프트웨어기술진흥협회',
+        '031-606-9311', '1111-1111', '이단형, 박준성');
+INSERT INTO company (ID, ADDRESS_ID, COMPANY_LOGINID, COMPANY_PW, COMPANY_NAME, COMPANY_TEL, COMPANY_REGNUM,
+                     COMPANY_REPNAME)
+VALUES (3, 3, 'naver1234', '$2a$10$D1sxdTxuaJuoxnNotsqAi.VxrkyVP6OeuXuzPRnlOn6Sos2HfYwsy', '네이버(주)', '1588-3830',
+        '1234-1234', '최수연');
+INSERT INTO company (ID, ADDRESS_ID, COMPANY_LOGINID, COMPANY_PW, COMPANY_NAME, COMPANY_TEL, COMPANY_REGNUM,
+                     COMPANY_REPNAME)
+VALUES (4, 4, 'kakao1234', '$2a$10$7pR73XX5lGyPq7.n.qdAseG2PxDrDXnYWCBFf10OZibUcgyp76zP.', '(주) 카카오', '1899-1326',
+        '4321-4321', '홍은택');
+INSERT INTO company (ID, ADDRESS_ID, COMPANY_LOGINID, COMPANY_PW, COMPANY_NAME, COMPANY_TEL, COMPANY_REGNUM,
+                     COMPANY_REPNAME)
+VALUES (5, 5, 'coupang1234', '$2a$10$4.o2.jZrgUIfXWu5U4NLS.d6PcEzNVycjrL3DAqzmHUE.zKVB71f2', '쿠팡(주)', '1577-7011',
+        '7890-7890', '강한승, 박대준');
+INSERT INTO company (ID, ADDRESS_ID, COMPANY_LOGINID, COMPANY_PW, COMPANY_NAME, COMPANY_TEL, COMPANY_REGNUM,
+                     COMPANY_REPNAME)
+VALUES (6, 6, 'baemin1234', '$2a$10$xagzKEOmhfQMlC72GrJeqenHN89j/4u1EnDVQrluGGlouvakn6eZO', '(주)우아한형제들', '1600-7001',
+        '5678-5678', '김범준');
+INSERT INTO company (ID, ADDRESS_ID, COMPANY_LOGINID, COMPANY_PW, COMPANY_NAME, COMPANY_TEL, COMPANY_REGNUM,
+                     COMPANY_REPNAME)
+VALUES (7, 7, 'dangguen1234', '$2a$10$bd6advMvkIvlG6l627gTTe4mzTxkv6WDKCUkoVZozJJw6UNxGHSEu', '(주) 당근마켓', '1544-9796',
+        '375-87-00088', '김재현, 김용현');
+INSERT INTO company (ID, ADDRESS_ID, COMPANY_LOGINID, COMPANY_PW, COMPANY_NAME, COMPANY_TEL, COMPANY_REGNUM,
+                     COMPANY_REPNAME)
+VALUES (8, 8, 'toss1234', '$2a$10$qCnbsgDb8JEIi4T80b5He.ezG5D76i545Ljs1p2xXizbQSjuiOhQO', '(주)비바리퍼블리카', '1599-4905',
+        '120-88-01280', '이승건');
+INSERT INTO company (ID, ADDRESS_ID, COMPANY_LOGINID, COMPANY_PW, COMPANY_NAME, COMPANY_TEL, COMPANY_REGNUM,
+                     COMPANY_REPNAME)
+VALUES (9, 9, 'sssds1234', '$2a$10$mqvuVmpJrdNryk6ViDdZNeIY9MfZar8N2dxSx9BdtsT4vxXfj5FuC', '삼성SDS', '02-6155-3114',
+        '4589-2363', '황성우');
+INSERT INTO company (ID, ADDRESS_ID, COMPANY_LOGINID, COMPANY_PW, COMPANY_NAME, COMPANY_TEL, COMPANY_REGNUM,
+                     COMPANY_REPNAME)
+VALUES (10, 10, 'nexon1234', '$2a$10$chjshceBJCr3DczRpt02OedLPeNmSpOyO47E96UvQ8Oio1fiJ6qsS', '(주)넥슨코리아', '1588-7701',
+        '1234-5683', '이정헌');
+INSERT INTO company (ID, ADDRESS_ID, COMPANY_LOGINID, COMPANY_PW, COMPANY_NAME, COMPANY_TEL, COMPANY_REGNUM,
+                     COMPANY_REPNAME)
+VALUES (11, 11, 'sssec1234', '$2a$10$U/khiDEcMvYhy925.Ik5ROW7sAY5SOHSjm3bkzZaFYgxYoU5yIRai', '삼성전자(주)', '02-2255-0114',
+        '3847-8690', '한종희, 경계현');
+
+INSERT INTO ratepoint (ID, RATINGPOINT)
+VALUES (1, 0);
+INSERT INTO ratepoint (ID, RATINGPOINT)
+VALUES (2, 0);
+INSERT INTO ratepoint (ID, RATINGPOINT)
+VALUES (3, 0);
+INSERT INTO ratepoint (ID, RATINGPOINT)
+VALUES (4, 0);
+INSERT INTO ratepoint (ID, RATINGPOINT)
+VALUES (5, 0);
+INSERT INTO ratepoint (ID, RATINGPOINT)
+VALUES (6, 0);
+INSERT INTO ratepoint (ID, RATINGPOINT)
+VALUES (7, 0);
+INSERT INTO ratepoint (ID, RATINGPOINT)
+VALUES (8, 0);
+INSERT INTO ratepoint (ID, RATINGPOINT)
+VALUES (9, 0);
+INSERT INTO ratepoint (ID, RATINGPOINT)
+VALUES (10, 0);
+INSERT INTO ratepoint (ID, RATINGPOINT)
+VALUES (11, 0);
+INSERT INTO ratepoint (ID, RATINGPOINT)
+VALUES (12, 0);
+INSERT INTO ratepoint (ID, RATINGPOINT)
+VALUES (13, 0);
+INSERT INTO ratepoint (ID, RATINGPOINT)
+VALUES (14, 0);
+INSERT INTO ratepoint (ID, RATINGPOINT)
+VALUES (15, 0);
+INSERT INTO ratepoint (ID, RATINGPOINT)
+VALUES (16, 0);
+
+INSERT INTO place (ID, COMPANY_ID, ADDRESS_ID, RATEPOINT_ID, PLACE_NAME, PLACE_DESCRIPTION, PLACE_OPENDAYS, PLACE_START,
+                   PLACE_END, PLACE_ADDINFO)
+VALUES (1, 1, 12, 1, '골프존타워서울본관', '골프존타워서울본관입니다.', 'Mon, Tue, Wed, Thu, Fri', '08:00:00', '18:00:00',
+        'Wifi, Coffee, Parking, Monitor');
+INSERT INTO place (ID, COMPANY_ID, ADDRESS_ID, RATEPOINT_ID, PLACE_NAME, PLACE_DESCRIPTION, PLACE_OPENDAYS, PLACE_START,
+                   PLACE_END, PLACE_ADDINFO)
+VALUES (2, 1, 13, 2, '골프존타워서울R&D센터', '골프존타워서울R&D센터입니다.', 'Mon, Tue, Wed, Thu, Fri, Sat', '08:00:00', '18:00:00',
+        'Coffee, Parking, Monitor');
+INSERT INTO place (ID, COMPANY_ID, ADDRESS_ID, RATEPOINT_ID, PLACE_NAME, PLACE_DESCRIPTION, PLACE_OPENDAYS, PLACE_START,
+                   PLACE_END, PLACE_ADDINFO)
+VALUES (3, 1, 14, 3, '골프존대전신사옥및골프복합문화센터', '골프존대전신사옥및골프복합문화센터입니다.', 'Mon, Tue, Wed, Thu, Fri, Sat, Sun', '08:00:00',
+        '18:00:00', 'Wifi, Coffee, Parking');
+INSERT INTO place (ID, COMPANY_ID, ADDRESS_ID, RATEPOINT_ID, PLACE_NAME, PLACE_DESCRIPTION, PLACE_OPENDAYS, PLACE_START,
+                   PLACE_END, PLACE_ADDINFO)
+VALUES (4, 2, 15, 4, 'KOSTA', '오리역 3번 출구 앞 하나프라자 6층에 위치하고 있습니다.', 'Mon, Tue, Wed, Thu, Fri, Sat, Sun', '08:00:00',
+        '20:00:00', 'Wifi, Coffee, Monitor');
+INSERT INTO place (ID, COMPANY_ID, ADDRESS_ID, RATEPOINT_ID, PLACE_NAME, PLACE_DESCRIPTION, PLACE_OPENDAYS, PLACE_START,
+                   PLACE_END, PLACE_ADDINFO)
+VALUES (5, 3, 16, 5, 'NAVER', 'NAVER', 'Mon, Tue, Wed, Thu, Fri', '08:00:00', '18:00:00',
+        'Wifi, Coffee, Parking, Monitor');
+INSERT INTO place (ID, COMPANY_ID, ADDRESS_ID, RATEPOINT_ID, PLACE_NAME, PLACE_DESCRIPTION, PLACE_OPENDAYS, PLACE_START,
+                   PLACE_END, PLACE_ADDINFO)
+VALUES (6, 3, 17, 6, 'NAVER 1784', 'NAVER 1784', 'Mon, Tue, Wed, Thu, Fri, Sat, Sun', '00:00:00', '23:00:00',
+        'Wifi, Coffee, Parking, Monitor');
+INSERT INTO place (ID, COMPANY_ID, ADDRESS_ID, RATEPOINT_ID, PLACE_NAME, PLACE_DESCRIPTION, PLACE_OPENDAYS, PLACE_START,
+                   PLACE_END, PLACE_ADDINFO)
+VALUES (7, 4, 18, 7, '카카오 판교아지트', '카카오 판교아지트', 'Mon, Tue, Wed, Thu, Fri, Sat, Sun', '07:00:00', '17:00:00',
+        'Wifi, Coffee, Parking, Monitor');
+INSERT INTO place (ID, COMPANY_ID, ADDRESS_ID, RATEPOINT_ID, PLACE_NAME, PLACE_DESCRIPTION, PLACE_OPENDAYS, PLACE_START,
+                   PLACE_END, PLACE_ADDINFO)
+VALUES (8, 4, 19, 8, '카카오 스페이스닷투', '카카오 스페이스닷투', 'Mon, Tue, Wed, Thu, Sun', '09:00:00', '18:00:00', 'Coffee, Parking');
+INSERT INTO place (ID, COMPANY_ID, ADDRESS_ID, RATEPOINT_ID, PLACE_NAME, PLACE_DESCRIPTION, PLACE_OPENDAYS, PLACE_START,
+                   PLACE_END, PLACE_ADDINFO)
+VALUES (9, 5, 20, 9, '쿠팡', '쿠팡', 'Tue, Wed, Thu, Fri, Sat', '00:00:00', '23:00:00', 'Coffee, Parking, Monitor');
+INSERT INTO place (ID, COMPANY_ID, ADDRESS_ID, RATEPOINT_ID, PLACE_NAME, PLACE_DESCRIPTION, PLACE_OPENDAYS, PLACE_START,
+                   PLACE_END, PLACE_ADDINFO)
+VALUES (10, 6, 21, 10, '우아한형제들', '우아한형제들', 'Tue, Wed, Thu, Fri, Sat, Sun', '08:00:00', '23:00:00',
+        'Wifi, Coffee, Parking');
+INSERT INTO place (ID, COMPANY_ID, ADDRESS_ID, RATEPOINT_ID, PLACE_NAME, PLACE_DESCRIPTION, PLACE_OPENDAYS, PLACE_START,
+                   PLACE_END, PLACE_ADDINFO)
+VALUES (11, 6, 22, 11, '우아한테크코스', '우아한테크코스', 'Mon, Tue, Wed, Thu, Fri, Sat', '08:00:00', '22:00:00',
+        'Coffee, Parking, Monitor');
+INSERT INTO place (ID, COMPANY_ID, ADDRESS_ID, RATEPOINT_ID, PLACE_NAME, PLACE_DESCRIPTION, PLACE_OPENDAYS, PLACE_START,
+                   PLACE_END, PLACE_ADDINFO)
+VALUES (12, 7, 23, 12, '당근마켓', '당근마켓', 'Tue, Wed, Thu, Fri, Sat, Sun', '01:00:00', '19:00:00', 'Wifi, Coffee, Parking');
+INSERT INTO place (ID, COMPANY_ID, ADDRESS_ID, RATEPOINT_ID, PLACE_NAME, PLACE_DESCRIPTION, PLACE_OPENDAYS, PLACE_START,
+                   PLACE_END, PLACE_ADDINFO)
+VALUES (13, 8, 24, 13, '토스', '토스', 'Mon, Tue, Wed, Thu, Fri, Sat, Sun', '01:00:00', '23:00:00',
+        'Wifi, Coffee, Parking, Monitor');
+INSERT INTO place (ID, COMPANY_ID, ADDRESS_ID, RATEPOINT_ID, PLACE_NAME, PLACE_DESCRIPTION, PLACE_OPENDAYS, PLACE_START,
+                   PLACE_END, PLACE_ADDINFO)
+VALUES (14, 9, 25, 14, '삼성SDS', '삼성SDS', 'Mon, Tue, Wed, Thu, Fri, Sat, Sun', '09:00:00', '18:00:00',
+        'Wifi, Coffee, Parking, Monitor');
+INSERT INTO place (ID, COMPANY_ID, ADDRESS_ID, RATEPOINT_ID, PLACE_NAME, PLACE_DESCRIPTION, PLACE_OPENDAYS, PLACE_START,
+                   PLACE_END, PLACE_ADDINFO)
+VALUES (15, 10, 26, 15, '넥슨코리아', '넥슨코리아', 'Mon, Tue, Wed, Thu, Fri, Sat, Sun', '09:00:00', '20:00:00',
+        'Wifi, Coffee, Parking');
+INSERT INTO place (ID, COMPANY_ID, ADDRESS_ID, RATEPOINT_ID, PLACE_NAME, PLACE_DESCRIPTION, PLACE_OPENDAYS, PLACE_START,
+                   PLACE_END, PLACE_ADDINFO)
+VALUES (16, 11, 27, 16, '삼성전자', '삼성전자', 'Tue, Wed, Thu, Fri, Sat, Sun', '09:00:00', '18:00:00',
+        'Coffee, Parking, Monitor');
+
+INSERT INTO placeimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID)
+VALUES (1, '공간 골프존.png', '1b0e5142-e47c-45d0-a8e2-4565a84fc121.png',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/1/PLACE/1b0e5142-e47c-45d0-a8e2-4565a84fc121.png',
+        1);
+INSERT INTO placeimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID)
+VALUES (2, '공간 골프존 서울 (1).jpeg', '75896fa3-8949-475b-9347-f490b1be44fd.jpeg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/1/PLACE/75896fa3-8949-475b-9347-f490b1be44fd.jpeg',
+        1);
+INSERT INTO placeimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID)
+VALUES (3, '공간 골프존 서울 (2).jpeg', 'd54e8b35-4a85-45c4-8912-c434175ecaa0.jpeg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/1/PLACE/d54e8b35-4a85-45c4-8912-c434175ecaa0.jpeg',
+        1);
+INSERT INTO placeimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID)
+VALUES (4, '공간 골프존.png', '4f933bad-963c-4256-968a-49a935e95867.png',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/2/PLACE/4f933bad-963c-4256-968a-49a935e95867.png',
+        2);
+INSERT INTO placeimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID)
+VALUES (5, '공간 골프존.png', '0c95d1be-75f6-41df-9702-88d5077466b5.png',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/3/PLACE/0c95d1be-75f6-41df-9702-88d5077466b5.png',
+        3);
+INSERT INTO placeimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID)
+VALUES (6, '공간 골프존 대전.jpeg', 'd04ac737-6092-4f9b-b7b8-17ecf5332dab.jpeg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/3/PLACE/d04ac737-6092-4f9b-b7b8-17ecf5332dab.jpeg',
+        3);
+INSERT INTO placeimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID)
+VALUES (7, '공간 KOSTA.jpg', '2939c316-7361-4207-97d8-3246b169af75.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/4/PLACE/2939c316-7361-4207-97d8-3246b169af75.jpg',
+        4);
+INSERT INTO placeimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID)
+VALUES (8, '공간 네이버.jpg', '0066b7f8-fdf6-4060-8b73-8481eaecd46a.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/5/PLACE/0066b7f8-fdf6-4060-8b73-8481eaecd46a.jpg',
+        5);
+INSERT INTO placeimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID)
+VALUES (9, '공간 네이버 1784.jpeg', 'e47cae8b-292e-4253-ae02-8972fe0342d1.jpeg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/6/PLACE/e47cae8b-292e-4253-ae02-8972fe0342d1.jpeg',
+        6);
+INSERT INTO placeimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID)
+VALUES (10, '공간 카카오.jpg', '7e24fc6b-1e83-4065-9e8a-8d21a40f2555.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/7/PLACE/7e24fc6b-1e83-4065-9e8a-8d21a40f2555.jpg',
+        7);
+INSERT INTO placeimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID)
+VALUES (11, '공간 카카오 스페이스 닷투.jpg', '2702fd72-adbf-43dc-933a-d5052385e639.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/8/PLACE/2702fd72-adbf-43dc-933a-d5052385e639.jpg',
+        8);
+INSERT INTO placeimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID)
+VALUES (12, '공간 쿠팡.jpg', 'ba248ba2-4ab4-4117-bb81-f49401a1fd50.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/9/PLACE/ba248ba2-4ab4-4117-bb81-f49401a1fd50.jpg',
+        9);
+INSERT INTO placeimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID)
+VALUES (13, '공간 우아한 형제들.jpg', '505ca972-940d-4791-b09f-5ccf066b2edc.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/10/PLACE/505ca972-940d-4791-b09f-5ccf066b2edc.jpg',
+        10);
+INSERT INTO placeimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID)
+VALUES (14, '공간 PLACE 커피머신 (1).jpg', '166f3f75-bda5-4941-a1d6-e67394b0e51d.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/10/PLACE/166f3f75-bda5-4941-a1d6-e67394b0e51d.jpg',
+        10);
+INSERT INTO placeimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID)
+VALUES (15, '공간 우아한 형제들.jpg', '7f141119-d9cf-43c7-be5a-6ebdc06b2dfa.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/11/PLACE/7f141119-d9cf-43c7-be5a-6ebdc06b2dfa.jpg',
+        11);
+INSERT INTO placeimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID)
+VALUES (16, '공간 PLACE 커피머신 (1).jpg', 'b0d6d591-5d47-42a6-8494-0acb7f25ddbc.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/11/PLACE/b0d6d591-5d47-42a6-8494-0acb7f25ddbc.jpg',
+        11);
+INSERT INTO placeimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID)
+VALUES (17, '공간 당근마켓 (1).png', '9eae22ef-ace4-4ba7-b488-552394147ff4.png',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/12/PLACE/9eae22ef-ace4-4ba7-b488-552394147ff4.png',
+        12);
+INSERT INTO placeimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID)
+VALUES (18, '공간 당근마켓 (2).jpg', '4c7c161d-7bd6-4e4d-93a8-25092859724c.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/12/PLACE/4c7c161d-7bd6-4e4d-93a8-25092859724c.jpg',
+        12);
+INSERT INTO placeimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID)
+VALUES (19, '공간 토스 (1).jpg', 'd8fd47bc-b454-4b5a-a89e-f30bdd7d01f0.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/13/PLACE/d8fd47bc-b454-4b5a-a89e-f30bdd7d01f0.jpg',
+        13);
+INSERT INTO placeimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID)
+VALUES (20, '공간 토스 (2).jpg', 'a3eab01b-ba0c-405c-8ae3-343da2b69c00.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/13/PLACE/a3eab01b-ba0c-405c-8ae3-343da2b69c00.jpg',
+        13);
+INSERT INTO placeimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID)
+VALUES (21, '공간 삼성SDS.jpg', '15b788e8-8639-463d-9181-2759ecc0b042.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/14/PLACE/15b788e8-8639-463d-9181-2759ecc0b042.jpg',
+        14);
+INSERT INTO placeimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID)
+VALUES (22, '공간 넥슨.jpg', '8d066c40-d5ec-479c-b55e-64355e012814.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/15/PLACE/8d066c40-d5ec-479c-b55e-64355e012814.jpg',
+        15);
+INSERT INTO placeimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID)
+VALUES (23, '공간 삼성전자.png', 'e4ada7c8-fe96-40e2-b64d-c4eb63680ef4.png',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/16/PLACE/e4ada7c8-fe96-40e2-b64d-c4eb63680ef4.png',
+        16);
+
+
+
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
 VALUES (1, 1, 1);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (2, 2, 1);
+VALUES (2, 1, 1);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (3, 3, 1);
+VALUES (3, 1, 1);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (4, 4, 1);
+VALUES (4, 1, 1);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (5, 5, 1);
+VALUES (5, 1, 1);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (6, 6, 1);
+VALUES (6, 1, 1);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (7, 7, 1);
+VALUES (7, 1, 1);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (8, 8, 1);
+VALUES (8, 1, 1);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (9, 9, 1);
+VALUES (9, 1, 1);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (10, 1, 2);
+VALUES (10, 1, 1);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (11, 1, 2);
+VALUES (11, 2, 1);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (12, 2, 2);
+VALUES (12, 3, 1);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (13, 2, 2);
+VALUES (13, 4, 1);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (14, 3, 2);
+VALUES (14, 5, 1);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (15, 3, 2);
+VALUES (15, 6, 1);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (16, 4, 2);
+VALUES (16, 7, 1);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (17, 4, 2);
+VALUES (17, 8, 1);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (18, 5, 2);
+VALUES (18, 9, 1);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (19, 5, 2);
+VALUES (19, 1, 2);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (20, 6, 2);
+VALUES (20, 1, 2);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (21, 6, 2);
+VALUES (21, 2, 2);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (22, 7, 2);
+VALUES (22, 2, 2);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (23, 7, 2);
+VALUES (23, 3, 2);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (24, 8, 2);
+VALUES (24, 3, 2);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (25, 8, 2);
+VALUES (25, 4, 2);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (26, 9, 2);
+VALUES (26, 4, 2);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (27, 9, 2);
+VALUES (27, 5, 2);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (28, 1, 3);
+VALUES (28, 5, 2);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (29, 2, 3);
+VALUES (29, 6, 2);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (30, 2, 3);
+VALUES (30, 6, 2);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (31, 3, 3);
+VALUES (31, 7, 2);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (32, 4, 3);
+VALUES (32, 7, 2);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (33, 4, 3);
+VALUES (33, 8, 2);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (34, 5, 3);
+VALUES (34, 8, 2);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (35, 6, 3);
+VALUES (35, 9, 2);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (36, 6, 3);
+VALUES (36, 9, 2);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (37, 7, 3);
+VALUES (37, 1, 3);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (38, 8, 3);
+VALUES (38, 2, 3);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (39, 8, 3);
+VALUES (39, 3, 3);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (40, 9, 3);
+VALUES (40, 4, 3);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (41, 3, 4);
+VALUES (41, 5, 3);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (42, 4, 4);
+VALUES (42, 6, 3);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (43, 5, 4);
+VALUES (43, 7, 3);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (44, 5, 4);
+VALUES (44, 8, 3);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (45, 5, 4);
+VALUES (45, 9, 3);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (46, 5, 4);
+VALUES (46, 1, 4);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (47, 5, 4);
+VALUES (47, 1, 4);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (48, 5, 4);
+VALUES (48, 1, 4);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (49, 1, 5);
+VALUES (49, 4, 4);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (50, 1, 5);
+VALUES (50, 6, 4);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
 VALUES (51, 1, 5);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
@@ -344,29 +433,29 @@ VALUES (57, 1, 5);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
 VALUES (58, 1, 5);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (59, 2, 5);
+VALUES (59, 1, 5);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (60, 2, 5);
+VALUES (60, 1, 5);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
 VALUES (61, 2, 5);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (62, 3, 5);
+VALUES (62, 2, 5);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
 VALUES (63, 3, 5);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (64, 4, 5);
+VALUES (64, 3, 5);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (65, 5, 5);
+VALUES (65, 4, 5);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (66, 5, 5);
+VALUES (66, 4, 5);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (67, 6, 5);
+VALUES (67, 5, 5);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (68, 6, 5);
+VALUES (68, 5, 5);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (69, 7, 5);
+VALUES (69, 6, 5);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (70, 7, 5);
+VALUES (70, 6, 5);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
 VALUES (71, 7, 5);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
@@ -376,51 +465,51 @@ VALUES (73, 8, 5);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
 VALUES (74, 8, 5);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (75, 8, 5);
+VALUES (75, 9, 5);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
 VALUES (76, 9, 5);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (77, 9, 5);
+VALUES (77, 1, 6);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
 VALUES (78, 1, 6);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (79, 1, 6);
+VALUES (79, 2, 6);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
 VALUES (80, 2, 6);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (81, 2, 6);
+VALUES (81, 3, 6);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
 VALUES (82, 3, 6);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (83, 3, 6);
+VALUES (83, 4, 6);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
 VALUES (84, 4, 6);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (85, 4, 6);
+VALUES (85, 5, 6);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
 VALUES (86, 5, 6);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (87, 5, 6);
+VALUES (87, 6, 6);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
 VALUES (88, 6, 6);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (89, 6, 6);
+VALUES (89, 7, 6);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
 VALUES (90, 7, 6);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (91, 7, 6);
+VALUES (91, 8, 6);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
 VALUES (92, 8, 6);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (93, 8, 6);
+VALUES (93, 9, 6);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
 VALUES (94, 9, 6);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (95, 9, 6);
+VALUES (95, 1, 7);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
 VALUES (96, 1, 7);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (97, 1, 7);
+VALUES (97, 2, 7);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
 VALUES (98, 2, 7);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
@@ -430,255 +519,968 @@ VALUES (100, 3, 7);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
 VALUES (101, 4, 7);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (102, 5, 7);
+VALUES (102, 4, 7);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
 VALUES (103, 5, 7);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (104, 6, 7);
+VALUES (104, 5, 7);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (105, 7, 7);
+VALUES (105, 6, 7);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (106, 7, 7);
+VALUES (106, 6, 7);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (107, 8, 7);
+VALUES (107, 7, 7);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (108, 9, 7);
+VALUES (108, 7, 7);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (109, 9, 7);
+VALUES (109, 8, 7);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (110, 1, 8);
+VALUES (110, 8, 7);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (111, 1, 8);
+VALUES (111, 9, 7);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (112, 2, 8);
+VALUES (112, 9, 7);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (113, 2, 8);
+VALUES (113, 1, 8);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (114, 3, 8);
+VALUES (114, 1, 8);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (115, 3, 8);
+VALUES (115, 2, 8);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (116, 4, 8);
+VALUES (116, 2, 8);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (117, 4, 8);
+VALUES (117, 3, 8);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (118, 5, 8);
+VALUES (118, 3, 8);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (119, 5, 8);
+VALUES (119, 4, 8);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (120, 6, 8);
+VALUES (120, 4, 8);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (121, 6, 8);
+VALUES (121, 5, 8);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (122, 7, 8);
+VALUES (122, 5, 8);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (123, 7, 8);
+VALUES (123, 6, 8);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (124, 8, 8);
+VALUES (124, 6, 8);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (125, 8, 8);
+VALUES (125, 6, 8);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (126, 9, 8);
+VALUES (126, 7, 8);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (127, 9, 8);
+VALUES (127, 7, 8);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (128, 1, 9);
+VALUES (128, 7, 8);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (129, 2, 9);
+VALUES (129, 8, 8);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (130, 3, 9);
+VALUES (130, 8, 8);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (131, 4, 9);
+VALUES (131, 8, 8);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (132, 5, 9);
+VALUES (132, 9, 8);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (133, 6, 9);
+VALUES (133, 9, 8);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (134, 7, 9);
+VALUES (134, 9, 8);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (135, 8, 9);
+VALUES (135, 2, 9);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (136, 9, 9);
+VALUES (136, 2, 9);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (137, 1, 10);
+VALUES (137, 3, 9);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (138, 1, 10);
+VALUES (138, 3, 9);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (139, 2, 10);
+VALUES (139, 4, 9);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (140, 2, 10);
+VALUES (140, 4, 9);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (141, 3, 10);
+VALUES (141, 5, 9);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (142, 3, 10);
+VALUES (142, 5, 9);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (143, 4, 10);
+VALUES (143, 6, 9);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (144, 4, 10);
+VALUES (144, 7, 9);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (145, 6, 10);
+VALUES (145, 8, 9);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (146, 7, 10);
+VALUES (146, 9, 9);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (147, 8, 10);
+VALUES (147, 1, 10);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (148, 2, 11);
+VALUES (148, 1, 10);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (149, 2, 11);
+VALUES (149, 2, 10);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (150, 2, 11);
+VALUES (150, 2, 10);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (151, 3, 11);
+VALUES (151, 3, 10);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (152, 3, 11);
+VALUES (152, 3, 10);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (153, 3, 11);
+VALUES (153, 4, 10);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (154, 4, 11);
+VALUES (154, 4, 10);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (155, 4, 11);
+VALUES (155, 5, 10);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (156, 6, 11);
+VALUES (156, 5, 10);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (157, 7, 11);
+VALUES (157, 6, 10);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (158, 1, 12);
+VALUES (158, 6, 10);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (159, 1, 12);
+VALUES (159, 7, 10);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (160, 1, 12);
+VALUES (160, 7, 10);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (161, 2, 12);
+VALUES (161, 8, 10);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (162, 2, 12);
+VALUES (162, 8, 10);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (163, 3, 12);
+VALUES (163, 9, 10);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (164, 6, 12);
+VALUES (164, 9, 10);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (165, 7, 12);
+VALUES (165, 1, 11);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (166, 1, 13);
+VALUES (166, 2, 11);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (167, 1, 13);
+VALUES (167, 3, 11);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (168, 1, 13);
+VALUES (168, 4, 11);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (169, 1, 13);
+VALUES (169, 5, 11);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (170, 2, 13);
+VALUES (170, 6, 11);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (171, 2, 13);
+VALUES (171, 7, 11);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (172, 3, 13);
+VALUES (172, 8, 11);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (173, 7, 13);
+VALUES (173, 9, 11);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (174, 8, 13);
+VALUES (174, 1, 12);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (175, 1, 14);
+VALUES (175, 2, 12);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (176, 1, 14);
+VALUES (176, 2, 12);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (177, 2, 14);
+VALUES (177, 3, 12);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (178, 2, 14);
+VALUES (178, 3, 12);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (179, 3, 14);
+VALUES (179, 3, 12);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (180, 3, 14);
+VALUES (180, 4, 12);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (181, 4, 14);
+VALUES (181, 4, 12);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (182, 4, 14);
+VALUES (182, 6, 12);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (183, 5, 14);
+VALUES (183, 6, 12);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (184, 5, 14);
+VALUES (184, 7, 12);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (185, 6, 14);
+VALUES (185, 1, 13);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (186, 6, 14);
+VALUES (186, 1, 13);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (187, 7, 14);
+VALUES (187, 2, 13);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (188, 7, 14);
+VALUES (188, 3, 13);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (189, 8, 14);
+VALUES (189, 3, 13);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (190, 8, 14);
+VALUES (190, 4, 13);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (191, 1, 15);
+VALUES (191, 5, 13);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (192, 1, 15);
+VALUES (192, 5, 13);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (193, 1, 15);
+VALUES (193, 6, 13);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (194, 2, 15);
+VALUES (194, 7, 13);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (195, 2, 15);
+VALUES (195, 7, 13);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (196, 2, 15);
+VALUES (196, 8, 13);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (197, 3, 15);
+VALUES (197, 1, 14);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (198, 3, 15);
+VALUES (198, 1, 14);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (199, 3, 15);
+VALUES (199, 2, 14);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (200, 4, 15);
+VALUES (200, 2, 14);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (201, 4, 15);
+VALUES (201, 3, 14);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (202, 5, 15);
+VALUES (202, 3, 14);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (203, 5, 15);
+VALUES (203, 4, 14);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (204, 6, 15);
+VALUES (204, 4, 14);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (205, 6, 15);
+VALUES (205, 5, 14);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (206, 7, 15);
+VALUES (206, 5, 14);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (207, 8, 15);
+VALUES (207, 6, 14);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (208, 9, 15);
+VALUES (208, 6, 14);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (209, 1, 16);
+VALUES (209, 7, 14);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (210, 1, 16);
+VALUES (210, 7, 14);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (211, 1, 16);
+VALUES (211, 8, 14);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (212, 2, 16);
+VALUES (212, 8, 14);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (213, 2, 16);
+VALUES (213, 9, 14);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (214, 3, 16);
+VALUES (214, 9, 14);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (215, 4, 16);
+VALUES (215, 1, 15);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (216, 5, 16);
+VALUES (216, 1, 15);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (217, 5, 16);
+VALUES (217, 2, 15);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (218, 6, 16);
+VALUES (218, 2, 15);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (219, 6, 16);
+VALUES (219, 3, 15);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (220, 6, 16);
+VALUES (220, 3, 15);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (221, 7, 16);
+VALUES (221, 4, 15);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (222, 7, 16);
+VALUES (222, 4, 15);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (223, 8, 16);
+VALUES (223, 5, 15);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (224, 8, 16);
+VALUES (224, 5, 15);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (225, 9, 16);
+VALUES (225, 6, 15);
 INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
-VALUES (226, 9, 16);
+VALUES (226, 6, 15);
+INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
+VALUES (227, 7, 15);
+INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
+VALUES (228, 7, 15);
+INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
+VALUES (229, 8, 15);
+INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
+VALUES (230, 8, 15);
+INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
+VALUES (231, 9, 15);
+INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
+VALUES (232, 9, 15);
+INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
+VALUES (233, 1, 16);
+INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
+VALUES (234, 1, 16);
+INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
+VALUES (235, 1, 16);
+INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
+VALUES (236, 1, 16);
+INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
+VALUES (237, 2, 16);
+INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
+VALUES (238, 2, 16);
+INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
+VALUES (239, 2, 16);
+INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
+VALUES (240, 2, 16);
+INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
+VALUES (241, 3, 16);
+INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
+VALUES (242, 3, 16);
+INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
+VALUES (243, 3, 16);
+INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
+VALUES (244, 3, 16);
+INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
+VALUES (245, 4, 16);
+INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
+VALUES (246, 4, 16);
+INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
+VALUES (247, 4, 16);
+INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
+VALUES (248, 4, 16);
+INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
+VALUES (249, 5, 16);
+INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
+VALUES (250, 5, 16);
+INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
+VALUES (251, 5, 16);
+INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
+VALUES (252, 5, 16);
+INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
+VALUES (253, 6, 16);
+INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
+VALUES (254, 6, 16);
+INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
+VALUES (255, 6, 16);
+INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
+VALUES (256, 6, 16);
+INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
+VALUES (257, 7, 16);
+INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
+VALUES (258, 7, 16);
+INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
+VALUES (259, 7, 16);
+INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
+VALUES (260, 7, 16);
+INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
+VALUES (261, 8, 16);
+INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
+VALUES (262, 8, 16);
+INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
+VALUES (263, 8, 16);
+INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
+VALUES (264, 8, 16);
+INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
+VALUES (265, 9, 16);
+INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
+VALUES (266, 9, 16);
+INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
+VALUES (267, 9, 16);
+INSERT INTO room (ID, ROOM_KIND_ID, PLACE_ID)
+VALUES (268, 9, 16);
+
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (1, 'DESK (1).jpeg', 'ff844a00-50a5-43d5-bf04-40c9c4fc7c46.jpeg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/1/DESK/ff844a00-50a5-43d5-bf04-40c9c4fc7c46.jpeg',
+        1, 1);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (2, 'DESK (2).jpg', 'd9605e10-8c8a-40d1-9fc2-fa92869016fe.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/1/DESK/d9605e10-8c8a-40d1-9fc2-fa92869016fe.jpg',
+        1, 1);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (3, 'DESK (3).jpg', '4178413c-e2a3-48ec-b94f-8c0d1cdd14e7.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/1/DESK/4178413c-e2a3-48ec-b94f-8c0d1cdd14e7.jpg',
+        1, 1);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (4, 'MEETINGROOM4 (1).jpeg', 'ee005b40-fd1d-45ee-bb6c-835858971239.jpeg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/1/MEETINGROOM4/ee005b40-fd1d-45ee-bb6c-835858971239.jpeg',
+        1, 2);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (5, 'MEETINGROOM6.jpg', 'a4e5a597-3055-4544-8227-0dd4e1cfe658.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/1/MEETINGROOM6/a4e5a597-3055-4544-8227-0dd4e1cfe658.jpg',
+        1, 3);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (6, 'MEETINGROOM10 (1).jpg', '94f8d9e2-814a-4a31-8e44-e0613c98265c.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/1/MEETINGROOM10/94f8d9e2-814a-4a31-8e44-e0613c98265c.jpg',
+        1, 4);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (7, 'MEETINGROOM20 (1).jpg', '21a3d0e4-d6af-4f42-a605-dff067bb100a.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/1/MEETINGROOM20/21a3d0e4-d6af-4f42-a605-dff067bb100a.jpg',
+        1, 5);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (8, 'OFFICE20.jpg', '43a4f44a-29b2-4e6e-99f9-f6e32dfa550a.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/1/OFFICE20/43a4f44a-29b2-4e6e-99f9-f6e32dfa550a.jpg',
+        1, 6);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (9, 'OFFICE40.jpg', 'b538c43c-0546-45ac-8e2c-eee81c1318f9.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/1/OFFICE40/b538c43c-0546-45ac-8e2c-eee81c1318f9.jpg',
+        1, 7);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (10, 'OFFICE70.jpg', '4172e6e0-a85b-42b1-9e91-ab05fd1720b0.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/1/OFFICE70/4172e6e0-a85b-42b1-9e91-ab05fd1720b0.jpg',
+        1, 8);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (11, 'OFFICE100.jpeg', '4d2e6a81-c64e-4978-ac8a-cd019d53a810.jpeg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/1/OFFICE100/4d2e6a81-c64e-4978-ac8a-cd019d53a810.jpeg',
+        1, 9);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (12, 'DESK (1).jpeg', '91a9239d-3545-4b03-81be-6ad76c6180a2.jpeg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/2/DESK/91a9239d-3545-4b03-81be-6ad76c6180a2.jpeg',
+        2, 1);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (13, 'MEETINGROOM4 (1).jpeg', '6233bde8-db8f-4ac6-a0c3-0a1768ec7c83.jpeg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/2/MEETINGROOM4/6233bde8-db8f-4ac6-a0c3-0a1768ec7c83.jpeg',
+        2, 2);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (14, 'MEETINGROOM6.jpg', '23d8351d-558a-4825-a230-d6287de959c1.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/2/MEETINGROOM6/23d8351d-558a-4825-a230-d6287de959c1.jpg',
+        2, 3);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (15, 'MEETINGROOM10 (1).jpg', 'e78e2825-54b0-42dc-8a85-3827c2d1cce3.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/2/MEETINGROOM10/e78e2825-54b0-42dc-8a85-3827c2d1cce3.jpg',
+        2, 4);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (16, 'MEETINGROOM20 (1).jpg', '69c54365-2cb9-4a6e-83e5-4859154d4323.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/2/MEETINGROOM20/69c54365-2cb9-4a6e-83e5-4859154d4323.jpg',
+        2, 5);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (17, 'OFFICE20.jpg', '3d4b8b55-8f49-4682-a8e9-af5b1a30fbea.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/2/OFFICE20/3d4b8b55-8f49-4682-a8e9-af5b1a30fbea.jpg',
+        2, 6);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (18, 'OFFICE40.jpg', '6116e892-ea97-4c5c-be61-2e8f60bf80d0.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/2/OFFICE40/6116e892-ea97-4c5c-be61-2e8f60bf80d0.jpg',
+        2, 7);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (19, 'OFFICE70.jpg', '7c5cef95-d1d2-4220-baa7-df1b37a7614f.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/2/OFFICE70/7c5cef95-d1d2-4220-baa7-df1b37a7614f.jpg',
+        2, 8);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (20, 'OFFICE100.jpeg', '901825f6-9a7e-4fad-bfee-178614bd99b1.jpeg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/2/OFFICE100/901825f6-9a7e-4fad-bfee-178614bd99b1.jpeg',
+        2, 9);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (21, 'DESK (1).jpeg', 'e7b7d104-94dc-4965-adae-5aef279405e4.jpeg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/3/DESK/e7b7d104-94dc-4965-adae-5aef279405e4.jpeg',
+        3, 1);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (22, 'MEETINGROOM4 (1).jpeg', '8a32b9aa-8f52-4c56-9660-dd784b5cd28d.jpeg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/3/MEETINGROOM4/8a32b9aa-8f52-4c56-9660-dd784b5cd28d.jpeg',
+        3, 2);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (23, 'MEETINGROOM6.jpg', '6e1b82d2-9d0f-474a-b5aa-15a80677c20a.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/3/MEETINGROOM6/6e1b82d2-9d0f-474a-b5aa-15a80677c20a.jpg',
+        3, 3);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (24, 'MEETINGROOM10 (2).jpg', '25fa9eaa-df38-4ba5-864a-a9f5a51e7756.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/3/MEETINGROOM10/25fa9eaa-df38-4ba5-864a-a9f5a51e7756.jpg',
+        3, 4);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (25, 'MEETINGROOM20 (2).jpg', '1be668e2-bf7d-4dba-93ab-0ba4f0548175.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/3/MEETINGROOM20/1be668e2-bf7d-4dba-93ab-0ba4f0548175.jpg',
+        3, 5);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (26, 'OFFICE20.jpg', 'cc083a69-39f6-4b4b-93cd-89c9298f42dc.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/3/OFFICE20/cc083a69-39f6-4b4b-93cd-89c9298f42dc.jpg',
+        3, 6);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (27, 'OFFICE40.jpg', '5eb7cf1a-2118-4260-9904-f98f722a44ea.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/3/OFFICE40/5eb7cf1a-2118-4260-9904-f98f722a44ea.jpg',
+        3, 7);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (28, 'OFFICE70.jpg', '05c0a7bf-6cd0-447c-8012-78597dd81b17.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/3/OFFICE70/05c0a7bf-6cd0-447c-8012-78597dd81b17.jpg',
+        3, 8);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (29, 'OFFICE100.jpeg', '47da2559-0aae-44da-a75d-48415d4c68f4.jpeg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/3/OFFICE100/47da2559-0aae-44da-a75d-48415d4c68f4.jpeg',
+        3, 9);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (30, 'DESK (1).jpeg', 'e33675be-4923-499a-a335-97a0086db8b6.jpeg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/4/DESK/e33675be-4923-499a-a335-97a0086db8b6.jpeg',
+        4, 1);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (31, 'DESK (2).jpg', '1c4d3053-5360-44f1-9011-e2af090c97ba.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/4/DESK/1c4d3053-5360-44f1-9011-e2af090c97ba.jpg',
+        4, 1);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (32, 'DESK (3).jpg', '5d86949e-574d-4af5-9973-5ef0d33a9422.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/4/DESK/5d86949e-574d-4af5-9973-5ef0d33a9422.jpg',
+        4, 1);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (33, 'MEETINGROOM10 (1).jpg', '380f7776-3b0f-4441-8319-95e6d91d292e.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/4/MEETINGROOM10/380f7776-3b0f-4441-8319-95e6d91d292e.jpg',
+        4, 4);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (34, 'OFFICE20.jpg', 'afaae544-d7f3-487f-975f-06a5e2688220.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/4/OFFICE20/afaae544-d7f3-487f-975f-06a5e2688220.jpg',
+        4, 6);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (35, 'DESK (1).jpeg', '2c73287e-bb20-42a8-ab55-81d574eb623f.jpeg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/5/DESK/2c73287e-bb20-42a8-ab55-81d574eb623f.jpeg',
+        5, 1);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (36, 'DESK (2).jpg', '47939d97-1ebe-45f0-89e1-f15021be3d3f.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/5/DESK/47939d97-1ebe-45f0-89e1-f15021be3d3f.jpg',
+        5, 1);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (37, 'MEETINGROOM4 (1).jpeg', 'e410e9c9-4ce3-4936-84f7-8079249935b6.jpeg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/5/MEETINGROOM4/e410e9c9-4ce3-4936-84f7-8079249935b6.jpeg',
+        5, 2);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (38, 'MEETINGROOM6.jpg', '73ef1812-8e49-4e71-a0c4-dbcac643d2b4.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/5/MEETINGROOM6/73ef1812-8e49-4e71-a0c4-dbcac643d2b4.jpg',
+        5, 3);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (39, 'MEETINGROOM10 (1).jpg', '6890dcc8-b126-4b89-81e0-a3b2d6a98829.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/5/MEETINGROOM10/6890dcc8-b126-4b89-81e0-a3b2d6a98829.jpg',
+        5, 4);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (40, 'MEETINGROOM10 (2).jpg', '7daafaee-50df-415c-babf-bf6fd125c124.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/5/MEETINGROOM10/7daafaee-50df-415c-babf-bf6fd125c124.jpg',
+        5, 4);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (41, 'MEETINGROOM20 (1).jpg', '5976bc14-c8a2-4d8b-b851-20777b365473.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/5/MEETINGROOM20/5976bc14-c8a2-4d8b-b851-20777b365473.jpg',
+        5, 5);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (42, 'MEETINGROOM20 (2).jpg', '6c7571eb-a96c-4ee5-97ee-015bbc4b4135.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/5/MEETINGROOM20/6c7571eb-a96c-4ee5-97ee-015bbc4b4135.jpg',
+        5, 5);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (43, 'OFFICE20.jpg', 'a3e319f9-4b3e-4a66-9619-a7bd4c8d096e.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/5/OFFICE20/a3e319f9-4b3e-4a66-9619-a7bd4c8d096e.jpg',
+        5, 6);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (44, 'OFFICE40.jpg', '5e776ba3-7ef2-4110-b6c4-3176eded53d5.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/5/OFFICE40/5e776ba3-7ef2-4110-b6c4-3176eded53d5.jpg',
+        5, 7);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (45, 'OFFICE70.jpg', '08441e03-ed52-4110-9157-86df19c61a96.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/5/OFFICE70/08441e03-ed52-4110-9157-86df19c61a96.jpg',
+        5, 8);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (46, 'OFFICE100.jpeg', '45db992d-87c4-4fe7-ae80-346b4ba227a2.jpeg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/5/OFFICE100/45db992d-87c4-4fe7-ae80-346b4ba227a2.jpeg',
+        5, 9);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (47, 'DESK (1).jpeg', 'c4dfb0bc-f344-4a10-b4f4-a6ec6b4f5049.jpeg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/6/DESK/c4dfb0bc-f344-4a10-b4f4-a6ec6b4f5049.jpeg',
+        6, 1);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (48, 'DESK (2).jpg', 'd578fe1d-b205-4cd3-8d4b-fa93c4e9a6ce.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/6/DESK/d578fe1d-b205-4cd3-8d4b-fa93c4e9a6ce.jpg',
+        6, 1);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (49, 'MEETINGROOM4 (1).jpeg', '4467443c-5793-429b-867d-a05077cc5ee1.jpeg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/6/MEETINGROOM4/4467443c-5793-429b-867d-a05077cc5ee1.jpeg',
+        6, 2);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (50, 'MEETINGROOM6.jpg', '9d5d7a46-65d3-4b3e-a0b7-cbe5f25c9691.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/6/MEETINGROOM6/9d5d7a46-65d3-4b3e-a0b7-cbe5f25c9691.jpg',
+        6, 3);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (51, 'MEETINGROOM10 (2).jpg', '2a5baf49-0512-4b82-8c2a-158057df5b33.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/6/MEETINGROOM10/2a5baf49-0512-4b82-8c2a-158057df5b33.jpg',
+        6, 4);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (52, 'MEETINGROOM20 (2).jpg', '1a023b51-5531-4a3b-87ed-42869c488129.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/6/MEETINGROOM20/1a023b51-5531-4a3b-87ed-42869c488129.jpg',
+        6, 5);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (53, 'OFFICE20.jpg', '0ab6ba8a-dec4-4359-bcb4-9c1b3ea7034c.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/6/OFFICE20/0ab6ba8a-dec4-4359-bcb4-9c1b3ea7034c.jpg',
+        6, 6);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (54, 'OFFICE40.jpg', '64f3c607-426d-41da-bb12-2d929d929c19.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/6/OFFICE40/64f3c607-426d-41da-bb12-2d929d929c19.jpg',
+        6, 7);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (55, 'OFFICE70.jpg', 'b9e0807e-c0f1-4636-aafd-0460640ed75b.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/6/OFFICE70/b9e0807e-c0f1-4636-aafd-0460640ed75b.jpg',
+        6, 8);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (56, 'OFFICE100.jpeg', '5f141bb5-ef9a-4575-8e3b-d5ded367283b.jpeg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/6/OFFICE100/5f141bb5-ef9a-4575-8e3b-d5ded367283b.jpeg',
+        6, 9);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (57, 'DESK (3).jpg', 'bffcd743-4192-4667-91dd-a529b7be8f4d.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/7/DESK/bffcd743-4192-4667-91dd-a529b7be8f4d.jpg',
+        7, 1);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (58, 'MEETINGROOM4 (1).jpeg', 'fe85d70b-f8bc-4aad-8a55-4da47942bbea.jpeg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/7/MEETINGROOM4/fe85d70b-f8bc-4aad-8a55-4da47942bbea.jpeg',
+        7, 2);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (59, 'MEETINGROOM6.jpg', '2e488846-3582-4acd-9b01-877533357c81.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/7/MEETINGROOM6/2e488846-3582-4acd-9b01-877533357c81.jpg',
+        7, 3);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (60, 'MEETINGROOM10 (2).jpg', '93f923fd-f9c1-4dc8-b144-d203cea770ba.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/7/MEETINGROOM10/93f923fd-f9c1-4dc8-b144-d203cea770ba.jpg',
+        7, 4);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (61, 'MEETINGROOM20 (2).jpg', 'a5a432fb-7d69-4fef-b1cd-9ae1e925a72a.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/7/MEETINGROOM20/a5a432fb-7d69-4fef-b1cd-9ae1e925a72a.jpg',
+        7, 5);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (62, 'OFFICE20.jpg', '0b565400-6086-4279-8831-ea41d049567d.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/7/OFFICE20/0b565400-6086-4279-8831-ea41d049567d.jpg',
+        7, 6);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (63, 'OFFICE40.jpg', '12975836-31ec-4bec-ba49-1458a6d722af.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/7/OFFICE40/12975836-31ec-4bec-ba49-1458a6d722af.jpg',
+        7, 7);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (64, 'OFFICE70.jpg', '4242267c-9d0d-455f-a8a7-2447eec7983b.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/7/OFFICE70/4242267c-9d0d-455f-a8a7-2447eec7983b.jpg',
+        7, 8);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (65, 'OFFICE100.jpeg', '68517509-53ec-4a9d-a5c8-6bd7d7f9a9de.jpeg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/7/OFFICE100/68517509-53ec-4a9d-a5c8-6bd7d7f9a9de.jpeg',
+        7, 9);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (66, 'DESK (1).jpeg', 'd6f118a0-84b5-48d9-8728-fa95e3eacc1e.jpeg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/8/DESK/d6f118a0-84b5-48d9-8728-fa95e3eacc1e.jpeg',
+        8, 1);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (67, 'DESK (2).jpg', 'a43e363b-e8e3-470a-9760-b6f39ab8de88.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/8/DESK/a43e363b-e8e3-470a-9760-b6f39ab8de88.jpg',
+        8, 1);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (68, 'MEETINGROOM4 (1).jpeg', '532e1488-ee7a-4344-8b44-e9993731eefc.jpeg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/8/MEETINGROOM4/532e1488-ee7a-4344-8b44-e9993731eefc.jpeg',
+        8, 2);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (69, 'MEETINGROOM6.jpg', 'd9d006ed-bc61-430d-b30e-735da820a8c0.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/8/MEETINGROOM6/d9d006ed-bc61-430d-b30e-735da820a8c0.jpg',
+        8, 3);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (70, 'MEETINGROOM10 (2).jpg', '2c5a34e9-5e05-4cad-aaa0-665a6ac7d853.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/8/MEETINGROOM10/2c5a34e9-5e05-4cad-aaa0-665a6ac7d853.jpg',
+        8, 4);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (71, 'MEETINGROOM20 (1).jpg', '37292738-1de9-4784-8937-a86a84e02627.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/8/MEETINGROOM20/37292738-1de9-4784-8937-a86a84e02627.jpg',
+        8, 5);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (72, 'OFFICE20.jpg', 'b74d688a-1575-4bd6-875d-6cdd80291bb2.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/8/OFFICE20/b74d688a-1575-4bd6-875d-6cdd80291bb2.jpg',
+        8, 6);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (73, 'OFFICE40.jpg', 'e2b306f3-2679-4936-8445-bfc3c8afdcde.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/8/OFFICE40/e2b306f3-2679-4936-8445-bfc3c8afdcde.jpg',
+        8, 7);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (74, 'OFFICE70.jpg', 'e4b7fa72-514d-414d-9bb7-59b7301d4e18.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/8/OFFICE70/e4b7fa72-514d-414d-9bb7-59b7301d4e18.jpg',
+        8, 8);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (75, 'OFFICE100.jpeg', '5ac3f919-b4a2-4af8-8c27-b50f7a903e87.jpeg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/8/OFFICE100/5ac3f919-b4a2-4af8-8c27-b50f7a903e87.jpeg',
+        8, 9);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (76, 'MEETINGROOM4 (1).jpeg', '4213b463-6ff9-4254-8cf8-438083253141.jpeg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/9/MEETINGROOM4/4213b463-6ff9-4254-8cf8-438083253141.jpeg',
+        9, 2);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (77, 'MEETINGROOM6.jpg', '70c15cdd-416a-4e9a-ae36-c074d9550df0.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/9/MEETINGROOM6/70c15cdd-416a-4e9a-ae36-c074d9550df0.jpg',
+        9, 3);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (78, 'MEETINGROOM10 (1).jpg', '2697e604-d0fd-413d-afa0-33d139a4a7ab.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/9/MEETINGROOM10/2697e604-d0fd-413d-afa0-33d139a4a7ab.jpg',
+        9, 4);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (79, 'MEETINGROOM10 (2).jpg', '810b7d6d-576d-43cc-9d7c-0180abff1f7e.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/9/MEETINGROOM10/810b7d6d-576d-43cc-9d7c-0180abff1f7e.jpg',
+        9, 4);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (80, 'MEETINGROOM20 (1).jpg', 'f56bf2ac-9bd3-46ff-88d6-3ed8c165a832.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/9/MEETINGROOM20/f56bf2ac-9bd3-46ff-88d6-3ed8c165a832.jpg',
+        9, 5);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (81, 'OFFICE20.jpg', '600296a7-556c-4e7f-9363-6678a29df4ee.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/9/OFFICE20/600296a7-556c-4e7f-9363-6678a29df4ee.jpg',
+        9, 6);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (82, 'OFFICE40.jpg', 'c8659b38-59f8-4ba3-be9f-16212cf7b195.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/9/OFFICE40/c8659b38-59f8-4ba3-be9f-16212cf7b195.jpg',
+        9, 7);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (83, 'OFFICE70.jpg', 'fade8e5b-e62b-4636-8cdf-d935b9dd40b3.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/9/OFFICE70/fade8e5b-e62b-4636-8cdf-d935b9dd40b3.jpg',
+        9, 8);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (84, 'OFFICE100.jpeg', '82402a32-bb50-4b33-93ab-d968b1985b47.jpeg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/9/OFFICE100/82402a32-bb50-4b33-93ab-d968b1985b47.jpeg',
+        9, 9);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (85, 'DESK (1).jpeg', '8f3d3850-de2d-419e-93f6-53ae5c92f381.jpeg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/10/DESK/8f3d3850-de2d-419e-93f6-53ae5c92f381.jpeg',
+        10, 1);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (86, 'DESK (2).jpg', '452bfea9-111a-4c4b-8df5-b59dec293791.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/10/DESK/452bfea9-111a-4c4b-8df5-b59dec293791.jpg',
+        10, 1);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (87, 'MEETINGROOM4 배민 (1).jpg', '24b28c07-3448-494f-8bee-c761a4d2b36d.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/10/MEETINGROOM4/24b28c07-3448-494f-8bee-c761a4d2b36d.jpg',
+        10, 2);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (88, 'MEETINGROOM4 배민 (2).jpg', 'fb54f2da-b4e6-4505-94da-4418a3bf66d3.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/10/MEETINGROOM4/fb54f2da-b4e6-4505-94da-4418a3bf66d3.jpg',
+        10, 2);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (89, 'MEETINGROOM6.jpg', 'ac47bbc6-9746-4e69-837e-00cfeb9e0bfc.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/10/MEETINGROOM6/ac47bbc6-9746-4e69-837e-00cfeb9e0bfc.jpg',
+        10, 3);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (90, 'MEETINGROOM10 (1).jpg', '7b1bb7ba-8319-45bc-a319-7d5f76c273fd.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/10/MEETINGROOM10/7b1bb7ba-8319-45bc-a319-7d5f76c273fd.jpg',
+        10, 4);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (91, 'MEETINGROOM10 (2).jpg', 'f64033f5-8bf4-462c-9f2d-68e42689afc0.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/10/MEETINGROOM10/f64033f5-8bf4-462c-9f2d-68e42689afc0.jpg',
+        10, 4);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (92, 'MEETINGROOM20 (2).jpg', '2633ebc0-de70-421c-a012-42ce94b3c826.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/10/MEETINGROOM20/2633ebc0-de70-421c-a012-42ce94b3c826.jpg',
+        10, 5);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (93, 'OFFICE20.jpg', '2bc71e52-de71-4784-a10c-72b38be45f72.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/10/OFFICE20/2bc71e52-de71-4784-a10c-72b38be45f72.jpg',
+        10, 6);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (94, 'OFFICE40.jpg', '6d4bc20c-595b-4e2f-8443-72e60dd27fc9.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/10/OFFICE40/6d4bc20c-595b-4e2f-8443-72e60dd27fc9.jpg',
+        10, 7);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (95, 'OFFICE70.jpg', 'f2cd687b-aab5-41df-a750-53bb9138d665.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/10/OFFICE70/f2cd687b-aab5-41df-a750-53bb9138d665.jpg',
+        10, 8);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (96, 'OFFICE100.jpeg', '6403d66d-0d01-414b-a81a-4d2df250e212.jpeg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/10/OFFICE100/6403d66d-0d01-414b-a81a-4d2df250e212.jpeg',
+        10, 9);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (97, 'DESK (1).jpeg', '9fc9d297-e486-41aa-9f00-a83ed63a3fa9.jpeg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/11/DESK/9fc9d297-e486-41aa-9f00-a83ed63a3fa9.jpeg',
+        11, 1);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (98, 'MEETINGROOM4 배민 (2).jpg', 'b2957a78-29ff-46f8-8b80-cfac28be5458.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/11/MEETINGROOM4/b2957a78-29ff-46f8-8b80-cfac28be5458.jpg',
+        11, 2);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (99, 'MEETINGROOM6.jpg', '03292e89-5251-4c21-81cf-24ccd82524b9.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/11/MEETINGROOM6/03292e89-5251-4c21-81cf-24ccd82524b9.jpg',
+        11, 3);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (100, 'MEETINGROOM10 우테코 (1).jpeg', 'fbff878a-9460-4093-b4cf-ad6a27747ed2.jpeg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/11/MEETINGROOM10/fbff878a-9460-4093-b4cf-ad6a27747ed2.jpeg',
+        11, 4);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (101, 'MEETINGROOM20 (2).jpg', 'bf5aab27-151e-44b2-a942-e98327fb58d7.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/11/MEETINGROOM20/bf5aab27-151e-44b2-a942-e98327fb58d7.jpg',
+        11, 5);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (102, 'OFFICE20.jpg', '2e751f21-66b7-4cf8-8314-be70dd0b7a66.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/11/OFFICE20/2e751f21-66b7-4cf8-8314-be70dd0b7a66.jpg',
+        11, 6);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (103, 'OFFICE40.jpg', 'ba48b787-f08c-4e0f-a5e6-6789e67abdd6.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/11/OFFICE40/ba48b787-f08c-4e0f-a5e6-6789e67abdd6.jpg',
+        11, 7);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (104, 'OFFICE70.jpg', '6c317245-efa1-4c5d-82ab-b38388fd4ad0.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/11/OFFICE70/6c317245-efa1-4c5d-82ab-b38388fd4ad0.jpg',
+        11, 8);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (105, 'OFFICE100.jpeg', 'd42f91b1-366e-4bbd-891a-e015fc673839.jpeg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/11/OFFICE100/d42f91b1-366e-4bbd-891a-e015fc673839.jpeg',
+        11, 9);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (106, 'DESK (3).jpg', 'd3811a97-dc9d-4e8a-a0fe-8448ebe35e60.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/12/DESK/d3811a97-dc9d-4e8a-a0fe-8448ebe35e60.jpg',
+        12, 1);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (107, 'MEETINGROOM4 (1).jpeg', '4ec353a9-4958-4055-9f94-cab41380a850.jpeg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/12/MEETINGROOM4/4ec353a9-4958-4055-9f94-cab41380a850.jpeg',
+        12, 2);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (108, 'MEETINGROOM6.jpg', '90eee96b-ca25-4b00-9cfa-202e8d32180d.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/12/MEETINGROOM6/90eee96b-ca25-4b00-9cfa-202e8d32180d.jpg',
+        12, 3);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (109, 'MEETINGROOM10 (1).jpg', 'd7332d47-b289-4623-8da2-9da37fb5d5d7.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/12/MEETINGROOM10/d7332d47-b289-4623-8da2-9da37fb5d5d7.jpg',
+        12, 4);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (110, 'MEETINGROOM10 (2).jpg', '4774c576-d84c-4906-957e-cf7551b91224.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/12/MEETINGROOM10/4774c576-d84c-4906-957e-cf7551b91224.jpg',
+        12, 4);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (111, 'OFFICE20.jpg', 'c14925a0-e301-4cee-894e-4e922fcfaf6c.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/12/OFFICE20/c14925a0-e301-4cee-894e-4e922fcfaf6c.jpg',
+        12, 6);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (112, 'OFFICE40.jpg', '16f0dcd3-64b7-4674-8241-e01e727707b7.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/12/OFFICE40/16f0dcd3-64b7-4674-8241-e01e727707b7.jpg',
+        12, 7);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (113, 'DESK (2).jpg', '457123bc-1424-46a5-a644-de770373b3f0.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/13/DESK/457123bc-1424-46a5-a644-de770373b3f0.jpg',
+        13, 1);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (114, 'MEETINGROOM4 토스 (1).jpg', '3303fe10-ec45-4e12-bcf1-fcdb5923239a.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/13/MEETINGROOM4/3303fe10-ec45-4e12-bcf1-fcdb5923239a.jpg',
+        13, 2);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (115, 'MEETINGROOM6.jpg', '852124d0-7a76-4525-8604-cf171ae95db3.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/13/MEETINGROOM6/852124d0-7a76-4525-8604-cf171ae95db3.jpg',
+        13, 3);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (116, 'MEETINGROOM10 (2).jpg', '8bff9782-b3a3-4a69-ac09-07cecd27414e.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/13/MEETINGROOM10/8bff9782-b3a3-4a69-ac09-07cecd27414e.jpg',
+        13, 4);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (117, 'MEETINGROOM20 (1).jpg', '21c5097a-8807-4445-b48d-eda4cb73a4eb.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/13/MEETINGROOM20/21c5097a-8807-4445-b48d-eda4cb73a4eb.jpg',
+        13, 5);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (118, 'OFFICE20.jpg', 'b2683808-8b65-43d5-8f8a-8f4d9af2bc00.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/13/OFFICE20/b2683808-8b65-43d5-8f8a-8f4d9af2bc00.jpg',
+        13, 6);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (119, 'OFFICE 40 토스 (1).jpg', '6c8144e4-5267-46cd-9c21-c4c1af057121.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/13/OFFICE40/6c8144e4-5267-46cd-9c21-c4c1af057121.jpg',
+        13, 7);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (120, 'OFFICE70.jpg', '1027f729-df7b-4811-96c7-de07eb644e70.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/13/OFFICE70/1027f729-df7b-4811-96c7-de07eb644e70.jpg',
+        13, 8);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (121, 'DESK (1).jpeg', '1d4c8b75-7c71-42d5-9787-dd101b631da2.jpeg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/14/DESK/1d4c8b75-7c71-42d5-9787-dd101b631da2.jpeg',
+        14, 1);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (122, 'DESK (2).jpg', 'f389d331-b489-4227-912c-75cb88ddf011.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/14/DESK/f389d331-b489-4227-912c-75cb88ddf011.jpg',
+        14, 1);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (123, 'MEETINGROOM4 (1).jpeg', 'fe040a1a-c658-4cc7-a8ac-e4459baa7940.jpeg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/14/MEETINGROOM4/fe040a1a-c658-4cc7-a8ac-e4459baa7940.jpeg',
+        14, 2);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (124, 'MEETINGROOM6.jpg', 'edaf4265-0c06-4ad7-bb0b-d9233332521d.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/14/MEETINGROOM6/edaf4265-0c06-4ad7-bb0b-d9233332521d.jpg',
+        14, 3);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (125, 'MEETINGROOM10 (1).jpg', '3a289a5f-a618-4d71-95f7-239bb390a367.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/14/MEETINGROOM10/3a289a5f-a618-4d71-95f7-239bb390a367.jpg',
+        14, 4);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (126, 'MEETINGROOM10 (2).jpg', '5fd21812-93ac-4e4e-901a-2a3109bb318c.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/14/MEETINGROOM10/5fd21812-93ac-4e4e-901a-2a3109bb318c.jpg',
+        14, 4);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (127, 'MEETINGROOM20 (1).jpg', '08e1185b-3db6-41a7-ba36-331309496eaf.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/14/MEETINGROOM20/08e1185b-3db6-41a7-ba36-331309496eaf.jpg',
+        14, 5);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (128, 'MEETINGROOM20 (2).jpg', '1326732f-d678-4dc0-a127-7ea7ac9c9183.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/14/MEETINGROOM20/1326732f-d678-4dc0-a127-7ea7ac9c9183.jpg',
+        14, 5);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (129, 'OFFICE20.jpg', '047b136d-92dd-4bda-88dc-fc3fe0dfa468.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/14/OFFICE20/047b136d-92dd-4bda-88dc-fc3fe0dfa468.jpg',
+        14, 6);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (130, 'OFFICE40.jpg', '6dac7b97-5d39-480e-84f6-133ae5cbae0d.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/14/OFFICE40/6dac7b97-5d39-480e-84f6-133ae5cbae0d.jpg',
+        14, 7);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (131, 'OFFICE70.jpg', 'afc59eea-f5da-4928-9e71-74304d4abd53.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/14/OFFICE70/afc59eea-f5da-4928-9e71-74304d4abd53.jpg',
+        14, 8);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (132, 'OFFICE100.jpeg', '22d4b425-ca75-4e59-829f-e862e53fdb06.jpeg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/14/OFFICE100/22d4b425-ca75-4e59-829f-e862e53fdb06.jpeg',
+        14, 9);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (133, 'DESK (3).jpg', 'f3702248-ce8b-43c0-8769-33fce73a036d.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/15/DESK/f3702248-ce8b-43c0-8769-33fce73a036d.jpg',
+        15, 1);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (134, 'DESK (2).jpg', 'f9153342-fbd8-4fc7-99ab-c23218f1663a.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/15/DESK/f9153342-fbd8-4fc7-99ab-c23218f1663a.jpg',
+        15, 1);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (135, 'MEETINGROOM4 (1).jpeg', '18718727-e13f-48f6-9b3b-42b52d7e3b28.jpeg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/15/MEETINGROOM4/18718727-e13f-48f6-9b3b-42b52d7e3b28.jpeg',
+        15, 2);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (136, 'MEETINGROOM6.jpg', '249ba2e1-ff35-4314-9e93-b9f9ba65f1d8.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/15/MEETINGROOM6/249ba2e1-ff35-4314-9e93-b9f9ba65f1d8.jpg',
+        15, 3);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (137, 'MEETINGROOM10 (1).jpg', 'b14672c8-7378-487e-9d68-1e9337962858.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/15/MEETINGROOM10/b14672c8-7378-487e-9d68-1e9337962858.jpg',
+        15, 4);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (138, 'MEETINGROOM10 (2).jpg', '70fab52c-821b-4ce1-94dc-9fed8ca2b38a.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/15/MEETINGROOM10/70fab52c-821b-4ce1-94dc-9fed8ca2b38a.jpg',
+        15, 4);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (139, 'MEETINGROOM20 (1).jpg', '935cb7d4-acad-4357-850d-ebf513c5e08f.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/15/MEETINGROOM20/935cb7d4-acad-4357-850d-ebf513c5e08f.jpg',
+        15, 5);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (140, 'MEETINGROOM20 (2).jpg', 'e70e30e2-21a2-4d58-b958-c151e6265ae3.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/15/MEETINGROOM20/e70e30e2-21a2-4d58-b958-c151e6265ae3.jpg',
+        15, 5);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (141, 'OFFICE20.jpg', '39417029-fd7a-44fd-a212-5ddb5f189419.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/15/OFFICE20/39417029-fd7a-44fd-a212-5ddb5f189419.jpg',
+        15, 6);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (142, 'OFFICE40.jpg', '42a20db8-4bdc-4427-b1fd-e2eb4c906b75.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/15/OFFICE40/42a20db8-4bdc-4427-b1fd-e2eb4c906b75.jpg',
+        15, 7);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (143, 'OFFICE70.jpg', 'b62e1170-b60c-4cbb-b826-d89a3dbb0ff9.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/15/OFFICE70/b62e1170-b60c-4cbb-b826-d89a3dbb0ff9.jpg',
+        15, 8);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (144, 'OFFICE100.jpeg', '9646f682-f714-41fb-8604-6ccb6b6dfa1c.jpeg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/15/OFFICE100/9646f682-f714-41fb-8604-6ccb6b6dfa1c.jpeg',
+        15, 9);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (145, 'DESK (1).jpeg', '2732b59e-4b5a-4399-b980-c2c453525d62.jpeg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/16/DESK/2732b59e-4b5a-4399-b980-c2c453525d62.jpeg',
+        16, 1);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (146, 'DESK (2).jpg', '080de027-32d3-4b19-b6e4-595d9319af12.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/16/DESK/080de027-32d3-4b19-b6e4-595d9319af12.jpg',
+        16, 1);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (147, 'DESK (3).jpg', '7b79f1e5-ca15-4094-9250-35927033c125.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/16/DESK/7b79f1e5-ca15-4094-9250-35927033c125.jpg',
+        16, 1);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (148, 'MEETINGROOM4 (1).jpeg', '23913510-0f1d-446e-b49e-52604148e197.jpeg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/16/MEETINGROOM4/23913510-0f1d-446e-b49e-52604148e197.jpeg',
+        16, 2);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (149, 'MEETINGROOM6.jpg', '9245d229-2632-4595-89c0-f03aec6f321a.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/16/MEETINGROOM6/9245d229-2632-4595-89c0-f03aec6f321a.jpg',
+        16, 3);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (150, 'MEETINGROOM10 (1).jpg', '01302ef9-27c2-4b00-95bd-62b206a55625.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/16/MEETINGROOM10/01302ef9-27c2-4b00-95bd-62b206a55625.jpg',
+        16, 4);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (151, 'MEETINGROOM10 (2).jpg', '527656a0-d3b4-4172-a786-f3e28d7babb7.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/16/MEETINGROOM10/527656a0-d3b4-4172-a786-f3e28d7babb7.jpg',
+        16, 4);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (152, 'MEETINGROOM20 (1).jpg', 'ab1188b4-b18e-4b46-a5d7-6a03ea03f61a.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/16/MEETINGROOM20/ab1188b4-b18e-4b46-a5d7-6a03ea03f61a.jpg',
+        16, 5);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (153, 'MEETINGROOM20 (2).jpg', '19674ec9-e4c7-4aae-8e8b-46003ad4b8fd.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/16/MEETINGROOM20/19674ec9-e4c7-4aae-8e8b-46003ad4b8fd.jpg',
+        16, 5);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (154, 'OFFICE20.jpg', 'c34d38da-47cb-4ac0-a5c7-8630a28bb943.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/16/OFFICE20/c34d38da-47cb-4ac0-a5c7-8630a28bb943.jpg',
+        16, 6);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (155, 'OFFICE40.jpg', '02d20063-7515-4ac5-a565-9115e25b560b.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/16/OFFICE40/02d20063-7515-4ac5-a565-9115e25b560b.jpg',
+        16, 7);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (156, 'OFFICE70.jpg', '5cd77049-3109-4bb9-9f0b-e8392f3257cc.jpg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/16/OFFICE70/5cd77049-3109-4bb9-9f0b-e8392f3257cc.jpg',
+        16, 8);
+INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
+VALUES (157, 'OFFICE100.jpeg', '709b70fc-1ca2-4a48-96cb-4431d3f27b12.jpeg',
+        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/16/OFFICE100/709b70fc-1ca2-4a48-96cb-4431d3f27b12.jpeg',
+        16, 9);
 
 INSERT INTO roomstatus (ID, ROOM_ID, STATUS)
 VALUES (1, 1, 1);
@@ -1065,7 +1867,7 @@ VALUES (191, 191, 1);
 INSERT INTO roomstatus (ID, ROOM_ID, STATUS)
 VALUES (192, 192, 1);
 INSERT INTO roomstatus (ID, ROOM_ID, STATUS)
-VALUES (193, 193, 1);
+VALUES (193, 193, 0);
 INSERT INTO roomstatus (ID, ROOM_ID, STATUS)
 VALUES (194, 194, 1);
 INSERT INTO roomstatus (ID, ROOM_ID, STATUS)
@@ -1132,38 +1934,90 @@ INSERT INTO roomstatus (ID, ROOM_ID, STATUS)
 VALUES (225, 225, 1);
 INSERT INTO roomstatus (ID, ROOM_ID, STATUS)
 VALUES (226, 226, 1);
-
-INSERT INTO role (ID, role)
-VALUES (1, 'ROLE_USER');
-INSERT INTO role (ID, role)
-VALUES (2, 'ROLE_MANAGER');
-
-INSERT INTO mileage (ID, POINT)
-VALUES (1, 0);
-INSERT INTO mileage (ID, POINT)
-VALUES (2, 0);
-INSERT INTO mileage (ID, POINT)
-VALUES (3, 0);
-INSERT INTO mileage (ID, POINT)
-VALUES (4, 0);
-INSERT INTO mileage (ID, POINT)
-VALUES (5, 0);
-
-INSERT INTO user (ID, MILEAGE_ID, ROLE_ID, USER_MAIL, USER_PW, USER_NAME, USER_TEL, USER_JOB, prefer_type)
-VALUES (1, 1, 1, 'test0000@test.com', '$2a$10$8JhEFusKy8aBREMCF/bgyunjtHM6S8Xp004Jmayuk1RZtuq70R91i', '홍길동',
-        '01011111111', '학생', 'desk:true&meetingroom:false&office:false');
-INSERT INTO user (ID, MILEAGE_ID, ROLE_ID, USER_MAIL, USER_PW, USER_NAME, USER_TEL, USER_JOB, prefer_type)
-VALUES (2, 2, 1, 'test1234@gmail.com', '$2a$10$wV88qo6uG8RSonuNQHEFkuPUWNmTzp0fsNkc7cxowMvMFq8u5b7Lu', '김철수',
-        '01022222222', '학생', 'desk:true&meetingroom:true&office:false');
-INSERT INTO user (ID, MILEAGE_ID, ROLE_ID, USER_MAIL, USER_PW, USER_NAME, USER_TEL, USER_JOB, prefer_type)
-VALUES (3, 3, 1, 'test12345@test.com', '$2a$10$tb/Sn5f2hJAtB2k/zGOt8eBiqgQqu.M2xNb.TteVw1S9ITZS4rDi.', '홍길동',
-        '01033333333', '학생', 'desk:true&meetingroom:true&office:false');
-INSERT INTO user (ID, MILEAGE_ID, ROLE_ID, USER_MAIL, USER_PW, USER_NAME, USER_TEL, USER_JOB, prefer_type)
-VALUES (4, 4, 1, 'qwer1235@gmail.com', '$2a$10$WvH.omVmd85FiwWWEuYsz.FZLG2goL05RPzYpHx28nOQFS0w898RO', '김가네',
-        '01033331111', '교수', 'desk:true&meetingroom:true&office:false');
-INSERT INTO user (ID, MILEAGE_ID, ROLE_ID, USER_MAIL, USER_PW, USER_NAME, USER_TEL, USER_JOB, prefer_type)
-VALUES (5, 5, 1, 'qwer123456@gmail.com', '$2a$10$Rrqi4ABMUFrl.WkvF/M0SOVG82ngoR2jW1V7RIX9PPNcWx9OlVzC2', '김가네',
-        '01012345678', '자영업자', 'desk:true&meetingroom:true&office:false');
+INSERT INTO roomstatus (ID, ROOM_ID, STATUS)
+VALUES (227, 227, 1);
+INSERT INTO roomstatus (ID, ROOM_ID, STATUS)
+VALUES (228, 228, 1);
+INSERT INTO roomstatus (ID, ROOM_ID, STATUS)
+VALUES (229, 229, 1);
+INSERT INTO roomstatus (ID, ROOM_ID, STATUS)
+VALUES (230, 230, 1);
+INSERT INTO roomstatus (ID, ROOM_ID, STATUS)
+VALUES (231, 231, 1);
+INSERT INTO roomstatus (ID, ROOM_ID, STATUS)
+VALUES (232, 232, 1);
+INSERT INTO roomstatus (ID, ROOM_ID, STATUS)
+VALUES (233, 233, 1);
+INSERT INTO roomstatus (ID, ROOM_ID, STATUS)
+VALUES (234, 234, 1);
+INSERT INTO roomstatus (ID, ROOM_ID, STATUS)
+VALUES (235, 235, 1);
+INSERT INTO roomstatus (ID, ROOM_ID, STATUS)
+VALUES (236, 236, 1);
+INSERT INTO roomstatus (ID, ROOM_ID, STATUS)
+VALUES (237, 237, 1);
+INSERT INTO roomstatus (ID, ROOM_ID, STATUS)
+VALUES (238, 238, 1);
+INSERT INTO roomstatus (ID, ROOM_ID, STATUS)
+VALUES (239, 239, 1);
+INSERT INTO roomstatus (ID, ROOM_ID, STATUS)
+VALUES (240, 240, 1);
+INSERT INTO roomstatus (ID, ROOM_ID, STATUS)
+VALUES (241, 241, 1);
+INSERT INTO roomstatus (ID, ROOM_ID, STATUS)
+VALUES (242, 242, 1);
+INSERT INTO roomstatus (ID, ROOM_ID, STATUS)
+VALUES (243, 243, 1);
+INSERT INTO roomstatus (ID, ROOM_ID, STATUS)
+VALUES (244, 244, 1);
+INSERT INTO roomstatus (ID, ROOM_ID, STATUS)
+VALUES (245, 245, 1);
+INSERT INTO roomstatus (ID, ROOM_ID, STATUS)
+VALUES (246, 246, 1);
+INSERT INTO roomstatus (ID, ROOM_ID, STATUS)
+VALUES (247, 247, 1);
+INSERT INTO roomstatus (ID, ROOM_ID, STATUS)
+VALUES (248, 248, 1);
+INSERT INTO roomstatus (ID, ROOM_ID, STATUS)
+VALUES (249, 249, 1);
+INSERT INTO roomstatus (ID, ROOM_ID, STATUS)
+VALUES (250, 250, 1);
+INSERT INTO roomstatus (ID, ROOM_ID, STATUS)
+VALUES (251, 251, 1);
+INSERT INTO roomstatus (ID, ROOM_ID, STATUS)
+VALUES (252, 252, 1);
+INSERT INTO roomstatus (ID, ROOM_ID, STATUS)
+VALUES (253, 253, 1);
+INSERT INTO roomstatus (ID, ROOM_ID, STATUS)
+VALUES (254, 254, 1);
+INSERT INTO roomstatus (ID, ROOM_ID, STATUS)
+VALUES (255, 255, 1);
+INSERT INTO roomstatus (ID, ROOM_ID, STATUS)
+VALUES (256, 256, 1);
+INSERT INTO roomstatus (ID, ROOM_ID, STATUS)
+VALUES (257, 257, 1);
+INSERT INTO roomstatus (ID, ROOM_ID, STATUS)
+VALUES (258, 258, 1);
+INSERT INTO roomstatus (ID, ROOM_ID, STATUS)
+VALUES (259, 259, 1);
+INSERT INTO roomstatus (ID, ROOM_ID, STATUS)
+VALUES (260, 260, 1);
+INSERT INTO roomstatus (ID, ROOM_ID, STATUS)
+VALUES (261, 261, 1);
+INSERT INTO roomstatus (ID, ROOM_ID, STATUS)
+VALUES (262, 262, 1);
+INSERT INTO roomstatus (ID, ROOM_ID, STATUS)
+VALUES (263, 263, 1);
+INSERT INTO roomstatus (ID, ROOM_ID, STATUS)
+VALUES (264, 264, 1);
+INSERT INTO roomstatus (ID, ROOM_ID, STATUS)
+VALUES (265, 265, 1);
+INSERT INTO roomstatus (ID, ROOM_ID, STATUS)
+VALUES (266, 266, 1);
+INSERT INTO roomstatus (ID, ROOM_ID, STATUS)
+VALUES (267, 267, 1);
+INSERT INTO roomstatus (ID, ROOM_ID, STATUS)
+VALUES (268, 268, 1);
 
 INSERT INTO manager (ID, ROLE_ID, NAME, EMAIL, PW, TEL)
 VALUES (1, 2, '관리자1', 'admin11111@gmail.com', 'admin11111', '01011111111');
@@ -1175,321 +2029,3 @@ INSERT INTO manager (ID, ROLE_ID, NAME, EMAIL, PW, TEL)
 VALUES (4, 2, '관리자4', 'admin44444@gmail.com', 'admin44444', '01044444444');
 INSERT INTO manager (ID, ROLE_ID, NAME, EMAIL, PW, TEL)
 VALUES (5, 2, '관리자5', 'admin55555@gmail.com', 'admin55555', '01055555555');
-
-INSERT INTO reservation (ID, USER_ID, ROOM_ID, RES_STARTDATE, RES_STARTTIME, RES_ENDDATE, RES_ENDTIME, RES_STATUS)
-VALUES (1, 1, 1, '2022-11-16', '09:00:00', '2022-11-16', '12:00:00', 1);
-INSERT INTO reservation (ID, USER_ID, ROOM_ID, RES_STARTDATE, RES_STARTTIME, RES_ENDDATE, RES_ENDTIME, RES_STATUS)
-VALUES (2, 2, 1, '2022-11-16', '16:00:00', '2022-11-16', '17:00:00', 1);
-INSERT INTO reservation (ID, USER_ID, ROOM_ID, RES_STARTDATE, RES_STARTTIME, RES_ENDDATE, RES_ENDTIME, RES_STATUS)
-VALUES (3, 3, 7, '2022-11-21', '00:00:00', '2022-11-22', '00:00:00', 1);
-INSERT INTO reservation (ID, USER_ID, ROOM_ID, RES_STARTDATE, RES_STARTTIME, RES_ENDDATE, RES_ENDTIME, RES_STATUS)
-VALUES (4, 4, 64, '2022-11-06', '08:00:00', '2022-11-06', '09:00:00', 1);
-INSERT INTO reservation (ID, USER_ID, ROOM_ID, RES_STARTDATE, RES_STARTTIME, RES_ENDDATE, RES_ENDTIME, RES_STATUS)
-VALUES (5, 5, 64, '2022-11-10', '08:00:00', '2022-11-10', '09:00:00', 1);
-INSERT INTO reservation (ID, USER_ID, ROOM_ID, RES_STARTDATE, RES_STARTTIME, RES_ENDDATE, RES_ENDTIME, RES_STATUS)
-VALUES (6, 1, 49, '2022-11-12', '08:00:00', '2022-11-12', '10:00:00', 1);
-INSERT INTO reservation (ID, USER_ID, ROOM_ID, RES_STARTDATE, RES_STARTTIME, RES_ENDDATE, RES_ENDTIME, RES_STATUS)
-VALUES (7, 2, 28, '2022-11-11', '14:00:00', '2022-11-11', '16:00:00', 1);
-INSERT INTO reservation (ID, USER_ID, ROOM_ID, RES_STARTDATE, RES_STARTTIME, RES_ENDDATE, RES_ENDTIME, RES_STATUS)
-VALUES (8, 3, 28, '2022-11-11', '11:00:00', '2022-11-11', '12:00:00', 1);
-INSERT INTO reservation (ID, USER_ID, ROOM_ID, RES_STARTDATE, RES_STARTTIME, RES_ENDDATE, RES_ENDTIME, RES_STATUS)
-VALUES (9, 4, 42, '2022-11-08', '11:00:00', '2022-11-08', '14:00:00', 1);
-INSERT INTO reservation (ID, USER_ID, ROOM_ID, RES_STARTDATE, RES_STARTTIME, RES_ENDDATE, RES_ENDTIME, RES_STATUS)
-VALUES (10, 5, 32, '2022-11-17', '11:00:00', '2022-11-17', '15:00:00', 1);
-INSERT INTO reservation (ID, USER_ID, ROOM_ID, RES_STARTDATE, RES_STARTTIME, RES_ENDDATE, RES_ENDTIME, RES_STATUS)
-VALUES (11, 1, 96, '2022-11-24', '07:00:00', '2022-11-24', '09:00:00', 1);
-INSERT INTO reservation (ID, USER_ID, ROOM_ID, RES_STARTDATE, RES_STARTTIME, RES_ENDDATE, RES_ENDTIME, RES_STATUS)
-VALUES (12, 2, 1, '2022-11-10', '10:00:00', '2022-11-10', '13:00:00', 1);
-INSERT INTO reservation (ID, USER_ID, ROOM_ID, RES_STARTDATE, RES_STARTTIME, RES_ENDDATE, RES_ENDTIME, RES_STATUS)
-VALUES (13, 3, 7, '2022-11-10', '00:00:00', '2022-11-13', '00:00:00', 1);
-INSERT INTO reservation (ID, USER_ID, ROOM_ID, RES_STARTDATE, RES_STARTTIME, RES_ENDDATE, RES_ENDTIME, RES_STATUS)
-VALUES (14, 4, 7, '2022-11-16', '00:00:00', '2022-11-30', '00:00:00', 1);
-INSERT INTO reservation (ID, USER_ID, ROOM_ID, RES_STARTDATE, RES_STARTTIME, RES_ENDDATE, RES_ENDTIME, RES_STATUS)
-VALUES (15, 5, 12, '2022-11-23', '10:00:00', '2022-11-23', '12:00:00', 1);
-INSERT INTO reservation (ID, USER_ID, ROOM_ID, RES_STARTDATE, RES_STARTTIME, RES_ENDDATE, RES_ENDTIME, RES_STATUS)
-VALUES (16, 1, 78, '2022-12-04', '03:00:00', '2022-12-04', '04:00:00', 1);
-INSERT INTO reservation (ID, USER_ID, ROOM_ID, RES_STARTDATE, RES_STARTTIME, RES_ENDDATE, RES_ENDTIME, RES_STATUS)
-VALUES (17, 2, 78, '2023-01-01', '00:00:00', '2023-01-01', '04:00:00', 1);
-INSERT INTO reservation (ID, USER_ID, ROOM_ID, RES_STARTDATE, RES_STARTTIME, RES_ENDDATE, RES_ENDTIME, RES_STATUS)
-VALUES (18, 3, 78, '2023-01-02', '00:00:00', '2023-01-02', '04:00:00', 1);
-INSERT INTO reservation (ID, USER_ID, ROOM_ID, RES_STARTDATE, RES_STARTTIME, RES_ENDDATE, RES_ENDTIME, RES_STATUS)
-VALUES (19, 4, 41, '2023-01-03', '04:00:00', '2023-01-03', '05:00:00', 1);
-INSERT INTO reservation (ID, USER_ID, ROOM_ID, RES_STARTDATE, RES_STARTTIME, RES_ENDDATE, RES_ENDTIME, RES_STATUS)
-VALUES (20, 5, 41, '2022-12-08', '11:00:00', '2022-12-08', '12:00:00', 1);
-INSERT INTO reservation (ID, USER_ID, ROOM_ID, RES_STARTDATE, RES_STARTTIME, RES_ENDDATE, RES_ENDTIME, RES_STATUS)
-VALUES (21, 1, 42, '2022-12-08', '12:00:00', '2022-12-08', '13:00:00', 1);
-INSERT INTO reservation (ID, USER_ID, ROOM_ID, RES_STARTDATE, RES_STARTTIME, RES_ENDDATE, RES_ENDTIME, RES_STATUS)
-VALUES (22, 2, 42, '2023-12-08', '11:00:00', '2023-12-08', '12:00:00', 1);
-INSERT INTO reservation (ID, USER_ID, ROOM_ID, RES_STARTDATE, RES_STARTTIME, RES_ENDDATE, RES_ENDTIME, RES_STATUS)
-VALUES (23, 3, 42, '2023-12-08', '12:00:00', '2023-12-08', '13:00:00', 1);
-INSERT INTO reservation (ID, USER_ID, ROOM_ID, RES_STARTDATE, RES_STARTTIME, RES_ENDDATE, RES_ENDTIME, RES_STATUS)
-VALUES (24, 4, 42, '2023-12-08', '13:00:00', '2023-12-08', '14:00:00', 1);
-INSERT INTO reservation (ID, USER_ID, ROOM_ID, RES_STARTDATE, RES_STARTTIME, RES_ENDDATE, RES_ENDTIME, RES_STATUS)
-VALUES (25, 5, 42, '2022-12-23', '14:00:00', '2022-12-23', '16:00:00', 1);
-INSERT INTO reservation (ID, USER_ID, ROOM_ID, RES_STARTDATE, RES_STARTTIME, RES_ENDDATE, RES_ENDTIME, RES_STATUS)
-VALUES (26, 1, 42, '2022-12-23', '16:00:00', '2022-12-23', '17:00:00', 1);
-
-
-
-INSERT INTO payment (ID, RESERVATION_ID, PAY_DATE, PAY_TIME, PAY_PRICE, PAY_MILEAGE, PAY_WAY, SAVED_MILEAGE, PAY_TYPE,
-                     PAY_API_CODE, PG, PAY_STATUS)
-VALUES (1, 1, '2022-11-15', '10:00:00', 30000, 0, 'PREPAYMENT', 1500, 'FULLPAYMENT', 'T37b0c65204d1c57a6d8', 'KAKAOPAY',
-        1);
-INSERT INTO payment (ID, RESERVATION_ID, PAY_DATE, PAY_TIME, PAY_PRICE, PAY_MILEAGE, PAY_WAY, SAVED_MILEAGE, PAY_TYPE,
-                     PAY_API_CODE, PG, PAY_STATUS)
-VALUES (2, 2, '2022-11-15', '11:00:00', 10000, 0, 'PREPAYMENT', 500, 'FULLPAYMENT', 'T37b0da57c755d99912e', 'KAKAOPAY',
-        1);
-INSERT INTO payment (ID, RESERVATION_ID, PAY_DATE, PAY_TIME, PAY_PRICE, PAY_MILEAGE, PAY_WAY, SAVED_MILEAGE, PAY_TYPE,
-                     PAY_API_CODE, PG, PAY_STATUS)
-VALUES (3, 3, '2022-11-22', '20:00:00', 200000, 0, 'POSTPAYMENT', 0, 'FULLPAYMENT', 'T37b0dcf7c755d999133', 'KAKAOPAY',
-        1);
-INSERT INTO payment (ID, RESERVATION_ID, PAY_DATE, PAY_TIME, PAY_PRICE, PAY_MILEAGE, PAY_WAY, SAVED_MILEAGE, PAY_TYPE,
-                     PAY_API_CODE, PG, PAY_STATUS)
-VALUES (4, 4, '2022-11-05', '14:00:00', 10000, 0, 'PREPAYMENT', 0, 'DEPOSIT', 'T37b0e0f204d1c57a6f8', 'KAKAOPAY', 1);
-INSERT INTO payment (ID, RESERVATION_ID, PAY_DATE, PAY_TIME, PAY_PRICE, PAY_MILEAGE, PAY_WAY, SAVED_MILEAGE, PAY_TYPE,
-                     PAY_API_CODE, PG, PAY_STATUS)
-VALUES (5, 4, '2022-11-06', '07:45:00', 40000, 0, 'POSTPAYMENT', 0, 'BALANCE', 'T37b0e2a7c755d99913a', 'KAKAOPAY', 1);
-INSERT INTO payment (ID, RESERVATION_ID, PAY_DATE, PAY_TIME, PAY_PRICE, PAY_MILEAGE, PAY_WAY, SAVED_MILEAGE, PAY_TYPE,
-                     PAY_API_CODE, PG, PAY_STATUS)
-VALUES (6, 5, '2022-11-10', '07:40:00', 50000, 0, 'PREPAYMENT', 2500, 'FULLPAYMENT', 'T37b0f637c755d999145', 'KAKAOPAY',
-        1);
-INSERT INTO payment (ID, RESERVATION_ID, PAY_DATE, PAY_TIME, PAY_PRICE, PAY_MILEAGE, PAY_WAY, SAVED_MILEAGE, PAY_TYPE,
-                     PAY_API_CODE, PG, PAY_STATUS)
-VALUES (7, 6, '2022-11-11', '11:00:00', 20000, 0, 'PREPAYMENT', 1000, 'FULLPAYMENT', 'T37b11237c755d99915b', 'KAKAOPAY',
-        1);
-INSERT INTO payment (ID, RESERVATION_ID, PAY_DATE, PAY_TIME, PAY_PRICE, PAY_MILEAGE, PAY_WAY, SAVED_MILEAGE, PAY_TYPE,
-                     PAY_API_CODE, PG, PAY_STATUS)
-VALUES (8, 7, '2022-11-11', '12:00:00', 20000, 0, 'PREPAYMENT', 1000, 'FULLPAYMENT', 'T37b1233204d1c57a734', 'KAKAOPAY',
-        1);
-INSERT INTO payment (ID, RESERVATION_ID, PAY_DATE, PAY_TIME, PAY_PRICE, PAY_MILEAGE, PAY_WAY, SAVED_MILEAGE, PAY_TYPE,
-                     PAY_API_CODE, PG, PAY_STATUS)
-VALUES (9, 8, '2022-11-11', '10:00:00', 10000, 0, 'PREPAYMENT', 500, 'FULLPAYMENT', 'T37b2e42204d1c57aaec', 'KAKAOPAY',
-        1);
-INSERT INTO payment (ID, RESERVATION_ID, PAY_DATE, PAY_TIME, PAY_PRICE, PAY_MILEAGE, PAY_WAY, SAVED_MILEAGE, PAY_TYPE,
-                     PAY_API_CODE, PG, PAY_STATUS)
-VALUES (10, 9, '2022-11-05', '10:00:00', 30000, 0, 'PREPAYMENT', 0, 'DEPOSIT', 'T37b3605204d1c57ab58', 'KAKAOPAY', 1);
-INSERT INTO payment (ID, RESERVATION_ID, PAY_DATE, PAY_TIME, PAY_PRICE, PAY_MILEAGE, PAY_WAY, SAVED_MILEAGE, PAY_TYPE,
-                     PAY_API_CODE, PG, PAY_STATUS)
-VALUES (11, 9, '2022-11-08', '10:43:00', 120000, 0, 'POSTPAYMENT', 0, 'BALANCE', 'T37b3b62204d1c57ab92', 'KAKAOPAY', 1);
-INSERT INTO payment (ID, RESERVATION_ID, PAY_DATE, PAY_TIME, PAY_PRICE, PAY_MILEAGE, PAY_WAY, SAVED_MILEAGE, PAY_TYPE,
-                     PAY_API_CODE, PG, PAY_STATUS)
-VALUES (12, 10, '2022-11-10', '10:00:00', 40000, 0, 'PREPAYMENT', 0, 'DEPOSIT', 'T37c7af3204d1c57b2d8', 'KAKAOPAY', 1);
-INSERT INTO payment (ID, RESERVATION_ID, PAY_DATE, PAY_TIME, PAY_PRICE, PAY_MILEAGE, PAY_WAY, SAVED_MILEAGE, PAY_TYPE,
-                     PAY_API_CODE, PG, PAY_STATUS)
-VALUES (13, 10, '2022-11-17', '10:40:00', 160000, 0, 'POSTPAYMENT', 0, 'BALANCE', 'T37c8ff77c755d999dd8', 'KAKAOPAY',
-        1);
-INSERT INTO payment (ID, RESERVATION_ID, PAY_DATE, PAY_TIME, PAY_PRICE, PAY_MILEAGE, PAY_WAY, SAVED_MILEAGE, PAY_TYPE,
-                     PAY_API_CODE, PG, PAY_STATUS)
-VALUES (14, 11, '2022-11-23', '10:00:00', 20000, 0, 'PREPAYMENT', 1000, 'FULLPAYMENT', 'T37cb36a204d1c57b697',
-        'KAKAOPAY', 1);
-INSERT INTO payment (ID, RESERVATION_ID, PAY_DATE, PAY_TIME, PAY_PRICE, PAY_MILEAGE, PAY_WAY, SAVED_MILEAGE, PAY_TYPE,
-                     PAY_API_CODE, PG, PAY_STATUS)
-VALUES (15, 12, '2022-11-09', '10:00:00', 30000, 0, 'PREPAYMENT', 1500, 'FULLPAYMENT', 'T37cb818204d1c57b6ac',
-        'KAKAOPAY', 1);
-INSERT INTO payment (ID, RESERVATION_ID, PAY_DATE, PAY_TIME, PAY_PRICE, PAY_MILEAGE, PAY_WAY, SAVED_MILEAGE, PAY_TYPE,
-                     PAY_API_CODE, PG, PAY_STATUS)
-VALUES (16, 13, '2022-11-13', '10:00:00', 600000, 0, 'POSTPAYMENT', 0, 'FULLPAYMENT', 'T37cbc477c755d99a0f0',
-        'KAKAOPAY', 1);
-INSERT INTO payment (ID, RESERVATION_ID, PAY_DATE, PAY_TIME, PAY_PRICE, PAY_MILEAGE, PAY_WAY, SAVED_MILEAGE, PAY_TYPE,
-                     PAY_API_CODE, PG, PAY_STATUS)
-VALUES (17, 14, '2022-11-30', '10:00:00', 2800000, 0, 'POSTPAYMENT', 0, 'FULLPAYMENT', 'T37cbda0204d1c57b6bf',
-        'KAKAOPAY', 1);
-INSERT INTO payment (ID, RESERVATION_ID, PAY_DATE, PAY_TIME, PAY_PRICE, PAY_MILEAGE, PAY_WAY, SAVED_MILEAGE, PAY_TYPE,
-                     PAY_API_CODE, PG, PAY_STATUS)
-VALUES (18, 15, '2022-11-22', '10:00:00', 40000, 0, 'PREPAYMENT', 2000, 'FULLPAYMENT', 'T37cbfa5204d1c57b6c6',
-        'KAKAOPAY', 1);
-INSERT INTO payment (ID, RESERVATION_ID, PAY_DATE, PAY_TIME, PAY_PRICE, PAY_MILEAGE, PAY_WAY, SAVED_MILEAGE, PAY_TYPE,
-                     PAY_API_CODE, PG, PAY_STATUS)
-VALUES (19, 16, '2022-11-28', '22:00:00', 10000, 0, 'PREPAYMENT', 500, 'FULLPAYMENT', 'T37d6db2204d1c57b84a',
-        'KAKAOPAY', 1);
-INSERT INTO payment (ID, RESERVATION_ID, PAY_DATE, PAY_TIME, PAY_PRICE, PAY_MILEAGE, PAY_WAY, SAVED_MILEAGE, PAY_TYPE,
-                     PAY_API_CODE, PG, PAY_STATUS)
-VALUES (20, 17, '2022-11-28', '10:00:00', 8000, 0, 'PREPAYMENT', 0, 'DEPOSIT', 'T37d7469204d1c57b877', 'KAKAOPAY', 1);
-INSERT INTO payment (ID, RESERVATION_ID, PAY_DATE, PAY_TIME, PAY_PRICE, PAY_MILEAGE, PAY_WAY, SAVED_MILEAGE, PAY_TYPE,
-                     PAY_API_CODE, PG, PAY_STATUS)
-VALUES (21, 18, '2022-11-28', '11:00:00', 8000, 0, 'PREPAYMENT', 0, 'DEPOSIT', 'T37db2ea7c755d99a4f2', 'KAKAOPAY', 1);
-INSERT INTO payment (ID, RESERVATION_ID, PAY_DATE, PAY_TIME, PAY_PRICE, PAY_MILEAGE, PAY_WAY, SAVED_MILEAGE, PAY_TYPE,
-                     PAY_API_CODE, PG, PAY_STATUS)
-VALUES (22, 19, '2022-11-29', '07:00:00', 30000, 0, 'PREPAYMENT', 1500, 'FULLPAYMENT', 'T37db4cc7c755d99a510',
-        'KAKAOPAY', 1);
-INSERT INTO payment (ID, RESERVATION_ID, PAY_DATE, PAY_TIME, PAY_PRICE, PAY_MILEAGE, PAY_WAY, SAVED_MILEAGE, PAY_TYPE,
-                     PAY_API_CODE, PG, PAY_STATUS)
-VALUES (23, 20, '2022-11-29', '07:30:00', 6000, 0, 'PREPAYMENT', 0, 'DEPOSIT', 'T37e3bb67c755d99aae5', 'KAKAOPAY', 1);
-INSERT INTO payment (ID, RESERVATION_ID, PAY_DATE, PAY_TIME, PAY_PRICE, PAY_MILEAGE, PAY_WAY, SAVED_MILEAGE, PAY_TYPE,
-                     PAY_API_CODE, PG, PAY_STATUS)
-VALUES (24, 21, '2022-11-29', '08:00:00', 50000, 0, 'PREPAYMENT', 2500, 'FULLPAYMENT', 'T37e42d5204d1c57c071',
-        'KAKAOPAY', 1);
-INSERT INTO payment (ID, RESERVATION_ID, PAY_DATE, PAY_TIME, PAY_PRICE, PAY_MILEAGE, PAY_WAY, SAVED_MILEAGE, PAY_TYPE,
-                     PAY_API_CODE, PG, PAY_STATUS)
-VALUES (25, 22, '2022-11-29', '10:00:00', 10000, 0, 'PREPAYMENT', 0, 'DEPOSIT', 'T37e5e617c755d99ab18', 'KAKAOPAY', 1);
-INSERT INTO payment (ID, RESERVATION_ID, PAY_DATE, PAY_TIME, PAY_PRICE, PAY_MILEAGE, PAY_WAY, SAVED_MILEAGE, PAY_TYPE,
-                     PAY_API_CODE, PG, PAY_STATUS)
-VALUES (26, 23, '2022-11-29', '13:00:00', 50000, 0, 'PREPAYMENT', 2500, 'FULLPAYMENT', 'T3801dda0d397ff1f728',
-        'KAKAOPAY', 1);
-INSERT INTO payment (ID, RESERVATION_ID, PAY_DATE, PAY_TIME, PAY_PRICE, PAY_MILEAGE, PAY_WAY, SAVED_MILEAGE, PAY_TYPE,
-                     PAY_API_CODE, PG, PAY_STATUS)
-VALUES (27, 24, '2022-11-29', '14:00:00', 50000, 0, 'PREPAYMENT', 2500, 'FULLPAYMENT', 'N1234abc1a392fj4l123',
-        'NICEPAY', 1);
-INSERT INTO payment (ID, RESERVATION_ID, PAY_DATE, PAY_TIME, PAY_PRICE, PAY_MILEAGE, PAY_WAY, SAVED_MILEAGE, PAY_TYPE,
-                     PAY_API_CODE, PG, PAY_STATUS)
-VALUES (28, 25, '2022-11-29', '15:00:00', 20000, 0, 'PREPAYMENT', 0, 'DEPOSIT', 'N1234abf1a112fj4l152', 'NICEPAY', 1);
-INSERT INTO payment (ID, RESERVATION_ID, PAY_DATE, PAY_TIME, PAY_PRICE, PAY_MILEAGE, PAY_WAY, SAVED_MILEAGE, PAY_TYPE,
-                     PAY_API_CODE, PG, PAY_STATUS)
-VALUES (29, 26, '2022-11-29', '18:00:00', 10000, 0, 'PREPAYMENT', 0, 'DEPOSIT', 'N1264vqq2n412fh1l894', 'NICEPAY', 1);
-
-
-INSERT INTO rating (ID, RESERVATION_ID, RATING_SCORE, RATING_REVIEW, RATING_TIME)
-VALUES (1, 4, 5, 'NAVER', '2022-11-29 00:00:00');
-INSERT INTO rating (ID, RESERVATION_ID, RATING_SCORE, RATING_REVIEW, RATING_TIME)
-VALUES (2, 9, 1, 'KOSTA', '2022-11-29 12:00:00');
-INSERT INTO rating (ID, RESERVATION_ID, RATING_SCORE, RATING_REVIEW, RATING_TIME)
-VALUES (3, 12, 4.5, '골프존타워서울본관', '2022-11-29 22:00:00');
-INSERT INTO rating (ID, RESERVATION_ID, RATING_SCORE, RATING_REVIEW, RATING_TIME)
-VALUES (4, 13, 4, '골프존타워서울본관', '2022-11-30 10:00:00');
-INSERT INTO rating (ID, RESERVATION_ID, RATING_SCORE, RATING_REVIEW, RATING_TIME)
-VALUES (5, 5, 5, 'NAVER', '2022-12-01 12:00:00');
-INSERT INTO rating (ID, RESERVATION_ID, RATING_SCORE, RATING_REVIEW, RATING_TIME)
-VALUES (6, 7, 3, '골프존대전신사옥및골프복합문화센터', '2022-12-02 12:00:00');
-INSERT INTO rating (ID, RESERVATION_ID, RATING_SCORE, RATING_REVIEW, RATING_TIME)
-VALUES (7, 8, 4, '골프존대전신사옥및골프복합문화센터', '2022-12-03 12:00:00');
-INSERT INTO rating (ID, RESERVATION_ID, RATING_SCORE, RATING_REVIEW, RATING_TIME)
-VALUES (8, 6, 4, 'NAVER', '2022-12-04 12:00:00');
-INSERT INTO rating (ID, RESERVATION_ID, RATING_SCORE, RATING_REVIEW, RATING_TIME)
-VALUES (9, 1, 3, '골프존타워서울본관', '2022-12-05 12:00:00');
-INSERT INTO rating (ID, RESERVATION_ID, RATING_SCORE, RATING_REVIEW, RATING_TIME)
-VALUES (10, 2, 4, '골프존타워서울본관', '2022-12-06 12:00:00');
-INSERT INTO rating (ID, RESERVATION_ID, RATING_SCORE, RATING_REVIEW, RATING_TIME)
-VALUES (11, 14, 5, '골프존타워서울본관', '2022-12-07 12:00:00');
-INSERT INTO rating (ID, RESERVATION_ID, RATING_SCORE, RATING_REVIEW, RATING_TIME)
-VALUES (12, 10, 3.5, '골프존대전신사옥및골프복합문화센터', '2022-12-08 12:00:00');
-INSERT INTO rating (ID, RESERVATION_ID, RATING_SCORE, RATING_REVIEW, RATING_TIME)
-VALUES (13, 3, 3, '골프존타워서울본관', '2022-12-09 12:00:00');
-INSERT INTO rating (ID, RESERVATION_ID, RATING_SCORE, RATING_REVIEW, RATING_TIME)
-VALUES (14, 15, 4, '골프존타워서울R&D센터', '2022-12-10 12:00:00');
-INSERT INTO rating (ID, RESERVATION_ID, RATING_SCORE, RATING_REVIEW, RATING_TIME)
-VALUES (15, 11, 5, '카카오 판교아지트', '2022-12-11 12:00:00');
-
-INSERT INTO refresh_token (ID, USER_ID, ENCODED_TOKEN)
-VALUES (1, 1,
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgiLCJzdGF0dXMiOiJyZWZyZXNoIiwiaWF0IjoxNjY5MjkxMzQ3OTcwfQ.P3fJMKaSrmKV2QBRB_LwyuqdUsMMrkL_PKDOkVH5618');
-
-INSERT INTO inquiry (ID, USER_ID, TITLE, QUESTION, WRITETIME)
-VALUES (1, 1, '마일리지는 어떻게 적립되나요?', '마일리지 적립 기준이 궁금합니다.', '2022-11-25 20:55:10');
-INSERT INTO inquiry (ID, USER_ID, TITLE, QUESTION, WRITETIME)
-VALUES (2, 2, '예약 취소는 어떻게 하나요?', '예약을 취소하고 싶어요.', '2022-11-26 00:11:47');
-INSERT INTO inquiry (ID, USER_ID, TITLE, QUESTION, WRITETIME)
-VALUES (3, 3, '결제를 변경하고 싶습니다.', '결제 수단을 변경하고 싶습니다.', '2022-11-26 11:12:00');
-INSERT INTO inquiry (ID, USER_ID, TITLE, QUESTION, WRITETIME)
-VALUES (4, 4, '오피스 이용료는 어떻게 계산하나요?', '오피스 이용료 계산이 궁금합니다.', '2022-11-26 12:11:47');
-INSERT INTO inquiry (ID, USER_ID, TITLE, QUESTION, WRITETIME)
-VALUES (5, 5, '예약 취소 시, 환불은 어떻게 되나요?', '환불 기준이 궁금합니다.', '2022-11-26 13:11:47');
-INSERT INTO inquiry (ID, USER_ID, TITLE, QUESTION, WRITETIME)
-VALUES (6, 1, '사무공간 타입 문의', '어떤 사무공간 타입이 있나요?', '2022-11-27 12:11:47');
-INSERT INTO inquiry (ID, USER_ID, TITLE, QUESTION, WRITETIME)
-VALUES (7, 2, '주차 문의', '주차되나요?', '2022-11-27 13:11:47');
-INSERT INTO inquiry (ID, USER_ID, TITLE, QUESTION, WRITETIME)
-VALUES (8, 4, '카카오페이 가능한가요?', '카카오페이로 결제할 수 있나요?', '2022-11-27 15:11:47');
-INSERT INTO inquiry (ID, USER_ID, TITLE, QUESTION, WRITETIME)
-VALUES (9, 5, '이용 시간 문의', '예약된 이용 시간을 바꾸고 싶어요.', '2022-11-28 14:11:47');
-INSERT INTO inquiry (ID, USER_ID, TITLE, QUESTION, WRITETIME)
-VALUES (10, 1, '검색 문의', '지도 기반으로 찾고 싶어요.', '2022-11-29 13:11:47');
-INSERT INTO inquiry (ID, USER_ID, TITLE, QUESTION, WRITETIME)
-VALUES (11, 2, '검색 문의', '원하는 룸타입만 보고 싶어요.', '2022-11-29 14:11:47');
-
-INSERT INTO inquirystatus (ID, INQUIRY_ID, STATUS)
-VALUES (1, 1, 1);
-INSERT INTO inquirystatus (ID, INQUIRY_ID, STATUS)
-VALUES (2, 2, 1);
-INSERT INTO inquirystatus (ID, INQUIRY_ID, STATUS)
-VALUES (3, 3, 1);
-INSERT INTO inquirystatus (ID, INQUIRY_ID, STATUS)
-VALUES (4, 4, 1);
-INSERT INTO inquirystatus (ID, INQUIRY_ID, STATUS)
-VALUES (5, 5, 1);
-INSERT INTO inquirystatus (ID, INQUIRY_ID, STATUS)
-VALUES (6, 6, 0);
-INSERT INTO inquirystatus (ID, INQUIRY_ID, STATUS)
-VALUES (7, 7, 0);
-INSERT INTO inquirystatus (ID, INQUIRY_ID, STATUS)
-VALUES (8, 8, 0);
-INSERT INTO inquirystatus (ID, INQUIRY_ID, STATUS)
-VALUES (9, 9, 0);
-INSERT INTO inquirystatus (ID, INQUIRY_ID, STATUS)
-VALUES (10, 10, 0);
-INSERT INTO inquirystatus (ID, INQUIRY_ID, STATUS)
-VALUES (11, 11, 0);
-
-INSERT INTO answer (ID, INQUIRY_ID, MANAGER_ID, ANSWER)
-VALUES (1, 1, 1, '답변1');
-INSERT INTO answer (ID, INQUIRY_ID, MANAGER_ID, ANSWER)
-VALUES (2, 2, 2, '답변2');
-INSERT INTO answer (ID, INQUIRY_ID, MANAGER_ID, ANSWER)
-VALUES (3, 3, 3, '답변3');
-INSERT INTO answer (ID, INQUIRY_ID, MANAGER_ID, ANSWER)
-VALUES (4, 4, 4, '답변4');
-INSERT INTO answer (ID, INQUIRY_ID, MANAGER_ID, ANSWER)
-VALUES (5, 5, 5, '답변5');
-
-INSERT INTO comment (ID, RATING_ID, USER_ID, CONTEXT, WRITEDATETIME)
-VALUES (1, 1, 1, '네이버 좋아요1', '2022-11-29 01:00:00');
-INSERT INTO comment (ID, RATING_ID, USER_ID, CONTEXT, WRITEDATETIME)
-VALUES (2, 1, 2, '네이버 좋아요2', '2022-11-29 02:00:00');
-INSERT INTO comment (ID, RATING_ID, USER_ID, CONTEXT, WRITEDATETIME)
-VALUES (3, 1, 3, '네이버 좋아요3', '2022-11-29 03:00:00');
-INSERT INTO comment (ID, RATING_ID, USER_ID, CONTEXT, WRITEDATETIME)
-VALUES (4, 1, 4, '네이버 좋아요4', '2022-11-29 04:00:00');
-INSERT INTO comment (ID, RATING_ID, USER_ID, CONTEXT, WRITEDATETIME)
-VALUES (5, 2, 5, '코스타...', '2022-11-29 04:00:00');
-
-INSERT INTO placeimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID)
-VALUES (1, '골프존.png', '골프존.png',
-        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/1/PLACE/%EA%B3%A8%ED%94%84%EC%A1%B4.png',
-        1);
-INSERT INTO placeimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID)
-VALUES (2, '골프존 서울 (1).jpeg', '골프존 서울 (1).jpeg',
-        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/1/PLACE/%EA%B3%A8%ED%94%84%EC%A1%B4+%EC%84%9C%EC%9A%B8+(1).jpeg',
-        1);
-INSERT INTO placeimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID)
-VALUES (3, '골프존 서울 (2).jpeg', '골프존 서울 (2).jpeg',
-        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/1/PLACE/%EA%B3%A8%ED%94%84%EC%A1%B4+%EC%84%9C%EC%9A%B8+(2).jpeg',
-        1);
-
-INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
-VALUES (1, 'DESK.jpeg', 'DESK.jpeg',
-        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/1/DESK/DESK.jpeg', 1, 1);
-INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
-VALUES (2, 'MEETINGROOM4.jpeg', 'MEETINGROOM4.jpeg',
-        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/1/MEETINGROOM4/MEETINGROOM4.jpeg',
-        1, 2);
-INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
-VALUES (3, 'MEETINGROOM6.jpg', 'MEETINGROOM6.jpg',
-        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/1/MEETINGROOM6/MEETINGROOM6.jpg', 1,
-        3);
-INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
-VALUES (4, 'MEETINGROOM10 (1).jpg', 'MEETINGROOM10 (1).jpg',
-        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/1/MEETINGROOM10/MEETINGROOM10+(1).jpg',
-        1, 4);
-INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
-VALUES (5, 'MEETINGROOM10 (2).jpg', 'MEETINGROOM10 (2).jpg',
-        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/1/MEETINGROOM10/MEETINGROOM10+(2).jpg',
-        1, 4);
-INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
-VALUES (6, 'MEETINGROOM20 (1).jpg', 'MEETINGROOM20 (1).jpg',
-        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/1/MEETINGROOM20/MEETINGROOM20+(1).jpg',
-        1, 5);
-INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
-VALUES (7, 'MEETINGROOM20 (2).jpg', 'MEETINGROOM20 (2).jpg',
-        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/1/MEETINGROOM20/MEETINGROOM20+(2).jpg',
-        1, 5);
-INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
-VALUES (8, 'OFFICE20.jpg', 'OFFICE20.jpg',
-        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/1/OFFICE20/OFFICE20.jpg', 1, 6);
-INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
-VALUES (9, 'OFFICE40.jpg', 'OFFICE40.jpg',
-        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/1/OFFICE40/OFFICE40.jpg', 1, 7);
-INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
-VALUES (10, 'OFFICE70.jpg', 'OFFICE70.jpg',
-        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/1/OFFICE70/OFFICE70.jpg', 1, 8);
-INSERT INTO roomimage (ID, UPLOAD_FILENAME, STORE_FILENAME, SAVED_PATH, PLACE_ID, ROOMKIND_ID)
-VALUES (11, 'OFFICE100.jpeg', 'OFFICE100.jpeg',
-        'https://officesharingplatform-image-server.s3.ap-northeast-2.amazonaws.com/1/OFFICE100/OFFICE100.jpeg', 1, 9);
