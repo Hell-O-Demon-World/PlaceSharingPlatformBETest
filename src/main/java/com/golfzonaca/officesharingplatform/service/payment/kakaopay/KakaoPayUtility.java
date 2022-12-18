@@ -61,10 +61,10 @@ public class KakaoPayUtility {
         return totalAmount / 11;
     }
 
-    public long calculateMileage(Integer totalAmount, long payMileage, String payWay, String payType) {
+    public long calculateMileage(Integer payPrice, String payWay, String payType) {
 
         if (payWay.equals(PayWay.PREPAYMENT.toString()) && payType.equals(PayType.FULL_PAYMENT.toString())) {
-            return (long) ((totalAmount - payMileage) * 0.05);
+            return (long) (payPrice * 0.05);
         } else {
             return 0;
         }
