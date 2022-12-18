@@ -24,12 +24,14 @@ public class MileageEarningUsage {
     private Long currentPoint;
     @Column(name = "UPDATE_DATE")
     private LocalDateTime updateDate;
-
+    @Column(name = "EXPIRE_DATE", nullable = false)
+    private LocalDateTime expireDate;
     @Builder
-    public MileageEarningUsage(MileageTransactionUsage mileageTransactionUsage, MileageUpdate mileageUpdate, Long currentPoint, LocalDateTime updateDate) {
+    public MileageEarningUsage(MileageTransactionUsage mileageTransactionUsage, MileageUpdate mileageUpdate, Long currentPoint, LocalDateTime updateDate, LocalDateTime expireDate) {
         this.mileageUpdate = mileageUpdate;
         this.currentPoint = currentPoint;
         this.updateDate = updateDate;
+        this.expireDate = expireDate;
     }
 
     public void updateCurrentDate(LocalDateTime currentDateTime) {

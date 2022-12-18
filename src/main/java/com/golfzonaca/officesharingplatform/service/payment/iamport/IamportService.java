@@ -206,7 +206,6 @@ public class IamportService {
     }
 
     public List<IamportResponse<Payment>> nicePayCancelOneTime(com.golfzonaca.officesharingplatform.domain.Payment payment) throws IamportResponseException, IOException {
-        restoreUserMileage(payment);
         Refund refunds = refundService.processingRefundData(payment);
         List<IamportResponse<Payment>> iamportResponses = refundRequest(refunds);
         return iamportResponses;

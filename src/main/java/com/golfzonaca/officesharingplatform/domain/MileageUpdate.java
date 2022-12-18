@@ -27,8 +27,7 @@ public class MileageUpdate {
     private Long updatePoint;
     @Column(name = "UPDATE_DATE", nullable = false)
     private LocalDateTime updateDate;
-    @Column(name = "EXPIRE_DATE", nullable = false)
-    private LocalDateTime expireDate;
+
     @Column(name = "STATUS_TYPE", nullable = false)
     @Enumerated(EnumType.STRING)
     private MileageStatusType statusType;
@@ -37,11 +36,10 @@ public class MileageUpdate {
     private List<MileageEarningUsage> mileageExpiredUpdateList = new LinkedList<>();
 
     @Builder
-    public MileageUpdate(Mileage mileage, Long updatePoint, LocalDateTime updateDate, LocalDateTime expireDate, MileageStatusType statusType) {
+    public MileageUpdate(Mileage mileage, Long updatePoint, LocalDateTime updateDate, MileageStatusType statusType) {
         this.mileage = mileage;
         this.updatePoint = updatePoint;
         this.updateDate = updateDate;
-        this.expireDate = expireDate;
         this.statusType = statusType;
     }
 

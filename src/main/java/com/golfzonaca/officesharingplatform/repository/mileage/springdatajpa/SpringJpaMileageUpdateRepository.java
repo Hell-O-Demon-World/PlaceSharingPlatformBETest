@@ -9,8 +9,5 @@ import java.util.List;
 
 public interface SpringJpaMileageUpdateRepository extends JpaRepository<MileageUpdate, Long> {
     MileageUpdate save(MileageUpdate mileageUpdate);
-
-    List<MileageUpdate> findMileageUpdatesByMileageAndExpireDateIsAfter(Mileage mileage, LocalDate localDate);
-
     List<MileageUpdate> findAllByMileage(Mileage mileage);
 }

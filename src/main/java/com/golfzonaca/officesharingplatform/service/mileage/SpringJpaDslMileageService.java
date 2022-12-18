@@ -28,14 +28,7 @@ public class SpringJpaDslMileageService implements MileageService {
                 .latestUpdateDate(MileageTimeSetter.currentDateTime())
                 .build();
         Mileage saveMileage = mileageRepository.save(mileage);
-        MileageUpdate mileageUpdate = MileageUpdate.builder()
-                .mileage(saveMileage)
-                .statusType(MileageStatusType.NEW_MEMBER)
-                .updatePoint(INITIAL_POINT)
-                .updateDate(MileageTimeSetter.currentDateTime())
-                .expireDate(MileageTimeSetter.expiredDateTime())
-                .build();
-        mileageRepository.save(mileageUpdate);
+        saveMileageUpdate(saveMileage, INITIAL_POINT, MileageStatusType.NEW_MEMBER);
         return mileage;
     }
 
@@ -56,7 +49,6 @@ public class SpringJpaDslMileageService implements MileageService {
                 .statusType(mileageStatusType)
                 .updatePoint(currentPayMileage)
                 .updateDate(MileageTimeSetter.currentDateTime())
-                .expireDate(MileageTimeSetter.expiredDateTime())
                 .build();
         return mileageRepository.save(mileageUpdate);
     }
@@ -66,6 +58,7 @@ public class SpringJpaDslMileageService implements MileageService {
                 .mileageUpdate(mileageUpdate)
                 .currentPoint(currentPayMileage)
                 .updateDate(MileageTimeSetter.currentDateTime())
+                .expireDate(MileageTimeSetter.expiredDateTime())
                 .build();
         mileageRepository.save(mileageEarningUsage);
     }
@@ -88,17 +81,16 @@ public class SpringJpaDslMileageService implements MileageService {
         List<MileageTransactionUsage> transactionUsageMileageList = mileageRepository.findTransactionUsageMileageByPaymentMileage(paymentMileage);
         for (MileageTransactionUsage mileageTransactionUsage : transactionUsageMileageList) {
             MileageEarningUsage earningUsage = mileageTransactionUsage.getMileageEarningUsage();
-            LocalDateTime expireDate = earningUsage.getMileageUpdate().getExpireDate();
+            LocalDateTime expireDate = earningUsage.getExpireDate();
             long usedPoint = mileageTransactionUsage.getUsedPoint();
             if (MileageTimeSetter.currentDateTime().isBefore(expireDate)) {
                 earningUsage.updateCurrentPoint(usedPoint);
                 earningUsage.updateCurrentDate(MileageTimeSetter.currentDateTime());
-                MileageUpdate saveMileageUpdate = saveMileageUpdate(mileage, usedPoint, MileageStatusType.EARNING);
-                saveMileagePaymentUpdate(payment, usedPoint, saveMileageUpdate, MileagePaymentReason.REFUND);
                 totalPlusPoint += usedPoint;
             }
         }
-
+        MileageUpdate saveMileageUpdate = saveMileageUpdate(mileage, totalPlusPoint, MileageStatusType.EARNING);
+        saveMileagePaymentUpdate(payment, totalPlusPoint, saveMileageUpdate, MileagePaymentReason.REFUND);
         mileage.addPoint(totalPlusPoint);
     }
 
