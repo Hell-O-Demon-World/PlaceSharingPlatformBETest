@@ -113,9 +113,6 @@ public class IamportService {
             mileageService.payingMileage(paymentSave);
         }
         IamportResponse<Payment> iamportResponse = iamportClient.onetimePayment(onetimePaymentData);
-        if (PayType.FULL_PAYMENT.equals(payment.getType())) {
-            mileageService.savingFullPaymentMileage(paymentSave);
-        }
         payment.addReceipt(iamportResponse.getResponse().getReceiptUrl());
         paymentSave.updatePayStatus(PaymentStatus.COMPLETED); // paystatus completed로 업데이트
 

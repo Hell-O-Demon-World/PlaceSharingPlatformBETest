@@ -1,17 +1,25 @@
 package com.golfzonaca.officesharingplatform.web.mypage;
 
 import com.golfzonaca.officesharingplatform.annotation.TokenUserId;
+import com.golfzonaca.officesharingplatform.domain.User;
 import com.golfzonaca.officesharingplatform.service.mypage.MyPageService;
+import com.golfzonaca.officesharingplatform.service.reservation.ReservationService;
 import com.golfzonaca.officesharingplatform.web.mypage.dto.EditUserInfoData;
 import com.golfzonaca.officesharingplatform.web.mypage.dto.ReservationCancelForm;
 import com.golfzonaca.officesharingplatform.web.mypage.dto.SaveInquiryData;
 import com.golfzonaca.officesharingplatform.web.mypage.validation.MypageRequestValidation;
 import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.*;
+import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.ServletResponse;
+import java.net.URI;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 @RestController
@@ -105,5 +113,14 @@ public class MyPageController {
     public Map<String, JsonObject> mileageHistory(@TokenUserId Long userId, @RequestParam Integer page) {
         mypageRequestValidation.validationUser(userId);
         return myPageService.getMileageHistory(userId, Long.parseLong(String.valueOf(page)), 8L);
+    }
+
+    @PostMapping("/reservation/fix")
+    public ResponseEntity<?> reservationFix(@TokenUserId Long userId, @RequestBody Map<String, Long> reservation) {
+        mypageRequestValidation.validationReservation(userId, reservation.get("reservationId"));
+        myPageService.fixReservation(userId, reservation.get("reservationId"));
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(URI.create("/mypage/usage?page=1"));
+        return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
     }
 }

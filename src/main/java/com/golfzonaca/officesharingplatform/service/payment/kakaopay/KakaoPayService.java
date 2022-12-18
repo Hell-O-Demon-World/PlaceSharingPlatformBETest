@@ -83,9 +83,6 @@ public class KakaoPayService {
         HttpEntity<MultiValueMap<String, String>> requestApprovalEntity = new HttpEntity<>(kakaoPayUtility.multiValueMapConverter(new ObjectMapper(), body), httpHeaders);
 
         KakaoPayApprovalResponse kakaoPayApprovalResponse = sendKakaoPayApprovalRequest(HOST, requestApprovalEntity);
-        if (PayType.FULL_PAYMENT.equals(payment.getType())) {
-            mileageService.savingFullPaymentMileage(payment);
-        }
         payment.getReservation().updateAllStatus(ReservationStatus.COMPLETED, FixStatus.UNFIXED);
         return kakaoPayApprovalResponse;
     }

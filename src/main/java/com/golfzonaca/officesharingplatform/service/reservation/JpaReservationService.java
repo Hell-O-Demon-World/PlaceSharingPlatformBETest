@@ -273,7 +273,6 @@ public class JpaReservationService implements ReservationService {
         } else {
             resultRoom = getResultRoom(place, startTime, endTime, date, selectedType);
         }
-        // TODO: Need to change status of reservation when user choose pay method
         Reservation reservation = new Reservation(user, resultRoom, LocalDateTime.now(), date, startTime, endDate, endTime, ReservationStatus.PROGRESSING, FixStatus.UNFIXED);
         return Optional.ofNullable(reservationRepository.save(reservation)).orElseThrow(() -> new DuplicatedReservationException("ReservationError::: 예약 실패"));
 

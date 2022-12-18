@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @RequiredArgsConstructor
 public class PaymentValidation {
-
     private final ReservationRepository reservationRepository;
 
     public void cancelRequest(long reservationId) {

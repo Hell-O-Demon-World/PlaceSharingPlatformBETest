@@ -42,7 +42,6 @@ public class SpringJpaDslMileageService implements MileageService {
 
     @Override
     public void savingFullPaymentMileage(Payment payment) {
-        log.info("saving mileage...");
         Mileage mileage = payment.getReservation().getUser().getMileage();
         long currentPayMileage = payment.getSavedMileage();
         MileageUpdate mileageUpdate = MileageUpdate.builder()
