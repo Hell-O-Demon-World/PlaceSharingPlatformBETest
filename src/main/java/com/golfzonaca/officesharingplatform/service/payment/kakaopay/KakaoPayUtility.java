@@ -96,9 +96,9 @@ public class KakaoPayUtility {
                 .totalAmount(totalAmount)
                 .taxFreeAmount(calculateTaxFreeAmount(totalAmount))
                 .vatAmount(calculateVatAmount(totalAmount))
-                .approvalUrl("http://localhost:8080/payment/" + payment.getId() + "/kakaopayapprove")
-                .cancelUrl("http://localhost:8080/payment/kakaopaycancel")
-                .failUrl("http://localhost:8080/kakaopaysuccessfail")
+                .approvalUrl("https://port-0-officesharingplatformbetest-883524lbs4i71x.gksl2.cloudtype.app/" + payment.getId() + "/kakaopayapprove")
+                .cancelUrl("https://port-0-officesharingplatformbetest-883524lbs4i71x.gksl2.cloudtype.app/places/" + reservation.getRoom().getPlace().getId())
+                .failUrl("https://port-0-officesharingplatformbetest-883524lbs4i71x.gksl2.cloudtype.app/places/" + reservation.getRoom().getPlace().getId())
                 .build();
     }
 

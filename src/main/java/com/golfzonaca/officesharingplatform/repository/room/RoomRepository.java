@@ -8,6 +8,8 @@ import com.golfzonaca.officesharingplatform.domain.type.RoomType;
 import java.util.List;
 
 public interface RoomRepository {
+    List<Room> findAvailableRoomsByPlace(Place place);
+
     List<Room> findRoomByPlaceIdAndRoomKindId(Long placeId, Long roomKindId);
 
     List<Long> findRoomIdByPlaceIdAndRoomTypeId(Long placeId, Long roomKindId);

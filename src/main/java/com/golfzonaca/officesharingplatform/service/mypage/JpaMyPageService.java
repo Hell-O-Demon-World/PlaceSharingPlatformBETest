@@ -228,15 +228,15 @@ public class JpaMyPageService implements MyPageService {
             PaymentListResponse paymentListResponse = restTemplate.exchange(url, HttpMethod.GET, request, PaymentListResponse.class, params).getBody();
             PagedPaymentAnnotation pagedPaymentAnnotation = paymentListResponse.getResponse().orElseThrow(() -> new NoSuchElementException("예약 결제 정보를 찾을 수 없습니다."));
             List<PaymentAnnotation> paymentAnnotations = pagedPaymentAnnotation.getList().orElseThrow(() -> new NoSuchElementException("예약 결제 정보를 찾을 수 없습니다."));
-            PaymentAnnotation paymentAnnotation = paymentAnnotations.get(0);
-            String receipt = paymentAnnotation.getReceipt_url().orElse("결제 영수증을 확인할 수 없습니다.");
-
-
-            List<Payment> paymentList = reservationRepository.findById(reservationId).getPaymentList();
-            for (Payment payment : paymentList) {
-                if (payment.getPayWay().equals(PayWay.POSTPAYMENT)) {
-                    payment.addReceipt(receipt);
-                    payment.updatePayStatus(PaymentStatus.COMPLETED);
+            if (!paymentAnnotations.isEmpty()) {
+                PaymentAnnotation paymentAnnotation = paymentAnnotations.get(0);
+                String receipt = paymentAnnotation.getReceipt_url().orElse("결제 영수증을 확인할 수 없습니다.");
+                List<Payment> paymentList = reservationRepository.findById(reservationId).getPaymentList();
+                for (Payment payment : paymentList) {
+                    if (payment.getPayWay().equals(PayWay.POSTPAYMENT)) {
+                        payment.addReceipt(receipt);
+                        payment.updatePayStatus(PaymentStatus.COMPLETED);
+                    }
                 }
             }
         } catch (IamportResponseException | IOException e) {

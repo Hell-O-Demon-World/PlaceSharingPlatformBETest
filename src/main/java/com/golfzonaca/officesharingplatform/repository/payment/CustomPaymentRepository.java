@@ -35,12 +35,17 @@ public class CustomPaymentRepository implements PaymentRepository {
 
     @Override
     public List<Payment> findProgressingPaymentByReservation(Reservation reservation) {
-        return queryPaymentRepository.findProgressingPaymentByReservation(reservation);
+        return queryPaymentRepository.findNotCanceledPaymentByReservation(reservation);
     }
 
     @Override
     public void delete(Payment payment) {
         jpaRepository.delete(payment);
+    }
+
+    @Override
+    public List<Payment> findByReservationAndProgressingStatus(Reservation reservation) {
+        return queryPaymentRepository.findByReservationAndProgressingStatus(reservation);
     }
 
 }

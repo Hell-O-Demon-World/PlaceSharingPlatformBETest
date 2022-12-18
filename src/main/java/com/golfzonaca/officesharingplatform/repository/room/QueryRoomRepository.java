@@ -102,4 +102,11 @@ public class QueryRoomRepository {
                 .where(eqPlaceId(placeId), eqRoomType(roomType))
                 .fetch();
     }
+
+    public List<Room> findAvailableRoomsByPlace(Place place) {
+        return query
+                .selectFrom(room)
+                .where(room.place.eq(place), room.roomStatus.status.eq(true))
+                .fetch();
+    }
 }

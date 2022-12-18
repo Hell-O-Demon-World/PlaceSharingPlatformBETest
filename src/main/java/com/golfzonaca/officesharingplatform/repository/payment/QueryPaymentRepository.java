@@ -29,10 +29,17 @@ public class QueryPaymentRepository {
                 .fetch();
     }
 
-    public List<Payment> findProgressingPaymentByReservation(Reservation reservation) {
+    public List<Payment> findNotCanceledPaymentByReservation(Reservation reservation) {
         return query
                 .selectFrom(payment)
                 .where(payment.reservation.eq(reservation), payment.payStatus.ne(PaymentStatus.CANCELED))
+                .fetch();
+    }
+
+    public List<Payment> findByReservationAndProgressingStatus(Reservation reservation) {
+        return query
+                .selectFrom(payment)
+                .where(payment.reservation.eq(reservation), payment.payStatus.eq(PaymentStatus.PROGRESSING))
                 .fetch();
     }
 }
