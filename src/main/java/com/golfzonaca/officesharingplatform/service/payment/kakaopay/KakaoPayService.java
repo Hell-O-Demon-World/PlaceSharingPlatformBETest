@@ -3,6 +3,7 @@ package com.golfzonaca.officesharingplatform.service.payment.kakaopay;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.golfzonaca.officesharingplatform.domain.*;
 import com.golfzonaca.officesharingplatform.domain.type.*;
+import com.golfzonaca.officesharingplatform.exception.NonExistedMileageException;
 import com.golfzonaca.officesharingplatform.repository.payment.PaymentRepository;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
 import com.golfzonaca.officesharingplatform.repository.user.UserRepository;
@@ -73,7 +74,12 @@ public class KakaoPayService {
 
         KakaoPayUtility kakaoPayUtility = new KakaoPayUtility();
         Payment payment = paymentRepository.findById(paymentId);
+        Mileage userMileage = payment.getReservation().getUser().getMileage();
+        long userMileagePoint = userMileage.getPoint();
         if (payment.getPayMileage() > 0) {
+            if (userMileagePoint < payment.getPayMileage()) {
+                throw new NonExistedMileageException("가지고 있는 마일리지보다 사용할 마일리지가 클 수 없습니다.");
+            }
             mileageService.payingMileage(payment);
         }
 

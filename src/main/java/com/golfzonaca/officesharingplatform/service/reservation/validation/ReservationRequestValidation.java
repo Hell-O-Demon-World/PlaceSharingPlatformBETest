@@ -57,7 +57,6 @@ public class ReservationRequestValidation {
         validRestRoomForSelectedPlaceAndDateTime(place, roomType, data.getStartDate(), data.getStartTime(), data.getStartDate(), data.getEndTime());
         validSelectedDate(LocalDateTime.of(data.getStartDate(), data.getStartTime()), LocalDateTime.of(data.getEndDate(), data.getEndTime()), roomType);
 
-
     }
 
     private void validDuplicatedResStartAndEndTime(ProcessReservationData data) {

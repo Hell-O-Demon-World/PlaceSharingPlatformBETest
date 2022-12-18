@@ -195,6 +195,21 @@ create table mileage_update_history
 ) DEFAULT CHARACTER SET = 'utf8'
   COLLATE = 'utf8_general_ci';
 
+create table earning_mileage_usage_history
+(
+    ID    bigint unsigned auto_increment primary key,
+    MILEAGE_ID bigint unsigned not null,
+    MILEAGE_UPDATE_ID bigint unsigned not null,
+    MILEAGE_PAYMENT_ID bigint unsigned not null,
+    UPDATE_POINT bigint unsigned not null,
+    UPDATE_DATE datetime not null,
+    EXPIRE_DATE datetime not null,
+    constraint FK_MILEAGE_TO_MILEAGE_UPDATE_1
+        foreign key (MILEAGE_ID) references mileage (ID)
+            on update cascade on delete cascade
+) DEFAULT CHARACTER SET = 'utf8'
+  COLLATE = 'utf8_general_ci';
+
 create table user
 (
     ID          bigint unsigned auto_increment primary key,
