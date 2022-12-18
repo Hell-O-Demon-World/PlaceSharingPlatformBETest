@@ -16,4 +16,6 @@ public interface PaymentRepository {
     List<Payment> findProgressingPaymentByReservation(Reservation reservation);
 
     void delete(Payment payment);
+
+    List<Payment> findByReservationAndProgressingStatus(Reservation reservation);
 }

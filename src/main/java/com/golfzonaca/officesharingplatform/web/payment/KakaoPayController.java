@@ -20,6 +20,7 @@ import java.util.List;
 public class KakaoPayController {
 
     private final KakaoPayService kakaoPayService;
+    private final PaymentValidation paymentValidation;
 
     @PostMapping("/kakaopay")
     public String kakaoPayReady(@TokenUserId Long userId, @RequestBody PaymentInfo paymentInfo) {
@@ -28,6 +29,7 @@ public class KakaoPayController {
         long payMileage = paymentInfo.getPayMileage();
         String payWay = paymentInfo.getPayWay();
         String payType = paymentInfo.getPayType();
+        paymentValidation.deleteKakaoHistoryOnProgressing(reservationId);
         return kakaoPayService.kakaoPayReadyRequest(userId, reservationId, payWay, payType, payMileage);
     }
 
