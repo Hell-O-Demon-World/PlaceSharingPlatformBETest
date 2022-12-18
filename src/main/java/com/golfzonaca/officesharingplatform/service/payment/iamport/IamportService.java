@@ -175,7 +175,7 @@ public class IamportService {
 
         unscheduleData.addMerchantUid(merchantUid);
         IamportResponse<List<Schedule>> listIamportResponse = iamportClient.unsubscribeSchedule(unscheduleData);
-        payment.updatePayStatus(PaymentStatus.CANCELED);
+        paymentRepository.delete(payment);
         return listIamportResponse;
     }
 
@@ -220,19 +220,19 @@ public class IamportService {
 
         Integer totalAmount = kakaoPayUtility.calculateTotalAmount(reservation, payWay, payType, payMileage);
 
-        return com.golfzonaca.officesharingplatform.domain.Payment.builder()
-                .reservation(reservation)
-                .payDate(LocalDate.now())
-                .payTime(LocalTime.now())
-                .price(totalAmount)
-                .payMileage(payMileage)
-                .payWay(PayWay.valueOf(payWay))
-                .savedMileage(kakaoPayUtility.calculateMileage(totalAmount, payWay, payType))
-                .type(PayType.valueOf(payType))
-                .apiCode(apiCode)
-                .pg(PG.NICEPAY)
-                .payStatus(PaymentStatus.PROGRESSING)
-                .build();
+        return new com.golfzonaca.officesharingplatform.domain.Payment(
+                reservation,
+                LocalDate.now(),
+                LocalTime.now(),
+                totalAmount,
+                payMileage,
+                PayWay.valueOf(payWay),
+                kakaoPayUtility.calculateMileage(totalAmount, payWay, payType),
+                PayType.valueOf(payType),
+                apiCode,
+                PG.NICEPAY,
+                PaymentStatus.PROGRESSING,
+                "카카오페이에서 확인하실 수 있습니다.");
     }
 
     public Integer calculateTotalAmount(Reservation reservation, String payWay, String payType, long payMileage) {

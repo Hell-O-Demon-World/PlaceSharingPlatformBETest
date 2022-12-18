@@ -11,8 +11,10 @@ public class MyReservationDetail {
     private String resEndTime;
     private String usageState;
     private Boolean isAvailableReview;
+    private Long totalPrice;
+    private Double savedMileage;
 
-    public MyReservationDetail(String placeName, String roomType, String resCompletedDate, String resCompletedTime, String resStartDate, String resStartTime, String resEndDate, String resEndTime, String usageState) {
+    public MyReservationDetail(String placeName, String roomType, String resCompletedDate, String resCompletedTime, String resStartDate, String resStartTime, String resEndDate, String resEndTime, String usageState, Long totalPrice, Double savedMileage) {
         this.placeName = placeName;
         this.roomType = roomType;
         this.resCompletedDate = resCompletedDate;
@@ -22,6 +24,8 @@ public class MyReservationDetail {
         this.resEndDate = resEndDate;
         this.resEndTime = resEndTime;
         this.usageState = usageState;
+        this.totalPrice = totalPrice;
+        this.savedMileage = savedMileage;
     }
 
     public void addIsAvailableReview(Boolean isAvailableReview) {

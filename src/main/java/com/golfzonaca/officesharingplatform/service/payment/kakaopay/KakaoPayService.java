@@ -184,18 +184,18 @@ public class KakaoPayService {
 
         Integer totalAmount = kakaoPayUtility.calculateTotalAmount(reservation, payWay, payType, payMileage);
 
-        return Payment.builder()
-                .reservation(reservation)
-                .payDate(LocalDate.now())
-                .payTime(LocalTime.now())
-                .price(totalAmount)
-                .payMileage(payMileage)
-                .payWay(PayWay.valueOf(payWay))
-                .savedMileage(kakaoPayUtility.calculateMileage(totalAmount, payWay, payType))
-                .type(PayType.valueOf(payType))
-                .apiCode(kakaoPayUtility.getKakaoApiCode())
-                .pg(PG.KAKAOPAY)
-                .payStatus(PaymentStatus.PROGRESSING)
-                .build();
+        return new Payment(
+                reservation,
+                LocalDate.now(),
+                LocalTime.now(),
+                totalAmount,
+                payMileage,
+                PayWay.valueOf(payWay),
+                kakaoPayUtility.calculateMileage(totalAmount, payWay, payType),
+                PayType.valueOf(payType),
+                kakaoPayUtility.getKakaoApiCode(),
+                PG.KAKAOPAY,
+                PaymentStatus.PROGRESSING,
+                "카카오페이에서 확인하실 수 있습니다.");
     }
 }

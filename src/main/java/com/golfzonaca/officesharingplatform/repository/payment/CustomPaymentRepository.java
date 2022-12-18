@@ -38,4 +38,9 @@ public class CustomPaymentRepository implements PaymentRepository {
         return queryPaymentRepository.findProgressingPaymentByReservation(reservation);
     }
 
+    @Override
+    public void delete(Payment payment) {
+        jpaRepository.delete(payment);
+    }
+
 }

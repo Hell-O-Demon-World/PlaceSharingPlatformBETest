@@ -15,7 +15,10 @@ title OfficeSharingPlatform
 
     section 공통
     환경 설정(Git)             :chap1, 11-16, 1d
-    개발 및 리팩토링             :chap2, 11-16, 12-16
+    개발 및 리팩토링             :chap2, 11-16, 12-17
+    배포 (테스트)               :chap3, 12-17, 12-18
+    QA                       :chap4, 12-17, 12-22
+    배포                      :chap5, 12-18, 12-22
 
     section 오령기
     Spring Jpa, QueryDsl 적용 (Main Platform)                     : chap1, 11-16, 3d
@@ -55,5 +58,6 @@ title OfficeSharingPlatform
     Place Details - 후기 & 댓글 Pagination, 부가 정보(맛집, 카페) (Main Platform)   : chap18, 12-12, 3d
     문의 & 필터 수정, 정기결제 추가 (Main Platform)                                 : chap19, 12-15, 1d
     주소 저장 로직 변경 (Admin Page, Back Office)                                : chap20, 12-16, 1d
+    마이페이지 - 예약 내역 조회 수정 (Main Platform)                                : chap21, 12-17, 1d
 
 ```
