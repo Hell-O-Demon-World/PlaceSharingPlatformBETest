@@ -19,11 +19,14 @@ public class MileageTransactionUsage {
     @OneToOne
     @JoinColumn(name = "MILEAGE_PAYMENT_UPDATE_ID")
     private MileagePaymentUpdate mileagePaymentUpdate;
-    @Column(name = "POINT")
-    private long point;
+    @OneToOne
+    @JoinColumn(name = "MILEAGE_EARNING_USAGE_ID")
+    private MileageEarningUsage mileageEarningUsage;
+    @Column(name = "USED_POINT")
+    private long usedPoint;
     @Builder
-    public MileageTransactionUsage(MileagePaymentUpdate mileagePaymentUpdate, long point) {
+    public MileageTransactionUsage(MileagePaymentUpdate mileagePaymentUpdate, long usedPoint) {
         this.mileagePaymentUpdate = mileagePaymentUpdate;
-        this.point = point;
+        this.usedPoint = usedPoint;
     }
 }

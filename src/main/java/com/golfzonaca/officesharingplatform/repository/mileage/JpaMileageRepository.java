@@ -18,7 +18,7 @@ import java.util.List;
 public class JpaMileageRepository implements MileageRepository {
     private final SpringJpaMileageRepository jpaMileageRepository;
     private final SpringJpaMileageUpdateRepository jpaMileageUpdateRepository;
-    private final SpringJpaMileageExpiredRepository jpaMileageExpiredRepository;
+    private final SpringJpaMileageEarningUsageRepository jpaMileageExpiredRepository;
     private final SpringJpaMileagePaymentRepository jpaMileagePaymentRepository;
     private final SpringJpaMileageTransactionUsageRepository jpaMileageTransactionUsageRepository;
     private final QueryDslMileageUpdateRepository queryDslMileageUpdateRepository;
@@ -45,8 +45,8 @@ public class JpaMileageRepository implements MileageRepository {
     }
 
     @Override
-    public MileageExpiredHistory save(MileageExpiredHistory mileageExpiredHistory) {
-        return jpaMileageExpiredRepository.save(mileageExpiredHistory);
+    public MileageEarningUsage save(MileageEarningUsage mileageEarningUsage) {
+        return jpaMileageExpiredRepository.save(mileageEarningUsage);
     }
 
     @Override
@@ -65,8 +65,9 @@ public class JpaMileageRepository implements MileageRepository {
     }
 
     @Override
-    public MileageExpiredHistory findExpiredMileage(MileageTransactionUsage mileageTransactionUsage) {
-        return jpaMileageExpiredRepository.findFirstByMileageTransactionUsage(mileageTransactionUsage);
+    public MileageEarningUsage findExpiredMileage(MileageTransactionUsage mileageTransactionUsage) {
+//        return jpaMileageExpiredRepository.findFirstByMileageTransactionUsage(mileageTransactionUsage);
+        return null;
     }
 
     @Override

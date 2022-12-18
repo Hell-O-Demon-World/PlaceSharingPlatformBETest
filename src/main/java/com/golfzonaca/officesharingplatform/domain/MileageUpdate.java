@@ -34,7 +34,7 @@ public class MileageUpdate {
     private MileageStatusType statusType;
     //양방향 매핑
     @OneToMany(mappedBy = "mileageUpdate")
-    private List<MileageExpiredHistory> mileageExpiredUpdateList = new LinkedList<>();
+    private List<MileageEarningUsage> mileageExpiredUpdateList = new LinkedList<>();
 
     @Builder
     public MileageUpdate(Mileage mileage, Long updatePoint, LocalDateTime updateDate, LocalDateTime expireDate, MileageStatusType statusType) {
