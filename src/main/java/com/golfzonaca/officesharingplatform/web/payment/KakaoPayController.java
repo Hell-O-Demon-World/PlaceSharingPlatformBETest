@@ -36,7 +36,7 @@ public class KakaoPayController {
     @GetMapping("/{paymentId}/kakaopayapprove")
     public void kakaoPayApprove(@PathVariable Long paymentId, @RequestParam("pg_token") String pgToken, HttpServletResponse response) throws IOException {
         kakaoPayService.kakaoPayApprovalRequest(paymentId, pgToken);
-        response.sendRedirect("https://office-sharing-platform.vercel.app/mypage/usage");
+        response.sendRedirect("https://office-sharing.vercel.app/mypage/usage");
     }
 
     @PostMapping("/kakaopaycancel")
