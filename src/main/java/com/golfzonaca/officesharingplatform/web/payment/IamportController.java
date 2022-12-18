@@ -28,11 +28,12 @@ public class IamportController {
         response.sendRedirect(url);
     }
 
-    @PostMapping("/nicpaycancel")
+    @PostMapping("/nicepaycancel")
     public void nicepayCancel(@TokenUserId Long userId, @RequestBody CancelInfo cancelInfo, HttpServletResponse response) throws IamportResponseException, IOException {
         long reservationId = cancelInfo.getReservationId();
         paymentValidation.cancelRequest(reservationId);
         String url = iamportService.nicePayCancel(userId, reservationId);
+        iamportService.cancelByReservationAndUserId(reservationId, userId);
         response.sendRedirect(url);
     }
 

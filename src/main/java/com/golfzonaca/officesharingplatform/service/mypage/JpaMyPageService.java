@@ -2,6 +2,7 @@ package com.golfzonaca.officesharingplatform.service.mypage;
 
 import com.golfzonaca.officesharingplatform.domain.*;
 import com.golfzonaca.officesharingplatform.domain.type.*;
+import com.golfzonaca.officesharingplatform.exception.InvalidResCancelRequest;
 import com.golfzonaca.officesharingplatform.exception.NonExistedReservationException;
 import com.golfzonaca.officesharingplatform.repository.comment.CommentRepository;
 import com.golfzonaca.officesharingplatform.repository.inquiry.InquiryRepository;
@@ -53,6 +54,8 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
+import static com.golfzonaca.officesharingplatform.domain.QUser.user;
+
 @Slf4j
 @Service
 @Transactional
@@ -87,9 +90,16 @@ public class JpaMyPageService implements MyPageService {
     @Override
     public void cancelByReservationAndUserId(Long reservationId, Long userId) {
         Reservation findReservation = reservationRepository.findById(reservationId);
+        Mileage mileage = findReservation.getUser().getMileage();
+        List<Payment> payments = paymentRepository.findByReservationId(findReservation.getId());
+        if (payments.size() != 1) {
+            throw new InvalidResCancelRequest("취소할 수 없는 예약입니다.");
+        }
+        Payment payment = payments.get(0);
         Long targetUserID = findReservation.getUser().getId();
         if (targetUserID.equals(userId)) {
             reservationRepository.delete(findReservation);
+            mileageService.recoveryMileage(mileage, payment);
         } else {
             log.error("token 정보가 해당 예약 정보와 일치하지 않습니다.");
             throw new NonExistedReservationException("");

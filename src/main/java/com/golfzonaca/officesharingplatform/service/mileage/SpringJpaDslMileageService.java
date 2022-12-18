@@ -83,36 +83,23 @@ public class SpringJpaDslMileageService implements MileageService {
 
     @Override
     public void recoveryMileage(Mileage mileage, Payment payment) {
-//        long totalPlusPoint = 0L;
-//        MileagePaymentUpdate paymentMileage = mileageRepository.findMileageByPayment(payment);
-//        List<MileageTransactionUsage> transactionUsageMileageList = mileageRepository.findTransactionUsageMileageByPaymentMileage(paymentMileage);
-//        for (MileageTransactionUsage mileageTransactionUsage : transactionUsageMileageList) {
-//            MileageEarningUsage expiredMileage = mileageRepository.findExpiredMileage(mileageTransactionUsage);
-//            LocalDateTime expireDate = expiredMileage.getMileageUpdate().getExpireDate();
-//            long usedPoint = mileageTransactionUsage.getUsedPoint();
-//
-//            expiredMileage.updateCurrentPoint(usedPoint);
-//            expiredMileage.updateCurrendDate(MileageTimeSetter.currentDateTime());
-//
-//            MileageUpdate mileageUpdate = MileageUpdate.builder()
-//                    .updateDate(MileageTimeSetter.currentDateTime())
-//                    .expireDate(expireDate)
-//                    .statusType(MileageStatusType.EARNING)
-//                    .build();
-//            MileageUpdate saveMileageUpdate = mileageRepository.save(mileageUpdate);
-//            MileagePaymentUpdate mileagePaymentUpdate = MileagePaymentUpdate.builder()
-//                    .mileageUpdate(saveMileageUpdate)
-//                    .updatePoint(usedPoint)
-//                    .payment(payment)
-//                    .paymentReason(MileagePaymentReason.REFUND)
-//                    .build();
-//            mileageRepository.save(mileagePaymentUpdate);
-//            mileageRepository.save(expiredMileage);
-//            totalPlusPoint += usedPoint;
-//        }
-//
-//        mileage.addPoint(totalPlusPoint);
-//        mileageRepository.save(mileage);
+        long totalPlusPoint = 0L;
+        MileagePaymentUpdate paymentMileage = mileageRepository.findMileageByPayment(payment);
+        List<MileageTransactionUsage> transactionUsageMileageList = mileageRepository.findTransactionUsageMileageByPaymentMileage(paymentMileage);
+        for (MileageTransactionUsage mileageTransactionUsage : transactionUsageMileageList) {
+            MileageEarningUsage earningUsage = mileageRepository.findExpiredMileage(mileageTransactionUsage);
+            LocalDateTime expireDate = earningUsage.getMileageUpdate().getExpireDate();
+            long usedPoint = mileageTransactionUsage.getUsedPoint();
+            if (MileageTimeSetter.currentDateTime().isBefore(expireDate)) {
+                earningUsage.updateCurrentPoint(usedPoint);
+                earningUsage.updateCurrentDate(MileageTimeSetter.currentDateTime());
+                MileageUpdate saveMileageUpdate = saveMileageUpdate(mileage, usedPoint, MileageStatusType.EARNING);
+                saveMileagePaymentUpdate(payment, usedPoint, saveMileageUpdate, MileagePaymentReason.REFUND);
+                totalPlusPoint += usedPoint;
+            }
+        }
+
+        mileage.addPoint(totalPlusPoint);
     }
 
     @Override

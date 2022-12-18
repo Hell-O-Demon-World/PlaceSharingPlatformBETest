@@ -5,7 +5,9 @@ import com.golfzonaca.officesharingplatform.domain.Refund;
 import com.golfzonaca.officesharingplatform.domain.Reservation;
 import com.golfzonaca.officesharingplatform.domain.User;
 import com.golfzonaca.officesharingplatform.domain.type.*;
+import com.golfzonaca.officesharingplatform.exception.InvalidResCancelRequest;
 import com.golfzonaca.officesharingplatform.exception.NonExistedMileageException;
+import com.golfzonaca.officesharingplatform.exception.NonExistedReservationException;
 import com.golfzonaca.officesharingplatform.repository.payment.PaymentRepository;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
 import com.golfzonaca.officesharingplatform.service.mileage.MileageService;
@@ -20,6 +22,7 @@ import com.siot.IamportRestClient.response.IamportResponse;
 import com.siot.IamportRestClient.response.Payment;
 import com.siot.IamportRestClient.response.Schedule;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +41,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Transactional
 @Service
+@Slf4j
 public class IamportService {
 
     private final ReservationRepository reservationRepository;
@@ -169,6 +173,23 @@ public class IamportService {
         return "localhost:3000/mypage/" + reservation.getId();
     }
 
+    public void cancelByReservationAndUserId(Long reservationId, Long userId) {
+        Reservation findReservation = reservationRepository.findById(reservationId);
+        Mileage mileage = findReservation.getUser().getMileage();
+        List<com.golfzonaca.officesharingplatform.domain.Payment> payments = paymentRepository.findByReservationId(findReservation.getId());
+        if (payments.size() != 1) {
+            throw new InvalidResCancelRequest("취소할 수 없는 예약입니다.");
+        }
+        com.golfzonaca.officesharingplatform.domain.Payment payment = payments.get(0);
+        Long targetUserID = findReservation.getUser().getId();
+        if (targetUserID.equals(userId)) {
+            reservationRepository.delete(findReservation);
+            mileageService.recoveryMileage(mileage, payment);
+        } else {
+            log.error("token 정보가 해당 예약 정보와 일치하지 않습니다.");
+            throw new NonExistedReservationException("");
+        }
+    }
     private IamportResponse<List<Schedule>> nicePayCancelSubscribe(com.golfzonaca.officesharingplatform.domain.Payment payment) throws IamportResponseException, IOException {
         IamportClient iamportClient = new IamportClient(apiKey, apiSecret);
         User user = payment.getReservation().getUser();
@@ -186,7 +207,7 @@ public class IamportService {
     }
 
     public List<IamportResponse<Payment>> nicePayCancelOneTime(com.golfzonaca.officesharingplatform.domain.Payment payment) throws IamportResponseException, IOException {
-//        restoreUserMileage(payment);
+        restoreUserMileage(payment);
         Refund refunds = refundService.processingRefundData(payment);
         List<IamportResponse<Payment>> iamportResponses = refundRequest(refunds);
         return iamportResponses;
@@ -203,7 +224,6 @@ public class IamportService {
         refundResult.add(iamportResponse);
         refund.updateRefundStatus(true);
         refund.getPayment().updatePayStatus(PaymentStatus.CANCELED);
-
         return refundResult;
     }
 
