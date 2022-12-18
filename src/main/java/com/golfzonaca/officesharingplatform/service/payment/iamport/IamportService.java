@@ -54,8 +54,8 @@ public class IamportService {
 
         Reservation findReservation = reservationRepository.findById(nicePayRequestForm.getReservationId());
         Long findPlaceId = findReservation.getRoom().getPlace().getId();
-        String redirectUrlPayFailure = "localhost:3000/place/" + findPlaceId.toString();
-        String redirectUrlPaySuccess = "localhost:3000/mypage/" + findReservation.getId();
+        String redirectUrlPayFailure = "https://office-sharing-platform.vercel.app/place/" + findPlaceId.toString();
+        String redirectUrlPaySuccess = "https://office-sharing-platform.vercel.app/mypage/" + findReservation.getId();
 
         if (findReservation.getRoom().getRoomKind().getRoomType().toString().contains("OFFICE")) {
             IamportResponse<List<Schedule>> iamportListResponse = requestNicePaySubscribe(userId, nicePayRequestForm);
@@ -163,7 +163,7 @@ public class IamportService {
             }
         }
         reservation.updateAllStatus(ReservationStatus.CANCELED, FixStatus.CANCELED);
-        return "localhost:3000/mypage/" + reservation.getId();
+        return "https://office-sharing-platform.vercel.app/mypage/" + reservation.getId();
     }
 
     private IamportResponse<List<Schedule>> nicePayCancelSubscribe(com.golfzonaca.officesharingplatform.domain.Payment payment) throws IamportResponseException, IOException {
