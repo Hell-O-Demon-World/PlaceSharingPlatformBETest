@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -122,12 +123,11 @@ public class SpringJpaDslMileageService implements MileageService {
         MileageUpdate savedUpdateMileage = saveMileageUpdate(findMileage, payMileage, MileageStatusType.USE);
         MileagePaymentUpdate savedPaymentMileage = saveMileagePaymentUpdate(payment, payMileage, savedUpdateMileage, MileagePaymentReason.USE_MILEAGE);
 
-        List<MileageEarningUsage> mileageEarningUsageList = mileageRepository.findAllMileageEarningUsageByMileageUpdate(savedUpdateMileage);
+        List<MileageEarningUsage> mileageEarningUsageList = mileageRepository.findAllMileageEarningUsageByMileage(findMileage);
         long remainMileagePoint = payMileage;
         for (MileageEarningUsage update : mileageEarningUsageList) {
             Long updatePoint = update.getCurrentPoint();
             if (updatePoint > 0) {
-                long currentPoint = 0L;
                 long minusPoint = updatePoint;
                 if (updatePoint <= remainMileagePoint) {
                     remainMileagePoint -= updatePoint;

@@ -2,6 +2,7 @@ package com.golfzonaca.officesharingplatform.repository.mileage;
 
 import com.golfzonaca.officesharingplatform.domain.*;
 import com.golfzonaca.officesharingplatform.exception.NonExistedMileageException;
+import com.golfzonaca.officesharingplatform.repository.mileage.querydsl.QueryDslMileageEarningUsageRepository;
 import com.golfzonaca.officesharingplatform.repository.mileage.querydsl.QueryDslMileagePaymentUpdateRepository;
 import com.golfzonaca.officesharingplatform.repository.mileage.querydsl.QueryDslMileageUpdateRepository;
 import com.golfzonaca.officesharingplatform.repository.mileage.springdatajpa.*;
@@ -23,6 +24,7 @@ public class JpaMileageRepository implements MileageRepository {
     private final SpringJpaMileageTransactionUsageRepository jpaMileageTransactionUsageRepository;
     private final QueryDslMileageUpdateRepository queryDslMileageUpdateRepository;
     private final QueryDslMileagePaymentUpdateRepository queryDslMileagePaymentUpdateRepository;
+    private final QueryDslMileageEarningUsageRepository queryDslMileageEarningUsageRepository;
 
     @Override
     public Mileage save(Mileage mileage) {
@@ -101,7 +103,7 @@ public class JpaMileageRepository implements MileageRepository {
     }
 
     @Override
-    public List<MileageEarningUsage> findAllMileageEarningUsageByMileageUpdate(MileageUpdate mileageUpdate) {
-        return jpaMileageEarningUsageRepository.findAllByMileageUpdate(mileageUpdate);
+    public List<MileageEarningUsage> findAllMileageEarningUsageByMileage(Mileage mileage) {
+        return queryDslMileageEarningUsageRepository.findAllByMileage(mileage);
     }
 }

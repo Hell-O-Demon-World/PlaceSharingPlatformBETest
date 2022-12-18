@@ -24,5 +24,5 @@ public interface MileageRepository {
 
     MileagePaymentUpdate findMileagePaymentByMileageUpdate(MileageUpdate mileageUpdate);
 
-    List<MileageEarningUsage> findAllMileageEarningUsageByMileageUpdate(MileageUpdate mileageUpdate);
+    List<MileageEarningUsage> findAllMileageEarningUsageByMileage(Mileage mileage);
 }
