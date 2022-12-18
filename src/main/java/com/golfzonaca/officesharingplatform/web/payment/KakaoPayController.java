@@ -7,6 +7,7 @@ import com.golfzonaca.officesharingplatform.web.payment.dto.PaymentInfo;
 import com.golfzonaca.officesharingplatform.web.payment.dto.kakaopay.KakaoPayCancelResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -14,13 +15,14 @@ import java.io.IOException;
 import java.util.List;
 
 @Slf4j
-@RestController
+@Controller
 @RequestMapping("/payment")
 @RequiredArgsConstructor
 public class KakaoPayController {
 
     private final KakaoPayService kakaoPayService;
 
+    @ResponseBody
     @PostMapping("/kakaopay")
     public String kakaoPayReady(@TokenUserId Long userId, @RequestBody PaymentInfo paymentInfo) {
         log.info("kakaoPayReady");
@@ -37,6 +39,7 @@ public class KakaoPayController {
         response.sendRedirect("https://office-sharing-platform.vercel.app/mypage/usage");
     }
 
+    @ResponseBody
     @PostMapping("/kakaopaycancel")
     public List<KakaoPayCancelResponse> kakaoPayCancel(@TokenUserId Long userId, @RequestBody CancelInfo cancelInfo) {
         Long reservationId = cancelInfo.getReservationId();
