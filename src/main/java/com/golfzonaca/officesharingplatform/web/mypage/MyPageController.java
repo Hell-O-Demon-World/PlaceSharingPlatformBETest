@@ -1,6 +1,7 @@
 package com.golfzonaca.officesharingplatform.web.mypage;
 
 import com.golfzonaca.officesharingplatform.annotation.TokenUserId;
+import com.golfzonaca.officesharingplatform.auth.token.JwtManager;
 import com.golfzonaca.officesharingplatform.domain.User;
 import com.golfzonaca.officesharingplatform.service.mypage.MyPageService;
 import com.golfzonaca.officesharingplatform.service.reservation.ReservationService;
@@ -51,9 +52,13 @@ public class MyPageController {
     }
 
     @PostMapping("/cancel")
-    public void cancelReservation(@TokenUserId Long userId, @RequestBody ReservationCancelForm reservationCancelForm) {
+    public ResponseEntity<?> cancelReservation(@TokenUserId Long userId, @RequestBody ReservationCancelForm reservationCancelForm) {
         mypageRequestValidation.validationReservation(userId, reservationCancelForm.getReservationId());
-        myPageService.cancelByReservationAndUserId(reservationCancelForm.getReservationId(), userId);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(URI.create("/nicepaycancel"));
+        headers.setBearerAuth(JwtManager.createAccessJwt(userId).getEncoded());
+
+        return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
     }
 
     @GetMapping("/review")
