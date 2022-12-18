@@ -224,6 +224,7 @@ public class JpaMyPageService implements MyPageService {
             for (Payment payment : paymentList) {
                 if (payment.getPayWay().equals(PayWay.POSTPAYMENT)) {
                     payment.addReceipt(receipt);
+                    payment.updatePayStatus(PaymentStatus.COMPLETED);
                 }
             }
         } catch (IamportResponseException | IOException e) {
