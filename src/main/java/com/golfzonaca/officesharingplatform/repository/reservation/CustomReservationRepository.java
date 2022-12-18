@@ -106,4 +106,9 @@ public class CustomReservationRepository implements ReservationRepository {
         return queryReservationRepository.findAllRoomByPlaceAndRoomKindAndStartDateAndEndDate(place, selectedType, date, endDate);
     }
 
+    @Override
+    public Reservation findByIdAndUserID(long reservationId, Long userId) {
+        return jpaReservationRepository.findFirstByIdAndUserId(reservationId, userId).orElseThrow(()-> new NonExistedReservationException("조건에 맞는 예약이 없습니다."));
+    }
+
 }

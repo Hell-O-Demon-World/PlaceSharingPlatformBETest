@@ -52,4 +52,7 @@ public class RequestValidation {
         ratingRepository.findById(ratingId);
     }
 
+    public void validUserAndReservation(Long userId, long reservationId) {
+        reservationRepository.findByIdAndUserID(reservationId, userId);
+    }
 }
