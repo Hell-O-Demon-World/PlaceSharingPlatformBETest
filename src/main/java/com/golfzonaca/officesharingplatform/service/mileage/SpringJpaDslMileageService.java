@@ -87,7 +87,7 @@ public class SpringJpaDslMileageService implements MileageService {
         MileagePaymentUpdate paymentMileage = mileageRepository.findMileageByPayment(payment);
         List<MileageTransactionUsage> transactionUsageMileageList = mileageRepository.findTransactionUsageMileageByPaymentMileage(paymentMileage);
         for (MileageTransactionUsage mileageTransactionUsage : transactionUsageMileageList) {
-            MileageEarningUsage earningUsage = mileageRepository.findExpiredMileage(mileageTransactionUsage);
+            MileageEarningUsage earningUsage = mileageTransactionUsage.getMileageEarningUsage();
             LocalDateTime expireDate = earningUsage.getMileageUpdate().getExpireDate();
             long usedPoint = mileageTransactionUsage.getUsedPoint();
             if (MileageTimeSetter.currentDateTime().isBefore(expireDate)) {

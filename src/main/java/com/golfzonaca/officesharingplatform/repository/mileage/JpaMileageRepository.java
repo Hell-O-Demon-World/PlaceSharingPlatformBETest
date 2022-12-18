@@ -67,7 +67,7 @@ public class JpaMileageRepository implements MileageRepository {
     }
 
     @Override
-    public MileageEarningUsage findExpiredMileage(MileageTransactionUsage mileageTransactionUsage) {
+    public MileageEarningUsage findEarningMileage(MileageTransactionUsage mileageTransactionUsage) {
 //        return jpaMileageExpiredRepository.findFirstByMileageTransactionUsage(mileageTransactionUsage);
         return null;
     }

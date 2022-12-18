@@ -26,7 +26,7 @@ public class QueryDslMileagePaymentUpdateRepository {
     public Optional<MileagePaymentUpdate> findFirstMileageByPayment(Payment payment) {
         return Optional.ofNullable(query.selectFrom(mileagePaymentUpdate)
                 .innerJoin(mileagePaymentUpdate.payment)
-                .where(mileagePaymentUpdate.payment.id.eq(payment.getId()))
+                .where(mileagePaymentUpdate.payment.eq(payment))
                 .fetchFirst());
     }
 

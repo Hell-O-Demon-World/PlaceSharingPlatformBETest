@@ -180,8 +180,10 @@ public class IamportService {
         com.golfzonaca.officesharingplatform.domain.Payment payment = payments.get(0);
         Long targetUserID = findReservation.getUser().getId();
         if (targetUserID.equals(userId)) {
-            reservationRepository.delete(findReservation);
-            mileageService.recoveryMileage(mileage, payment);
+            if (payment.getType().equals(PayType.FULL_PAYMENT)) {
+                mileageService.recoveryMileage(mileage, payment);
+            }
+//            reservationRepository.delete(findReservation);
         } else {
             log.error("token 정보가 해당 예약 정보와 일치하지 않습니다.");
             throw new NonExistedReservationException("");

@@ -7,6 +7,5 @@ public interface MileageService {
     Mileage join();
     void savingFullPaymentMileage(Payment payment);
     void recoveryMileage(Mileage mileage, Payment payment);
-
     void payingMileage(Payment payment);
 }
