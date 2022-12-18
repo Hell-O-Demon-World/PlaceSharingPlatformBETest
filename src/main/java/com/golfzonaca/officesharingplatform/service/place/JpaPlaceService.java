@@ -4,9 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.golfzonaca.officesharingplatform.domain.*;
 import com.golfzonaca.officesharingplatform.domain.type.RoomType;
 import com.golfzonaca.officesharingplatform.domain.type.kakaoapi.MapCategoryGroupCode;
+import com.golfzonaca.officesharingplatform.exception.UnavailablePlaceException;
 import com.golfzonaca.officesharingplatform.repository.comment.CommentRepository;
 import com.golfzonaca.officesharingplatform.repository.place.PlaceRepository;
 import com.golfzonaca.officesharingplatform.repository.rating.RatingRepository;
+import com.golfzonaca.officesharingplatform.repository.room.RoomRepository;
 import com.golfzonaca.officesharingplatform.repository.roomkind.RoomKindRepository;
 import com.golfzonaca.officesharingplatform.service.place.dto.comment.CommentDto;
 import com.golfzonaca.officesharingplatform.service.place.dto.place.PlaceListDto;
@@ -45,6 +47,7 @@ import java.util.*;
 public class JpaPlaceService implements PlaceService {
     private final PlaceRepository placeRepository;
     private final RoomKindRepository roomKindRepository;
+    private final RoomRepository roomRepository;
     private final RatingRepository ratingRepository;
     private final CommentRepository commentRepository;
 
@@ -273,12 +276,16 @@ public class JpaPlaceService implements PlaceService {
 
     private String getQuantityByRoomType(Place place, String roomType) {
         int quantity = 0;
-        for (Room room : place.getRooms()) {
-            if (room.getRoomKind().getRoomType().toString().contains(roomType)) {
-                quantity++;
+        List<Room> availableRoomList = roomRepository.findAvailableRoomsByPlace(place);
+        if (!availableRoomList.isEmpty()) {
+            for (Room room : availableRoomList) {
+                if (room.getRoomKind().getRoomType().toString().contains(roomType)) {
+                    quantity++;
+                }
             }
+            return String.valueOf(quantity);
         }
-        return String.valueOf(quantity);
+        throw new UnavailablePlaceException("현재 해당 PLACE 는 사용 불가합니다.");
     }
 
     public Map<Integer, PlaceListDto> processingMainPlaceData(List<Place> places) {

@@ -19,6 +19,11 @@ public class CustomRoomRepository implements RoomRepository {
     private final QueryRoomRepository queryRoomRepository;
 
     @Override
+    public List<Room> findAvailableRoomsByPlace(Place place) {
+        return queryRoomRepository.findAvailableRoomsByPlace(place);
+    }
+
+    @Override
     public List<Room> findRoomByPlaceIdAndRoomKindId(Long placeId, Long roomKindId) {
         return findAll(RoomSearchCond.builder()
                 .placeId(placeId)
