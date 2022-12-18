@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @RestController
@@ -23,17 +22,15 @@ public class IamportController {
     private final PaymentValidation paymentValidation;
 
     @PostMapping("/nicepay")
-    public void nicePay(@TokenUserId Long userId, @RequestBody NicePayRequestForm nicePayRequestForm, HttpServletResponse response) throws IamportResponseException, IOException {
-        String url = iamportService.requestNicePay(userId, nicePayRequestForm);
-        response.sendRedirect(url);
+    public String nicePay(@TokenUserId Long userId, @RequestBody NicePayRequestForm nicePayRequestForm) throws IamportResponseException, IOException {
+        return iamportService.requestNicePay(userId, nicePayRequestForm);
     }
 
     @PostMapping("/nicpaycancel")
-    public void nicepayCancel(@TokenUserId Long userId, @RequestBody CancelInfo cancelInfo, HttpServletResponse response) throws IamportResponseException, IOException {
+    public String nicepayCancel(@TokenUserId Long userId, @RequestBody CancelInfo cancelInfo) throws IamportResponseException, IOException {
         long reservationId = cancelInfo.getReservationId();
         paymentValidation.cancelRequest(reservationId);
-        String url = iamportService.nicePayCancel(userId, reservationId);
-        response.sendRedirect(url);
+        return iamportService.nicePayCancel(userId, reservationId);
     }
 
 }

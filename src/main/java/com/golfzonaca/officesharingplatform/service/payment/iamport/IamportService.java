@@ -53,36 +53,33 @@ public class IamportService {
 
     public String requestNicePay(Long userId, NicePayRequestForm nicePayRequestForm) throws IamportResponseException, IOException {
 
-        Reservation findReservation = reservationRepository.findById(nicePayRequestForm.getReservationId());
-        Long findPlaceId = findReservation.getRoom().getPlace().getId();
-        String redirectUrlPayFailure = "https://office-sharing.vercel.app/place/" + findPlaceId.toString();
-        String redirectUrlPaySuccess = "https://office-sharing.vercel.app/mypage/" + findReservation.getId();
+        Reservation reservation = reservationRepository.findById(nicePayRequestForm.getReservationId());
 
-        if (findReservation.getRoom().getRoomKind().getRoomType().toString().contains("OFFICE")) {
+        if (reservation.getRoom().getRoomKind().getRoomType().toString().contains("OFFICE")) {
             IamportResponse<List<Schedule>> iamportListResponse = requestNicePaySubscribe(userId, nicePayRequestForm);
             if (iamportListResponse.getCode() != 0) {
-                return redirectUrlPayFailure;
+                return iamportListResponse.getMessage();
             }
         } else {
             if (PayType.DEPOSIT.toString().equals(nicePayRequestForm.getPayType())) {
                 IamportResponse<Payment> iamportResponse = requestNicePayOnetime(userId, nicePayRequestForm);
                 if (iamportResponse.getCode() != 0) {
-                    return redirectUrlPayFailure;
+                    return iamportResponse.getMessage();
                 }
                 nicePayRequestForm.changePayTypeAndPayWay(PayType.BALANCE.toString(), PayWay.POSTPAYMENT.toString());
                 IamportResponse<List<Schedule>> paymentTypeAndWayResponse = requestNicePaySubscribe(userId, nicePayRequestForm);
                 if (paymentTypeAndWayResponse.getCode() != 0) {
-                    return redirectUrlPayFailure;
+                    return paymentTypeAndWayResponse.getMessage();
                 }
             } else {
                 IamportResponse<Payment> iamportResponseFinally = requestNicePayOnetime(userId, nicePayRequestForm);
                 if (iamportResponseFinally.getCode() != 0) {
-                    return redirectUrlPayFailure;
+                    return iamportResponseFinally.getMessage();
                 }
             }
         }
-        findReservation.updateResStatus(ReservationStatus.COMPLETED);
-        return redirectUrlPaySuccess;
+        reservation.updateResStatus(ReservationStatus.COMPLETED);
+        return String.valueOf(reservation.getId());
     }
 
     public IamportResponse<Payment> requestNicePayOnetime(Long userId, NicePayRequestForm nicePayRequestForm) throws IamportResponseException, IOException {
@@ -166,7 +163,7 @@ public class IamportService {
             }
         }
         reservation.updateAllStatus(ReservationStatus.CANCELED, FixStatus.CANCELED);
-        return "https://office-sharing.vercel.app/mypage/" + reservation.getId();
+        return "결제가 성공적으로 취소되었습니다.";
     }
 
     private IamportResponse<List<Schedule>> nicePayCancelSubscribe(com.golfzonaca.officesharingplatform.domain.Payment payment) throws IamportResponseException, IOException {
