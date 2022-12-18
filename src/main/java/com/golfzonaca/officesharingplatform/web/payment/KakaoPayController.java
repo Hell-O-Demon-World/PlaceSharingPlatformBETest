@@ -33,7 +33,7 @@ public class KakaoPayController {
     }
 
     @GetMapping("/{paymentId}/kakaopayapprove")
-    public void kakaoPayApprove(@PathVariable long paymentId, @RequestParam("pg_token") String pgToken, HttpServletResponse response) throws IOException {
+    public void kakaoPayApprove(@PathVariable Long paymentId, @RequestParam("pg_token") String pgToken, HttpServletResponse response) throws IOException {
         kakaoPayService.kakaoPayApprovalRequest(paymentId, pgToken);
         response.sendRedirect("http://localhost:3000/mypage/usage");
     }

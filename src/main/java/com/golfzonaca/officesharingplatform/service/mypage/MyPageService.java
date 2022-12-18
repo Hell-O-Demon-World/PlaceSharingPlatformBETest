@@ -34,4 +34,6 @@ public interface MyPageService {
     void clearPreoccupiedReservation(Long userId);
 
     void getReceiptForSubscribe(Long userId, long reservationId);
+
+    void fixReservation(Long userId, Long reservationId);
 }

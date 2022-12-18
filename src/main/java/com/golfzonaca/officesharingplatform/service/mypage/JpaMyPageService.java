@@ -10,6 +10,7 @@ import com.golfzonaca.officesharingplatform.repository.mileage.MileageRepository
 import com.golfzonaca.officesharingplatform.repository.rating.RatingRepository;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
 import com.golfzonaca.officesharingplatform.repository.user.UserRepository;
+import com.golfzonaca.officesharingplatform.service.mileage.MileageService;
 import com.golfzonaca.officesharingplatform.service.mypage.dto.comment.CommentDataByRating;
 import com.golfzonaca.officesharingplatform.service.mypage.dto.comment.MyCommentData;
 import com.golfzonaca.officesharingplatform.service.mypage.dto.edituserinfo.EditUserInfo;
@@ -63,6 +64,7 @@ public class JpaMyPageService implements MyPageService {
     private final InquiryStatusRepository inquiryStatusRepository;
     private final MileageRepository mileageRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final MileageService mileageService;
 
     @Value("${iamport.api.apiKey}")
     private String apiKey;
@@ -229,6 +231,22 @@ public class JpaMyPageService implements MyPageService {
             }
         } catch (IamportResponseException | IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void fixReservation(Long userId, Long reservationId) {
+        Reservation findReservation = reservationRepository.findById(reservationId);
+        RoomType findRoomType = findReservation.getRoom().getRoomKind().getRoomType();
+        if (!findRoomType.name().contains("OFFICE") && findReservation.getFixStatus().equals(FixStatus.UNFIXED)) {
+            List<Payment> paymentList = findReservation.getPaymentList();
+            for (Payment payment : paymentList) {
+                if (payment.getReservation().getStatus().equals(ReservationStatus.COMPLETED) && payment.getType().equals(PayType.FULL_PAYMENT)) {
+                    mileageService.savingFullPaymentMileage(payment);
+                    findReservation.changeFixStatus(FixStatus.FIXED);
+                    break;
+                }
+            }
         }
     }
 
