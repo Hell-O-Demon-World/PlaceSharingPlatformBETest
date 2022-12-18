@@ -18,7 +18,7 @@ import java.util.List;
 public class JpaMileageRepository implements MileageRepository {
     private final SpringJpaMileageRepository jpaMileageRepository;
     private final SpringJpaMileageUpdateRepository jpaMileageUpdateRepository;
-    private final SpringJpaMileageEarningUsageRepository jpaMileageExpiredRepository;
+    private final SpringJpaMileageEarningUsageRepository jpaMileageEarningUsageRepository;
     private final SpringJpaMileagePaymentRepository jpaMileagePaymentRepository;
     private final SpringJpaMileageTransactionUsageRepository jpaMileageTransactionUsageRepository;
     private final QueryDslMileageUpdateRepository queryDslMileageUpdateRepository;
@@ -46,7 +46,7 @@ public class JpaMileageRepository implements MileageRepository {
 
     @Override
     public MileageEarningUsage save(MileageEarningUsage mileageEarningUsage) {
-        return jpaMileageExpiredRepository.save(mileageEarningUsage);
+        return jpaMileageEarningUsageRepository.save(mileageEarningUsage);
     }
 
     @Override
@@ -98,5 +98,10 @@ public class JpaMileageRepository implements MileageRepository {
     @Override
     public MileagePaymentUpdate findMileagePaymentByMileageUpdate(MileageUpdate mileageUpdate) {
         return queryDslMileagePaymentUpdateRepository.findFirstMileageByUpdate(mileageUpdate);
+    }
+
+    @Override
+    public List<MileageEarningUsage> findAllMileageEarningUsageByMileageUpdate(MileageUpdate mileageUpdate) {
+        return jpaMileageEarningUsageRepository.findAllByMileageUpdate(mileageUpdate);
     }
 }

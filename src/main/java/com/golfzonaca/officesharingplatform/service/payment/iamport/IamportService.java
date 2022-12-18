@@ -5,6 +5,7 @@ import com.golfzonaca.officesharingplatform.domain.Refund;
 import com.golfzonaca.officesharingplatform.domain.Reservation;
 import com.golfzonaca.officesharingplatform.domain.User;
 import com.golfzonaca.officesharingplatform.domain.type.*;
+import com.golfzonaca.officesharingplatform.exception.NonExistedMileageException;
 import com.golfzonaca.officesharingplatform.repository.payment.PaymentRepository;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
 import com.golfzonaca.officesharingplatform.service.mileage.MileageService;
@@ -109,8 +110,13 @@ public class IamportService {
         //paymentRepository에 저장
         com.golfzonaca.officesharingplatform.domain.Payment paymentSave = paymentRepository.save(payment);
 
+        Mileage userMileage = paymentSave.getReservation().getUser().getMileage();
+        long userMileagePoint = userMileage.getPoint();
         if (payment.getPayMileage() > 0) {
-            mileageService.payingMileage(paymentSave);
+            if (userMileagePoint < payment.getPayMileage()) {
+                throw new NonExistedMileageException("가지고 있는 마일리지보다 사용할 마일리지가 클 수 없습니다.");
+            }
+            mileageService.payingMileage(payment);
         }
         IamportResponse<Payment> iamportResponse = iamportClient.onetimePayment(onetimePaymentData);
         payment.addReceipt(iamportResponse.getResponse().getReceiptUrl());

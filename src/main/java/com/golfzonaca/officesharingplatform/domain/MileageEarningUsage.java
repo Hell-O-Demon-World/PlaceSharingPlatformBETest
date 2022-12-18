@@ -24,6 +24,7 @@ public class MileageEarningUsage {
     private Long currentPoint;
     @Column(name = "UPDATE_DATE")
     private LocalDateTime updateDate;
+
     @Builder
     public MileageEarningUsage(MileageTransactionUsage mileageTransactionUsage, MileageUpdate mileageUpdate, Long currentPoint, LocalDateTime updateDate) {
         this.mileageUpdate = mileageUpdate;
@@ -31,11 +32,19 @@ public class MileageEarningUsage {
         this.updateDate = updateDate;
     }
 
-    public void updateCurrendDate(LocalDateTime currentDateTime) {
+    public void updateCurrentDate(LocalDateTime currentDateTime) {
         this.updateDate = currentDateTime;
     }
 
     public void updateCurrentPoint(long usedPoint) {
         this.currentPoint += usedPoint;
+    }
+
+    public void minusPoint(Long minusPoint) {
+        if (this.currentPoint - minusPoint < 0) {
+            this.currentPoint = 0L;
+        } else {
+            this.currentPoint -= minusPoint;
+        }
     }
 }

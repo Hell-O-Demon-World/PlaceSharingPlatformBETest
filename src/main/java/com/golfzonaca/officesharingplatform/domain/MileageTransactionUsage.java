@@ -25,8 +25,9 @@ public class MileageTransactionUsage {
     @Column(name = "USED_POINT")
     private long usedPoint;
     @Builder
-    public MileageTransactionUsage(MileagePaymentUpdate mileagePaymentUpdate, long usedPoint) {
+    public MileageTransactionUsage(MileagePaymentUpdate mileagePaymentUpdate, MileageEarningUsage mileageEarningUsage , long usedPoint) {
         this.mileagePaymentUpdate = mileagePaymentUpdate;
         this.usedPoint = usedPoint;
+        this.mileageEarningUsage = mileageEarningUsage;
     }
 }
