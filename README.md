@@ -30,6 +30,9 @@ title OfficeSharingPlatform
     이메일 검증                                                     : chap7, 11-25, 1d
     Reservation Part.2 - 투포인터 알고리즘 적용                        : chap8, 11-28, 1d
     Reservation Part.3 - 투포인터 알고리즘 적용                        : chap8, 11-29, 1d
+    인증(시큐리티) 수정 (Back Office)                : chap1, 11-16, 1d
+    인증(시큐리티) 수정 (Back Office)                : chap2, 12-14, 2d
+    정보 암호화 (ID, PW, API KEY 등) (Back Office)  : chap3, 12-16, 1d
 
     section 최한성
     KakaoPay 도입        : chap1, 11-16, 5d
@@ -53,11 +56,15 @@ title OfficeSharingPlatform
     이미지 업로드 추가 (Back Office)                                             : chap13, 12-01, 2d
     공간 상세 정보와 Reservation Part.1 통합 (Main Platform)                      : chap14, 12-03, 2d
     마이페이지  - 예약 내역 조회 (Main Platform)                                   : chap15, 12-07, 2d
+    이미지 업로드 수정 (Back Office)                : chap6, 12-08, 1d
     Spring Cache (CaffeineCache) 도입 (Main Platform)                         : chap16, 12-08, 2d
     마이페이지 - 조회(오버뷰, 후기, 댓글), 수정(회원정보) (Main Platform)                : chap17, 12-10, 3d
     Place Details - 후기 & 댓글 Pagination, 부가 정보(맛집, 카페) (Main Platform)   : chap18, 12-12, 3d
     문의 & 필터 수정, 정기결제 추가 (Main Platform)                                 : chap19, 12-15, 1d
     주소 저장 로직 변경 (Admin Page, Back Office)                                : chap20, 12-16, 1d
     마이페이지 - 예약 내역 조회 수정 (Main Platform)                                : chap21, 12-17, 1d
+    예외 처리 (Back Office)                       : chap8, 12-16, 1d
+    배포 (테스트) (Back Office)                    : chap9, 12-17, 1d
+    배포 (Back Office)                            : chap10, 12-18, 1d
 
 ```

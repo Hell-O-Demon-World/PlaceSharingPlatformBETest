@@ -54,8 +54,6 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
-import static com.golfzonaca.officesharingplatform.domain.QUser.user;
-
 @Slf4j
 @Service
 @Transactional
@@ -553,7 +551,7 @@ public class JpaMyPageService implements MyPageService {
             Payment payment = paymentList.get(i);
             myPaymentAndRefundDetail.put("payment", gson.toJsonTree(new MyPaymentDetail(payment.getPayDate().toString(), payment.getPayTime().toString(), payment.getPrice(), payment.getPayMileage(), payment.getType().getDescription(), payment.getReceipt())).getAsJsonObject());
             if (Optional.ofNullable(payment.getRefund()).isPresent()) {
-                myPaymentAndRefundDetail.put("refund", gson.toJsonTree(new MyRefundDetail(payment.getRefund().getRefundDateTime().toLocalDate().toString(), payment.getRefund().getRefundDateTime().toLocalTime().toString(), payment.getRefund().getRefundPrice())).getAsJsonObject());
+                myPaymentAndRefundDetail.put("refund", gson.toJsonTree(new MyRefundDetail(payment.getRefund().getRefundDateTime().toLocalDate().toString(), payment.getRefund().getRefundDateTime().toLocalTime().toString(), payment.getRefund().getRefundPrice(), payment.getPayMileage())).getAsJsonObject());
             }
             myPaymentAndRefundDetailData.put(String.valueOf(i), gson.toJsonTree(myPaymentAndRefundDetail).getAsJsonObject());
         }
