@@ -4,7 +4,6 @@ import com.golfzonaca.officesharingplatform.domain.type.PG;
 import com.golfzonaca.officesharingplatform.domain.type.PayType;
 import com.golfzonaca.officesharingplatform.domain.type.PayWay;
 import com.golfzonaca.officesharingplatform.domain.type.PaymentStatus;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -65,9 +64,8 @@ public class Payment {
 
     @OneToOne(mappedBy = "payment")
     private Refund refund;
-
-    @Builder
-    public Payment(Reservation reservation, LocalDate payDate, LocalTime payTime, long price, long payMileage, PayWay payWay, long savedMileage, PayType type, String apiCode, PG pg, PaymentStatus payStatus) {
+    
+    public Payment(Reservation reservation, LocalDate payDate, LocalTime payTime, long price, long payMileage, PayWay payWay, long savedMileage, PayType type, String apiCode, PG pg, PaymentStatus payStatus, String receipt) {
         this.reservation = reservation;
         this.payDate = payDate;
         this.payTime = payTime;
@@ -79,6 +77,7 @@ public class Payment {
         this.apiCode = apiCode;
         this.pg = pg;
         this.payStatus = payStatus;
+        this.receipt = receipt;
     }
 
     public void updatePayStatus(PaymentStatus payStatus) {
