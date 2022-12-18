@@ -99,7 +99,7 @@ public class QueryRoomRepository {
                 .select(room)
                 .from(room)
                 .innerJoin(room.roomKind)
-                .where(eqPlaceId(placeId), eqRoomType(roomType), room.roomStatus.status.eq(true))
+                .where(eqPlaceId(placeId), eqRoomType(roomType))
                 .fetch();
     }
 
