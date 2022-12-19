@@ -496,6 +496,19 @@ public class JpaMyPageService implements MyPageService {
         return result;
     }
 
+    private Boolean isCancelation(Reservation reservation) {
+        boolean result = false;
+        List<Payment> paymentList = reservation.getPaymentList();
+        if (reservation.getStatus().equals(ReservationStatus.COMPLETED) && reservation.getFixStatus().equals(FixStatus.UNFIXED)) {
+            for (Payment payment : paymentList) {
+                if (!payment.getType().equals(PayType.BALANCE) && payment.getPayStatus().equals(PaymentStatus.COMPLETED)) {
+                    result = true;
+                    break;
+                }
+            }
+        }
+        return result;
+    }
     @NotNull
     private Map<String, JsonObject> processingCommentDataByRating(Rating rating, Integer page) {
         Gson gson = new Gson();

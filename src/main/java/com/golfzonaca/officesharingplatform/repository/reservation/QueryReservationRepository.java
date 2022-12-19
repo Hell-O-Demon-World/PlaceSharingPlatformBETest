@@ -1,7 +1,7 @@
 package com.golfzonaca.officesharingplatform.repository.reservation;
 
 import com.golfzonaca.officesharingplatform.domain.*;
-import com.golfzonaca.officesharingplatform.domain.type.ReservationStatus;
+import com.golfzonaca.officesharingplatform.domain.type.FixStatus;
 import com.golfzonaca.officesharingplatform.domain.type.RoomType;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -11,12 +11,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static com.golfzonaca.officesharingplatform.domain.QReservation.reservation;
-import static com.golfzonaca.officesharingplatform.domain.QRoom.room;
 
 
 @Slf4j
@@ -47,13 +48,13 @@ public class QueryReservationRepository {
 
     Optional<Reservation> findFirstByPlaceIdAndRoomTypeAndDate(Long placeId, RoomType roomType, LocalDate date) {
         Optional<RoomType> optionalRoomType = Optional.ofNullable(roomType);
+        Optional<LocalDate> optionalLocalDate = Optional.ofNullable(date);
         return Optional.ofNullable(query
                 .select(reservation)
                 .from(reservation)
                 .innerJoin(reservation.room.place)
                 .innerJoin(reservation.room.roomKind)
-                .where(reservation.room.place.id.eq(placeId), eqRoomType(optionalRoomType)
-                        , reservation.resStartDate.before(date).and(reservation.resEndDate.after(date)))
+                .where(reservation.room.place.id.eq(placeId), reservation.fixStatus.eq(FixStatus.FIXED), eqRoomType(optionalRoomType), betweenStartDateAndEndDate(optionalLocalDate))
                 .fetchFirst());
     }
 
@@ -90,9 +91,15 @@ public class QueryReservationRepository {
 
     public List<Reservation> findInResValid(User user, Place place, LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
         log.info("Reservation findInResValid");
+        Optional<LocalDate> startDateOptional = Optional.ofNullable(startDate);
+        Optional<LocalDate> endDateOptional = Optional.ofNullable(endDate);
+        Optional<LocalTime> startTimeOptional = Optional.ofNullable(startTime);
+        Optional<LocalTime> endTimeOptional = Optional.ofNullable(endTime);
         return query
                 .selectFrom(reservation)
-                .where(userEquals(user), PlaceEquals(place), startDateEquals(startDate), endDateEquals(endDate), startTimeLoe(startTime).and(endTimeGt(startTime)).or(startTimeGt(startTime).and(startTimeLt(endTime))))
+                .where(userEquals(user), PlaceEquals(place), startDateEquals(startDate), endDateEquals(endDate)
+                        , reservation.fixStatus.eq(FixStatus.FIXED)
+                        , Objects.requireNonNull(betweenStartTimeAndEndTime(startTimeOptional)).or(betweenStartTimeAndEndTime(endTimeOptional)))
                 .fetch();
     }
 
@@ -110,34 +117,10 @@ public class QueryReservationRepository {
         Optional<RoomType> optionalRoomType = Optional.ofNullable(roomType);
         Optional<LocalDate> optionalLocalDate = Optional.ofNullable(date);
         return query
-                .select(reservation)
-                .from(reservation)
-                .innerJoin(reservation.room.place)
-                .innerJoin(reservation.room.roomKind)
-                .where(reservation.room.place.id.eq(placeId), eqRoomType(optionalRoomType), eqResStartDate(optionalLocalDate))
-                .fetch();
-    }
-
-    public List<Reservation> findCancelAllByPlaceIdAndRoomTypeAndDate(Long placeId, RoomType roomType, LocalDate date) {
-        Optional<RoomType> optionalRoomType = Optional.ofNullable(roomType);
-        Optional<LocalDate> optionalLocalDate = Optional.ofNullable(date);
-        return query
-                .select(reservation)
-                .from(reservation)
-                .innerJoin(reservation.room.place)
-                .innerJoin(reservation.room.roomKind)
-                .where(reservation.room.place.id.eq(placeId), eqRoomType(optionalRoomType), eqResStartDate(optionalLocalDate), reservation.status.eq(ReservationStatus.CANCELED))
-                .fetch();
-    }
-
-    public List<Reservation> findAllByPlaceIdAndRoomTypeAndDate2(Long placeId, RoomType roomType, LocalDate date) {
-        Optional<RoomType> optionalRoomType = Optional.ofNullable(roomType);
-        Optional<LocalDate> optionalLocalDate = Optional.ofNullable(date);
-        return query
                 .selectFrom(reservation)
                 .innerJoin(reservation.room.place)
                 .innerJoin(reservation.room.roomKind)
-                .where(reservation.room.place.id.eq(placeId), /*reservation.status.ne(ReservationStatus.CANCELED),*/ eqRoomType(optionalRoomType), eqResStartDate2(optionalLocalDate), reservation.status.ne(ReservationStatus.CANCELED))
+                .where(reservation.room.place.id.eq(placeId), reservation.fixStatus.eq(FixStatus.FIXED), eqRoomType(optionalRoomType), betweenStartDateAndEndDate(optionalLocalDate))
                 .fetch();
     }
 
@@ -279,13 +262,24 @@ public class QueryReservationRepository {
         }
         return null;
     }
-    private BooleanExpression eqResStartDate2(Optional<LocalDate> resDate) {
+
+    private BooleanExpression betweenStartDateAndEndDate(Optional<LocalDate> resDate) {
         if (resDate.isPresent()) {
-            return reservation.resStartDate.after(resDate.get()).and(reservation.resEndDate.before(resDate.get()));
+            return reservation.resStartDate.loe(resDate.get()).and(reservation.resEndDate.goe(resDate.get()));
         }
         return null;
     }
 
+    private BooleanExpression betweenStartTimeAndEndTime(Optional<LocalTime> localTime) {
+        if (localTime.isPresent()) {
+            LocalTime localTime1 = localTime.get();
+            if (localTime.get().getHour() != 0) {
+                localTime1 = localTime.get().minusHours(1);
+            }
+            return reservation.resStartTime.loe(localTime.get()).and(reservation.resEndTime.gt(localTime1));
+        }
+        return null;
+    }
 
     private BooleanExpression eqResEndTime(Optional<LocalTime> resEndTime) {
         if (resEndTime.isPresent()) {

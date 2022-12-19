@@ -31,8 +31,6 @@ public interface ReservationRepository {
 
     List<Reservation> findResByRoomKindAndDateTime(RoomType selectedType, LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime);
 
-    List<Reservation> findAllByPlaceIdAndRoomTypeAndDate(Long placeId, RoomType roomType, LocalDate date);
-
     Optional<Reservation> findByPlaceIdAndRoomTypeAndDate(Long placeId, RoomType roomType, LocalDate date);
 
     Reservation findById(Long reservationId);
@@ -45,5 +43,5 @@ public interface ReservationRepository {
 
     Reservation findByIdAndUserID(long reservationId, Long userId);
 
-    List<Reservation> findAllByPlaceIdAndRoomTypeAndDate2(Long placeId, RoomType roomType, LocalDate date);
+    List<Reservation> findAllByPlaceIdAndRoomTypeAndDate(Long placeId, RoomType roomType, LocalDate date);
 }
