@@ -93,8 +93,8 @@ public class MyPageController {
 
 
     @GetMapping("/edit")
-    public Map<String, JsonObject> editUserInfo(@TokenUserId Long userId, BindingResult bindingResult) {
-        mypageRequestValidation.validationUserAndBindingResult(userId, bindingResult);
+    public Map<String, JsonObject> editUserInfo(@TokenUserId Long userId) {
+        mypageRequestValidation.validationUser(userId);
         return myPageService.getEditUserInfo(userId);
     }
 
