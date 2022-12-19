@@ -10,4 +10,5 @@ public class MyRefundDetail {
     private String refundTime;
     private Long refundPrice;
     private Long refundMileage;
+    private String refundReceipt;
 }
