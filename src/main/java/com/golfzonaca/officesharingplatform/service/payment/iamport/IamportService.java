@@ -107,10 +107,9 @@ public class IamportService {
         OnetimePaymentData onetimePaymentData = new OnetimePaymentData(merchantUid, new BigDecimal(totalAmount), cardInfo);
         onetimePaymentData.setPg("nice");
 
-        com.golfzonaca.officesharingplatform.domain.Payment payment = processingPaymentData(findReservation, nicePayRequestForm.getPayWay(), nicePayRequestForm.getPayType(), nicePayRequestForm.getPayMileage(), merchantUid);
-        com.golfzonaca.officesharingplatform.domain.Payment paymentSave = paymentRepository.save(payment);
+        com.golfzonaca.officesharingplatform.domain.Payment payment = paymentRepository.save(processingPaymentData(findReservation, nicePayRequestForm.getPayWay(), nicePayRequestForm.getPayType(), nicePayRequestForm.getPayMileage(), merchantUid));
 
-        Mileage userMileage = paymentSave.getReservation().getUser().getMileage();
+        Mileage userMileage = payment.getReservation().getUser().getMileage();
         long userMileagePoint = userMileage.getPoint();
         if (payment.getPayMileage() > 0) {
             if (userMileagePoint < payment.getPayMileage()) {
@@ -124,7 +123,7 @@ public class IamportService {
             throw new PayFailureException(iamportResponse.getResponse().getFailReason());
         }
         payment.addReceipt(iamportResponse.getResponse().getReceiptUrl());
-        paymentSave.updatePayStatus(PaymentStatus.COMPLETED);
+        payment.updatePayStatus(PaymentStatus.COMPLETED);
 
         return iamportResponse;
     }
