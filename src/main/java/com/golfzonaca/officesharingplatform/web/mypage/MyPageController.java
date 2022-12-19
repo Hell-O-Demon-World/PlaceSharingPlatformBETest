@@ -1,22 +1,16 @@
 package com.golfzonaca.officesharingplatform.web.mypage;
 
 import com.golfzonaca.officesharingplatform.annotation.TokenUserId;
-import com.golfzonaca.officesharingplatform.auth.token.JwtManager;
 import com.golfzonaca.officesharingplatform.service.mypage.MyPageService;
 import com.golfzonaca.officesharingplatform.web.mypage.dto.EditUserInfoData;
-import com.golfzonaca.officesharingplatform.web.mypage.dto.ReservationCancelForm;
 import com.golfzonaca.officesharingplatform.web.mypage.dto.SaveInquiryData;
 import com.golfzonaca.officesharingplatform.web.mypage.validation.MypageRequestValidation;
 import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.*;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
-import java.net.URI;
-import java.util.HashMap;
 import java.util.Map;
 
 @RestController
