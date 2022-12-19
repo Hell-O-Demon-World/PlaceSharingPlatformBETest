@@ -123,11 +123,8 @@ public class MyPageController {
     }
 
     @PostMapping("/reservation/fix")
-    public ResponseEntity<?> reservationFix(@TokenUserId Long userId, @RequestBody Map<String, Long> reservation) {
+    public void reservationFix(@TokenUserId Long userId, @RequestBody Map<String, Long> reservation) {
         mypageRequestValidation.validationReservation(userId, reservation.get("reservationId"));
         myPageService.fixReservation(userId, reservation.get("reservationId"));
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create("/mypage/usage?page=1"));
-        return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
     }
 }
