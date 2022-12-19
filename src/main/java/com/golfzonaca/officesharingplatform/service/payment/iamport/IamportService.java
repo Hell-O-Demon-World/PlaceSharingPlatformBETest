@@ -174,7 +174,7 @@ public class IamportService {
         Reservation findReservation = reservationRepository.findById(reservationId);
         Mileage mileage = findReservation.getUser().getMileage();
         List<com.golfzonaca.officesharingplatform.domain.Payment> payments = paymentRepository.findByReservationId(findReservation.getId());
-        if (payments.size() != 1) {
+        if (payments.size() < 1) {
             throw new InvalidResCancelRequest("취소할 수 없는 예약입니다.");
         }
         com.golfzonaca.officesharingplatform.domain.Payment payment = payments.get(0);
