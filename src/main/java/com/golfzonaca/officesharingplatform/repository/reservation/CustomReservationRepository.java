@@ -24,7 +24,7 @@ public class CustomReservationRepository implements ReservationRepository {
     private final SpringDataJpaReservationRepository jpaReservationRepository;
     private final QueryReservationRepository queryReservationRepository;
 
-    @CacheEvict(cacheNames = "resDataByPlaceAndTypeAndDate", allEntries = true)
+    @CacheEvict(cacheNames = "resDataByPlaceAndTypeAndDate, resAllDataByPlaceAndTypeAndDate", allEntries = true)
     @Override
     public Reservation save(Reservation reservation) {
         return jpaReservationRepository.save(reservation);
@@ -107,7 +107,7 @@ public class CustomReservationRepository implements ReservationRepository {
 
     @Override
     public Reservation findByIdAndUserID(long reservationId, Long userId) {
-        return jpaReservationRepository.findFirstByIdAndUserId(reservationId, userId).orElseThrow(()-> new NonExistedReservationException("조건에 맞는 예약이 없습니다."));
+        return jpaReservationRepository.findFirstByIdAndUserId(reservationId, userId).orElseThrow(() -> new NonExistedReservationException("조건에 맞는 예약이 없습니다."));
     }
 
 }

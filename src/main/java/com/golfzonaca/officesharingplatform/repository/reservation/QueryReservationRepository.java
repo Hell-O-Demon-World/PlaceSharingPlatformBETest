@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
@@ -120,7 +119,7 @@ public class QueryReservationRepository {
                 .selectFrom(reservation)
                 .innerJoin(reservation.room.place)
                 .innerJoin(reservation.room.roomKind)
-                .where(reservation.room.place.id.eq(placeId), reservation.fixStatus.eq(FixStatus.FIXED), eqRoomType(optionalRoomType), betweenStartDateAndEndDate(optionalLocalDate))
+                .where(reservation.room.place.id.eq(placeId), reservation.fixStatus.ne(FixStatus.CANCELED), eqRoomType(optionalRoomType), betweenStartDateAndEndDate(optionalLocalDate))
                 .fetch();
     }
 
