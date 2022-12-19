@@ -36,4 +36,6 @@ public interface MyPageService {
     void getReceiptForSubscribe(Long userId, long reservationId);
 
     void fixReservation(Long userId, Long reservationId);
+
+    void forceFixReservationStarted(Long userId);
 }

@@ -30,6 +30,7 @@ public class MyPageController {
     public Map<String, JsonObject> overView(@TokenUserId Long userId) {
         mypageRequestValidation.validationUser(userId);
         myPageService.clearPreoccupiedReservation(userId);
+        myPageService.forceFixReservationStarted(userId);
         return myPageService.getOverViewData(userId);
     }
 
@@ -37,12 +38,14 @@ public class MyPageController {
     public Map<String, JsonObject> resHistory(@TokenUserId Long userId, @RequestParam Integer page) {
         mypageRequestValidation.validationUser(userId);
         myPageService.clearPreoccupiedReservation(userId);
+        myPageService.forceFixReservationStarted(userId);
         return myPageService.getResViewData(userId, page);
     }
 
     @GetMapping("/{reservationId}")
     public Map<String, JsonObject> resDetail(@TokenUserId Long userId, @PathVariable long reservationId) {
         mypageRequestValidation.validationReservation(userId, reservationId);
+        myPageService.forceFixReservationStarted(userId);
         myPageService.getReceiptForSubscribe(userId, reservationId);
         return myPageService.getResDetailViewData(userId, reservationId);
     }
