@@ -180,7 +180,7 @@ public class IamportService {
         com.golfzonaca.officesharingplatform.domain.Payment payment = payments.get(0);
         Long targetUserID = findReservation.getUser().getId();
         if (targetUserID.equals(userId)) {
-            if (payment.getType().equals(PayType.FULL_PAYMENT)) {
+            if (payment.getType().equals(PayType.FULL_PAYMENT) && payment.getPayMileage() > 0) {
                 mileageService.recoveryMileage(mileage, payment);
             }
         } else {
