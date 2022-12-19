@@ -23,6 +23,13 @@ public class ExceptionControllerAdvice {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(PayFailureException.class)
+    public ErrorResult illegalExHandler(PayFailureException e) {
+        log.error("[exceptionHandle] ex", e);
+        return new ErrorResult("BAD", e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(UnavailablePlaceException.class)
     public ErrorResult illegalExHandler(UnavailablePlaceException e) {
         log.error("[exceptionHandle] ex", e);

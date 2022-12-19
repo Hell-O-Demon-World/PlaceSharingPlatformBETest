@@ -258,7 +258,7 @@ public class JpaMyPageService implements MyPageService {
         User user = userRepository.findById(userId);
         for (Reservation reservation : user.getReservationList()) {
             if (reservation.getStatus().equals(ReservationStatus.COMPLETED) && reservation.getFixStatus().equals(FixStatus.UNFIXED)) {
-                if (LocalDateTime.of(reservation.getResStartDate(), reservation.getResStartTime()).equals(LocalDateTime.now()) || LocalDateTime.of(reservation.getResStartDate(), reservation.getResStartTime()).isBefore(LocalDateTime.now())) {
+                if (LocalDateTime.of(reservation.getResStartDate(), reservation.getResStartTime()).equals(LocalDateTime.now()) || LocalDateTime.of(reservation.getResStartDate(), reservation.getResStartTime()).isBefore(LocalDateTime.now()) || LocalDateTime.of(reservation.getResEndDate(), reservation.getResEndTime()).equals(LocalDateTime.now()) || LocalDateTime.of(reservation.getResEndDate(), reservation.getResEndTime()).isBefore(LocalDateTime.now())) {
                     reservation.updateFixStatus(FixStatus.FIXED);
                 }
             }
@@ -619,7 +619,7 @@ public class JpaMyPageService implements MyPageService {
 
     private RatingStatus getRatingStatus(Reservation reservation) {
         if (reservation.getRating() == null) {
-            if (LocalDateTime.of(reservation.getResEndDate(), reservation.getResEndTime()).isBefore(LocalDateTime.now()) || reservation.getFixStatus().equals(FixStatus.UNFIXED)) {
+            if (LocalDateTime.of(reservation.getResEndDate(), reservation.getResEndTime()).isBefore(LocalDateTime.now()) && reservation.getFixStatus().equals(FixStatus.FIXED)) {
                 return RatingStatus.WRITABLE;
             } else {
                 return RatingStatus.YET;

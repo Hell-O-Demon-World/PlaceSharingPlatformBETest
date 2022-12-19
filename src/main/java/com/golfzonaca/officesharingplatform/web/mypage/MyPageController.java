@@ -50,20 +50,6 @@ public class MyPageController {
         return myPageService.getResDetailViewData(userId, reservationId);
     }
 
-    @PostMapping("/cancel")
-    public ResponseEntity<String> cancelReservation(@TokenUserId Long userId, @RequestBody ReservationCancelForm reservationCancelForm) {
-        mypageRequestValidation.validationReservation(userId, reservationCancelForm.getReservationId());
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setBearerAuth(JwtManager.createAccessJwt(userId).getEncoded());
-
-        Map<String, Object> body = new HashMap<>();
-        body.put("reservationId", reservationCancelForm.getReservationId());
-        String url = "http://localhost:8080/payment/nicepaycancel";
-        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
-        return new RestTemplate().postForEntity(url, entity, String.class);
-    }
-
     @GetMapping("/review")
     public Map<String, JsonObject> reviewHistory(@TokenUserId Long userId, @RequestParam Integer page) {
         mypageRequestValidation.validationUser(userId);
@@ -123,8 +109,9 @@ public class MyPageController {
     }
 
     @PostMapping("/reservation/fix")
-    public void reservationFix(@TokenUserId Long userId, @RequestBody Map<String, Long> reservation) {
+    public Map<String, JsonObject> reservationFix(@TokenUserId Long userId, @RequestBody Map<String, Long> reservation) {
         mypageRequestValidation.validationReservation(userId, reservation.get("reservationId"));
         myPageService.fixReservation(userId, reservation.get("reservationId"));
+        return myPageService.getResDetailViewData(userId, reservation.get("reservationId"));
     }
 }

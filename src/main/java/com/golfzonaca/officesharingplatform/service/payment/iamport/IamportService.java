@@ -8,6 +8,7 @@ import com.golfzonaca.officesharingplatform.domain.type.*;
 import com.golfzonaca.officesharingplatform.exception.InvalidResCancelRequest;
 import com.golfzonaca.officesharingplatform.exception.NonExistedMileageException;
 import com.golfzonaca.officesharingplatform.exception.NonExistedReservationException;
+import com.golfzonaca.officesharingplatform.exception.PayFailureException;
 import com.golfzonaca.officesharingplatform.repository.payment.PaymentRepository;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
 import com.golfzonaca.officesharingplatform.service.mileage.MileageService;
@@ -91,24 +92,22 @@ public class IamportService {
         IamportClient iamportClient = new IamportClient(apiKey, apiSecret);
         Reservation findReservation = reservationRepository.findById(nicePayRequestForm.getReservationId());
 
-        int totalAmount = calculateTotalAmount(findReservation, //총액 정보 가져옴
+        int totalAmount = calculateTotalAmount(findReservation,
                 nicePayRequestForm.getPayWay(),
                 nicePayRequestForm.getPayType(),
                 nicePayRequestForm.getPayMileage());
 
-        CardInfo cardInfo = new CardInfo(nicePayRequestForm.getCard_number(), // 카드 정보 가져옴
+        CardInfo cardInfo = new CardInfo(nicePayRequestForm.getCard_number(),
                 nicePayRequestForm.getExpiry(),
                 nicePayRequestForm.getBirth(),
                 nicePayRequestForm.getPwd_2digit());
 
-        String merchantUid = createMerchantUid(); // 상점아이디 만들어줌
+        String merchantUid = createMerchantUid();
 
-        OnetimePaymentData onetimePaymentData = new OnetimePaymentData(merchantUid, new BigDecimal(totalAmount), cardInfo); // onetime 결제 요청
+        OnetimePaymentData onetimePaymentData = new OnetimePaymentData(merchantUid, new BigDecimal(totalAmount), cardInfo);
         onetimePaymentData.setPg("nice");
 
-        //결제 요청을 데이터 가공
         com.golfzonaca.officesharingplatform.domain.Payment payment = processingPaymentData(findReservation, nicePayRequestForm.getPayWay(), nicePayRequestForm.getPayType(), nicePayRequestForm.getPayMileage(), merchantUid);
-        //paymentRepository에 저장
         com.golfzonaca.officesharingplatform.domain.Payment paymentSave = paymentRepository.save(payment);
 
         Mileage userMileage = paymentSave.getReservation().getUser().getMileage();
@@ -119,9 +118,13 @@ public class IamportService {
             }
             mileageService.payingMileage(payment);
         }
+
         IamportResponse<Payment> iamportResponse = iamportClient.onetimePayment(onetimePaymentData);
+        if (iamportResponse.getResponse().getStatus().equals("failed")) {
+            throw new PayFailureException(iamportResponse.getResponse().getFailReason());
+        }
         payment.addReceipt(iamportResponse.getResponse().getReceiptUrl());
-        paymentSave.updatePayStatus(PaymentStatus.COMPLETED); // paystatus completed로 업데이트
+        paymentSave.updatePayStatus(PaymentStatus.COMPLETED);
 
         return iamportResponse;
     }
@@ -156,18 +159,17 @@ public class IamportService {
         return listIamportResponse;
     }
 
-    public String nicePayCancel(Long userId, long reservationId) throws IamportResponseException, IOException {
+    public void nicePayCancel(long reservationId) throws IamportResponseException, IOException {
         Reservation reservation = reservationRepository.findById(reservationId);
         List<com.golfzonaca.officesharingplatform.domain.Payment> paymentList = paymentRepository.findProgressingPaymentByReservation(reservation);
         for (com.golfzonaca.officesharingplatform.domain.Payment payment : paymentList) {
             if (payment.getPayWay().equals(PayWay.PREPAYMENT)) {
-                List<IamportResponse<Payment>> iamportResponses = nicePayCancelOneTime(payment);
+                nicePayCancelOneTime(payment);
             } else {
-                IamportResponse<List<Schedule>> listIamportResponse = nicePayCancelSubscribe(payment);
+                nicePayCancelSubscribe(payment);
             }
         }
         reservation.updateAllStatus(ReservationStatus.CANCELED, FixStatus.CANCELED);
-        return "결제가 성공적으로 취소되었습니다.";
     }
 
     public void cancelByReservationAndUserId(Long reservationId, Long userId) {
