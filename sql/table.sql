@@ -171,7 +171,6 @@ create table mileage_update_history
     UPDATE_POINT bigint unsigned not null,
     STATUS_TYPE  enum ('NEW_MEMBER', 'EARNING', 'USE', 'EXPIRATION') not null,
     UPDATE_DATE  datetime not null,
-    EXPIRE_DATE  datetime not null,
     constraint FK_MILEAGE_TO_MILEAGE_UPDATE_1
         foreign key (MILEAGE_ID) references mileage (ID)
             on update cascade on delete cascade
@@ -194,6 +193,7 @@ create table mileage_earning_usage_history
     MILEAGE_UPDATE_ID bigint unsigned not null,
     CURRENT_POINT     bigint unsigned not null,
     UPDATE_DATE       datetime not null,
+    EXPIRE_DATE       datetime not null,
     constraint FK_MILEAGE_TO_MILEAGE_UPDATE_HISTORY_1
         foreign key (MILEAGE_UPDATE_ID) references mileage_update_history (ID)
             on update cascade on delete cascade

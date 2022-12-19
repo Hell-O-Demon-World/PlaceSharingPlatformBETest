@@ -242,21 +242,21 @@ public class IamportService {
 
         KakaoPayUtility kakaoPayUtility = new KakaoPayUtility();
 
-        Integer totalAmount = kakaoPayUtility.calculateTotalAmount(reservation, payWay, payType, payMileage);
+        Integer payPrice = kakaoPayUtility.calculateTotalAmount(reservation, payWay, payType, payMileage);
 
         return new com.golfzonaca.officesharingplatform.domain.Payment(
                 reservation,
                 LocalDate.now(),
                 LocalTime.now(),
-                totalAmount,
+                payPrice,
                 payMileage,
                 PayWay.valueOf(payWay),
-                kakaoPayUtility.calculateMileage(totalAmount, payMileage, payWay, payType),
+                kakaoPayUtility.calculateMileage(payPrice, payWay, payType),
                 PayType.valueOf(payType),
                 apiCode,
                 PG.NICEPAY,
                 PaymentStatus.PROGRESSING,
-                "카카오페이에서 확인하실 수 있습니다.");
+                " ");
     }
 
     public Integer calculateTotalAmount(Reservation reservation, String payWay, String payType, long payMileage) {
