@@ -596,7 +596,7 @@ public class JpaMyPageService implements MyPageService {
     }
 
     private MyReservationDetail loadReservationDetail(Reservation reservation, Long totalPrice, Double savedMileage) {
-        Boolean isAvailableReview = isAvailableReview(reservation);
+        RatingStatus ratingStatus = getRatingStatus(reservation);
         Boolean cancelStatus = isCompleteAndUnfixed(reservation);
         Boolean completeStatus = isCompleteAndUnfixed(reservation);
         return MyReservationDetail.builder()
@@ -609,7 +609,8 @@ public class JpaMyPageService implements MyPageService {
                 .resEndDate(reservation.getResEndDate().toString())
                 .resEndTime(reservation.getResEndTime().toString())
                 .usageState(reservation.getStatus().getDescription())
-                .isAvailableReview(isAvailableReview)
+                .ratingStatus(ratingStatus.equals(RatingStatus.WRITABLE))
+                .ratingStatusDescription(ratingStatus.getDescription())
                 .totalPrice(totalPrice)
                 .savedMileage(savedMileage)
                 .cancelStatus(cancelStatus)
@@ -617,8 +618,15 @@ public class JpaMyPageService implements MyPageService {
                 .build();
     }
 
-    private Boolean isAvailableReview(Reservation reservation) {
-        return reservation.getStatus() != ReservationStatus.CANCELED || reservation.getFixStatus() != FixStatus.CANCELED || Optional.ofNullable(reservation.getRating()).isEmpty();
+    private RatingStatus getRatingStatus(Reservation reservation) {
+        if (reservation.getRating() == null) {
+            if (LocalDateTime.of(reservation.getResEndDate(), reservation.getResEndTime()).isBefore(LocalDateTime.now())) {
+                return RatingStatus.WRITABLE;
+            } else {
+                return RatingStatus.YET;
+            }
+        }
+        return RatingStatus.WRITTEN;
     }
 
     private Map<String, JsonObject> getMyPaymentAndRefundDetail(User user, long reservationId) {
