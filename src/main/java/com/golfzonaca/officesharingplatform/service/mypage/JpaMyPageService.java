@@ -428,38 +428,57 @@ public class JpaMyPageService implements MyPageService {
     }
 
     private Map<String, JsonObject> processingAllReservationData(User user, Integer page) {
-        Gson gson = new Gson();
         Map<String, JsonObject> myUsage = new LinkedHashMap<>();
         for (int i = 0; i < reservationRepository.findAllByUserWithPagination(user, page).size(); i++) {
             Reservation reservation = reservationRepository.findAllByUserWithPagination(user, page).get(i);
             UsageStatus usageStatus = getUsageStatus(reservation);
             RatingStatus ratingStatus = getRatingStatus(reservation, usageStatus);
-            Boolean cancelStatus = getCancelStatus(reservation);
-            JsonObject myReservationViewData = gson.toJsonTree(MyReservationList.builder()
-                    .reservationId(reservation.getId())
-                    .productType(reservation.getRoom().getRoomKind().getRoomType().getDescription())
-                    .placeName(reservation.getRoom().getPlace().getPlaceName())
-                    .reservationCompletedDate(reservation.getResCompleted().toLocalDate().toString())
-                    .reservationCompletedTime(reservation.getResCompleted().toLocalTime().toString())
-                    .reservationStartDate(reservation.getResStartDate().toString())
-                    .reservationStartTime(reservation.getResStartTime().toString())
-                    .reservationEndDate(reservation.getResEndDate().toString())
-                    .reservationEndTime(reservation.getResEndTime().toString())
-                    .usageStatus(usageStatus.getDescription())
-                    .ratingStatus(ratingStatus.equals(RatingStatus.WRITABLE))
-                    .cancelStatus(cancelStatus)
-                    .ratingStatusDescription(ratingStatus.getDescription()).build()).getAsJsonObject();
+            Boolean cancelStatus = isCompleteAndUnfixed(reservation);
+            Boolean completeStatus = isCompleteAndUnfixed(reservation);
+            JsonObject myReservationViewData = getMyReservationViewData(reservation, usageStatus, ratingStatus, cancelStatus, completeStatus);
             myUsage.put(String.valueOf(i), myReservationViewData);
         }
         return myUsage;
     }
 
-    private Boolean getCancelStatus(Reservation reservation) {
+    private static JsonObject getMyReservationViewData(Reservation reservation, UsageStatus usageStatus, RatingStatus ratingStatus, Boolean cancelStatus, Boolean completeStatus) {
+        Gson gson = new Gson();
+        Long reservationId = reservation.getId();
+        String productType = reservation.getRoom().getRoomKind().getRoomType().getDescription();
+        String placeName = reservation.getRoom().getPlace().getPlaceName();
+        LocalDate reservationCompletedDate = reservation.getResCompleted().toLocalDate();
+        LocalTime reservationCompletedTime = reservation.getResCompleted().toLocalTime();
+        LocalDate reservationStartDate = reservation.getResStartDate();
+        LocalTime reservationStartTime = reservation.getResStartTime();
+        LocalDate reservationEndDate = reservation.getResEndDate();
+        LocalTime reservationEndTime = reservation.getResEndTime();
+        String description = usageStatus.getDescription();
+        boolean isWritable = ratingStatus.equals(RatingStatus.WRITABLE);
+        String ratingStatusDescription = ratingStatus.getDescription();
+
+        MyReservationList resultMyReservationList = MyReservationList.builder()
+                .reservationId(reservationId)
+                .productType(productType)
+                .placeName(placeName)
+                .reservationCompletedDate(reservationCompletedDate.toString())
+                .reservationCompletedTime(reservationCompletedTime.toString())
+                .reservationStartDate(reservationStartDate.toString())
+                .reservationStartTime(reservationStartTime.toString())
+                .reservationEndDate(reservationEndDate.toString())
+                .reservationEndTime(reservationEndTime.toString())
+                .usageStatus(description)
+                .ratingStatus(isWritable)
+                .cancelStatus(cancelStatus)
+                .completeStatus(completeStatus)
+                .ratingStatusDescription(ratingStatusDescription).build();
+        return gson.toJsonTree(resultMyReservationList).getAsJsonObject();
+    }
+    private Boolean isCompleteAndUnfixed(Reservation reservation) {
         boolean result = false;
         List<Payment> paymentList = reservation.getPaymentList();
         if (reservation.getStatus().equals(ReservationStatus.COMPLETED) && reservation.getFixStatus().equals(FixStatus.UNFIXED)) {
             for (Payment payment : paymentList) {
-                if (payment.getType().equals(PayType.FULL_PAYMENT) && payment.getPayStatus().equals(PaymentStatus.COMPLETED)) {
+                if (!payment.getType().equals(PayType.BALANCE) && payment.getPayStatus().equals(PaymentStatus.COMPLETED)) {
                     result = true;
                     break;
                 }
