@@ -258,6 +258,18 @@ public class JpaMyPageService implements MyPageService {
         }
     }
 
+    @Override
+    public void forceFixReservationStarted(Long userId) {
+        User user = userRepository.findById(userId);
+        for (Reservation reservation : user.getReservationList()) {
+            if (reservation.getStatus().equals(ReservationStatus.COMPLETED) && reservation.getFixStatus().equals(FixStatus.UNFIXED)) {
+                if (LocalDateTime.of(reservation.getResStartDate(), reservation.getResStartTime()).equals(LocalDateTime.now()) || LocalDateTime.of(reservation.getResStartDate(), reservation.getResStartTime()).isAfter(LocalDateTime.now())) {
+                    reservation.updateFixStatus(FixStatus.FIXED);
+                }
+            }
+        }
+    }
+
     private Map<Long, JsonObject> getMileageHistoryDtoMap(List<MileageUpdate> mileageUpdateList) {
         Map<Long, JsonObject> result = new LinkedHashMap<>();
         Gson gson = new Gson();
@@ -441,7 +453,8 @@ public class JpaMyPageService implements MyPageService {
         return myUsage;
     }
 
-    private static JsonObject getMyReservationViewData(Reservation reservation, UsageStatus usageStatus, RatingStatus ratingStatus, Boolean cancelStatus, Boolean completeStatus) {
+    private static JsonObject getMyReservationViewData(Reservation reservation, UsageStatus
+            usageStatus, RatingStatus ratingStatus, Boolean cancelStatus, Boolean completeStatus) {
         Gson gson = new Gson();
         Long reservationId = reservation.getId();
         String productType = reservation.getRoom().getRoomKind().getRoomType().getDescription();
@@ -473,6 +486,7 @@ public class JpaMyPageService implements MyPageService {
                 .ratingStatusDescription(ratingStatusDescription).build();
         return gson.toJsonTree(resultMyReservationList).getAsJsonObject();
     }
+
     private Boolean isCompleteAndUnfixed(Reservation reservation) {
         boolean result = false;
         List<Payment> paymentList = reservation.getPaymentList();
