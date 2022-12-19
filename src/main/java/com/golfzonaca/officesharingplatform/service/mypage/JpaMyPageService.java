@@ -597,6 +597,7 @@ public class JpaMyPageService implements MyPageService {
 
     private MyReservationDetail loadReservationDetail(Reservation reservation, Long totalPrice, Double savedMileage) {
         RatingStatus ratingStatus = getRatingStatus(reservation);
+        UsageStatus usageStatus = getUsageStatus(reservation);
         Boolean cancelStatus = isCompleteAndUnfixed(reservation);
         Boolean completeStatus = isCompleteAndUnfixed(reservation);
         return MyReservationDetail.builder()
@@ -608,7 +609,7 @@ public class JpaMyPageService implements MyPageService {
                 .resStartTime(reservation.getResStartTime().toString())
                 .resEndDate(reservation.getResEndDate().toString())
                 .resEndTime(reservation.getResEndTime().toString())
-                .usageState(reservation.getStatus().getDescription())
+                .usageState(usageStatus.getDescription())
                 .ratingStatus(ratingStatus.equals(RatingStatus.WRITABLE))
                 .ratingStatusDescription(ratingStatus.getDescription())
                 .totalPrice(totalPrice)
