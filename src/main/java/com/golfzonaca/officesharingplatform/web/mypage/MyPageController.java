@@ -101,11 +101,10 @@ public class MyPageController {
     @PostMapping("/edit")
     public void editUser(@TokenUserId Long userId, @Validated @RequestBody EditUserInfoData editUserInfoData, BindingResult bindingResult) {
         mypageRequestValidation.validationUserAndBindingResult(userId, bindingResult);
-        String password = editUserInfoData.getPassword();
         String tel = editUserInfoData.getTel();
         String job = editUserInfoData.getJob();
         Map<String, Boolean> preferType = editUserInfoData.getPreferType();
-        myPageService.updateUserInfo(userId, password, tel, job, preferType);
+        myPageService.updateUserInfo(userId, tel, job, preferType);
     }
 
     @PostMapping("/withdrawal")

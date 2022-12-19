@@ -23,7 +23,7 @@ public interface MyPageService {
 
     Map<String, JsonObject> getEditUserInfo(Long userId);
 
-    void updateUserInfo(Long userId, String password, String tel, String job, Map<String, Boolean> preferType);
+    void updateUserInfo(Long userId, String tel, String job, Map<String, Boolean> preferType);
 
     void saveInquiry(Long userId, String title, String question);
 
