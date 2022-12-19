@@ -224,7 +224,7 @@ public class JpaMyPageService implements MyPageService {
             Map<String, Object> params = new HashMap<>();
             params.put("page", 1);
             PaymentListResponse paymentListResponse = restTemplate.exchange(url, HttpMethod.GET, request, PaymentListResponse.class, params).getBody();
-            PagedPaymentAnnotation pagedPaymentAnnotation = paymentListResponse.getResponse().orElseThrow(() -> new NoSuchElementException("예약 결제 정보를 찾을 수 없습니다."));
+            PagedPaymentAnnotation pagedPaymentAnnotation = Objects.requireNonNull(paymentListResponse).getResponse().orElseThrow(() -> new NoSuchElementException("예약 결제 정보를 찾을 수 없습니다."));
             List<PaymentAnnotation> paymentAnnotations = pagedPaymentAnnotation.getList().orElseThrow(() -> new NoSuchElementException("예약 결제 정보를 찾을 수 없습니다."));
             if (!paymentAnnotations.isEmpty()) {
                 PaymentAnnotation paymentAnnotation = paymentAnnotations.get(0);
@@ -578,15 +578,36 @@ public class JpaMyPageService implements MyPageService {
         for (Payment payment : reservation.getPaymentList()) {
             if (payment.getPayWay().equals(PayWay.PREPAYMENT) && payment.getType().equals(PayType.FULL_PAYMENT)) {
                 savedMileage = totalPrice * 0.05;
+                break;
             }
         }
-        MyReservationDetail reservationDetail = new MyReservationDetail(reservation.getRoom().getPlace().getPlaceName(), reservation.getRoom().getRoomKind().getRoomType().getDescription(), reservation.getResCompleted().toLocalDate().toString(), reservation.getResCompleted().toLocalTime().toString(), reservation.getResStartDate().toString(), reservation.getResStartTime().toString(), reservation.getResEndDate().toString(), reservation.getResEndTime().toString(), reservation.getStatus().getDescription(), totalPrice, savedMileage);
-        if (reservation.getStatus() == ReservationStatus.CANCELED && reservation.getFixStatus() == FixStatus.CANCELED) {
-            reservationDetail.addIsAvailableReview(false);
-        } else if (Optional.ofNullable(reservation.getRating()).isEmpty()) {
-            reservationDetail.addIsAvailableReview(true);
-        }
-        return reservationDetail;
+        return loadReservationDetail(reservation, totalPrice, savedMileage);
+    }
+
+    private MyReservationDetail loadReservationDetail(Reservation reservation, Long totalPrice, Double savedMileage) {
+        Boolean isAvailableReview = isAvailableReview(reservation);
+        Boolean cancelStatus = isCompleteAndUnfixed(reservation);
+        Boolean completeStatus = isCompleteAndUnfixed(reservation);
+        return MyReservationDetail.builder()
+                .placeName(reservation.getRoom().getPlace().getPlaceName())
+                .roomType(reservation.getRoom().getRoomKind().getRoomType().getDescription())
+                .resCompletedDate(reservation.getResCompleted().toLocalDate().toString())
+                .resCompletedTime(reservation.getResCompleted().toLocalTime().toString())
+                .resStartDate(reservation.getResStartDate().toString())
+                .resStartTime(reservation.getResStartTime().toString())
+                .resEndDate(reservation.getResEndDate().toString())
+                .resEndTime(reservation.getResEndTime().toString())
+                .usageState(reservation.getStatus().getDescription())
+                .isAvailableReview(isAvailableReview)
+                .totalPrice(totalPrice)
+                .savedMileage(savedMileage)
+                .cancelStatus(cancelStatus)
+                .completeStatus(completeStatus)
+                .build();
+    }
+
+    private Boolean isAvailableReview(Reservation reservation) {
+        return reservation.getStatus() != ReservationStatus.CANCELED || reservation.getFixStatus() != FixStatus.CANCELED || Optional.ofNullable(reservation.getRating()).isEmpty();
     }
 
     private Map<String, JsonObject> getMyPaymentAndRefundDetail(User user, long reservationId) {

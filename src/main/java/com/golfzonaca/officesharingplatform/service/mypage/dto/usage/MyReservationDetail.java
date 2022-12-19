@@ -1,5 +1,10 @@
 package com.golfzonaca.officesharingplatform.service.mypage.dto.usage;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+
+@Builder
+@AllArgsConstructor
 public class MyReservationDetail {
     private String placeName;
     private String roomType;
@@ -13,20 +18,8 @@ public class MyReservationDetail {
     private Boolean isAvailableReview;
     private Long totalPrice;
     private Double savedMileage;
-
-    public MyReservationDetail(String placeName, String roomType, String resCompletedDate, String resCompletedTime, String resStartDate, String resStartTime, String resEndDate, String resEndTime, String usageState, Long totalPrice, Double savedMileage) {
-        this.placeName = placeName;
-        this.roomType = roomType;
-        this.resCompletedDate = resCompletedDate;
-        this.resCompletedTime = resCompletedTime;
-        this.resStartDate = resStartDate;
-        this.resStartTime = resStartTime;
-        this.resEndDate = resEndDate;
-        this.resEndTime = resEndTime;
-        this.usageState = usageState;
-        this.totalPrice = totalPrice;
-        this.savedMileage = savedMileage;
-    }
+    private Boolean cancelStatus;
+    private Boolean completeStatus;
 
     public void addIsAvailableReview(Boolean isAvailableReview) {
         this.isAvailableReview = isAvailableReview;
