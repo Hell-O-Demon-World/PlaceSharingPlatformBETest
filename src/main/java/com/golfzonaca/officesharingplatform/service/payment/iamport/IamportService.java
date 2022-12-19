@@ -183,7 +183,6 @@ public class IamportService {
             if (payment.getType().equals(PayType.FULL_PAYMENT)) {
                 mileageService.recoveryMileage(mileage, payment);
             }
-//            reservationRepository.delete(findReservation);
         } else {
             log.error("token 정보가 해당 예약 정보와 일치하지 않습니다.");
             throw new NonExistedReservationException("");

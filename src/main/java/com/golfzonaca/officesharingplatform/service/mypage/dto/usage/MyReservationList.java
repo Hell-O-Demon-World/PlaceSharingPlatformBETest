@@ -15,6 +15,7 @@ public class MyReservationList {
     private String reservationEndTime;
     private String usageStatus;
     private Boolean ratingStatus;
+    private Boolean cancelStatus;
     private String ratingStatusDescription;
 
 }

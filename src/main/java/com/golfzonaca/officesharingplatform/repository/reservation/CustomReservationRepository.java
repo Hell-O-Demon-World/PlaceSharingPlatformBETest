@@ -75,6 +75,11 @@ public class CustomReservationRepository implements ReservationRepository {
         return queryReservationRepository.findAllByPlaceIdAndRoomTypeAndDate(placeId, roomType, date);
     }
 
+    @Override
+    public List<Reservation> findAllByPlaceIdAndRoomTypeAndDate2(Long placeId, RoomType roomType, LocalDate date) {
+        return queryReservationRepository.findAllByPlaceIdAndRoomTypeAndDate(placeId, roomType, date);
+    }
+
     @Cacheable(cacheNames = "resDataByPlaceAndTypeAndDate", sync = true, key = "#placeId+'&'+#roomType+'&'+#date")
     @Override
     public Optional<Reservation> findByPlaceIdAndRoomTypeAndDate(Long placeId, RoomType roomType, LocalDate date) {

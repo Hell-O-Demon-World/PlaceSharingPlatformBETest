@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -65,13 +64,6 @@ public class JpaMileageRepository implements MileageRepository {
     public List<MileageTransactionUsage> findTransactionUsageMileageByPaymentMileage(MileagePaymentUpdate mileagePaymentUpdate) {
         return queryDslMileagePaymentUpdateRepository.findTransactionUsageMileageByPaymentMileage(mileagePaymentUpdate);
     }
-
-    @Override
-    public MileageEarningUsage findEarningMileage(MileageTransactionUsage mileageTransactionUsage) {
-//        return jpaMileageExpiredRepository.findFirstByMileageTransactionUsage(mileageTransactionUsage);
-        return null;
-    }
-
     @Override
     public Mileage findByUser(User user) {
         return jpaMileageRepository.findById(user.getId()).orElseThrow(() -> new NonExistedMileageException("NonExistedMileageException:: 마일리지가 존재하지 않습니다."));
@@ -80,11 +72,6 @@ public class JpaMileageRepository implements MileageRepository {
     @Override
     public List<MileageUpdate> findMileageUpdateAll() {
         return jpaMileageUpdateRepository.findAll();
-    }
-
-    @Override
-    public List<MileageUpdate> findMileageUpdateAllLikeUserAndExpireDate(Mileage mileage, LocalDateTime localDateTime) {
-        return queryDslMileageUpdateRepository.findMileageUpdateAllLikeUserAndExpireDate(mileage, localDateTime);
     }
 
     @Override

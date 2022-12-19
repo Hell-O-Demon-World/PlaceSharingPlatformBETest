@@ -133,15 +133,4 @@ public class SpringJpaDslMileageService implements MileageService {
                 .build();
         mileageRepository.save(mileageTransactionUsage);
     }
-
-    private Long getLatestUpdatePoint(MileageUpdate update) {
-        Long updatePoint = update.getUpdatePoint();
-        List<MileageEarningUsage> mileageExpiredUpdateList = update.getMileageExpiredUpdateList();
-        if (mileageExpiredUpdateList.size() != 0) {
-            // CAN USE LATEST MILEAGE?
-            MileageEarningUsage result = mileageExpiredUpdateList.get(mileageExpiredUpdateList.size() - 1);
-            updatePoint = result.getCurrentPoint();
-        }
-        return updatePoint;
-    }
 }

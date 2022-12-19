@@ -44,4 +44,6 @@ public interface ReservationRepository {
     List<Room> findByPlaceAndRoomKindAndStartDateAndEndDate(Place place, RoomType selectedType, LocalDate date, LocalDate endDate);
 
     Reservation findByIdAndUserID(long reservationId, Long userId);
+
+    List<Reservation> findAllByPlaceIdAndRoomTypeAndDate2(Long placeId, RoomType roomType, LocalDate date);
 }

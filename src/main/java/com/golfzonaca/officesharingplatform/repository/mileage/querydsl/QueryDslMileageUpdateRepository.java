@@ -20,15 +20,6 @@ public class QueryDslMileageUpdateRepository {
         this.query = new JPAQueryFactory(em);
     }
 
-    public List<MileageUpdate> findMileageUpdateAllLikeUserAndExpireDate(Mileage mileage, LocalDateTime currentLocalDateTime) {
-        Long mileageId = mileage.getId();
-        return query
-                .selectFrom(mileageUpdate)
-                .where(mileageUpdate.mileage.id.eq(mileageId)
-                        .and(mileageUpdate.expireDate.after(currentLocalDateTime)))
-                .fetch();
-    }
-
     public List<MileageUpdate> findByMileageWithPagination(Mileage mileage, long page, long items) {
         return query
                 .selectFrom(mileageUpdate)

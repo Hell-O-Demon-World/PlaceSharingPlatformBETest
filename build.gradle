@@ -39,6 +39,12 @@ dependencies {
 //	JPA, Spring Data JPA 추가
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
+    testImplementation('org.springframework.boot:spring-boot-starter-test')
+    runtimeOnly 'com.h2database:h2'
+
+    testImplementation('org.junit.jupiter:junit-jupiter')
+    testImplementation('org.junit.jupiter:junit-jupiter-api')
+    testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine')
 //  Querydsl 추가
     implementation 'com.querydsl:querydsl-jpa'
     annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jpa"

@@ -1,6 +1,7 @@
 package com.golfzonaca.officesharingplatform.repository.reservation;
 
 import com.golfzonaca.officesharingplatform.domain.*;
+import com.golfzonaca.officesharingplatform.domain.type.ReservationStatus;
 import com.golfzonaca.officesharingplatform.domain.type.RoomType;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -114,6 +115,29 @@ public class QueryReservationRepository {
                 .innerJoin(reservation.room.place)
                 .innerJoin(reservation.room.roomKind)
                 .where(reservation.room.place.id.eq(placeId), eqRoomType(optionalRoomType), eqResStartDate(optionalLocalDate))
+                .fetch();
+    }
+
+    public List<Reservation> findCancelAllByPlaceIdAndRoomTypeAndDate(Long placeId, RoomType roomType, LocalDate date) {
+        Optional<RoomType> optionalRoomType = Optional.ofNullable(roomType);
+        Optional<LocalDate> optionalLocalDate = Optional.ofNullable(date);
+        return query
+                .select(reservation)
+                .from(reservation)
+                .innerJoin(reservation.room.place)
+                .innerJoin(reservation.room.roomKind)
+                .where(reservation.room.place.id.eq(placeId), eqRoomType(optionalRoomType), eqResStartDate(optionalLocalDate), reservation.status.eq(ReservationStatus.CANCELED))
+                .fetch();
+    }
+
+    public List<Reservation> findAllByPlaceIdAndRoomTypeAndDate2(Long placeId, RoomType roomType, LocalDate date) {
+        Optional<RoomType> optionalRoomType = Optional.ofNullable(roomType);
+        Optional<LocalDate> optionalLocalDate = Optional.ofNullable(date);
+        return query
+                .selectFrom(reservation)
+                .innerJoin(reservation.room.place)
+                .innerJoin(reservation.room.roomKind)
+                .where(reservation.room.place.id.eq(placeId), reservation.status.ne(ReservationStatus.CANCELED), eqRoomType(optionalRoomType), eqResStartDate2(optionalLocalDate), reservation.status.eq(ReservationStatus.CANCELED))
                 .fetch();
     }
 
@@ -255,6 +279,13 @@ public class QueryReservationRepository {
         }
         return null;
     }
+    private BooleanExpression eqResStartDate2(Optional<LocalDate> resDate) {
+        if (resDate.isPresent()) {
+            return reservation.resStartDate.after(resDate.get()).and(reservation.resEndDate.before(resDate.get()));
+        }
+        return null;
+    }
+
 
     private BooleanExpression eqResEndTime(Optional<LocalTime> resEndTime) {
         if (resEndTime.isPresent()) {

@@ -14,10 +14,8 @@ public interface MileageRepository {
     Mileage findByID(Long id);
     MileagePaymentUpdate findMileageByPayment(Payment payment);
     List<MileageTransactionUsage> findTransactionUsageMileageByPaymentMileage(MileagePaymentUpdate mileagePaymentUpdate);
-    MileageEarningUsage findEarningMileage(MileageTransactionUsage mileageTransactionUsage);
     Mileage findByUser(User user);
     List<MileageUpdate> findMileageUpdateAll();
-    List<MileageUpdate> findMileageUpdateAllLikeUserAndExpireDate(Mileage mileage, LocalDateTime localDateTime);
 
     List<MileageUpdate> findAllMileageUpdateByMileage(Mileage findMileage, Long page, Long items);
     List<MileageUpdate> findAllMileageUpdateByMileage(Mileage findMileage);
