@@ -137,7 +137,7 @@ public class QueryReservationRepository {
                 .selectFrom(reservation)
                 .innerJoin(reservation.room.place)
                 .innerJoin(reservation.room.roomKind)
-                .where(reservation.room.place.id.eq(placeId), reservation.status.ne(ReservationStatus.CANCELED), eqRoomType(optionalRoomType), eqResStartDate2(optionalLocalDate), reservation.status.eq(ReservationStatus.CANCELED))
+                .where(reservation.room.place.id.eq(placeId), /*reservation.status.ne(ReservationStatus.CANCELED),*/ eqRoomType(optionalRoomType), eqResStartDate2(optionalLocalDate), reservation.status.ne(ReservationStatus.CANCELED))
                 .fetch();
     }
 

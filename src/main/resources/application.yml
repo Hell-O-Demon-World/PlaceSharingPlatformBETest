@@ -18,7 +18,7 @@ spring:
     host: smtp.gmail.com
     port: 465
     username: ENC(YSIukal9W6pIy9Lj9j7Mw50EBj6r1yV0O9IU3IoMh9jREPh2kEdfFQ==)
-    password: ENC(dYWX2Og3+sY4n5D+oBM4LYxE8Dtz6DKleAybB+Qwu1M=)
+    password: ENC(7sLz/0La1jvXgQ2y+652CzNeC+hwsRvqXsWrKWUaF/Q=)
     properties:
       mail.smtp.auth: true
       mail.smtp.starttls.enable: true
