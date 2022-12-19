@@ -160,11 +160,8 @@ public class JpaMyPageService implements MyPageService {
     }
 
     @Override
-    public void updateUserInfo(Long userId, String password, String tel, String job, Map<String, Boolean> preferType) {
+    public void updateUserInfo(Long userId, String tel, String job, Map<String, Boolean> preferType) {
         User user = userRepository.findById(userId);
-        if (StringUtils.hasText(password)) {
-            user.updatePassword(bCryptPasswordEncoder.encode(password));
-        }
         if (StringUtils.hasText(tel)) {
             user.updatePhoneNumber(tel);
         }

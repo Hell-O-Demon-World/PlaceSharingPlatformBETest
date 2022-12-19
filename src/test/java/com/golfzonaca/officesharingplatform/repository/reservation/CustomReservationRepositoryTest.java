@@ -27,11 +27,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@TestMethodOrder(value = MethodOrderer.OrderAnnotation.class)
+//@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+//@TestMethodOrder(value = MethodOrderer.OrderAnnotation.class)
+@Component
 public class CustomReservationRepositoryTest {
     @Autowired
-    private CustomReservationRepository queryReservationRepository;
+    private ReservationRepository queryReservationRepository;
 
     @Test
     void findAllByPlaceIdAndRoomTypeAndDate2() {

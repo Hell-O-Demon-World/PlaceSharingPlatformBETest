@@ -12,9 +12,6 @@ import java.util.Map;
 
 @Getter
 public class EditUserInfoData {
-    @NotBlank(message = "비밀번호에 빈 문자나 공백 또는 Null 값이 들어갈 수 없습니다.")
-    @Size(min = 8, max = 15, message = "비밀번호의 길이는 8 ~ 15 자리여야 합니다.")
-    private String password;
     @PhoneNum(message = "전화번호는 '-' 없이 숫자만 입력해주시기 바랍니다.")
     @Size(min = 9, max = 11, message = "전화번호의 길이는 최소 9자, 최대 11자 입니다.")
     private String tel;
