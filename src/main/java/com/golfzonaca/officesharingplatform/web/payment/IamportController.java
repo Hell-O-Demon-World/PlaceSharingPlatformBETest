@@ -1,14 +1,11 @@
 package com.golfzonaca.officesharingplatform.web.payment;
 
 import com.golfzonaca.officesharingplatform.annotation.TokenUserId;
-import com.golfzonaca.officesharingplatform.domain.type.PayType;
-import com.golfzonaca.officesharingplatform.domain.type.PayWay;
 import com.golfzonaca.officesharingplatform.service.mypage.MyPageService;
 import com.golfzonaca.officesharingplatform.service.payment.iamport.IamportService;
 import com.golfzonaca.officesharingplatform.web.payment.dto.CancelInfo;
 import com.golfzonaca.officesharingplatform.web.payment.form.NicePayRequestForm;
 import com.golfzonaca.officesharingplatform.web.payment.validation.PaymentValidation;
-import com.golfzonaca.officesharingplatform.web.validation.RequestValidation;
 import com.google.gson.JsonObject;
 import com.siot.IamportRestClient.exception.IamportResponseException;
 import lombok.RequiredArgsConstructor;
@@ -24,11 +21,9 @@ import java.util.Map;
 @RequestMapping("/payment")
 @RequiredArgsConstructor
 public class IamportController {
-
     private final IamportService iamportService;
     private final PaymentValidation paymentValidation;
     private final MyPageService myPageService;
-    private final RequestValidation requestValidation;
 
     @PostMapping("/nicepay")
     public String nicePay(@TokenUserId Long userId, @RequestBody NicePayRequestForm nicePayRequestForm) throws IamportResponseException, IOException {
@@ -39,9 +34,7 @@ public class IamportController {
     @PostMapping("/nicepaycancel")
     public Map<String, JsonObject> nicepayCancel(@TokenUserId Long userId, @RequestBody CancelInfo cancelInfo) throws IamportResponseException, IOException {
         long reservationId = cancelInfo.getReservationId();
-        requestValidation.validUser(userId);
-        requestValidation.validReservation(reservationId);
-        paymentValidation.cancelRequest(reservationId);
+        paymentValidation.validationPaymentCancel(userId, reservationId);
         iamportService.cancelByReservationAndUserId(reservationId, userId);
         iamportService.nicePayCancel(reservationId);
         return myPageService.getResDetailViewData(userId, reservationId);

@@ -27,6 +27,18 @@ public class PaymentValidation {
     private final RequestValidation requestValidation;
 
 
+    public void validationPayment(Long userId, NicePayRequestForm nicePayRequestForm) {
+        requestValidation.validUser(userId);
+        requestValidation.validReservation(nicePayRequestForm.getReservationId());
+        validRoomTypeOffice(userId, nicePayRequestForm);
+    }
+
+    public void validationPaymentCancel(Long userId, Long reservationId) {
+        requestValidation.validUser(userId);
+        requestValidation.validReservation(reservationId);
+        cancelRequest(reservationId);
+    }
+
     public void cancelRequest(long reservationId) {
         Reservation reservation = reservationRepository.findById(reservationId);
         if (reservation.getStatus() != ReservationStatus.COMPLETED || reservation.getFixStatus() != FixStatus.UNFIXED) {
@@ -42,12 +54,6 @@ public class PaymentValidation {
         }
     }
 
-    public void validationPayment(Long userId, NicePayRequestForm nicePayRequestForm) {
-        requestValidation.validUser(userId);
-        requestValidation.validReservation(nicePayRequestForm.getReservationId());
-        validRoomTypeOffice(userId, nicePayRequestForm);
-
-    }
 
     private void validRoomTypeOffice(Long userId, NicePayRequestForm nicePayRequestForm) {
         long reservationId = nicePayRequestForm.getReservationId();
@@ -55,7 +61,7 @@ public class PaymentValidation {
         if (findReservation.getRoom().getRoomKind().getRoomType().toString().contains("OFFICE")) {
             if (!nicePayRequestForm.getPayWay().equals(PayWay.POSTPAYMENT.name()) || !nicePayRequestForm.getPayType().equals(PayType.FULL_PAYMENT.name())) {
                 throw new PayFailureException("오피스는 후결제, 현장 결제 방식만 가능합니다.");
-            } 
+            }
         }
     }
 
