@@ -61,26 +61,14 @@ public class IamportService {
         Reservation reservation = reservationRepository.findById(nicePayRequestForm.getReservationId());
 
         if (reservation.getRoom().getRoomKind().getRoomType().toString().contains("OFFICE")) {
-            IamportResponse<List<Schedule>> iamportListResponse = requestNicePaySubscribe(userId, nicePayRequestForm);
-            if (iamportListResponse.getCode() != 0) {
-                return iamportListResponse.getMessage();
-            }
+            requestNicePaySubscribe(userId, nicePayRequestForm);
         } else {
             if (PayType.DEPOSIT.toString().equals(nicePayRequestForm.getPayType())) {
-                IamportResponse<Payment> iamportResponse = requestNicePayOnetime(userId, nicePayRequestForm);
-                if (iamportResponse.getCode() != 0) {
-                    return iamportResponse.getMessage();
-                }
+                requestNicePayOnetime(userId, nicePayRequestForm);
                 nicePayRequestForm.changePayTypeAndPayWay(PayType.BALANCE.toString(), PayWay.POSTPAYMENT.toString());
-                IamportResponse<List<Schedule>> paymentTypeAndWayResponse = requestNicePaySubscribe(userId, nicePayRequestForm);
-                if (paymentTypeAndWayResponse.getCode() != 0) {
-                    return paymentTypeAndWayResponse.getMessage();
-                }
+                requestNicePaySubscribe(userId, nicePayRequestForm);
             } else {
-                IamportResponse<Payment> iamportResponseFinally = requestNicePayOnetime(userId, nicePayRequestForm);
-                if (iamportResponseFinally.getCode() != 0) {
-                    return iamportResponseFinally.getMessage();
-                }
+                requestNicePayOnetime(userId, nicePayRequestForm);
             }
         }
         reservation.updateResStatus(ReservationStatus.COMPLETED);
@@ -154,6 +142,9 @@ public class IamportService {
         scheduleData.addSchedule(scheduleEntry);
         com.golfzonaca.officesharingplatform.domain.Payment payment = processingPaymentData(reservation, nicePayRequestForm.getPayWay(), nicePayRequestForm.getPayType(), nicePayRequestForm.getPayMileage(), merchantUid);
         IamportResponse<List<Schedule>> listIamportResponse = iamportClient.subscribeSchedule(scheduleData);
+        if (listIamportResponse.getCode() != 0) {
+            throw new PayFailureException(listIamportResponse.getMessage());
+        }
         paymentRepository.save(payment);
         return listIamportResponse;
     }
@@ -293,6 +284,9 @@ public class IamportService {
         billingData.setPwd2Digit(nicePayRequestForm.getPwd_2digit());
         billingData.setPg(nicePayRequestForm.getPg());
         IamportResponse<BillingCustomer> billingCustomerIamportResponse = iamportClient.postBillingCustomer(customerUid, billingData);
+        if (billingCustomerIamportResponse.getCode() != 0) {
+            throw new PayFailureException(billingCustomerIamportResponse.getMessage());
+        }
         return customerUid;
     }
 }

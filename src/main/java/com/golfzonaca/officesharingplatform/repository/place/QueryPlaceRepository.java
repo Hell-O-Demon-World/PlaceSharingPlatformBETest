@@ -84,9 +84,9 @@ public class QueryPlaceRepository {
 
     private BooleanExpression likeCityOrSubCity(Optional<String> city, Optional<String> subCity) {
         if (city.isPresent() && subCity.isEmpty()) {
-            return place.address.address.contains(city.get());
-        } else if (city.isPresent() && subCity.isPresent()) {
-            return place.address.address.contains(subCity.get());
+            return place.address.address.like(city.get() + '%');
+        } else if (city.isPresent()) {
+            return place.address.address.like(city.get() + ' ' + subCity.get() + '%');
         }
         return null;
     }

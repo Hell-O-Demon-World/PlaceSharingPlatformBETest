@@ -11,6 +11,7 @@ import com.golfzonaca.officesharingplatform.repository.inquirystatus.InquiryStat
 import com.golfzonaca.officesharingplatform.repository.mileage.MileageRepository;
 import com.golfzonaca.officesharingplatform.repository.payment.PaymentRepository;
 import com.golfzonaca.officesharingplatform.repository.rating.RatingRepository;
+import com.golfzonaca.officesharingplatform.repository.refund.RefundRepository;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
 import com.golfzonaca.officesharingplatform.repository.room.RoomRepository;
 import com.golfzonaca.officesharingplatform.repository.user.UserRepository;
@@ -70,6 +71,7 @@ public class JpaMyPageService implements MyPageService {
     private final InquiryStatusRepository inquiryStatusRepository;
     private final MileageRepository mileageRepository;
     private final PaymentRepository paymentRepository;
+    private final RefundRepository refundRepository;
     private final MileageService mileageService;
 
     @Value("${iamport.api.apiKey}")
@@ -675,9 +677,8 @@ public class JpaMyPageService implements MyPageService {
             Map<String, JsonObject> myPaymentAndRefundDetail = new LinkedHashMap<>();
             Payment payment = paymentList.get(i);
             myPaymentAndRefundDetail.put("payment", gson.toJsonTree(new MyPaymentDetail(payment.getPayDate().toString(), payment.getPayTime().toString(), payment.getPrice(), payment.getPayMileage(), payment.getType().getDescription(), payment.getReceipt())).getAsJsonObject());
-            if (Optional.ofNullable(payment.getRefund()).isPresent()) {
-                myPaymentAndRefundDetail.put("refund", gson.toJsonTree(new MyRefundDetail(payment.getRefund().getRefundDateTime().toLocalDate().toString(), payment.getRefund().getRefundDateTime().toLocalTime().toString(), payment.getRefund().getRefundPrice(), payment.getPayMileage(), payment.getReceipt())).getAsJsonObject());
-            }
+            Optional<Refund> refund = refundRepository.findByPayment(payment);
+            refund.ifPresent(value -> myPaymentAndRefundDetail.put("refund", gson.toJsonTree(new MyRefundDetail(value.getRefundDateTime().toLocalDate().toString(), value.getRefundDateTime().toLocalTime().toString(), value.getRefundPrice(), payment.getPayMileage(), payment.getReceipt())).getAsJsonObject()));
             myPaymentAndRefundDetailData.put(String.valueOf(i), gson.toJsonTree(myPaymentAndRefundDetail).getAsJsonObject());
         }
         return myPaymentAndRefundDetailData;
