@@ -57,7 +57,7 @@ public class PaymentValidation {
 
     private void validRoomTypeOffice(Long userId, NicePayRequestForm nicePayRequestForm) {
         long reservationId = nicePayRequestForm.getReservationId();
-        Reservation findReservation = reservationRepository.findByIdAndUserID(userId, reservationId);
+        Reservation findReservation = reservationRepository.findByIdAndUserID(reservationId, userId);
         if (findReservation.getRoom().getRoomKind().getRoomType().toString().contains("OFFICE")) {
             if (!nicePayRequestForm.getPayWay().equals(PayWay.POSTPAYMENT.name()) || !nicePayRequestForm.getPayType().equals(PayType.FULL_PAYMENT.name())) {
                 throw new PayFailureException("오피스는 후결제, 현장 결제 방식만 가능합니다.");
