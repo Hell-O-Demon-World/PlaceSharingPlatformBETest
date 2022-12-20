@@ -38,6 +38,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -193,6 +194,7 @@ public class JpaMyPageService implements MyPageService {
         return putMileageData(findUser, page, items);
     }
 
+    @CacheEvict(cacheNames = {"resDataByPlaceAndTypeAndDate", "resAllDataByPlaceAndTypeAndDate"}, allEntries = true)
     @Override
     public void clearPreoccupiedReservation(Long userId) {
         User user = userRepository.findById(userId);
