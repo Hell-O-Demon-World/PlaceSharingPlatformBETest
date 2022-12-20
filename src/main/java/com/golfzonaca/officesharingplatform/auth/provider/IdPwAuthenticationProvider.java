@@ -31,8 +31,7 @@ public class IdPwAuthenticationProvider implements AuthenticationProvider {
             return null;
         }
 
-        IdPwAuthenticationToken certifiedToken = new IdPwAuthenticationToken(userDetails.getUsername(),
-                userDetails.getPassword(), grantedAuthoritiesMapper.mapAuthorities(userDetails.getAuthorities()));
+        IdPwAuthenticationToken certifiedToken = new IdPwAuthenticationToken(userDetails.getUsername(), userDetails.getPassword(), grantedAuthoritiesMapper.mapAuthorities(userDetails.getAuthorities()));
 
         certifiedToken.setDetails(authentication.getDetails());
 

@@ -1,11 +1,10 @@
 package com.golfzonaca.officesharingplatform.config;
 
-import com.golfzonaca.officesharingplatform.auth.handler.PasswordMismatchHandler;
 import com.golfzonaca.officesharingplatform.service.auth.PrincipalDetailsService;
 import com.golfzonaca.officesharingplatform.auth.filter.JsonIdPwAuthenticationProcessingFilter;
 import com.golfzonaca.officesharingplatform.auth.filter.JwtAuthenticationFilter;
 import com.golfzonaca.officesharingplatform.auth.filter.exception.JwtAuthenticationEntryPoint;
-import com.golfzonaca.officesharingplatform.auth.handler.JwtSuccessHandler;
+import com.golfzonaca.officesharingplatform.auth.handler.LoginSuccessHandler;
 import com.golfzonaca.officesharingplatform.auth.handler.LoginFailureHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -25,7 +24,7 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 public class SecurityConfig {
     private final PrincipalDetailsService principalDetailsService;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final JwtSuccessHandler jwtSuccessHandler;
+    private final LoginSuccessHandler loginSuccessHandler;
     private final LoginFailureHandler loginFailureHandler;
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
@@ -40,7 +39,7 @@ public class SecurityConfig {
     public JsonIdPwAuthenticationProcessingFilter jsonIdPwAuthenticationProcessingFilter() throws Exception {
         JsonIdPwAuthenticationProcessingFilter jsonAuthenticationFilter = new JsonIdPwAuthenticationProcessingFilter(LOGIN_REQUEST_MATCHER);
         jsonAuthenticationFilter.setAuthenticationManager(authenticationConfiguration.getAuthenticationManager());
-        jsonAuthenticationFilter.setAuthenticationSuccessHandler(jwtSuccessHandler);
+        jsonAuthenticationFilter.setAuthenticationSuccessHandler(loginSuccessHandler);
         jsonAuthenticationFilter.setAuthenticationFailureHandler(loginFailureHandler);
         return jsonAuthenticationFilter;
     }

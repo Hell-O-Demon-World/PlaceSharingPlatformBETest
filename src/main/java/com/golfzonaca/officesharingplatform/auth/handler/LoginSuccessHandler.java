@@ -27,7 +27,7 @@ import java.io.IOException;
 @Component
 @Transactional
 @RequiredArgsConstructor
-public class JwtSuccessHandler implements AuthenticationSuccessHandler {
+public class LoginSuccessHandler implements AuthenticationSuccessHandler {
     private final UserRepository userRepository;
     private final RefreshTokenService refreshTokenService;
     private final JwtHttpServletProvider jwtHttpServletProvider;

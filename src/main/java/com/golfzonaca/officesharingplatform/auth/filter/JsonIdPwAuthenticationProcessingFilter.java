@@ -1,7 +1,6 @@
 package com.golfzonaca.officesharingplatform.auth.filter;
 
 import com.golfzonaca.officesharingplatform.auth.filter.dto.IdPwAttributeName;
-import com.golfzonaca.officesharingplatform.auth.handler.PasswordMismatchHandler;
 import com.golfzonaca.officesharingplatform.auth.token.IdPwAuthenticationToken;
 import org.springframework.boot.json.GsonJsonParser;
 import org.springframework.security.authentication.AuthenticationServiceException;
