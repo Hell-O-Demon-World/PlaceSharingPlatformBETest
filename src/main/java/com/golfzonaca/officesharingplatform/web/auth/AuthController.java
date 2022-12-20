@@ -31,8 +31,10 @@ public class AuthController {
     @ResponseBody
     @PostMapping("/signup")
     public void signup(@Validated @RequestBody SignUpSaveForm signUpSaveForm, BindingResult bindingResult) {
+        String password = signUpSaveForm.getPassword();
+        String checkedPassword = signUpSaveForm.getCheckedPassword();
         User user = signUpSaveForm.toEntity();
-        authRequestValidation.validation(user, bindingResult);
+        authRequestValidation.validation(user, bindingResult, password, checkedPassword);
         customAuthService.join(user);
     }
 

@@ -27,6 +27,9 @@ public class SignUpSaveForm {
     @NotBlank(message = "비밀번호에 빈 문자나 공백 또는 Null 값이 들어갈 수 없습니다.")
     @Size(min = 8, max = 15, message = "비밀번호의 길이는 8 ~ 15 자리여야 합니다.")
     private String password;
+    @NotBlank(message = "비밀번호에 빈 문자나 공백 또는 Null 값이 들어갈 수 없습니다.")
+    @Size(min = 8, max = 15, message = "비밀번호의 길이는 8 ~ 15 자리여야 합니다.")
+    private String checkedPassword;
     @NotBlank(message = "이름에 빈 문자나 공백 또는 Null 값이 들어갈 수 없습니다.")
     @Size(max = 20, message = "이름의 길이는 최대 20자 이내 입니다.")
     private String name;

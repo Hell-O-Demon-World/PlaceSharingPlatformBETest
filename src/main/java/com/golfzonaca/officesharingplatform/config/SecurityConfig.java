@@ -29,7 +29,6 @@ public class SecurityConfig {
     private final LoginFailureHandler loginFailureHandler;
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-    private final PasswordMismatchHandler passwordMismatchHandler;
     private static final RequestMatcher LOGIN_REQUEST_MATCHER = new AntPathRequestMatcher("/auth/signin", "POST");
 
     @Bean
@@ -40,11 +39,9 @@ public class SecurityConfig {
     @Bean
     public JsonIdPwAuthenticationProcessingFilter jsonIdPwAuthenticationProcessingFilter() throws Exception {
         JsonIdPwAuthenticationProcessingFilter jsonAuthenticationFilter = new JsonIdPwAuthenticationProcessingFilter(LOGIN_REQUEST_MATCHER);
-        jsonAuthenticationFilter.setUnsuccessfulPasswordsAuthentication(passwordMismatchHandler);
         jsonAuthenticationFilter.setAuthenticationManager(authenticationConfiguration.getAuthenticationManager());
         jsonAuthenticationFilter.setAuthenticationSuccessHandler(jwtSuccessHandler);
         jsonAuthenticationFilter.setAuthenticationFailureHandler(loginFailureHandler);
-//        jsonAuthenticationFilter.setUnsuccessfulPasswordsAuthentication(passwordMatcher);
         return jsonAuthenticationFilter;
     }
 

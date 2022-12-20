@@ -20,9 +20,6 @@ import java.util.stream.Collectors;
 
 
 public class JsonIdPwAuthenticationProcessingFilter extends AbstractAuthenticationProcessingFilter {
-
-    private PasswordMismatchHandler passwordMismatchHandler;
-
     public JsonIdPwAuthenticationProcessingFilter(RequestMatcher loginRequestMatcher) {
         super(loginRequestMatcher);
     }
@@ -36,21 +33,11 @@ public class JsonIdPwAuthenticationProcessingFilter extends AbstractAuthenticati
 
         Map<String, Object> parseJsonMap = parseJsonMap(request);
         String id = (String) parseJsonMap.get(IdPwAttributeName.id);
-        String pw = (String) parseJsonMap.get(IdPwAttributeName.pw1);
-        String pw2 = (String) parseJsonMap.get(IdPwAttributeName.pw2);
-
-        unsuccessfulPasswordsAuthentication(response, pw, pw2);
-
+        String pw = (String) parseJsonMap.get(IdPwAttributeName.pw);
 
         IdPwAuthenticationToken idPwAuthenticationToken = new IdPwAuthenticationToken(id, pw);
         idPwAuthenticationToken.setDetails(super.authenticationDetailsSource.buildDetails(request));
         return super.getAuthenticationManager().authenticate(idPwAuthenticationToken);
-    }
-
-
-
-    public void setUnsuccessfulPasswordsAuthentication(PasswordMismatchHandler passwordMismatchHandler) {
-        this.passwordMismatchHandler = passwordMismatchHandler;
     }
 
     @Override
@@ -67,16 +54,6 @@ public class JsonIdPwAuthenticationProcessingFilter extends AbstractAuthenticati
             throws IOException, ServletException {
 
         getFailureHandler().onAuthenticationFailure(request, response, failed);
-    }
-
-    protected void unsuccessfulPasswordsAuthentication(HttpServletResponse response, String pw, String pw2)
-            throws IOException, ServletException {
-
-        getNotSamePasswordsHandler().onAuthenticationPasswordFailure(response, pw, pw2);
-    }
-
-    private PasswordMismatchHandler getNotSamePasswordsHandler() {
-        return this.passwordMismatchHandler;
     }
 
     private Map<String, Object> parseJsonMap(HttpServletRequest request) throws IOException {
