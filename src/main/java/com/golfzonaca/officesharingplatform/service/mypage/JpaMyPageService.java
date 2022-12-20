@@ -247,8 +247,10 @@ public class JpaMyPageService implements MyPageService {
         if (!findRoomType.name().contains("OFFICE") && findReservation.getFixStatus().equals(FixStatus.UNFIXED)) {
             List<Payment> paymentList = findReservation.getPaymentList();
             for (Payment payment : paymentList) {
-                if (payment.getReservation().getStatus().equals(ReservationStatus.COMPLETED) && payment.getType().equals(PayType.FULL_PAYMENT) && payment.getPayStatus().equals(PaymentStatus.COMPLETED)) {
-                    mileageService.savingFullPaymentMileage(payment);
+                if (payment.getReservation().getStatus().equals(ReservationStatus.COMPLETED) && payment.getType().equals(PayType.FULL_PAYMENT) || payment.getType().equals(PayType.DEPOSIT) && payment.getPayStatus().equals(PaymentStatus.COMPLETED)) {
+                    if (payment.getType().equals(PayType.FULL_PAYMENT)) {
+                        mileageService.savingFullPaymentMileage(payment);
+                    }
                     findReservation.changeFixStatus(FixStatus.FIXED);
                     break;
                 }
