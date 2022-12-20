@@ -24,7 +24,7 @@ public class CustomReservationRepository implements ReservationRepository {
     private final SpringDataJpaReservationRepository jpaReservationRepository;
     private final QueryReservationRepository queryReservationRepository;
 
-    @CacheEvict(cacheNames = "resDataByPlaceAndTypeAndDate, resAllDataByPlaceAndTypeAndDate", allEntries = true)
+    @CacheEvict(cacheNames = {"resDataByPlaceAndTypeAndDate", "resAllDataByPlaceAndTypeAndDate"}, allEntries = true)
     @Override
     public Reservation save(Reservation reservation) {
         return jpaReservationRepository.save(reservation);
@@ -69,12 +69,13 @@ public class CustomReservationRepository implements ReservationRepository {
         return queryReservationRepository.findResByRoomKindAndDateTime(selectedType, startDate, startTime, endDate, endTime);
     }
 
-//    @Cacheable(cacheNames = "resAllDataByPlaceAndTypeAndDate", sync = true, key = "#placeId+'&'+#roomType+'&'+#date")
+    @Cacheable(cacheNames = "resAllDataByPlaceAndTypeAndDate", sync = true, key = "#placeId+'&'+#roomType+'&'+#date")
     @Override
     public List<Reservation> findAllByPlaceIdAndRoomTypeAndDate(Long placeId, RoomType roomType, LocalDate date) {
         return queryReservationRepository.findAllByPlaceIdAndRoomTypeAndDate(placeId, roomType, date);
     }
 
+    @Cacheable(cacheNames = "resDataByPlaceAndTypeAndDate", sync = true, key = "#placeId+'&'+#roomType+'&'+#date")
     @Override
     public Optional<Reservation> findByPlaceIdAndRoomTypeAndDate(Long placeId, RoomType roomType, LocalDate date) {
         return queryReservationRepository.findFirstByPlaceIdAndRoomTypeAndDate(placeId, roomType, date);

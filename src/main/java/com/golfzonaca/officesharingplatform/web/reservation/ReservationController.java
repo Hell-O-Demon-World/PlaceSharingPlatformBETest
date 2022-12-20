@@ -39,7 +39,6 @@ public class ReservationController {
         Place place = placeService.findById(placeId);
         RoomType roomType = RoomType.getRoomType(typeName);
         reservationRequestValidation.validation(roomType, inputDate);
-
         return reservationService.getReservationResponseData(place, roomType, inputDate);
     }
 
