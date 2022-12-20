@@ -2,6 +2,7 @@ package com.golfzonaca.officesharingplatform.service.mypage;
 
 import com.golfzonaca.officesharingplatform.domain.*;
 import com.golfzonaca.officesharingplatform.domain.type.*;
+import com.golfzonaca.officesharingplatform.exception.CalculateRoomNumErrorException;
 import com.golfzonaca.officesharingplatform.exception.InvalidResCancelRequest;
 import com.golfzonaca.officesharingplatform.exception.NonExistedReservationException;
 import com.golfzonaca.officesharingplatform.repository.comment.CommentRepository;
@@ -11,6 +12,7 @@ import com.golfzonaca.officesharingplatform.repository.mileage.MileageRepository
 import com.golfzonaca.officesharingplatform.repository.payment.PaymentRepository;
 import com.golfzonaca.officesharingplatform.repository.rating.RatingRepository;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
+import com.golfzonaca.officesharingplatform.repository.room.RoomRepository;
 import com.golfzonaca.officesharingplatform.repository.user.UserRepository;
 import com.golfzonaca.officesharingplatform.service.mileage.MileageService;
 import com.golfzonaca.officesharingplatform.service.mypage.dto.comment.CommentDataByRating;
@@ -59,6 +61,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class JpaMyPageService implements MyPageService {
     private final UserRepository userRepository;
+    private final RoomRepository roomRepository;
     private final ReservationRepository reservationRepository;
     private final CommentRepository commentRepository;
     private final RatingRepository ratingRepository;
@@ -509,6 +512,7 @@ public class JpaMyPageService implements MyPageService {
         }
         return result;
     }
+
     @NotNull
     private Map<String, JsonObject> processingCommentDataByRating(Rating rating, Integer page) {
         Gson gson = new Gson();
@@ -607,6 +611,17 @@ public class JpaMyPageService implements MyPageService {
     }
 
     private MyReservationDetail loadReservationDetail(Reservation reservation, Long totalPrice, Double savedMileage) {
+        List<Room> roomList = roomRepository.findByPlace(reservation.getRoom().getPlace());
+        Long roomIdInPlace = null;
+        for (int i = 0; i < roomList.size(); i++) {
+            Room room = roomList.get(i);
+            if (reservation.getRoom() == room) {
+                roomIdInPlace = (long) i + 1;
+            }
+        }
+        if (roomIdInPlace == null) {
+            throw new CalculateRoomNumErrorException("잠시 후 다시 시도해주시기 바랍니다.");
+        }
         RatingStatus ratingStatus = getRatingStatus(reservation);
         UsageStatus usageStatus = getUsageStatus(reservation);
         Boolean cancelStatus = isCompleteAndUnfixed(reservation);
@@ -614,6 +629,7 @@ public class JpaMyPageService implements MyPageService {
         return MyReservationDetail.builder()
                 .placeName(reservation.getRoom().getPlace().getPlaceName())
                 .roomType(reservation.getRoom().getRoomKind().getRoomType().getDescription())
+                .roomId(roomIdInPlace)
                 .resCompletedDate(reservation.getResCompleted().toLocalDate().toString())
                 .resCompletedTime(reservation.getResCompleted().toLocalTime().toString())
                 .resStartDate(reservation.getResStartDate().toString())

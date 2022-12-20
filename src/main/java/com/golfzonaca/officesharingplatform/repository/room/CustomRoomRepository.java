@@ -69,4 +69,9 @@ public class CustomRoomRepository implements RoomRepository {
     public Room findById(Long resultRoomId) {
         return jpaRoomRepository.findById(resultRoomId).orElseThrow(() -> new NonExistedRoomException("NotExistRoomException::: 예약가능한 Room이 없습니다."));
     }
+
+    @Override
+    public List<Room> findByPlace(Place place) {
+        return queryRoomRepository.findAllByPlace(place);
+    }
 }

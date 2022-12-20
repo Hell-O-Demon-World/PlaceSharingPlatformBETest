@@ -8,6 +8,7 @@ import lombok.Builder;
 public class MyReservationDetail {
     private String placeName;
     private String roomType;
+    private Long roomId;
     private String resCompletedDate;
     private String resCompletedTime;
     private String resStartDate;

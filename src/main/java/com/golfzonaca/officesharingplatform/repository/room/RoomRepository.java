@@ -25,4 +25,6 @@ public interface RoomRepository {
     List<Room> findRoomByPlaceIdAndRoomType(Long placeId, RoomType selectedType);
 
     Room findById(Long resultRoomId);
+
+    List<Room> findByPlace(Place place);
 }

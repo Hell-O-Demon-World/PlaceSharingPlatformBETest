@@ -109,4 +109,12 @@ public class QueryRoomRepository {
                 .where(room.place.eq(place), room.roomStatus.status.eq(true))
                 .fetch();
     }
+
+    public List<Room> findAllByPlace(Place place) {
+        return query
+                .selectFrom(room)
+                .where(room.place.eq(place))
+                .orderBy(room.roomKind.id.asc())
+                .fetch();
+    }
 }
