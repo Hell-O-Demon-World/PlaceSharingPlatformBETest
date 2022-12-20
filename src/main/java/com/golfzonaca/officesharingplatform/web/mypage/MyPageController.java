@@ -1,6 +1,7 @@
 package com.golfzonaca.officesharingplatform.web.mypage;
 
 import com.golfzonaca.officesharingplatform.annotation.TokenUserId;
+import com.golfzonaca.officesharingplatform.batch.BatchManager;
 import com.golfzonaca.officesharingplatform.service.mypage.MyPageService;
 import com.golfzonaca.officesharingplatform.web.mypage.dto.EditUserInfoData;
 import com.golfzonaca.officesharingplatform.web.mypage.dto.SaveInquiryData;
@@ -19,12 +20,12 @@ import java.util.Map;
 public class MyPageController {
     private final MyPageService myPageService;
     private final MypageRequestValidation mypageRequestValidation;
+    private final BatchManager batchManager;
 
     @GetMapping
     public Map<String, JsonObject> overView(@TokenUserId Long userId) {
         mypageRequestValidation.validationUser(userId);
-        myPageService.clearPreoccupiedReservation(userId);
-        myPageService.forceFixReservationStarted(userId);
+        batchManager.reservationClear(userId);
         return myPageService.getOverViewData(userId);
     }
 

@@ -1,5 +1,6 @@
 package com.golfzonaca.officesharingplatform.web.main;
 
+import com.golfzonaca.officesharingplatform.batch.BatchManager;
 import com.golfzonaca.officesharingplatform.service.auth.AuthService;
 import com.golfzonaca.officesharingplatform.service.place.PlaceService;
 import com.golfzonaca.officesharingplatform.service.place.dto.place.PlaceListDto;
@@ -25,6 +26,7 @@ public class MainController {
     private final PlaceService placeService;
     private final SearchService searchService;
     private final AuthService authService;
+    private final BatchManager batchManager;
 
     @GetMapping()
     public Map<Integer, PlaceListDto> allPlace() {

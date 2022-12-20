@@ -2,10 +2,10 @@ package com.golfzonaca.officesharingplatform.auth.handler;
 
 import com.golfzonaca.officesharingplatform.auth.filter.servlet.JwtHttpServletProvider;
 import com.golfzonaca.officesharingplatform.auth.token.JwtManager;
+import com.golfzonaca.officesharingplatform.batch.BatchManager;
 import com.golfzonaca.officesharingplatform.domain.RefreshToken;
 import com.golfzonaca.officesharingplatform.domain.User;
 import com.golfzonaca.officesharingplatform.repository.user.UserRepository;
-import com.golfzonaca.officesharingplatform.service.mypage.MyPageService;
 import com.golfzonaca.officesharingplatform.service.refreshtoken.RefreshTokenService;
 import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +31,7 @@ public class JwtSuccessHandler implements AuthenticationSuccessHandler {
     private final UserRepository userRepository;
     private final RefreshTokenService refreshTokenService;
     private final JwtHttpServletProvider jwtHttpServletProvider;
-    private final MyPageService myPageService;
+    private final BatchManager batchManager;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -42,14 +42,9 @@ public class JwtSuccessHandler implements AuthenticationSuccessHandler {
         json.addProperty("accessToken", accessJwt.getEncoded());
         json.addProperty("refreshToken", refreshJwt.getEncoded());
 
-        reservationBatch(findUser);
-        
-        jwtHttpServletProvider.responseJsonObject(response, HttpStatus.ACCEPTED, json);
-    }
+        batchManager.reservationClear(findUser.getId());
 
-    private void reservationBatch(User findUser) {
-        myPageService.clearPreoccupiedReservation(findUser.getId());
-        myPageService.forceFixReservationStarted(findUser.getId());
+        jwtHttpServletProvider.responseJsonObject(response, HttpStatus.ACCEPTED, json);
     }
 
     private Jwt createRefreshJwt(Long userId) {

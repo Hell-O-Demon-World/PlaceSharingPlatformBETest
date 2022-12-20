@@ -265,6 +265,12 @@ public class JpaMyPageService implements MyPageService {
             if (reservation.getStatus().equals(ReservationStatus.COMPLETED) && reservation.getFixStatus().equals(FixStatus.UNFIXED)) {
                 if (LocalDateTime.of(reservation.getResStartDate(), reservation.getResStartTime()).equals(LocalDateTime.now()) || LocalDateTime.of(reservation.getResStartDate(), reservation.getResStartTime()).isBefore(LocalDateTime.now()) || LocalDateTime.of(reservation.getResEndDate(), reservation.getResEndTime()).equals(LocalDateTime.now()) || LocalDateTime.of(reservation.getResEndDate(), reservation.getResEndTime()).isBefore(LocalDateTime.now())) {
                     reservation.updateFixStatus(FixStatus.FIXED);
+                    List<Payment> paymentList = reservation.getPaymentList();
+                    for (Payment payment : paymentList) {
+                        if (payment.getType().equals(PayType.FULL_PAYMENT) && payment.getPayWay().equals(PayWay.PREPAYMENT)) {
+                            mileageService.savingFullPaymentMileage(payment);
+                        }
+                    }
                 }
             }
         }
