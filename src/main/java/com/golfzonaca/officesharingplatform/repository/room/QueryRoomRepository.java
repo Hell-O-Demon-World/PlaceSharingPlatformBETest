@@ -114,7 +114,7 @@ public class QueryRoomRepository {
         return query
                 .selectFrom(room)
                 .where(room.place.eq(place))
-                .orderBy(room.roomKind.id.asc())
+                .orderBy(room.id.asc(), room.roomKind.id.asc())
                 .fetch();
     }
 }
