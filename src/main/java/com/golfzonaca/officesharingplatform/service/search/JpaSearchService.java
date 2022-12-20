@@ -40,7 +40,13 @@ public class JpaSearchService implements SearchService {
         }
 
         if (!city.equals("0")) {
-            filterData.setCity(city.substring(0, 2));
+            if (city.length() == 3 || city.length() == 5) {
+                filterData.setCity(city.substring(0, 2));
+            } else if (city.length() == 4) {
+                filterData.setCity(city.charAt(0) + city.substring(2, 3));
+            } else {
+                filterData.setCity(city);
+            }
         }
 
         if (!subCity.equals("0")) {
