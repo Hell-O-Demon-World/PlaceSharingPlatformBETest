@@ -48,6 +48,7 @@ public class ReservationRequestValidation {
     public void validation(User user, Place place, ProcessReservationData data) {
         RoomType roomType = RoomType.getRoomType(data.getSelectedType().toUpperCase());
         if (!roomType.name().contains("OFFICE")) {
+            validNotSameDay(data);
             validBusinessDay(place, data.getStartDate());
             validDuplicatedResStartAndEndTime(data);
             validResTimeBetweenPlaceOpeningTime(place, data.getStartTime(), data.getEndTime());
@@ -56,7 +57,14 @@ public class ReservationRequestValidation {
         validDuplicatedResForSameUser(user, place, data.getStartDate(), data.getStartTime(), data.getStartDate(), data.getEndTime());
         validRestRoomForSelectedPlaceAndDateTime(place, roomType, data.getStartDate(), data.getStartTime(), data.getStartDate(), data.getEndTime());
         validSelectedDate(LocalDateTime.of(data.getStartDate(), data.getStartTime()), LocalDateTime.of(data.getEndDate(), data.getEndTime()), roomType);
+    }
 
+    private void validNotSameDay(ProcessReservationData data) {
+        LocalDate startDate = data.getStartDate();
+        LocalDate endDate = data.getEndDate();
+        if (!startDate.equals(endDate)) {
+            throw new InvalidReservationException("데스크와 회의실의 예약 날짜는 하루 단위로 입력해야 합니다.");
+        }
     }
 
     private void validDuplicatedResStartAndEndTime(ProcessReservationData data) {
