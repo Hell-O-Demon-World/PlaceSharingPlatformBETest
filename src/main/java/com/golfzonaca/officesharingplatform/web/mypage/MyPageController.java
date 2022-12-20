@@ -38,7 +38,7 @@ public class MyPageController {
 
     @GetMapping("/{reservationId}")
     public Map<String, JsonObject> resDetail(@TokenUserId Long userId, @PathVariable long reservationId) {
-        mypageRequestValidation.validationReservation(userId, reservationId);
+        mypageRequestValidation.validationMypageDetail(userId, reservationId);
         myPageService.forceFixReservationStarted(userId);
         myPageService.getReceiptForSubscribe(userId, reservationId);
         return myPageService.getResDetailViewData(userId, reservationId);

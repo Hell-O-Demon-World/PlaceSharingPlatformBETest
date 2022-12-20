@@ -19,6 +19,11 @@ public class MypageRequestValidation {
     public void validationUser(long userId) {
         requestValidation.validUser(userId);
     }
+
+    public void validationMypageDetail(Long userId, long reservationId) {
+        requestValidation.validUser(userId);
+        requestValidation.validUserAndReservation(userId, reservationId);
+    }
     public void validationReservation(Long userId, long reservationId) {
         requestValidation.validUser(userId);
         requestValidation.validReservation(reservationId);
