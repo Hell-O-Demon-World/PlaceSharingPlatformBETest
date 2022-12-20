@@ -98,12 +98,4 @@ public class Reservation {
         this.status = status;
         this.fixStatus = fixStatus;
     }
-
-    public void changeStatus(ReservationStatus completed) {
-        this.status = completed;
-    }
-
-    public void changeFixStatus(FixStatus fixed) {
-        this.fixStatus = fixed;
-    }
 }

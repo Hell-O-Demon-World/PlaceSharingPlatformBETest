@@ -24,8 +24,8 @@ public class IdPwAuthenticationProvider implements AuthenticationProvider {
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 
-        String userId = String.valueOf(authentication.getPrincipal());
-        UserDetails userDetails = principalDetailsService.loadUserByUsername(userId);
+        String userName = String.valueOf(authentication.getPrincipal());
+        UserDetails userDetails = principalDetailsService.loadUserByUsername(userName);
 
         if (!this.passwordEncoder.matches(authentication.getCredentials().toString(), userDetails.getPassword())) {
             return null;

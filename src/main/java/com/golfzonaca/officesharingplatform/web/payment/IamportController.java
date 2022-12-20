@@ -1,10 +1,13 @@
 package com.golfzonaca.officesharingplatform.web.payment;
 
 import com.golfzonaca.officesharingplatform.annotation.TokenUserId;
+import com.golfzonaca.officesharingplatform.domain.type.PayType;
+import com.golfzonaca.officesharingplatform.domain.type.PayWay;
 import com.golfzonaca.officesharingplatform.service.mypage.MyPageService;
 import com.golfzonaca.officesharingplatform.service.payment.iamport.IamportService;
 import com.golfzonaca.officesharingplatform.web.payment.dto.CancelInfo;
 import com.golfzonaca.officesharingplatform.web.payment.form.NicePayRequestForm;
+import com.golfzonaca.officesharingplatform.web.payment.validation.PaymentValidation;
 import com.golfzonaca.officesharingplatform.web.validation.RequestValidation;
 import com.google.gson.JsonObject;
 import com.siot.IamportRestClient.exception.IamportResponseException;
@@ -29,8 +32,7 @@ public class IamportController {
 
     @PostMapping("/nicepay")
     public String nicePay(@TokenUserId Long userId, @RequestBody NicePayRequestForm nicePayRequestForm) throws IamportResponseException, IOException {
-        requestValidation.validUser(userId);
-        requestValidation.validReservation(nicePayRequestForm.getReservationId());
+        paymentValidation.validationPayment(userId, nicePayRequestForm);
         return iamportService.requestNicePay(userId, nicePayRequestForm);
     }
 

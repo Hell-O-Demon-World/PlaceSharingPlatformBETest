@@ -5,6 +5,7 @@ import com.golfzonaca.officesharingplatform.service.payment.kakaopay.KakaoPaySer
 import com.golfzonaca.officesharingplatform.web.payment.dto.CancelInfo;
 import com.golfzonaca.officesharingplatform.web.payment.dto.PaymentInfo;
 import com.golfzonaca.officesharingplatform.web.payment.dto.kakaopay.KakaoPayCancelResponse;
+import com.golfzonaca.officesharingplatform.web.payment.validation.PaymentValidation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;

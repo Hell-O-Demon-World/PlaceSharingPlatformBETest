@@ -1,13 +1,7 @@
 package com.golfzonaca.officesharingplatform.web.mypage.validation;
 
-import com.golfzonaca.officesharingplatform.repository.rating.RatingRepository;
-import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
-import com.golfzonaca.officesharingplatform.repository.room.RoomRepository;
-import com.golfzonaca.officesharingplatform.repository.roomkind.RoomKindRepository;
-import com.golfzonaca.officesharingplatform.repository.user.UserRepository;
 import com.golfzonaca.officesharingplatform.web.validation.RequestValidation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 

@@ -1,6 +1,7 @@
 package com.golfzonaca.officesharingplatform.auth.filter;
 
-import com.golfzonaca.officesharingplatform.auth.filter.dto.IdPwDto;
+import com.golfzonaca.officesharingplatform.auth.filter.dto.IdPwAttributeName;
+import com.golfzonaca.officesharingplatform.auth.handler.PasswordMismatchHandler;
 import com.golfzonaca.officesharingplatform.auth.token.IdPwAuthenticationToken;
 import org.springframework.boot.json.GsonJsonParser;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -17,27 +18,41 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+
 public class JsonIdPwAuthenticationProcessingFilter extends AbstractAuthenticationProcessingFilter {
+
+    private PasswordMismatchHandler passwordMismatchHandler;
+
     public JsonIdPwAuthenticationProcessingFilter(RequestMatcher loginRequestMatcher) {
         super(loginRequestMatcher);
     }
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException {
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
 
         if (!request.getMethod().equals("POST")) {
             throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
         }
 
         Map<String, Object> parseJsonMap = parseJsonMap(request);
+        String id = (String) parseJsonMap.get(IdPwAttributeName.id);
+        String pw = (String) parseJsonMap.get(IdPwAttributeName.pw1);
+        String pw2 = (String) parseJsonMap.get(IdPwAttributeName.pw2);
 
-        String id = (String) parseJsonMap.get(IdPwDto.id);
-        String pw = (String) parseJsonMap.get(IdPwDto.pw);
+        unsuccessfulPasswordsAuthentication(response, pw, pw2);
+
 
         IdPwAuthenticationToken idPwAuthenticationToken = new IdPwAuthenticationToken(id, pw);
         idPwAuthenticationToken.setDetails(super.authenticationDetailsSource.buildDetails(request));
         return super.getAuthenticationManager().authenticate(idPwAuthenticationToken);
     }
+
+
+
+    public void setUnsuccessfulPasswordsAuthentication(PasswordMismatchHandler passwordMismatchHandler) {
+        this.passwordMismatchHandler = passwordMismatchHandler;
+    }
+
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
                                             FilterChain chain, Authentication authentication) throws IOException, ServletException {
@@ -54,9 +69,21 @@ public class JsonIdPwAuthenticationProcessingFilter extends AbstractAuthenticati
         getFailureHandler().onAuthenticationFailure(request, response, failed);
     }
 
+    protected void unsuccessfulPasswordsAuthentication(HttpServletResponse response, String pw, String pw2)
+            throws IOException, ServletException {
+
+        getNotSamePasswordsHandler().onAuthenticationPasswordFailure(response, pw, pw2);
+    }
+
+    private PasswordMismatchHandler getNotSamePasswordsHandler() {
+        return this.passwordMismatchHandler;
+    }
+
     private Map<String, Object> parseJsonMap(HttpServletRequest request) throws IOException {
         String body = request.getReader().lines().collect(Collectors.joining());
         GsonJsonParser gsonJsonParser = new GsonJsonParser();
         return gsonJsonParser.parseMap(body);
     }
+
+
 }

@@ -253,7 +253,7 @@ public class JpaMyPageService implements MyPageService {
                     if (payment.getType().equals(PayType.FULL_PAYMENT)) {
                         mileageService.savingFullPaymentMileage(payment);
                     }
-                    findReservation.changeFixStatus(FixStatus.FIXED);
+                    findReservation.updateFixStatus(FixStatus.FIXED);
                     break;
                 }
             }
