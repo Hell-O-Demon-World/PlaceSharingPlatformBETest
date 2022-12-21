@@ -14,7 +14,6 @@ import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import static com.golfzonaca.officesharingplatform.domain.QReservation.reservation;
@@ -110,7 +109,6 @@ public class QueryReservationRepository {
 
     public List<Reservation> findResByRoomKindAndDateTime(RoomType selectedType, LocalDate startDate, LocalTime startTime
             , LocalDate endDate, LocalTime endTime) {
-        log.info("Reservation findResByRoomKindAndDateTime");
         return query
                 .selectFrom(reservation)
                 .innerJoin(reservation.room.roomKind)
