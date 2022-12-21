@@ -49,6 +49,7 @@ public class CustomReservationRepository implements ReservationRepository {
                 .build());
     }
 
+    @CacheEvict(cacheNames = {"resDataByPlaceAndTypeAndDate", "resAllDataByPlaceAndTypeAndDate"}, allEntries = true)
     @Override
     public void delete(Reservation reservation) {
         jpaReservationRepository.delete(reservation);
