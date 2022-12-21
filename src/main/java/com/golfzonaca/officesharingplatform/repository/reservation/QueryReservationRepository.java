@@ -97,7 +97,7 @@ public class QueryReservationRepository {
         return query
                 .selectFrom(reservation)
                 .where(userEquals(user), PlaceEquals(place), startDateEquals(startDate), endDateEquals(endDate)
-                        , reservation.fixStatus.eq(FixStatus.FIXED)
+                        /*, reservation.fixStatus.eq(FixStatus.FIXED)*/
                         , Objects.requireNonNull(betweenStartTimeAndEndTime(startTimeOptional)).or(betweenStartTimeAndEndTime(endTimeOptional)))
                 .fetch();
     }
@@ -275,7 +275,7 @@ public class QueryReservationRepository {
             if (localTime.get().getHour() != 0) {
                 localTime1 = localTime.get().minusHours(1);
             }
-            return reservation.resStartTime.loe(localTime.get()).and(reservation.resEndTime.gt(localTime1));
+            return reservation.resStartTime.goe(localTime.get()).and(reservation.resEndTime.lt(localTime1));
         }
         return null;
     }

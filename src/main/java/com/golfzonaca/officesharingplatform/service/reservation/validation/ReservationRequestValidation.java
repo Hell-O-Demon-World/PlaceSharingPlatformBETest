@@ -151,7 +151,7 @@ public class ReservationRequestValidation {
     }
 
     private void validDuplicatedResForSameUser(User user, Place place, LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
-        if (!reservationRepository.findInResValid(user, place, startDate, startTime, endDate, endTime)) {
+        if (reservationRepository.findInResValid(user, place, startDate, startTime, endDate, endTime)) {
             throw new DuplicatedReservationException("DuplicatedResForUserError::: 선택하신 시간과 공간에 대한 예약 내역이 존재합니다.");
         }
     }
