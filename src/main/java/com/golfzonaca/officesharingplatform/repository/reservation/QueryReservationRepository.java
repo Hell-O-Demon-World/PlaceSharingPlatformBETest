@@ -138,7 +138,7 @@ public class QueryReservationRepository {
         return query
                 .selectFrom(reservation)
                 .innerJoin(reservation.user)
-                .where(reservation.user.eq(user), startDateGoe(date), startTimeGt(LocalTime.now()))
+                .where(reservation.user.eq(user), startDateGoe(date), startTimeGt(LocalTime.now()), reservation.status.eq(ReservationStatus.COMPLETED))
                 .orderBy(reservation.resStartDate.asc(), reservation.resStartTime.asc())
                 .offset(8L * (page - 1))
                 .limit(8)
@@ -160,7 +160,7 @@ public class QueryReservationRepository {
         return query
                 .selectFrom(reservation)
                 .innerJoin(reservation.user)
-                .where(reservation.user.eq(user), startDateEquals(date), startTimeLoe(time), endTimeGt(time))
+                .where(reservation.user.eq(user), startDateEquals(date), startTimeLoe(time), endTimeGt(time), reservation.status.eq(ReservationStatus.COMPLETED))
                 .orderBy(reservation.resStartTime.asc())
                 .fetch();
     }
