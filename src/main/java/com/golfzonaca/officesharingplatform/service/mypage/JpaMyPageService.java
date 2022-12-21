@@ -676,6 +676,9 @@ public class JpaMyPageService implements MyPageService {
         for (int i = 0; i < paymentList.size(); i++) {
             Map<String, JsonObject> myPaymentAndRefundDetail = new LinkedHashMap<>();
             Payment payment = paymentList.get(i);
+            if (reservationRepository.findById(reservationId).getRoom().getRoomKind().getRoomType().toString().contains("OFFICE")) {
+                myPaymentAndRefundDetail.put("payment", gson.toJsonTree(new MyPaymentDetail(payment.getPayDate().toString(), payment.getPayTime().toString(), payment.getPrice(), payment.getPayMileage(), "후결제", payment.getReceipt())).getAsJsonObject());
+            }
             myPaymentAndRefundDetail.put("payment", gson.toJsonTree(new MyPaymentDetail(payment.getPayDate().toString(), payment.getPayTime().toString(), payment.getPrice(), payment.getPayMileage(), payment.getType().getDescription(), payment.getReceipt())).getAsJsonObject());
             Optional<Refund> refund = refundRepository.findByPayment(payment);
             refund.ifPresent(value -> myPaymentAndRefundDetail.put("refund", gson.toJsonTree(new MyRefundDetail(value.getRefundDateTime().toLocalDate().toString(), value.getRefundDateTime().toLocalTime().toString(), value.getRefundPrice(), payment.getPayMileage(), payment.getReceipt())).getAsJsonObject()));
