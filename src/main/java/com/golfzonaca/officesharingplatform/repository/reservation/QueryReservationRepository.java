@@ -90,11 +90,6 @@ public class QueryReservationRepository {
     }
 
     public Optional<Reservation> findInResValid(User user, LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
-        log.info("Reservation findInResValid");
-        Optional<LocalDate> startDateOptional = Optional.ofNullable(startDate);
-        Optional<LocalDate> endDateOptional = Optional.ofNullable(endDate);
-        Optional<LocalTime> startTimeOptional = Optional.ofNullable(startTime);
-        Optional<LocalTime> endTimeOptional = Optional.ofNullable(endTime);
         return Optional.ofNullable(query
                 .selectFrom(reservation)
                 .where(userEquals(user), reservation.status.ne(ReservationStatus.CANCELED), reservation.status.ne(ReservationStatus.PROGRESSING), reservation.resStartDate.eq(startDate), reservation.resEndDate.eq(endDate),
@@ -104,12 +99,12 @@ public class QueryReservationRepository {
                 .fetchFirst());
     }
 
-    public Optional<Reservation> findResThatDay(User user, Place place, LocalDate startDate, LocalDate endDate) {
+    public Optional<Reservation> findResThatDay(User user, RoomType roomType, LocalDate startDate, LocalDate endDate) {
         return Optional.ofNullable(query
                 .selectFrom(reservation)
-                .where(userEquals(user), PlaceEquals(place)
-                        , reservation.fixStatus.ne(FixStatus.CANCELED)
-                        , reservation.resStartDate.eq(startDate), reservation.resEndDate.eq(endDate))
+                .where(userEquals(user), reservation.room.roomKind.roomType.eq(roomType), reservation.status.ne(ReservationStatus.CANCELED), reservation.status.ne(ReservationStatus.PROGRESSING),
+                        (reservation.resStartDate.loe(startDate).and(reservation.resEndDate.after(startDate)))
+                                .or(reservation.resStartDate.after(startDate).and(reservation.resStartDate.before(startDate))))
                 .fetchFirst());
     }
 
