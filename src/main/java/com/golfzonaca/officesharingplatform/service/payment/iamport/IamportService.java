@@ -217,15 +217,6 @@ public class IamportService {
         return refundResult;
     }
 
-    public void restoreUserMileage(com.golfzonaca.officesharingplatform.domain.Payment payment) {
-        User user = payment.getReservation().getUser();
-        Mileage getUserMileage = user.getMileage();
-
-        getUserMileage.addPoint(payment.getPayMileage());
-        mileageService.recoveryMileage(getUserMileage, payment);
-
-    }
-
     public String createMerchantUid() {
         return ("N" + UUID.randomUUID().toString().replaceAll("-", "")).substring(0, 20);
     }
