@@ -14,7 +14,6 @@ import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import static com.golfzonaca.officesharingplatform.domain.QReservation.reservation;
@@ -91,10 +90,6 @@ public class QueryReservationRepository {
 
     public Optional<Reservation> findInResValid(User user, LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
         log.info("Reservation findInResValid");
-        Optional<LocalDate> startDateOptional = Optional.ofNullable(startDate);
-        Optional<LocalDate> endDateOptional = Optional.ofNullable(endDate);
-        Optional<LocalTime> startTimeOptional = Optional.ofNullable(startTime);
-        Optional<LocalTime> endTimeOptional = Optional.ofNullable(endTime);
         return Optional.ofNullable(query
                 .selectFrom(reservation)
                 .where(userEquals(user), reservation.status.ne(ReservationStatus.CANCELED), reservation.status.ne(ReservationStatus.PROGRESSING), reservation.resStartDate.eq(startDate), reservation.resEndDate.eq(endDate),
@@ -115,7 +110,6 @@ public class QueryReservationRepository {
 
     public List<Reservation> findResByRoomKindAndDateTime(RoomType selectedType, LocalDate startDate, LocalTime startTime
             , LocalDate endDate, LocalTime endTime) {
-        log.info("Reservation findResByRoomKindAndDateTime");
         return query
                 .selectFrom(reservation)
                 .innerJoin(reservation.room.roomKind)
