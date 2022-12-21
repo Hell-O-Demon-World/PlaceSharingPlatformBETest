@@ -215,13 +215,7 @@ public class JpaReservationService implements ReservationService {
             ReservedRoom reservedRoom = reservedRoomMap.get(i);
             int plusPointer = selectedStartTime;
             int minusPointer = selectedStartTime;
-            if (selectedStartTime == 0) {
-                if (reservedRoom.getTimeState(selectedStartTime) && !reservedRoom.getTimeState(selectedStartTime + 1)) {
-                    List<Integer> arrayList = new ArrayList<>();
-                    arrayList.add(plusMaxPointer);
-                    return arrayList;
-                }
-            } else if (!reservedRoom.getTimeState(selectedStartTime - 1) && reservedRoom.getTimeState(selectedStartTime) && !reservedRoom.getTimeState(selectedStartTime + 1)) {
+            if (isBeforeTimeZeroAfterTimeFalse(selectedStartTime, reservedRoom) || isBeforeFalseAfterFalse(selectedStartTime, reservedRoom)) {
                 onlyOneStatus.add(true);
             }
             if (!(plusMaxPointer == findPlace.getPlaceEnd().getHour())) {
@@ -260,6 +254,14 @@ public class JpaReservationService implements ReservationService {
             }
         }
         return result;
+    }
+
+    private boolean isBeforeTimeZeroAfterTimeFalse(int selectedStartTime, ReservedRoom reservedRoom) {
+        return selectedStartTime == 0 && reservedRoom.getTimeState(selectedStartTime) && !reservedRoom.getTimeState(selectedStartTime + 1);
+    }
+
+    private boolean isBeforeFalseAfterFalse(int selectedStartTime, ReservedRoom reservedRoom) {
+        return !reservedRoom.getTimeState(selectedStartTime - 1) && reservedRoom.getTimeState(selectedStartTime) && !reservedRoom.getTimeState(selectedStartTime + 1);
     }
 
     @Override
