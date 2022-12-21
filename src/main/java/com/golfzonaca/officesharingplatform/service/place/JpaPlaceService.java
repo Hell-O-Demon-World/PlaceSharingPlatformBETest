@@ -184,7 +184,7 @@ public class JpaPlaceService implements PlaceService {
             throw new NoSuchElementException("현재 선택하신 Place의 리뷰는 존재하지 않습니다.");
         }
         Map<String, JsonObject> reviewData = new LinkedHashMap<>();
-        reviewData.put("paginationData", gson.toJsonTree(Map.of("maxPage", ratingRepository.countByPlace(place) / 4 + 1)).getAsJsonObject());
+        reviewData.put("paginationData", gson.toJsonTree(Map.of("maxPage", (int) Math.ceil((double) ratingRepository.countByPlace(place) / 4))).getAsJsonObject());
         reviewData.put("reviewData", gson.toJsonTree(processingReviewData(place, page)).getAsJsonObject());
         return reviewData;
     }
@@ -209,7 +209,7 @@ public class JpaPlaceService implements PlaceService {
             throw new NoSuchElementException("현재 선택하신 리뷰는 댓글이 존재하지 않습니다.");
         }
         Map<String, JsonObject> commentData = new LinkedHashMap<>();
-        commentData.put("paginationData", gson.toJsonTree(Map.of("maxPage", rating.getCommentList().size() / 8 + 1)).getAsJsonObject());
+        commentData.put("paginationData", gson.toJsonTree(Map.of("maxPage", (int) Math.ceil((double) rating.getCommentList().size() / 8))).getAsJsonObject());
         commentData.put("commentData", gson.toJsonTree(processingCommentData(rating, page)).getAsJsonObject());
         return commentData;
     }

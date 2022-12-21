@@ -321,7 +321,7 @@ public class JpaMyPageService implements MyPageService {
 
     private Map<String, Integer> getMileagePagenationInfo(Mileage mileage) {
         List<MileageUpdate> totalMileageUpdateList = mileageRepository.findAllMileageUpdateByMileage(mileage);
-        return Map.of("maxPage", totalMileageUpdateList.size() / 8 + 1);
+        return Map.of("maxPage", (int) Math.ceil((double) totalMileageUpdateList.size() / 8));
     }
 
     private String getIssuer(MileageStatusType historyStatus, MileageUpdate mileageUpdate) {
@@ -379,21 +379,21 @@ public class JpaMyPageService implements MyPageService {
     private void putReservationData(User user, Map<String, JsonObject> myResMap, Integer page) {
         Gson gson = new Gson();
         Map<String, JsonObject> myUsage = processingAllReservationData(user, page);
-        myResMap.put("paginationData", gson.toJsonTree(Map.of("maxPage", user.getReservationList().size() / 8 + 1)).getAsJsonObject());
+        myResMap.put("paginationData", gson.toJsonTree(Map.of("maxPage", (int) Math.ceil((double) user.getReservationList().size() / 8))).getAsJsonObject());
         myResMap.put("reservationData", gson.toJsonTree(myUsage).getAsJsonObject());
     }
 
     private void putQnAData(User user, Map<String, JsonObject> myInquiryMap, Integer page) {
         Gson gson = new Gson();
         Map<String, JsonObject> qnaMap = processingQnAData(user, page);
-        myInquiryMap.put("paginationData", gson.toJsonTree(Map.of("maxPage", user.getInquiryList().size() / 8 + 1)).getAsJsonObject());
+        myInquiryMap.put("paginationData", gson.toJsonTree(Map.of("maxPage", (int) Math.ceil((double) user.getInquiryList().size() / 8))).getAsJsonObject());
         myInquiryMap.put("qnaData", gson.toJsonTree(qnaMap).getAsJsonObject());
     }
 
     private void putReviewData(User user, Map<String, JsonObject> reviewMap, Integer page) {
         Gson gson = new Gson();
         List<Rating> ratingList = ratingRepository.findAllByUserWithPagination(user, page);
-        reviewMap.put("paginationData", gson.toJsonTree(Map.of("maxPage", ratingRepository.countByUser(user) / 8 + 1)).getAsJsonObject());
+        reviewMap.put("paginationData", gson.toJsonTree(Map.of("maxPage", (int) Math.ceil((double) ratingRepository.countByUser(user) / 8))).getAsJsonObject());
         Map<String, JsonObject> reviewData = processingReviewData(ratingList);
         reviewMap.put("reviewData", gson.toJsonTree(reviewData).getAsJsonObject());
     }
@@ -529,7 +529,7 @@ public class JpaMyPageService implements MyPageService {
     private Map<String, JsonObject> processingCommentDataByRating(Rating rating, Integer page) {
         Gson gson = new Gson();
         Map<String, JsonObject> commentData = new LinkedHashMap<>();
-        commentData.put("paginationData", gson.toJsonTree(Map.of("maxPage", commentRepository.findAllByRating(rating).size() / 8 + 1)).getAsJsonObject());
+        commentData.put("paginationData", gson.toJsonTree(Map.of("maxPage", (int) Math.ceil((double) commentRepository.findAllByRating(rating).size() / 8))).getAsJsonObject());
         Map<String, JsonObject> commentDataMap = new LinkedHashMap<>();
         for (int i = 0; i < commentRepository.findAllByRatingWithPagination(rating, page).size(); i++) {
             Comment comment = commentRepository.findAllByRatingWithPagination(rating, page).get(i);
@@ -583,7 +583,7 @@ public class JpaMyPageService implements MyPageService {
     private void putCommentData(Integer page, User user, Map<String, JsonObject> myCommentMap) {
         Gson gson = new Gson();
         List<Comment> commentList = commentRepository.findAllByUserWithPagination(user, page);
-        myCommentMap.put("paginationData", gson.toJsonTree(Map.of("maxPage", commentRepository.countByUser(user) / 8 + 1)).getAsJsonObject());
+        myCommentMap.put("paginationData", gson.toJsonTree(Map.of("maxPage", (int) Math.ceil((double) commentRepository.countByUser(user) / 8))).getAsJsonObject());
         Map<String, JsonObject> commentDataMap = new LinkedHashMap<>();
         for (int i = 0; i < commentList.size(); i++) {
             Comment comment = commentList.get(i);

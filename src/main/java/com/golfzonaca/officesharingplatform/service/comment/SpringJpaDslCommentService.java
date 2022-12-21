@@ -52,7 +52,7 @@ public class SpringJpaDslCommentService implements CommentService {
     private Map<String, JsonObject> putCommentDataByRating(Rating rating, Integer page) {
         Gson gson = new Gson();
         Map<String, JsonObject> commentDataMap = new LinkedHashMap<>();
-        commentDataMap.put("paginationData", gson.toJsonTree(Map.of("maxPage", rating.getCommentList().size() / 8 + 1)).getAsJsonObject());
+        commentDataMap.put("paginationData", gson.toJsonTree(Map.of("maxPage", (int) Math.ceil((double) rating.getCommentList().size() / 8))).getAsJsonObject());
         Map<String, JsonObject> commentData = processingCommentDataByRating(rating, page);
         commentDataMap.put("commentData", gson.toJsonTree(commentData).getAsJsonObject());
         return commentDataMap;
