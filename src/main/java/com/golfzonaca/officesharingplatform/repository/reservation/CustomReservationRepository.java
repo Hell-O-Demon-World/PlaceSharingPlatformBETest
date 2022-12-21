@@ -61,8 +61,8 @@ public class CustomReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public boolean findInResValid(User user, Place place, LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
-        return queryReservationRepository.findInResValid(user, place, startDate, startTime, endDate, endTime).isEmpty();
+    public boolean findInResValid(User user, LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
+        return queryReservationRepository.findInResValid(user, startDate, startTime, endDate, endTime).isEmpty();
     }
 
     @Override

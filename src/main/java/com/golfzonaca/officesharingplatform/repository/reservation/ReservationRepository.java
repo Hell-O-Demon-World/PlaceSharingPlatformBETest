@@ -27,7 +27,7 @@ public interface ReservationRepository {
 
     List<Reservation> findAll(ReservationSearchCond cond);
 
-    boolean findInResValid(User user, Place place, LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime);
+    boolean findInResValid(User user, LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime);
 
     List<Reservation> findResByRoomKindAndDateTime(RoomType selectedType, LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime);
 

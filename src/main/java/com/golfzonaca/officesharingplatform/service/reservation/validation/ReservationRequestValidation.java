@@ -52,9 +52,9 @@ public class ReservationRequestValidation {
             validBusinessDay(place, data.getStartDate());
             validDuplicatedResStartAndEndTime(data);
             validResTimeBetweenPlaceOpeningTime(place, data.getStartTime(), data.getEndTime());
+            validDuplicatedResForSameUser(user, data.getStartDate(), data.getStartTime(), data.getStartDate(), data.getEndTime());
         }
         validPastOfDateTime(LocalDateTime.of(data.getStartDate(), data.getStartTime()), LocalDateTime.of(data.getStartDate(), data.getEndTime()));
-        validDuplicatedResForSameUser(user, place, data.getStartDate(), data.getStartTime(), data.getStartDate(), data.getEndTime());
         validRestRoomForSelectedPlaceAndDateTime(place, roomType, data.getStartDate(), data.getStartTime(), data.getStartDate(), data.getEndTime());
         validSelectedDate(LocalDateTime.of(data.getStartDate(), data.getStartTime()), LocalDateTime.of(data.getEndDate(), data.getEndTime()), roomType);
     }
@@ -150,8 +150,8 @@ public class ReservationRequestValidation {
         }
     }
 
-    private void validDuplicatedResForSameUser(User user, Place place, LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
-        if (reservationRepository.findInResValid(user, place, startDate, startTime, endDate, endTime)) {
+    private void validDuplicatedResForSameUser(User user, LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
+        if (!reservationRepository.findInResValid(user, startDate, startTime, endDate, endTime)) {
             throw new DuplicatedReservationException("DuplicatedResForUserError::: 선택하신 시간과 공간에 대한 예약 내역이 존재합니다.");
         }
     }
