@@ -12,7 +12,7 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 public class RatingSaveData {
     @Range(min = 1, max = 5)
-    private Float RatingScore;
+    private Float ratingScore;
     @NotBlank
-    private String RatingReview;
+    private String ratingReview;
 }
