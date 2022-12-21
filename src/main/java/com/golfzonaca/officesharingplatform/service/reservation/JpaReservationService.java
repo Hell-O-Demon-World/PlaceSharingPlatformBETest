@@ -123,10 +123,10 @@ public class JpaReservationService implements ReservationService {
         for (int time = startDateTime.getHour(); time < endDateTime.getHour(); time++) {
             for (int i = 0; i < reservedRoomMap.size(); i++) {
                 ReservedRoom reservedRoom = reservedRoomMap.get(i);
+                resultTimeStates.replace(time, reservedRoom.getTimeState(time));
                 if (reservedRoom.getTimeState(time)) {
                     break;
                 }
-                resultTimeStates.replace(time, reservedRoom.getTimeState(time));
             }
         }
 
@@ -209,6 +209,8 @@ public class JpaReservationService implements ReservationService {
     private List<Integer> getResultList(Place findPlace, int selectedStartTime, Map<Integer, ReservedRoom> reservedRoomMap) {
         int plusMaxPointer = selectedStartTime;
         int minusMinPointer = selectedStartTime;
+        List<Boolean> onlyOneStatus = new ArrayList<>();
+
         for (int i = 0; i < reservedRoomMap.size(); i++) {
             ReservedRoom reservedRoom = reservedRoomMap.get(i);
             int plusPointer = selectedStartTime;
@@ -220,9 +222,7 @@ public class JpaReservationService implements ReservationService {
                     return arrayList;
                 }
             } else if (!reservedRoom.getTimeState(selectedStartTime - 1) && reservedRoom.getTimeState(selectedStartTime) && !reservedRoom.getTimeState(selectedStartTime + 1)) {
-                List<Integer> arrayList = new ArrayList<>();
-                arrayList.add(plusMaxPointer);
-                return arrayList;
+                onlyOneStatus.add(true);
             }
             if (!(plusMaxPointer == findPlace.getPlaceEnd().getHour())) {
                 for (int j = selectedStartTime; j < findPlace.getPlaceEnd().getHour() - 1; j++) {
@@ -252,7 +252,9 @@ public class JpaReservationService implements ReservationService {
 
         List<Integer> result = new ArrayList<>();
 
-        if (minusMinPointer != plusMaxPointer) {
+        if (onlyOneStatus.size() == reservedRoomMap.size()) {
+            result.add(plusMaxPointer);
+        } else if (minusMinPointer != plusMaxPointer) {
             for (int i = minusMinPointer; i < plusMaxPointer + 1; i++) {
                 result.add(i);
             }
