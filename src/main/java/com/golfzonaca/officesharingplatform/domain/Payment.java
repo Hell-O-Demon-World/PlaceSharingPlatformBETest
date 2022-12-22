@@ -32,24 +32,24 @@ public class Payment {
     private LocalTime payTime;
 
     @Column(name = "PAY_PRICE", nullable = false)
-    private long price; //마일리지를 제외한 돈 나가는거
+    private long price;
 
     @Column(name = "PAY_MILEAGE", nullable = false)
-    private long payMileage; //사용한 마일리지
+    private long payMileage;
 
     @Column(name = "PAY_WAY", nullable = false)
     @Enumerated(EnumType.STRING)
     private PayWay payWay;
 
     @Column(name = "SAVED_MILEAGE", nullable = false)
-    private long savedMileage; //적립된 마일리지
+    private long savedMileage;
 
     @Column(name = "PAY_TYPE", nullable = false)
     @Enumerated(EnumType.STRING)
     private PayType type;
 
     @Column(name = "PAY_API_CODE", nullable = false)
-    private String apiCode; //결제하면 주문번호 튀어나오는거
+    private String apiCode;
 
     @Column(name = "PG", nullable = false)
     @Enumerated(EnumType.STRING)

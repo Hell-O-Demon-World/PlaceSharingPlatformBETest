@@ -127,7 +127,7 @@ public class KakaoPayService {
 
         List<KakaoPayCancelResponse> cancelResult = new LinkedList<>();
 
-        for (Refund refund : refunds) { // 검증이 끝나면 취소요청하기
+        for (Refund refund : refunds) {
             HttpHeaders httpHeaders = kakaoPayUtility.makeHttpHeader(kakaoPayApiKey);
 
             KakaoPayCancelRequest kakaoPayCancelRequest = kakaoPayUtility.makeRequestBodyForCancel(refund);

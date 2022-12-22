@@ -47,14 +47,14 @@ public class PaymentValidation {
     public void validExistedPayWay(String payWay) {
         for (PayWay supportedPayWay : PayWay.values()) {
             if (supportedPayWay.toString().equals(payWay)) {
-                return; // 메소드 끊어버릴려고
+                return;
             }
         }
         throw new NoSuchElementException("지원하지 않는 결제 방식입니다.");
     }
 
     public void validPairByRoomType(String payType, String payWay, RoomType roomType) {
-        // DESK,MEETINGROOM이면 PrePayment, POSTPAYMENT 둘다 가능
+
         if (roomType.toString().contains("OFFICE")) {
             if (payWay.equals(PayWay.POSTPAYMENT.toString()) && payType.equals(PayType.FULL_PAYMENT.toString())) {
 

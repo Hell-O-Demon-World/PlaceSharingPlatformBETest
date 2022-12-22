@@ -21,7 +21,7 @@ public class KakaoPayReadyResponse {
     private String nextRedirectMobileUrl;
     private String nextRedirectPcUrl;
     private String androidAppScheme;
-    private String iosAppScheme; //카카오페이랑 사전 협의
+    private String iosAppScheme;
     private LocalDateTime createdAt;
 
 }
