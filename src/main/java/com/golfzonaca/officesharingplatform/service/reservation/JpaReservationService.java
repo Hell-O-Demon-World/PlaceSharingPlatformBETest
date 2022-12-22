@@ -246,7 +246,7 @@ public class JpaReservationService implements ReservationService {
 
         List<Integer> result = new ArrayList<>();
 
-        if (onlyOneStatus.size() == reservedRoomMap.size()) {
+        if (onlyOneStatus.size() != reservedRoomMap.size()) {
             result.add(plusMaxPointer);
         } else if (minusMinPointer != plusMaxPointer) {
             for (int i = minusMinPointer; i < plusMaxPointer + 1; i++) {
