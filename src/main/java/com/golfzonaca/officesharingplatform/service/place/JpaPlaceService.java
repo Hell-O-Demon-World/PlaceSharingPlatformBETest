@@ -195,7 +195,7 @@ public class JpaPlaceService implements PlaceService {
         List<Rating> ratingList = ratingRepository.findAllByPlaceWithPagination(place, page);
         for (int i = 0; i < ratingList.size(); i++) {
             Rating rating = ratingList.get(i);
-            JsonObject myRatingData = gson.toJsonTree(new RatingDto(rating.getId(), String.valueOf(rating.getRatingScore()), rating.getReservation().getUser().getUsername(), rating.getRatingTime().toLocalDate().toString(), rating.getRatingTime().toLocalTime().toString(), rating.getReservation().getRoom().getRoomKind().getRoomType().getDescription(), rating.getRatingReview(), String.valueOf(rating.getCommentList().size()))).getAsJsonObject();
+            JsonObject myRatingData = gson.toJsonTree(new RatingDto(rating.getId(), String.valueOf(rating.getRatingScore()), processingUserIdentification(rating.getReservation().getUser()), rating.getRatingTime().toLocalDate().toString(), rating.getRatingTime().toLocalTime().toString(), rating.getReservation().getRoom().getRoomKind().getRoomType().getDescription(), rating.getRatingReview(), String.valueOf(rating.getCommentList().size()))).getAsJsonObject();
             reviewData.put(String.valueOf(i), myRatingData);
         }
         return reviewData;
