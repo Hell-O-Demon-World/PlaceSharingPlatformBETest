@@ -199,8 +199,7 @@ public class IamportService {
 
     public List<IamportResponse<Payment>> nicePayCancelOneTime(com.golfzonaca.officesharingplatform.domain.Payment payment) throws IamportResponseException, IOException {
         Refund refunds = refundService.processingRefundData(payment);
-        List<IamportResponse<Payment>> iamportResponses = refundRequest(refunds);
-        return iamportResponses;
+        return refundRequest(refunds);
     }
 
     public List<IamportResponse<Payment>> refundRequest(Refund refund) throws IamportResponseException, IOException {
@@ -209,12 +208,15 @@ public class IamportService {
         List<IamportResponse<Payment>> refundResult = new LinkedList<>();
 
         int cancelAmount = (int) refund.getRefundPrice();
-        CancelData cancelData = new CancelData(refund.getPayment().getApiCode(), false, new BigDecimal(cancelAmount));
-        IamportResponse<Payment> iamportResponse = iamportClient.cancelPaymentByImpUid(cancelData);
-        refundResult.add(iamportResponse);
-        refund.updateRefundStatus(true);
-        refund.getPayment().updatePayStatus(PaymentStatus.CANCELED);
-        return refundResult;
+        if (cancelAmount != 0) {
+            CancelData cancelData = new CancelData(refund.getPayment().getApiCode(), false, new BigDecimal(cancelAmount));
+            IamportResponse<Payment> iamportResponse = iamportClient.cancelPaymentByImpUid(cancelData);
+            refundResult.add(iamportResponse);
+            refund.updateRefundStatus(true);
+            refund.getPayment().updatePayStatus(PaymentStatus.CANCELED);
+            return refundResult;
+        }
+        return null;
     }
 
     public String createMerchantUid() {
