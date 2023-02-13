@@ -4,6 +4,7 @@ import com.golfzonaca.officesharingplatform.domain.type.PG;
 import com.golfzonaca.officesharingplatform.domain.type.PayType;
 import com.golfzonaca.officesharingplatform.domain.type.PayWay;
 import com.golfzonaca.officesharingplatform.domain.type.PaymentStatus;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -14,14 +15,14 @@ import java.time.LocalTime;
 @Getter
 @Entity
 @Table(uniqueConstraints = {@UniqueConstraint(name = "Payment", columnNames = {"PAY_API_CODE"})})
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Payment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "RESERVATION_ID")
     private Reservation reservation;
 
@@ -64,7 +65,7 @@ public class Payment {
 
     @OneToOne(mappedBy = "payment")
     private Refund refund;
-    
+
     public Payment(Reservation reservation, LocalDate payDate, LocalTime payTime, long price, long payMileage, PayWay payWay, long savedMileage, PayType type, String apiCode, PG pg, PaymentStatus payStatus, String receipt) {
         this.reservation = reservation;
         this.payDate = payDate;

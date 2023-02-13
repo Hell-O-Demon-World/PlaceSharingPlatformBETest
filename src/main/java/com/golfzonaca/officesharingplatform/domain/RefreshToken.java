@@ -1,16 +1,13 @@
 package com.golfzonaca.officesharingplatform.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
 import javax.persistence.*;
 
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
 @Entity
@@ -21,7 +18,7 @@ public class RefreshToken {
     private Long id;
     @Column(name = "ENCODED_TOKEN", unique = true, nullable = false)
     private String encodedToken;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID", unique = true, nullable = false)
     @NotFound(action = NotFoundAction.IGNORE)
     private User user;

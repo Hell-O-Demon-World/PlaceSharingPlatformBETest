@@ -1,15 +1,12 @@
 package com.golfzonaca.officesharingplatform.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "mileage_transaction_usage_history")
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @AllArgsConstructor
 public class MileageTransactionUsage {
@@ -24,8 +21,9 @@ public class MileageTransactionUsage {
     private MileageEarningUsage mileageEarningUsage;
     @Column(name = "USED_POINT")
     private long usedPoint;
+
     @Builder
-    public MileageTransactionUsage(MileagePaymentUpdate mileagePaymentUpdate, MileageEarningUsage mileageEarningUsage , long usedPoint) {
+    public MileageTransactionUsage(MileagePaymentUpdate mileagePaymentUpdate, MileageEarningUsage mileageEarningUsage, long usedPoint) {
         this.mileagePaymentUpdate = mileagePaymentUpdate;
         this.usedPoint = usedPoint;
         this.mileageEarningUsage = mileageEarningUsage;

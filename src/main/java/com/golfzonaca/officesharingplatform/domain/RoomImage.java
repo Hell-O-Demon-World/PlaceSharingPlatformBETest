@@ -1,5 +1,6 @@
 package com.golfzonaca.officesharingplatform.domain;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -8,7 +9,7 @@ import javax.persistence.*;
 @Getter
 @Entity
 @Table(name = "ROOMIMAGE")
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RoomImage {
 
     @Id
@@ -24,11 +25,11 @@ public class RoomImage {
     @Column(name = "SAVED_PATH", nullable = false)
     private String savedPath;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PLACE_ID")
     private Place place;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ROOMKIND_ID")
     private RoomKind roomKind;
 

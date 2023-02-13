@@ -1,9 +1,6 @@
 package com.golfzonaca.officesharingplatform.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.LinkedList;
@@ -12,7 +9,7 @@ import java.util.List;
 @Getter
 @Entity
 @Builder
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class Room {
 
@@ -24,7 +21,7 @@ public class Room {
     @JoinColumn(name = "ROOM_KIND_ID")
     private RoomKind roomKind;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PLACE_ID")
     private Place place;
 

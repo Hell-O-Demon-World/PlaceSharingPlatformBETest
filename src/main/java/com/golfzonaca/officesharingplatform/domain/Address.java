@@ -1,5 +1,6 @@
 package com.golfzonaca.officesharingplatform.domain;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +10,7 @@ import javax.persistence.*;
 @Getter
 @Entity
 @Table(uniqueConstraints = {@UniqueConstraint(name = "ADDRESS", columnNames = {"ADDRESS"})})
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

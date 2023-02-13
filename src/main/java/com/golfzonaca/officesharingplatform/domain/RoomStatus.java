@@ -1,5 +1,6 @@
 package com.golfzonaca.officesharingplatform.domain;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +10,7 @@ import javax.persistence.*;
 @Getter
 @Entity
 @Table(name = "roomstatus", uniqueConstraints = {@UniqueConstraint(name = "RoomStatus", columnNames = {"ROOM_ID"})})
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RoomStatus {
 
     @Id

@@ -1,9 +1,6 @@
 package com.golfzonaca.officesharingplatform.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.LinkedList;
@@ -14,7 +11,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @Table(uniqueConstraints = {@UniqueConstraint(name = "Company", columnNames = {"COMPANY_LOGINID", "COMPANY_NAME", "COMPANY_TEL", "COMPANY_REGNUM"})})
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Company {
 
     @Id

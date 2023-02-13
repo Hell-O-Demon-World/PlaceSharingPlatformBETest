@@ -1,5 +1,6 @@
 package com.golfzonaca.officesharingplatform.domain;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +12,7 @@ import java.util.List;
 
 @Getter
 @Entity
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Rating {
 
     @Id
@@ -30,7 +31,7 @@ public class Rating {
 
     @Column(name = "RATING_TIME", nullable = false)
     private LocalDateTime ratingTime;
-    
+
     @OneToMany(mappedBy = "rating")
     private List<Comment> commentList = new LinkedList<>();
 

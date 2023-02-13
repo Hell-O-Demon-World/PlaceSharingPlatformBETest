@@ -1,6 +1,7 @@
 package com.golfzonaca.officesharingplatform.domain;
 
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,7 @@ import javax.persistence.*;
 @Getter
 @Entity
 @Table(name = "ratepoint")
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RatePoint {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +25,7 @@ public class RatePoint {
     }
 
     public void UpdateRatePoint(float ratingPoint) {
-        this.ratingPoint =  (float) (Math.round(ratingPoint * 10) / 10);
+        this.ratingPoint = (float) (Math.round(ratingPoint * 10) / 10);
     }
 
 }

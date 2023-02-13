@@ -1,10 +1,7 @@
 package com.golfzonaca.officesharingplatform.domain;
 
 import com.golfzonaca.officesharingplatform.domain.type.MileageStatusType;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -13,14 +10,14 @@ import java.util.List;
 
 @Entity
 @Table(name = "mileage_update_history")
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @AllArgsConstructor
 public class MileageUpdate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MILEAGE_ID", nullable = false)
     private Mileage mileage;
     @Column(name = "UPDATE_POINT", nullable = false)
