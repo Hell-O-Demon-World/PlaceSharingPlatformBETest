@@ -8,8 +8,6 @@ group = 'com.golfzonaca'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
-ext["hibernate.version"] = "5.6.5.Final"
-
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
@@ -25,8 +23,10 @@ allprojects {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
-//    Jasypt
+
+//  Jasypt
     implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.4'
+
 //  Spring Cache 추가
     implementation 'org.springframework.boot:spring-boot-starter-cache'
 
@@ -39,17 +39,19 @@ dependencies {
 //	JPA, Spring Data JPA 추가
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
-    testImplementation('org.springframework.boot:spring-boot-starter-test')
-    runtimeOnly 'com.h2database:h2'
-
-    testImplementation('org.junit.jupiter:junit-jupiter')
-    testImplementation('org.junit.jupiter:junit-jupiter-api')
-    testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine')
-//  Querydsl 추가
-    implementation 'com.querydsl:querydsl-jpa'
+//  QueryDSL 설정
+    implementation "com.querydsl:querydsl-jpa"
+    implementation "com.querydsl:querydsl-core"
+    implementation "com.querydsl:querydsl-collections"
+//  QueryDSL JPAAnnotationProcessor 사용 지정
     annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jpa"
+//  java.lang.NoClassDefFoundError (javax.annotation.Generated) 대응 코드
     annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+//  java.lang.NoClassDefFoundError (javax.annotation.Entity) 대응 코드
     annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+
+//  h2 추가
+    runtimeOnly 'com.h2database:h2'
 
 //	MariaDB 추가
     implementation 'org.mariadb.jdbc:mariadb-java-client'
@@ -69,13 +71,9 @@ dependencies {
 //  javax.validation 추가
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
+//  Lombok 추가
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
-//  테스트에서 Lombok 사용
-    testCompileOnly 'org.projectlombok:lombok'
-    testAnnotationProcessor 'org.projectlombok:lombok'
 
 //  Jitpack 사용
     implementation 'com.github.iamport:iamport-rest-client-java:Tag'
@@ -86,13 +84,35 @@ dependencies {
 //  iamport 사용
     implementation group: 'com.github.iamport', name: 'iamport-rest-client-java', version: '0.2.22'
 
+//  SQL 확인
+    implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.1'
+
+//  테스트에서 Lombok 사용
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+
+//  테스트 추가
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 tasks.named('test') {
     useJUnitPlatform()
 }
 
-clean {
-    delete file('src/main/generated')
+// Querydsl 설정부
+def generated = 'src/main/generated'
+
+// querydsl QClass 파일 생성 위치를 지정
+tasks.withType(JavaCompile) {
+    options.getGeneratedSourceOutputDirectory().set(file(generated))
 }
 
+// java source set 에 querydsl QClass 위치 추가
+sourceSets {
+    main.java.srcDirs += [generated]
+}
+
+// gradle clean 시에 QClass 디렉토리 삭제
+clean {
+    delete file(generated)
+}

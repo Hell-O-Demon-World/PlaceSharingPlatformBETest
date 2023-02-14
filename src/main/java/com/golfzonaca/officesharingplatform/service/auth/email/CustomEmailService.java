@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
-@Transactional
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class CustomEmailService implements EmailService {
     private final JavaMailSender javaMailSender;

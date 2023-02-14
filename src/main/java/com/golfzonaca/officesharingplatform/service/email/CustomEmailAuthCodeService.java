@@ -5,11 +5,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Transactional
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class CustomEmailAuthCodeService implements EmailAuthCodeService {
     private final EmailAuthCodeRepository emailAuthCodeRepository;
+
     @Override
     public boolean MatchersByEmailAndCode(String email, String code) {
         return emailAuthCodeRepository.findFirstByEmailAndCode(email, code);

@@ -1,6 +1,9 @@
 package com.golfzonaca.officesharingplatform.domain;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.LinkedList;
@@ -9,7 +12,7 @@ import java.util.List;
 @Getter
 @Entity
 @Builder
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @AllArgsConstructor
 public class Room {
 

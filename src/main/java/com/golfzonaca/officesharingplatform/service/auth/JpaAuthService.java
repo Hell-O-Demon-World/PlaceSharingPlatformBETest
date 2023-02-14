@@ -1,11 +1,10 @@
 package com.golfzonaca.officesharingplatform.service.auth;
 
 import com.golfzonaca.officesharingplatform.domain.Mileage;
-import com.golfzonaca.officesharingplatform.domain.Role;
 import com.golfzonaca.officesharingplatform.domain.User;
-import com.golfzonaca.officesharingplatform.domain.type.RoleType;
 import com.golfzonaca.officesharingplatform.repository.role.RoleRepository;
 import com.golfzonaca.officesharingplatform.repository.user.UserRepository;
+import com.golfzonaca.officesharingplatform.service.auth.dto.SignUpInfoDto;
 import com.golfzonaca.officesharingplatform.service.mileage.MileageService;
 import com.golfzonaca.officesharingplatform.web.auth.form.EmailForm;
 import lombok.RequiredArgsConstructor;
@@ -17,11 +16,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-
 @Slf4j
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class JpaAuthService implements AuthService {
     private final UserRepository userRepository;
@@ -35,18 +32,14 @@ public class JpaAuthService implements AuthService {
         return userRepository.findByNameAndTelLike(name, tel).getEmail();
     }
 
+    @Transactional
     @Override
-    public void join(User user) {
+    public void join(SignUpInfoDto signUpInfoDto) {
 
-        String rawPassword = user.getPassword();
-        String encPassword = bCryptPasswordEncoder.encode(rawPassword);
+        String encPassword = bCryptPasswordEncoder.encode(signUpInfoDto.getPassword());
         Mileage mileage = mileageService.join();
-        Role role = roleRepository.findByRoleType(RoleType.ROLE_USER);
-        LocalDateTime joinDate = LocalDateTime.now();
-        user.updatePassword(encPassword);
-        user.updateMileage(mileage);
-        user.updateRole(role);
-        user.updateDate(joinDate);
+
+        User user = User.joinUser(signUpInfoDto.getName(), signUpInfoDto.getEmail(), encPassword, signUpInfoDto.getPhoneNumber(), signUpInfoDto.getJob(), signUpInfoDto.getUserPreferType(), mileage);
 
         userRepository.save(user);
     }
@@ -66,6 +59,7 @@ public class JpaAuthService implements AuthService {
         javaMailSender.send(simpleMailMessage);
     }
 
+    @Transactional
     @Override
     public void createNewPassword(String email, String newPassword) {
         User findUser = userRepository.findByMailLike(email);

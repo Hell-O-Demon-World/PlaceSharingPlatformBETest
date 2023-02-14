@@ -1,6 +1,9 @@
 package com.golfzonaca.officesharingplatform.domain;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
@@ -8,7 +11,7 @@ import javax.persistence.*;
 @Getter
 @Entity
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class EmailAuthenticationCode {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

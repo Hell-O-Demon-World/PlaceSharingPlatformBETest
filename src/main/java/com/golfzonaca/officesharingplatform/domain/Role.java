@@ -17,4 +17,8 @@ public class Role {
     @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
     private RoleType roleType;
+
+    public static Role userRole() {
+        return new Role(1L, RoleType.ROLE_USER);
+    }
 }

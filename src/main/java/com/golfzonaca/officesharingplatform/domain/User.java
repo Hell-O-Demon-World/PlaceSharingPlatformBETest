@@ -9,10 +9,10 @@ import java.util.List;
 
 @Getter
 @Entity
+@AllArgsConstructor
 @Table(name = "USER", uniqueConstraints = {@UniqueConstraint(name = "USER", columnNames = {"USER_MAIL", "USER_TEL", "MILEAGE_ID"})})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
-@AllArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -59,6 +59,22 @@ public class User {
         this.userPlace = userPlace;
         this.mileage = mileage;
         this.role = role;
+    }
+
+    public User(String username, String email, String password, String phoneNumber, String job, String userPlace, LocalDateTime joinDate, Mileage mileage, Role role) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.phoneNumber = phoneNumber;
+        this.job = job;
+        this.userPlace = userPlace;
+        this.joinDate = joinDate;
+        this.mileage = mileage;
+        this.role = role;
+    }
+
+    public static User joinUser(String username, String email, String password, String phoneNumber, String job, String userPlace, Mileage mileage) {
+        return new User(username, email, password, phoneNumber, job, userPlace, LocalDateTime.now(), mileage, Role.userRole());
     }
 
     public void updatePassword(String password) {

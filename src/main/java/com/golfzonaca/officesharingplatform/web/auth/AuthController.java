@@ -1,8 +1,8 @@
 package com.golfzonaca.officesharingplatform.web.auth;
 
-import com.golfzonaca.officesharingplatform.domain.User;
 import com.golfzonaca.officesharingplatform.exception.FailedMatchingCodeException;
 import com.golfzonaca.officesharingplatform.service.auth.AuthService;
+import com.golfzonaca.officesharingplatform.service.auth.dto.SignUpInfoDto;
 import com.golfzonaca.officesharingplatform.service.auth.email.CustomEmailService;
 import com.golfzonaca.officesharingplatform.service.auth.email.VerifyingCodeMaker;
 import com.golfzonaca.officesharingplatform.service.auth.validation.AuthRequestValidation;
@@ -33,9 +33,11 @@ public class AuthController {
     public void signup(@Validated @RequestBody SignUpSaveForm signUpSaveForm, BindingResult bindingResult) {
         String password = signUpSaveForm.getPassword();
         String checkedPassword = signUpSaveForm.getCheckedPassword();
-        User user = signUpSaveForm.toEntity();
-        authRequestValidation.validation(user, bindingResult, password, checkedPassword);
-        customAuthService.join(user);
+        String phoneNumber = signUpSaveForm.getPhoneNumber();
+        String email = signUpSaveForm.getEmail();
+        authRequestValidation.validation(bindingResult, email, phoneNumber, password, checkedPassword);
+        String userPreferType = signUpSaveForm.getChangePreferString(signUpSaveForm.getPreferType());
+        customAuthService.join(new SignUpInfoDto(email, signUpSaveForm.getPassword(), signUpSaveForm.getName(), phoneNumber, signUpSaveForm.getJob(), userPreferType));
     }
 
     @GetMapping("/refresh")
@@ -43,7 +45,7 @@ public class AuthController {
     }
 
     @PostMapping("/sendemail")
-    public void verifyingMail(@Validated @RequestBody AddressForm address, BindingResult bindingResult) throws NoSuchAlgorithmException{
+    public void verifyingMail(@Validated @RequestBody AddressForm address, BindingResult bindingResult) throws NoSuchAlgorithmException {
         authRequestValidation.validation(address.getAddress(), bindingResult);
         String email = address.getAddress();
         String code = VerifyingCodeMaker.makeCode();

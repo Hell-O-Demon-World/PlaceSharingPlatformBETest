@@ -59,7 +59,7 @@ import java.util.*;
 
 @Slf4j
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class JpaMyPageService implements MyPageService {
     private final UserRepository userRepository;
@@ -89,6 +89,7 @@ public class JpaMyPageService implements MyPageService {
         return overViewMap;
     }
 
+    @Transactional
     @Override
     public void cancelByReservationAndUserId(Long reservationId, Long userId) {
         Reservation findReservation = reservationRepository.findById(reservationId);
@@ -163,6 +164,7 @@ public class JpaMyPageService implements MyPageService {
         return editUserInfoMap;
     }
 
+    @Transactional
     @Override
     public void updateUserInfo(Long userId, String tel, String job, Map<String, Boolean> preferType) {
         User user = userRepository.findById(userId);
@@ -177,12 +179,14 @@ public class JpaMyPageService implements MyPageService {
         }
     }
 
+    @Transactional
     @Override
     public void saveInquiry(Long userId, String title, String question) {
         Inquiry inquiry = inquiryRepository.save(new Inquiry(userRepository.findById(userId), title, question, LocalDateTime.now()));
         inquiryStatusRepository.save(new InquiryStatus(inquiry, false));
     }
 
+    @Transactional
     @Override
     public void leaveMembership(Long userId) {
         User findUser = userRepository.findById(userId);
@@ -192,11 +196,11 @@ public class JpaMyPageService implements MyPageService {
     @Override
     public Map<String, JsonObject> getMileageHistory(Long userId, Long page, Long items) {
         User findUser = userRepository.findById(userId);
-
         return putMileageData(findUser, page, items);
     }
 
     @CacheEvict(cacheNames = {"resDataByPlaceAndTypeAndDate", "resAllDataByPlaceAndTypeAndDate"}, allEntries = true)
+    @Transactional
     @Override
     public void clearPreoccupiedReservation(Long userId) {
         User user = userRepository.findById(userId);
@@ -244,6 +248,7 @@ public class JpaMyPageService implements MyPageService {
         }
     }
 
+    @Transactional
     @Override
     public void fixReservation(Long userId, Long reservationId) {
         Reservation findReservation = reservationRepository.findById(reservationId);
@@ -262,6 +267,7 @@ public class JpaMyPageService implements MyPageService {
         }
     }
 
+    @Transactional
     @Override
     public void forceFixReservationStarted(Long userId) {
         User user = userRepository.findById(userId);
@@ -310,7 +316,7 @@ public class JpaMyPageService implements MyPageService {
 
     private Map<String, JsonObject> putMileageData(User user, Long page, Long items) {
         List<MileageUpdate> mileageUpdateList = getMileageUpdateList(user, page, items);
-        Map<String, Integer> mileagePaginationInfo = getMileagePagenationInfo(user.getMileage());
+        Map<String, Integer> mileagePaginationInfo = getMileagePaginationInfo(user.getMileage());
         Map<Long, JsonObject> mileageHistoryDtoMap = getMileageHistoryDtoMap(mileageUpdateList);
         Gson gson = new Gson();
         Map<String, JsonObject> result = processingUserData(user);
@@ -319,7 +325,7 @@ public class JpaMyPageService implements MyPageService {
         return result;
     }
 
-    private Map<String, Integer> getMileagePagenationInfo(Mileage mileage) {
+    private Map<String, Integer> getMileagePaginationInfo(Mileage mileage) {
         List<MileageUpdate> totalMileageUpdateList = mileageRepository.findAllMileageUpdateByMileage(mileage);
         return Map.of("maxPage", (int) Math.ceil((double) totalMileageUpdateList.size() / 8));
     }
@@ -463,8 +469,7 @@ public class JpaMyPageService implements MyPageService {
         return myUsage;
     }
 
-    private static JsonObject getMyReservationViewData(Reservation reservation, UsageStatus
-            usageStatus, RatingStatus ratingStatus, Boolean cancelStatus, Boolean completeStatus) {
+    private JsonObject getMyReservationViewData(Reservation reservation, UsageStatus usageStatus, RatingStatus ratingStatus, Boolean cancelStatus, Boolean completeStatus) {
         Gson gson = new Gson();
         Long reservationId = reservation.getId();
         String productType = reservation.getRoom().getRoomKind().getRoomType().getDescription();
@@ -511,7 +516,7 @@ public class JpaMyPageService implements MyPageService {
         return result;
     }
 
-    private Boolean isCancelation(Reservation reservation) {
+    private Boolean isCancellation(Reservation reservation) {
         boolean result = false;
         List<Payment> paymentList = reservation.getPaymentList();
         if (reservation.getStatus().equals(ReservationStatus.COMPLETED) && reservation.getFixStatus().equals(FixStatus.UNFIXED)) {
