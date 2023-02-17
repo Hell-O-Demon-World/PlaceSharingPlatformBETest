@@ -72,6 +72,10 @@ public class Reservation {
         this.fixStatus = fixStatus;
     }
 
+    public static Reservation createReservation(User user, Room room, LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
+        return new Reservation(user, room, LocalDateTime.now(), startDate, startTime, endDate, endTime, ReservationStatus.PROGRESSING, FixStatus.UNFIXED);
+    }
+
     public Reservation toEntity() {
         return Reservation.builder()
                 .user(new User())
@@ -95,4 +99,6 @@ public class Reservation {
         this.status = status;
         this.fixStatus = fixStatus;
     }
+
+
 }

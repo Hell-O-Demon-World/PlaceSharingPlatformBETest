@@ -31,6 +31,7 @@ public class SpringJpaDslRatingService implements RatingService {
             throw new MismatchInfoException("회원 정보와 예약자 정보가 일치하지 않습니다.");
         }
         Rating rating = new Rating(reservation, ratingScore, ratingReview, LocalDateTime.now());
+
         Rating rate = ratingRepository.save(rating);
         Place place = rating.getReservation().getRoom().getPlace();
         if (place.getRatePoint().getRatingPoint() == 0) {
@@ -56,7 +57,7 @@ public class SpringJpaDslRatingService implements RatingService {
         RatePoint findRatePoint = rating.getReservation().getRoom().getPlace().getRatePoint();
         float result = (findRatePoint.getRatingPoint() * 2 - rating.getRatingScore() + updateData.getRatingScore()) / 2;
 
-        ratePointRepository.update(findRatePoint, (float) (Math.round(result*10)/10));
+        ratePointRepository.update(findRatePoint, (float) (Math.round(result * 10) / 10));
         ratingRepository.update(rating, updateData);
     }
 

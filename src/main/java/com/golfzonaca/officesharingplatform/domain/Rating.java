@@ -47,4 +47,14 @@ public class Rating {
         this.ratingScore = (float) (Math.round(ratingScore * 10) / 10);
         this.ratingReview = ratingReview;
     }
+
+    public static Rating createRating(Reservation reservation, Float ratingScore, String ratingReview) {
+        Float placeScore = reservation.getRating().getRatingScore();
+        if (placeScore == 0) {
+            placeScore = ratingScore;
+        } else {
+            placeScore = (float) Math.round((placeScore + ratingScore) / 2);
+        }
+        return new Rating(reservation, ratingScore, ratingReview, LocalDateTime.now());
+    }
 }

@@ -246,7 +246,7 @@ public class JpaReservationService implements ReservationService {
 
         List<Integer> result = new ArrayList<>();
 
-        if (onlyOneStatus.size() <= reservedRoomMap.size() && plusMaxPointer - minusMinPointer < 1 ) {
+        if (onlyOneStatus.size() <= reservedRoomMap.size() && plusMaxPointer - minusMinPointer < 1) {
             result.add(plusMaxPointer);
         } else if (minusMinPointer != plusMaxPointer) {
             for (int i = minusMinPointer; i < plusMaxPointer + 1; i++) {
@@ -268,21 +268,21 @@ public class JpaReservationService implements ReservationService {
     public Reservation saveReservation(User user, Place place, ProcessReservationData data) {
         LocalTime startTime = data.getStartTime();
         LocalTime endTime = data.getEndTime();
-        LocalDate date = data.getStartDate();
+        LocalDate startDate = data.getStartDate();
         LocalDate endDate = data.getEndDate();
         RoomType selectedType = RoomType.getRoomType(data.getSelectedType());
         Room resultRoom;
         if (selectedType.toString().toUpperCase().contains("OFFICE")) {
-            resultRoom = getResultRoom(place, date, endDate, selectedType);
+            resultRoom = allocateOffice(place, startDate, endDate, selectedType);
         } else {
-            resultRoom = getResultRoom(place, startTime, endTime, date, selectedType);
+            resultRoom = allocateRoom(place, startTime, endTime, startDate, selectedType);
         }
-        Reservation reservation = new Reservation(user, resultRoom, LocalDateTime.now(), date, startTime, endDate, endTime, ReservationStatus.PROGRESSING, FixStatus.UNFIXED);
+        Reservation reservation = new Reservation(user, resultRoom, LocalDateTime.now(), startDate, startTime, endDate, endTime, ReservationStatus.PROGRESSING, FixStatus.UNFIXED);
         return Optional.ofNullable(reservationRepository.save(reservation)).orElseThrow(() -> new DuplicatedReservationException("ReservationError::: 예약 실패"));
 
     }
 
-    private Room getResultRoom(Place place, LocalDate date, LocalDate endDate, RoomType selectedType) {
+    private Room allocateOffice(Place place, LocalDate date, LocalDate endDate, RoomType selectedType) {
         Room resultRoom = new Room();
         List<Room> roomList = roomRepository.findRoomByPlaceAndRoomKind(place, selectedType);
         List<Room> findReservation = reservationRepository.findByPlaceAndRoomKindAndStartDateAndEndDate(place, selectedType, date, endDate);
@@ -298,7 +298,7 @@ public class JpaReservationService implements ReservationService {
         return resultRoom;
     }
 
-    private Room getResultRoom(Place place, LocalTime startLocalTime, LocalTime endLocalTime, LocalDate date, RoomType selectedType) {
+    private Room allocateRoom(Place place, LocalTime startLocalTime, LocalTime endLocalTime, LocalDate date, RoomType selectedType) {
         int startTime = startLocalTime.getHour();
         int endTime = endLocalTime.getHour();
 
