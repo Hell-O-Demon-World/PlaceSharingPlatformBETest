@@ -93,6 +93,9 @@ dependencies {
 
 //  테스트 추가
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+//  스캐빈저 추가
+    implementation 'com.navercorp.scavenger:scavenger-agent-java:1.0.3'
 }
 
 tasks.named('test') {
