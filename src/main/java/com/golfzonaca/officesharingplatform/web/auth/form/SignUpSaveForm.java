@@ -1,10 +1,6 @@
 package com.golfzonaca.officesharingplatform.web.auth.form;
 
 import com.golfzonaca.officesharingplatform.annotation.PhoneNum;
-import com.golfzonaca.officesharingplatform.domain.Mileage;
-import com.golfzonaca.officesharingplatform.domain.Role;
-import com.golfzonaca.officesharingplatform.domain.User;
-import com.golfzonaca.officesharingplatform.domain.type.RoleType;
 import com.golfzonaca.officesharingplatform.web.auth.form.prefertype.PreferType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -42,10 +38,10 @@ public class SignUpSaveForm {
     @NotNull(message = "선호 유형은 Null일 수 없습니다.")
     private List<PreferType> preferType;
 
-    public User toEntity() {
+    /*public User toEntity() {
         String changePreferString = getChangePreferString(preferType);
         return new User(name, email, password, phoneNumber, job, changePreferString, new Mileage(0L), new Role(1L, RoleType.ROLE_USER));
-    }
+    }*/
 
     public String getChangePreferString(List<PreferType> preferType) {
         String changePreferString = "".concat("desk:" + (preferType.get(0).isDesk()) + "&"

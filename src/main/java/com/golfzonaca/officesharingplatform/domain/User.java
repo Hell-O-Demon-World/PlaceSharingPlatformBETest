@@ -50,7 +50,7 @@ public class User {
         this.id = id;
     }
 
-    public User(String username, String email, String password, String phoneNumber, String job, String userPlace, Mileage mileage, Role role) {
+    /*public User(String username, String email, String password, String phoneNumber, String job, String userPlace, Mileage mileage, Role role) {
         this.username = username;
         this.email = email;
         this.password = password;
@@ -59,9 +59,13 @@ public class User {
         this.userPlace = userPlace;
         this.mileage = mileage;
         this.role = role;
+    }*/
+
+    public static User joinUser(String username, String email, String password, String phoneNumber, String job, String userPlace, Mileage mileage) {
+        return new User(username, email, password, phoneNumber, job, userPlace, LocalDateTime.now(), mileage, Role.userRole());
     }
 
-    public User(String username, String email, String password, String phoneNumber, String job, String userPlace, LocalDateTime joinDate, Mileage mileage, Role role) {
+    private User(String username, String email, String password, String phoneNumber, String job, String userPlace, LocalDateTime joinDate, Mileage mileage, Role role) {
         this.username = username;
         this.email = email;
         this.password = password;
@@ -71,10 +75,6 @@ public class User {
         this.joinDate = joinDate;
         this.mileage = mileage;
         this.role = role;
-    }
-
-    public static User joinUser(String username, String email, String password, String phoneNumber, String job, String userPlace, Mileage mileage) {
-        return new User(username, email, password, phoneNumber, job, userPlace, LocalDateTime.now(), mileage, Role.userRole());
     }
 
     public void updatePassword(String password) {
