@@ -24,14 +24,6 @@ public class CustomRoomRepository implements RoomRepository {
     }
 
     @Override
-    public List<Room> findRoomByPlaceIdAndRoomKindId(Long placeId, Long roomKindId) {
-        return findAll(RoomSearchCond.builder()
-                .placeId(placeId)
-                .roomKindId(roomKindId)
-                .build());
-    }
-
-    @Override
     public List<Long> findRoomIdByPlaceIdAndRoomTypeId(Long placeId, Long roomKindId) {
         return queryRoomRepository.findIdAll(RoomSearchCond.builder()
                 .placeId(placeId)
@@ -50,8 +42,8 @@ public class CustomRoomRepository implements RoomRepository {
     }
 
     @Override
-    public List<Room> findAll(RoomSearchCond cond) {
-        return queryRoomRepository.findAll(cond);
+    public List<Room> findAll() {
+        return jpaRoomRepository.findAll();
     }
 
     @Override

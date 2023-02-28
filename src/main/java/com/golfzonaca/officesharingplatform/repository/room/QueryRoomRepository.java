@@ -36,18 +36,6 @@ public class QueryRoomRepository {
                 .fetch();
     }
 
-    List<Room> findAll(RoomSearchCond cond) {
-        log.info("Room findAll cond = {}", cond);
-        Optional<Long> roomKindId = Optional.ofNullable(cond.getRoomKindId());
-        Optional<Long> placeId = Optional.ofNullable(cond.getPlaceId());
-
-        return query
-                .select(room)
-                .from(room)
-                .where(eqRoomKindId(roomKindId), eqPlaceId(placeId))
-                .fetch();
-    }
-
     public List<Room> findRoomByPlaceAndRoomKind(Place place, RoomType selectedType) {
         log.info("Room findRoomByPlaceAndRoomKind");
         return query
