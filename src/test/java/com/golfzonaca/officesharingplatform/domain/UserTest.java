@@ -1,5 +1,6 @@
 package com.golfzonaca.officesharingplatform.domain;
 
+import com.golfzonaca.officesharingplatform.domain.type.RoleType;
 import com.golfzonaca.officesharingplatform.service.mileage.MileageService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -32,8 +33,6 @@ class UserTest {
         String userPlace = "";
         Mileage mileage = mileageService.join();
 
-        Role userRole = Role.userRole();
-        em.persist(userRole);
         // when
         User user = User.joinUser(username, email, password, phoneNumber, job, userPlace, mileage);
         em.persist(user);
@@ -49,6 +48,7 @@ class UserTest {
         assertThat(findUser.getPassword()).isEqualTo("password");
         assertThat(findUser.getPhoneNumber()).isEqualTo("01012341234");
         assertThat(findUser.getJob()).isEqualTo("학생");
+        assertThat(findUser.getRole().getRoleType()).isEqualTo(RoleType.ROLE_USER);
         assertThat(findUser.getUserPlace()).isBlank();
     }
 
