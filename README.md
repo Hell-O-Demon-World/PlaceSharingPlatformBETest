@@ -2,8 +2,9 @@
 
 ## 0. Update log
 
-- 2023.02.14 ~ 2023.02.14 : PSP 메인 플랫폼 서버 이전 (from CloudType to Oracle Cloud)(PEEK TPS 4000% 증가)
-- 2023.01.19 ~ 2023.01.20 : DB 서버 이전 (from Local PC to Oracle Cloud)
+- 2023.02.13 ~ 2023.02.28 : User 및 Reservation Entity 리팩토링 진행 중 (From 'Transaction Script Pattern' to 'Domain Model Pattern') (담당자 : 이동훈)
+- 2023.02.14 ~ 2023.02.14 : PSP 메인 플랫폼 서버 이전 (from CloudType to Oracle Cloud)(PEEK TPS 4000% 증가) (담당자 : 이동훈)
+- 2023.01.19 ~ 2023.01.20 : DB 서버 이전 (from Local PC to Oracle Cloud) (담당자 : 이동훈)
 - 2022.12.22 ~ 2022.12.23 : 배포
 - 2022.12.17 ~ 2022.12.22 : QA 및 버그 픽스
 - 2022.11.17 ~ 2022.12.17 : 개발 및 리팩토링
