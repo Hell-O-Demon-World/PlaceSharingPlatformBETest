@@ -4,7 +4,6 @@ package com.golfzonaca.officesharingplatform.repository.user;
 import com.golfzonaca.officesharingplatform.domain.User;
 
 import java.util.List;
-import java.util.Optional;
 
 
 public interface UserRepository {
@@ -20,7 +19,7 @@ public interface UserRepository {
 
     List<User> findAll();
 
-    List<User> findAll(UserSearchCond cond);
+    List<User> findAll(UserSearchCondition cond);
 
     void delete(Long userId);
 

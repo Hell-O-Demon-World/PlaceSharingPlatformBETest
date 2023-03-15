@@ -1,11 +1,11 @@
 package com.golfzonaca.officesharingplatform.service.search;
 
+import com.golfzonaca.officesharingplatform.controller.formatter.TimeFormatter;
+import com.golfzonaca.officesharingplatform.controller.main.dto.request.RequestSearchData;
 import com.golfzonaca.officesharingplatform.domain.Place;
 import com.golfzonaca.officesharingplatform.domain.type.RoomType;
 import com.golfzonaca.officesharingplatform.repository.place.PlaceRepository;
 import com.golfzonaca.officesharingplatform.repository.place.dto.FilterData;
-import com.golfzonaca.officesharingplatform.web.formatter.TimeFormatter;
-import com.golfzonaca.officesharingplatform.web.main.dto.request.RequestSearchData;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,8 +19,8 @@ public class JpaSearchService implements SearchService {
     private final PlaceRepository placeRepository;
 
     @Override
-    public List<Place> findPlaces(RequestSearchData requestSearchData) {
-        return placeRepository.findPlaces(requestSearchData);
+    public List<Place> searchPlaces(RequestSearchData requestSearchData) {
+        return placeRepository.searchPlaces(requestSearchData);
     }
 
     @Override

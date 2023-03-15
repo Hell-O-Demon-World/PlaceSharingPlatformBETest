@@ -1,12 +1,12 @@
 package com.golfzonaca.officesharingplatform.service.rating;
 
+import com.golfzonaca.officesharingplatform.controller.rating.dto.RatingUpdateData;
 import com.golfzonaca.officesharingplatform.domain.*;
 import com.golfzonaca.officesharingplatform.exception.MismatchInfoException;
 import com.golfzonaca.officesharingplatform.repository.ratepoint.RatePointRepository;
 import com.golfzonaca.officesharingplatform.repository.rating.RatingRepository;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
 import com.golfzonaca.officesharingplatform.repository.user.UserRepository;
-import com.golfzonaca.officesharingplatform.web.rating.dto.RatingUpdateData;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

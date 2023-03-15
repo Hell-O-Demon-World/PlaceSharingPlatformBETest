@@ -1,5 +1,8 @@
 package com.golfzonaca.officesharingplatform.service.reservation;
 
+import com.golfzonaca.officesharingplatform.controller.formatter.TimeFormatter;
+import com.golfzonaca.officesharingplatform.controller.reservation.dto.process.ProcessReservationData;
+import com.golfzonaca.officesharingplatform.controller.reservation.dto.response.ReservationResponseData;
 import com.golfzonaca.officesharingplatform.domain.Place;
 import com.golfzonaca.officesharingplatform.domain.Reservation;
 import com.golfzonaca.officesharingplatform.domain.Room;
@@ -9,14 +12,12 @@ import com.golfzonaca.officesharingplatform.domain.type.ReservationStatus;
 import com.golfzonaca.officesharingplatform.domain.type.RoomType;
 import com.golfzonaca.officesharingplatform.domain.type.dateformat.DateTimeFormat;
 import com.golfzonaca.officesharingplatform.exception.DuplicatedReservationException;
+import com.golfzonaca.officesharingplatform.exception.NonExistedPlaceException;
 import com.golfzonaca.officesharingplatform.repository.place.PlaceRepository;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
 import com.golfzonaca.officesharingplatform.repository.room.RoomRepository;
 import com.golfzonaca.officesharingplatform.service.reservation.dto.ReservedRoom;
 import com.golfzonaca.officesharingplatform.service.reservation.validation.ReservationRequestValidation;
-import com.golfzonaca.officesharingplatform.web.formatter.TimeFormatter;
-import com.golfzonaca.officesharingplatform.web.reservation.dto.process.ProcessReservationData;
-import com.golfzonaca.officesharingplatform.web.reservation.dto.response.ReservationResponseData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -164,7 +165,7 @@ public class JpaReservationService implements ReservationService {
 
     @Override
     public List<Integer> findAvailableTimes(Long placeId, RoomType selectedType, LocalDate date, LocalTime startTime) {
-        Place findPlace = placeRepository.findById(placeId);
+        Place findPlace = placeRepository.findById(placeId).orElseThrow(NonExistedPlaceException::new);
 
         return getTimeList(findPlace, selectedType, date, startTime);
     }

@@ -1,8 +1,8 @@
 package com.golfzonaca.officesharingplatform.service.auth.email;
 
+import com.golfzonaca.officesharingplatform.controller.auth.form.EmailForm;
 import com.golfzonaca.officesharingplatform.domain.EmailAuthenticationCode;
 import com.golfzonaca.officesharingplatform.repository.email.EmailAuthCodeRepository;
-import com.golfzonaca.officesharingplatform.web.auth.form.EmailForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.SimpleMailMessage;

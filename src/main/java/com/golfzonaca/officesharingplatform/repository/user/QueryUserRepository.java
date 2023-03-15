@@ -39,7 +39,7 @@ public class QueryUserRepository {
                 .fetchFirst());
     }
 
-    public List<User> findAll(UserSearchCond cond) {
+    public List<User> findAll(UserSearchCondition cond) {
         String name = cond.getName();
         String mail = cond.getMail();
         String job = cond.getJob();

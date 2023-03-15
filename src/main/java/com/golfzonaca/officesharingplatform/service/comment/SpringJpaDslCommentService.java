@@ -1,5 +1,6 @@
 package com.golfzonaca.officesharingplatform.service.comment;
 
+import com.golfzonaca.officesharingplatform.controller.comment.dto.CommentData;
 import com.golfzonaca.officesharingplatform.domain.Comment;
 import com.golfzonaca.officesharingplatform.domain.Rating;
 import com.golfzonaca.officesharingplatform.domain.User;
@@ -8,7 +9,6 @@ import com.golfzonaca.officesharingplatform.repository.place.PlaceRepository;
 import com.golfzonaca.officesharingplatform.repository.rating.RatingRepository;
 import com.golfzonaca.officesharingplatform.repository.user.UserRepository;
 import com.golfzonaca.officesharingplatform.service.comment.dto.CommentDto;
-import com.golfzonaca.officesharingplatform.web.comment.dto.CommentData;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;

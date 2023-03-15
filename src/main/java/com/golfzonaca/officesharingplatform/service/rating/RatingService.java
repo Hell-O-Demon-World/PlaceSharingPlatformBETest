@@ -1,7 +1,7 @@
 package com.golfzonaca.officesharingplatform.service.rating;
 
+import com.golfzonaca.officesharingplatform.controller.rating.dto.RatingUpdateData;
 import com.golfzonaca.officesharingplatform.domain.Rating;
-import com.golfzonaca.officesharingplatform.web.rating.dto.RatingUpdateData;
 
 public interface RatingService {
 

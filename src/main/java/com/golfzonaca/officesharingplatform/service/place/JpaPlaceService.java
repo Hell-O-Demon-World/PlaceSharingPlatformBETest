@@ -1,9 +1,11 @@
 package com.golfzonaca.officesharingplatform.service.place;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.golfzonaca.officesharingplatform.controller.formatter.TimeFormatter;
 import com.golfzonaca.officesharingplatform.domain.*;
 import com.golfzonaca.officesharingplatform.domain.type.RoomType;
 import com.golfzonaca.officesharingplatform.domain.type.kakaoapi.MapCategoryGroupCode;
+import com.golfzonaca.officesharingplatform.exception.NonExistedPlaceException;
 import com.golfzonaca.officesharingplatform.exception.UnavailablePlaceException;
 import com.golfzonaca.officesharingplatform.repository.comment.CommentRepository;
 import com.golfzonaca.officesharingplatform.repository.place.PlaceRepository;
@@ -19,7 +21,6 @@ import com.golfzonaca.officesharingplatform.service.place.dto.roomtype.Desk;
 import com.golfzonaca.officesharingplatform.service.place.dto.roomtype.MeetingRoom;
 import com.golfzonaca.officesharingplatform.service.place.dto.roomtype.Office;
 import com.golfzonaca.officesharingplatform.service.place.dto.roomtype.RoomTypeResponse;
-import com.golfzonaca.officesharingplatform.web.formatter.TimeFormatter;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.querydsl.core.Tuple;
@@ -56,19 +57,19 @@ public class JpaPlaceService implements PlaceService {
 
     @Override
     public List<Place> findAllPlaces() {
-        return placeRepository.findAllPlaces();
+        return placeRepository.findAll();
     }
 
     @Override
     public Place findById(long placeId) {
-        return placeRepository.findById(placeId);
+        return placeRepository.findById(placeId).orElseThrow(NonExistedPlaceException::new);
     }
 
     @Override
     public boolean isOpenDay(Long id, String day) {
         LocalDate date = TimeFormatter.toLocalDate(day);
         String dayOfTheWeek = TimeFormatter.toDayOfTheWeek(date);
-        String strOpenDays = placeRepository.findOpenDayById(id);
+        String strOpenDays = placeRepository.findOpenDayById(id).orElseThrow(() -> new NonExistedPlaceException("NonExistedPlaceException::: 공간이 존재하지 않습니다."));
         String[] split = strOpenDays.split(", ");
         for (String openDay : split) {
             if (openDay.equals(dayOfTheWeek)) {
@@ -104,7 +105,8 @@ public class JpaPlaceService implements PlaceService {
         Map<String, JsonObject> placeInfo = new LinkedHashMap<>();
         PlaceMainInfo placeMainInfo = getPlaceMainInfo(placeId);
         placeInfo.put("placeMainInfo", gson.toJsonTree(placeMainInfo).getAsJsonObject());
-        Map<String, JsonObject> placeSubInfo = getInfoNearPlace(placeRepository.findById(placeId).getAddress().getLongitude(), placeRepository.findById(placeId).getAddress().getLatitude());
+        Place findPlace = placeRepository.findById(placeId).orElseThrow(NonExistedPlaceException::new);
+        Map<String, JsonObject> placeSubInfo = getInfoNearPlace(findPlace.getAddress().getLongitude(), findPlace.getAddress().getLatitude());
         if (placeSubInfo.isEmpty()) {
             placeSubInfo.put("NoSuchData", gson.toJsonTree(Map.of("PlaceCoordinateError", "주변 데이터 로딩에 실패하였습니다.")).getAsJsonObject());
         }
@@ -170,7 +172,7 @@ public class JpaPlaceService implements PlaceService {
 
     @NotNull
     private PlaceMainInfo getPlaceMainInfo(long placeId) {
-        Place place = placeRepository.findById(placeId);
+        Place place = placeRepository.findById(placeId).orElseThrow(NonExistedPlaceException::new);
         List<String> imagesPath = getImagesPath(place);
         List<RatingDto> ratingList = getPlaceRating(place);
         return new PlaceMainInfo(place.getId().toString(), place.getPlaceName(), place.getAddress().getPostalCode(), place.getAddress().getAddress(), stringToList(place.getPlaceAddInfo()), imagesPath, String.valueOf(place.getRatePoint().getRatingPoint()), String.valueOf(ratingList.size()), getQuantityByRoomType(place, "DESK"), getQuantityByRoomType(place, "MEETINGROOM"), getQuantityByRoomType(place, "OFFICE"), place.getDescription(), excludeOpenDays(stringToList(place.getOpenDays())), place.getPlaceStart().toString(), place.getPlaceEnd().toString(), findRoom(placeId));
@@ -179,7 +181,7 @@ public class JpaPlaceService implements PlaceService {
     @Override
     public Map<String, JsonObject> getReviewData(Long placeId, Integer page) {
         Gson gson = new Gson();
-        Place place = placeRepository.findById(placeId);
+        Place place = placeRepository.findById(placeId).orElseThrow(NonExistedPlaceException::new);
         if (getPlaceRating(place).size() == 0) {
             throw new NoSuchElementException("현재 선택하신 Place의 리뷰는 존재하지 않습니다.");
         }
@@ -227,7 +229,7 @@ public class JpaPlaceService implements PlaceService {
     }
 
     private RoomTypeResponse findRoom(long placeId) {
-        Place findPlace = placeRepository.findById(placeId);
+        Place findPlace = placeRepository.findById(placeId).orElseThrow(NonExistedPlaceException::new);
         return getRoomTypeResponse(findPlace);
     }
 

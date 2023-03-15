@@ -1,5 +1,6 @@
 package com.golfzonaca.officesharingplatform.service.payment.iamport;
 
+import com.golfzonaca.officesharingplatform.controller.payment.form.NicePayRequestForm;
 import com.golfzonaca.officesharingplatform.domain.Mileage;
 import com.golfzonaca.officesharingplatform.domain.Refund;
 import com.golfzonaca.officesharingplatform.domain.Reservation;
@@ -14,7 +15,6 @@ import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRe
 import com.golfzonaca.officesharingplatform.service.mileage.MileageService;
 import com.golfzonaca.officesharingplatform.service.payment.kakaopay.KakaoPayUtility;
 import com.golfzonaca.officesharingplatform.service.refund.RefundService;
-import com.golfzonaca.officesharingplatform.web.payment.form.NicePayRequestForm;
 import com.siot.IamportRestClient.IamportClient;
 import com.siot.IamportRestClient.exception.IamportResponseException;
 import com.siot.IamportRestClient.request.*;

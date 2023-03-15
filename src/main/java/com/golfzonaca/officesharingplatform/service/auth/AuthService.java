@@ -1,8 +1,8 @@
 package com.golfzonaca.officesharingplatform.service.auth;
 
 
+import com.golfzonaca.officesharingplatform.controller.auth.form.EmailForm;
 import com.golfzonaca.officesharingplatform.service.auth.dto.SignUpInfoDto;
-import com.golfzonaca.officesharingplatform.web.auth.form.EmailForm;
 
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;

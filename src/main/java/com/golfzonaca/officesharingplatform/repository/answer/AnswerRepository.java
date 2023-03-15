@@ -8,6 +8,6 @@ public interface AnswerRepository {
     void save(Answer answer);
 
     Optional<Answer> findById(long answerId);
-    
+
     void delete(Answer answer);
 }

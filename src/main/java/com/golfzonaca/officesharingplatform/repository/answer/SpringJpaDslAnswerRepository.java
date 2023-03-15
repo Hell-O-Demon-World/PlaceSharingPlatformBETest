@@ -12,7 +12,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class SpringJpaDslAnswerRepository implements AnswerRepository {
 
-    private final SpringJpaAnswerRepository jpaRepository;
+    private final JpaAnswerRepository jpaRepository;
 
     @Override
     public void save(Answer answer) {

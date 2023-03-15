@@ -1,6 +1,7 @@
 package com.golfzonaca.officesharingplatform.service.payment.kakaopay;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.golfzonaca.officesharingplatform.controller.payment.dto.kakaopay.*;
 import com.golfzonaca.officesharingplatform.domain.*;
 import com.golfzonaca.officesharingplatform.domain.type.*;
 import com.golfzonaca.officesharingplatform.exception.NonExistedMileageException;
@@ -10,7 +11,6 @@ import com.golfzonaca.officesharingplatform.repository.user.UserRepository;
 import com.golfzonaca.officesharingplatform.service.mileage.MileageService;
 import com.golfzonaca.officesharingplatform.service.payment.PaymentValidation;
 import com.golfzonaca.officesharingplatform.service.refund.RefundService;
-import com.golfzonaca.officesharingplatform.web.payment.dto.kakaopay.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;

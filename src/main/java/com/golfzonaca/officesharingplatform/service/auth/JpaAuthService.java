@@ -1,12 +1,12 @@
 package com.golfzonaca.officesharingplatform.service.auth;
 
+import com.golfzonaca.officesharingplatform.controller.auth.form.EmailForm;
 import com.golfzonaca.officesharingplatform.domain.Mileage;
 import com.golfzonaca.officesharingplatform.domain.User;
 import com.golfzonaca.officesharingplatform.repository.role.RoleRepository;
 import com.golfzonaca.officesharingplatform.repository.user.UserRepository;
 import com.golfzonaca.officesharingplatform.service.auth.dto.SignUpInfoDto;
 import com.golfzonaca.officesharingplatform.service.mileage.MileageService;
-import com.golfzonaca.officesharingplatform.web.auth.form.EmailForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.SimpleMailMessage;

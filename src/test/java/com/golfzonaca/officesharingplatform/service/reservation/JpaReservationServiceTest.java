@@ -1,12 +1,12 @@
 package com.golfzonaca.officesharingplatform.service.reservation;
 
+import com.golfzonaca.officesharingplatform.controller.formatter.TimeFormatter;
+import com.golfzonaca.officesharingplatform.controller.reservation.dto.request.ResRequestData;
+import com.golfzonaca.officesharingplatform.controller.reservation.dto.response.ReservationResponseData;
+import com.golfzonaca.officesharingplatform.controller.reservation.form.DefaultTimeOfDay;
 import com.golfzonaca.officesharingplatform.domain.*;
 import com.golfzonaca.officesharingplatform.domain.type.RoomType;
 import com.golfzonaca.officesharingplatform.domain.type.dateformat.DateTimeFormat;
-import com.golfzonaca.officesharingplatform.web.formatter.TimeFormatter;
-import com.golfzonaca.officesharingplatform.web.reservation.dto.request.ResRequestData;
-import com.golfzonaca.officesharingplatform.web.reservation.dto.response.ReservationResponseData;
-import com.golfzonaca.officesharingplatform.web.reservation.form.DefaultTimeOfDay;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -104,7 +104,7 @@ class JpaReservationServiceTest {
                 }
             }
         }
-        for (ReservationResponseData responseData :result) {
+        for (ReservationResponseData responseData : result) {
             System.out.println("responseData.getDate() = " + responseData.getDate());
             System.out.println("responseData = " + responseData.isState());
         }

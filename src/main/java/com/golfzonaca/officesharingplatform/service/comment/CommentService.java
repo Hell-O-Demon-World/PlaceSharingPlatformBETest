@@ -1,6 +1,6 @@
 package com.golfzonaca.officesharingplatform.service.comment;
 
-import com.golfzonaca.officesharingplatform.web.comment.dto.CommentData;
+import com.golfzonaca.officesharingplatform.controller.comment.dto.CommentData;
 import com.google.gson.JsonObject;
 
 import java.util.Map;

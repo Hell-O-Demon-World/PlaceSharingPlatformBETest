@@ -1,6 +1,6 @@
 package com.golfzonaca.officesharingplatform.service.reservation;
 
-import com.golfzonaca.officesharingplatform.web.reservation.form.DefaultTimeOfDay;
+import com.golfzonaca.officesharingplatform.controller.reservation.form.DefaultTimeOfDay;
 import lombok.Getter;
 
 import java.io.IOException;

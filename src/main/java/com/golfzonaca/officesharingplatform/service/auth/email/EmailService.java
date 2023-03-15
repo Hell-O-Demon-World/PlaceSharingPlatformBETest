@@ -1,6 +1,6 @@
 package com.golfzonaca.officesharingplatform.service.auth.email;
 
-import com.golfzonaca.officesharingplatform.web.auth.form.EmailForm;
+import com.golfzonaca.officesharingplatform.controller.auth.form.EmailForm;
 
 import javax.mail.internet.AddressException;
 import java.io.IOException;

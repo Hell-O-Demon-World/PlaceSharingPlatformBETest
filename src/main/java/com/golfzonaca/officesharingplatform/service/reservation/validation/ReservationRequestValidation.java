@@ -1,5 +1,7 @@
 package com.golfzonaca.officesharingplatform.service.reservation.validation;
 
+import com.golfzonaca.officesharingplatform.controller.formatter.TimeFormatter;
+import com.golfzonaca.officesharingplatform.controller.reservation.dto.process.ProcessReservationData;
 import com.golfzonaca.officesharingplatform.domain.Place;
 import com.golfzonaca.officesharingplatform.domain.Room;
 import com.golfzonaca.officesharingplatform.domain.User;
@@ -8,8 +10,6 @@ import com.golfzonaca.officesharingplatform.exception.*;
 import com.golfzonaca.officesharingplatform.repository.reservation.ReservationRepository;
 import com.golfzonaca.officesharingplatform.repository.room.RoomRepository;
 import com.golfzonaca.officesharingplatform.repository.roomkind.RoomKindRepository;
-import com.golfzonaca.officesharingplatform.web.formatter.TimeFormatter;
-import com.golfzonaca.officesharingplatform.web.reservation.dto.process.ProcessReservationData;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
