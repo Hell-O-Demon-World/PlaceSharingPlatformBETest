@@ -2,7 +2,8 @@
 
 ## 0. Update log
 
-- 2023.02.13 ~ 2023.02.28 : User 및 Reservation Entity 리팩토링 진행 중 (From 'Transaction Script Pattern' to 'Domain Model Pattern') (담당자 : 이동훈)
+- 2023.03.15 ~ 2023.03.31 : Spring Data Jpa & QueryDsl 참조관계 변경 진행 중 (Place 완료) (담당자 : 이동훈)
+- 2023.02.13 ~ 2023.02.28 : Entity 리팩토링 진행 중 (User, Reservation 완료) (From 'Transaction Script Pattern' to 'Domain Model Pattern') (담당자 : 이동훈)
 - 2023.02.14 ~ 2023.02.14 : PSP 메인 플랫폼 서버 이전 (from CloudType to Oracle Cloud)(PEEK TPS 4000% 증가) (담당자 : 이동훈)
 - 2023.01.19 ~ 2023.01.20 : DB 서버 이전 (from Local PC to Oracle Cloud) (담당자 : 이동훈)
 - 2022.12.22 ~ 2022.12.23 : 배포
@@ -86,12 +87,14 @@ gantt
 	title Place Sharing Platform  
   
     section 공통  
-    개발 환경 설정 :chap1, 2022-11-16, 1d  
-    개발 및 리팩토링 :chap2, 2022-11-17, 2022-12-17
-	QA 및 버그 픽스: chap3, 2022-12-17, 2022-12-22
-	배포: chap4, 2022-12-22, 2022-12-23
-	DB 이전 : chap5, 2023-01-19, 2023-01-21
-	서버 이전 : chap6, 2023-02-14, 2023-02-15
+    개발 환경 설정 : chap1, 2022-11-16, 1d  
+    개발 및 리팩토링 : chap2, 2022-11-17, 2022-12-17
+	QA 및 버그 픽스 : chap3, 2022-12-17, 2022-12-22
+	배포 : chap4, 2022-12-22, 2022-12-23
+	DB서버 변경 : chap5, 2023-01-19, 2023-01-21
+    Entity 리팩토링 (Domain Model Pattern 적용) : chap6, 2023-02-13, 2023-03-01
+	운영서버 변경 : chap7, 2023-02-14, 2023-02-15
+	Spring Data Jpa & QueryDsl 참조관계 재설정 : chap8, 2023-03-15, 2023-03-31
 	
 ```
 
