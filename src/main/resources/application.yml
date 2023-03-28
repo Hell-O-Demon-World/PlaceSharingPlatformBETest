@@ -1,16 +1,16 @@
 ### Developing Server ###
+#spring:
+#  datasource:
+#    url: jdbc:h2:tcp://localhost/~/psp
+#    username: sa
+#    password:
+
+### Deploy Server ###
 spring:
   datasource:
-    url: jdbc:h2:tcp://localhost/~/psp
-    username: sa
-    password:
-
-  ### Deploy Server ###
-  #spring:
-  #  datasource:
-  #    url: ENC(F/8BDMmLTNEvd/3bKYpwzb+ARpjKCrSmD3gJR4LrR75Ad105qui0asWZfEeC3gUVlmiB9n7r3nogLt+n3FdGqw==)
-  #    username: ENC(IYZiiPFZ/d7XM0OxII/y5ZjgTPU7eKRJ)
-  #    password: ENC(tCx5PtshhUwYLTDIrXuItttIEB671nLL)
+    url: ENC(F/8BDMmLTNEvd/3bKYpwzb+ARpjKCrSmD3gJR4LrR75Ad105qui0asWZfEeC3gUVlmiB9n7r3nogLt+n3FdGqw==)
+    username: ENC(IYZiiPFZ/d7XM0OxII/y5ZjgTPU7eKRJ)
+    password: ENC(tCx5PtshhUwYLTDIrXuItttIEB671nLL)
 
   ### GMail ###
   mail:
