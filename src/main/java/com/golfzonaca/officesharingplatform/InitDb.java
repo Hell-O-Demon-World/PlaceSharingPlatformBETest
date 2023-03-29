@@ -3,24 +3,25 @@ package com.golfzonaca.officesharingplatform;
 import com.golfzonaca.officesharingplatform.domain.Role;
 import com.golfzonaca.officesharingplatform.domain.RoomKind;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 
+@Slf4j
 @RequiredArgsConstructor
 public class InitDb {
 
     private final InitService initService;
 
-    @PostConstruct
+    //    @PostConstruct
     public void init() {
+        log.info("Init Test Data");
         initService.roleInit();
         initService.roomKindInit();
     }
 
-    @Component
+    //    @Component
     @Transactional
     @RequiredArgsConstructor
     static class InitService {

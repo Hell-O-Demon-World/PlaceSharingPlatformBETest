@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.golfzonaca'
-version = '0.0.1-SNAPSHOT'
+version = '1.0.0'
 sourceCompatibility = '11'
 
 configurations {
@@ -95,7 +95,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
 //  스캐빈저 추가
-    implementation 'com.navercorp.scavenger:scavenger-agent-java:1.0.3'
+//    implementation 'com.navercorp.scavenger:scavenger-agent-java:1.0.4'
 }
 
 tasks.named('test') {
