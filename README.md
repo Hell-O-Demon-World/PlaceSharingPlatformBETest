@@ -2,6 +2,7 @@
 
 ## 0. Update log
 
+- 2023.03.28 ~ 2023.03.28 : 오라클 클라우드 인스턴스 재설정 (담당자 : 이동훈)
 - 2023.03.15 ~ 2023.03.31 : Spring Data Jpa & QueryDsl 참조관계 변경 진행 중 (Place 완료) (담당자 : 이동훈)
 - 2023.02.13 ~ 2023.02.28 : Entity 리팩토링 진행 중 (User, Reservation 완료) (From 'Transaction Script Pattern' to 'Domain Model Pattern') (담당자 : 이동훈)
 - 2023.02.14 ~ 2023.02.14 : PSP 메인 플랫폼 서버 이전 (from CloudType to Oracle Cloud)(PEEK TPS 4000% 증가) (담당자 : 이동훈)
